@@ -8,6 +8,7 @@
     "start": "serve -s dist"
   },
   "dependencies": {
+    "@apollo/client": "^3.12.8",
     "@ckeditor/ckeditor5-build-balloon": "^29.1.0",
     "@ckeditor/ckeditor5-build-balloon-block": "^29.1.0",
     "@ckeditor/ckeditor5-build-classic": "^29.1.0",
@@ -35,6 +36,7 @@
     "flowbite": "^1.6.5",
     "flowbite-react": "^0.4.6",
     "framer-motion": "^12.0.6",
+    "graphql": "^16.10.0",
     "highlight.js": "^10.6.0",
     "js-beautify": "^1.13.5",
     "litepicker": "^2.0.11",

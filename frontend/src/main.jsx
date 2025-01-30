@@ -9,6 +9,8 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
 import { creatorTestnet } from "wagmi/chains";
+import { ApolloProvider } from "@apollo/client";
+import client from "./services/apollo.services"; // Import the client
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@rainbow-me/rainbowkit/styles.css";
 const config = getDefaultConfig({
@@ -21,11 +23,13 @@ const queryClient = new QueryClient();
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
-  <WagmiProvider config={config}>
-    <QueryClientProvider client={queryClient}>
-      <RainbowKitProvider theme={false ? darkTheme() : lightTheme()}>
-        <App />
-      </RainbowKitProvider>
-    </QueryClientProvider>
-  </WagmiProvider>
+  <ApolloProvider client={client}>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider theme={false ? darkTheme() : lightTheme()}>
+          <App />
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  </ApolloProvider>
 );
