@@ -110,7 +110,7 @@ const project: EthereumProject = {
       },
     },
   ],
-  repository: "https://github.com/subquery/ethereum-subql-starter",
+  repository: "https://github.com/Imdavyking/econova/indexer",
 };
 
 // Must set default to the project instance
