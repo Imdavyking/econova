@@ -78,14 +78,6 @@ You can query indexed data with the following example:
         contractAddress
       }
     }
-    addPointFromWeights(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-      nodes {
-        id
-        blockHeight
-        weightInGrams
-        contractAddress
-      }
-    }
     donations(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
       nodes {
         id
