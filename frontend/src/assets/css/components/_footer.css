@@ -1,0 +1,47 @@
+/** @format */
+/* .main_footer {
+	@apply bg-white;
+	
+} */
+
+.footer {
+	@apply mt-24 w-full h-[auto] flex items-center flex-col px-32 pt-1 overflow-hidden;
+	@include media-breakpoint-down(xl) {
+		@apply mt-20 pt-10 p-0;
+	}
+
+	.footer_list {
+		@apply w-full pt-10 flex items-start justify-start border-t border-gray-200;
+		@include media-breakpoint-down(xl) {
+			@apply flex-wrap pl-7;
+		}
+
+		.footer_childlist {
+			@apply w-1/4;
+
+			li {
+				@apply text-white font-normal mb-4;
+				@include media-breakpoint-down(xl) {
+					@apply text-sm;
+				}
+			}
+			a {
+				@apply text-white capitalize whitespace-nowrap leading-4 hover:text-primary;
+			}
+		}
+	}
+	.footer_secondchildlist {
+		@apply flex items-center justify-between justify-end gap-3;
+
+		small {
+			@apply text-sm font-normal text-white;
+		}
+		.footer_socials {
+			@apply flex gap-3;
+			@include media-breakpoint-down(xl) {
+				@apply justify-center;
+			}
+		}
+	
+	}
+}
