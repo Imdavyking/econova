@@ -36,12 +36,10 @@ const ConnectWallet = () => {
                 return (
                   <motion.button
                     onClick={openConnectModal}
-                    className="relative flex items-center space-x-2 px-4 py-2 rounded-xl font-medium overflow-hidden group"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    style={{ color: "black" }}
+                    className="btn  btn-outline-secondary bg-white py-3 text-primary px-4 w-48 mt-3 xl:mt-0 align-top mr-3"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300 group-hover:opacity-100 opacity-90" />
-                    <span className="relative text-black">Connect Wallet</span>
+                    Connect Wallet
                   </motion.button>
                 );
               }
@@ -50,9 +48,8 @@ const ConnectWallet = () => {
                 return (
                   <motion.button
                     onClick={openChainModal}
-                    className="relative flex items-center space-x-2 px-4 py-2 rounded-xl font-medium overflow-hidden group bg-red-500"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    className="btn btn-outline-secondary bg-white py-3 text-primary px-4 w-48 mt-3 xl:mt-0 align-top mr-3"
+                    style={{ color: "black" }}
                   >
                     <span className="relative text-white">Wrong Network</span>
                   </motion.button>
@@ -60,24 +57,13 @@ const ConnectWallet = () => {
               }
 
               return (
-                <button
+                <motion.button
                   onClick={openAccountModal}
                   className="btn  btn-outline-secondary bg-white py-3 text-primary px-4 w-48 mt-3 xl:mt-0 align-top mr-3"
                   style={{ color: "black" }}
                 >
                   {account.displayName}
-                </button>
-                // <motion.button
-                //   onClick={openAccountModal}
-                //   className="relative flex items-center space-x-2 px-4 py-2 rounded-xl font-medium overflow-hidden group"
-                //   whileHover={{ scale: 1.05 }}
-                //   whileTap={{ scale: 0.95 }}
-                // >
-                //   <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300 group-hover:opacity-100 opacity-90" />
-                //   <span className="relative text-black">
-                //     {account.displayName}
-                //   </span>
-                // </motion.button>
+                </motion.button>
               );
             })()}
           </div>
