@@ -5,7 +5,7 @@ import { CONTRACT_ADDRESS } from "../../utils/constants";
 // GraphQL Query
 const GET_POINTS = gql`
   query MyQuery {
-    pointsAddeds(orderBy: POINTS_DESC) {
+    pointsAddeds(orderBy: POINTS_DESC, first: 10) {
       nodes {
         id
         contractAddress
