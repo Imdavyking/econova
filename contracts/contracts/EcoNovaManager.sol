@@ -162,7 +162,7 @@ contract EcoNovaManager is Ownable {
             );
             userPoints[msg.sender] = pointData;
         }
-        emit PointsAdded(msg.sender, userPointData.points);
+        emit PointsAdded(msg.sender, userPoints[msg.sender].points);
     }
 
     /**
