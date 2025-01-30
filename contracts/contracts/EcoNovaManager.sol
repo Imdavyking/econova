@@ -184,6 +184,7 @@ contract EcoNovaManager is Ownable {
         // convert to ERC20 token
         i_ecoNovaToken.mint(msg.sender, point * 10 ** i_ecoNovaToken.decimals());
         emit PointsRedeemed(msg.sender, point);
+        emit PointsAdded(msg.sender, userPoints[msg.sender].points);
         return true;
     }
 }
