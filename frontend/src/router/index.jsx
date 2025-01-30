@@ -5,6 +5,7 @@ import RedeemPoints from "../views/redeem-points/Main";
 import AddPoint from "../views/add-points/Main";
 import Home from "../views/home/Main";
 import Donate from "../views/donate/Main";
+import LeaderBoard from "../views/leaderboard/Main";
 // import Dashboard from "../views/dashboard/Main";
 
 // import Settings from "../views/settings/Main";
@@ -26,6 +27,10 @@ function Router() {
     {
       path: "/donate",
       element: <Donate />,
+    },
+    {
+      path: "/leaderboard",
+      element: <LeaderBoard />,
     },
   ];
 
