@@ -1,5 +1,6 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
+import { CONTRACT_ADDRESS } from "../../utils/constants";
 
 // GraphQL Query
 const GET_POINTS = gql`
@@ -40,27 +41,35 @@ const PointsList = () => {
             </tr>
           </thead>
           <tbody>
-            {data.pointsAddeds.nodes.map((item, index) => (
-              <tr
-                key={item.id}
-                className={`border-b ${
-                  index === 0
-                    ? "bg-yellow-200"
-                    : index === 1
-                    ? "bg-gray-200"
-                    : index === 2
-                    ? "bg-orange-200"
-                    : "bg-white"
-                } hover:bg-gray-100 transition`}
-              >
-                <td className="p-3">{index + 1}</td>
-                <td className="p-3 font-semibold">{item.user}</td>
-                <td className="p-3 font-bold text-blue-600">{item.points}</td>
-                <td className="p-3">
-                  {new Date(item.updatedTimeStamp * 1000).toLocaleString()}
-                </td>
-              </tr>
-            ))}
+            {data.pointsAddeds.nodes
+              .filter((item) => {
+                console.log({ item });
+                return (
+                  String(item.contractAddress).toLowerCase() ==
+                  String(CONTRACT_ADDRESS).toLowerCase()
+                );
+              })
+              .map((item, index) => (
+                <tr
+                  key={item.id}
+                  className={`border-b ${
+                    index === 0
+                      ? "bg-yellow-200"
+                      : index === 1
+                      ? "bg-gray-200"
+                      : index === 2
+                      ? "bg-orange-200"
+                      : "bg-white"
+                  } hover:bg-gray-100 transition`}
+                >
+                  <td className="p-3">{index + 1}</td>
+                  <td className="p-3 font-semibold">{item.user}</td>
+                  <td className="p-3 font-bold text-blue-600">{item.points}</td>
+                  <td className="p-3">
+                    {new Date(item.updatedTimeStamp * 1000).toLocaleString()}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
