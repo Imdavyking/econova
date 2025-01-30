@@ -57,9 +57,9 @@ async function switchOrAddChain(ethProvider) {
   } catch (error) {}
 }
 
-const getSigner = () => {
+const getSigner = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-
+  await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
 };
 
@@ -70,7 +70,8 @@ const getContract = async () => {
     );
     return;
   }
-  const signer = getSigner();
+  const signer = await getSigner();
+
   await switchOrAddChain(signer.provider);
   return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 };
@@ -111,7 +112,7 @@ export const donateToFoundationService = async ({
 
 export const getPointsService = async () => {
   try {
-    const signer = getSigner();
+    const signer = await getSigner();
     const manager = await getContract();
 
     const userAddress = await signer.getAddress();
