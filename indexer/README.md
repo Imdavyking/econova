@@ -65,18 +65,22 @@ You can query indexed data with the following example:
 ```graphql
 {
   query {
-    pointsAdded(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-      id
-      blockHeight
-      user
-      points
-      contractAddress
+    pointsAddeds(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+      nodes {
+        id
+        blockHeight
+        user
+        points
+        contractAddress
+      }
     }
-    addPointFromWeight(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-      id
-      blockHeight
-      weightInGrams
-      contractAddress
+    addPointFromWeights(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+      nodes {
+        id
+        blockHeight
+        weightInGrams
+        contractAddress
+      }
     }
   }
 }
