@@ -153,6 +153,7 @@ contract EcoNovaManager is Ownable {
         if (userPointData.points > 0) {
             userPointData.points += points;
             userPointData.updatedTimeStamp = block.timestamp;
+            userPoints[msg.sender] = userPointData;
         } else {
             PointData memory pointData = PointData(
                 points,
@@ -162,6 +163,7 @@ contract EcoNovaManager is Ownable {
             );
             userPoints[msg.sender] = pointData;
         }
+
         emit PointsAdded(msg.sender, userPoints[msg.sender].points);
     }
 
