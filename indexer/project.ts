@@ -58,7 +58,7 @@ const project: EthereumProject = {
       startBlock: 6746942,
       options: {
         abi: "Abi",
-        address: "0x6771B937D4e0f3bbfcCA798Ed2eeCd95beA8dB95",
+        address: "0x815e97fCb4e170fA0C7214035FbAD911d08668AD",
       },
       assets: new Map([["Abi", { file: "./abis/abi.json" }]]),
       mapping: {
