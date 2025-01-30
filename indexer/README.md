@@ -58,7 +58,7 @@ This will:
 
 Ensure you have [Docker installed](https://docs.docker.com/engine/install) before running step 3.
 
-Once running, open your browser and go to [http://localhost:3000](http://localhost:3000) to use the GraphQL Playground.
+Once running, open your browser and go to [http://localhost:5100](http://localhost:5100) to use the GraphQL Playground.
 
 ---
 
