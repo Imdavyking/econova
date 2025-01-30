@@ -76,6 +76,15 @@ export async function handlePointsAddedAbiLog(
 
   const userAddress = log.args.user;
 
+  const user = await PointsAdded.getByUser(userAddress, {
+    orderDirection: "ASC",
+    limit: 1,
+  });
+
+  if (user.length > 0) {
+    await PointsAdded.remove(user[0].id);
+  }
+
   const transaction = PointsAdded.create({
     id: log.transactionHash,
     blockHeight: BigInt(log.blockNumber),
