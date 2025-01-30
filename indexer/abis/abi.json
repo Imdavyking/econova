@@ -17,22 +17,7 @@
   },
   {
     "inputs": [],
-    "name": "EcoNovaManager__IncorrectETHAmount",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "EcoNovaManager__InsufficientBalance",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "EcoNovaManager__InsufficientPoints",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "EcoNovaManager__SendingFailed",
     "type": "error"
   },
   {
@@ -80,31 +65,6 @@
       }
     ],
     "name": "Donated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "DonationWithdrawed",
     "type": "event"
   },
   {
@@ -182,19 +142,6 @@
     ],
     "name": "SetOrocle",
     "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "ETH_ADDRESS",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "inputs": [],
@@ -286,6 +233,45 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "ecoNovaToken",
+    "outputs": [
+      {
+        "internalType": "contract EcoNovaToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ethAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ethIdentifier",
+    "outputs": [
+      {
+        "internalType": "bytes20",
+        "name": "",
+        "type": "bytes20"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -304,32 +290,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "i_ecoNovaToken",
-    "outputs": [
-      {
-        "internalType": "contract EcoNovaToken",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "i_ethIdentifier",
-    "outputs": [
-      {
-        "internalType": "bytes20",
-        "name": "",
-        "type": "bytes20"
       }
     ],
     "stateMutability": "view",
@@ -438,24 +398,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawDonation",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]
