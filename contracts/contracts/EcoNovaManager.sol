@@ -17,6 +17,7 @@ contract EcoNovaManager is Ownable {
      * constants
      */
     uint256 public constant POINT_BASIS = 35;
+    uint256 public constant DONATION_POINT_PER_USD = POINT_BASIS * 2;
     uint256 public constant FIAT_DECIMALS = 10 ** 2;
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
@@ -100,6 +101,7 @@ contract EcoNovaManager is Ownable {
      * @param token The address of the token to donate.
      * @param amountInUsd The amount in USD (assumed to have 2 decimals).
      */
+
     function donateToFoundation(address token, uint256 amountInUsd) public payable {
         address caller = msg.sender;
         uint256 amountToSend = getUsdToTokenPrice(token, amountInUsd);
@@ -115,6 +117,17 @@ contract EcoNovaManager is Ownable {
             userDonations[caller] += msg.value;
         }
 
+        uint256 pointsEarned = (amountInUsd * DONATION_POINT_PER_USD) / FIAT_DECIMALS;
+        PointData storage userPointData = userPoints[caller];
+
+        if (userPointData.points > 0) {
+            userPointData.points += pointsEarned;
+            userPointData.updatedTimeStamp = block.timestamp;
+        } else {
+            userPoints[caller] = PointData(pointsEarned, block.timestamp, block.timestamp, caller);
+        }
+
+        emit PointsAdded(caller, userPoints[caller].points);
         emit Donated(caller, token, amountToSend);
     }
 

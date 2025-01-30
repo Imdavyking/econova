@@ -32,7 +32,7 @@ chainId !== 31337
 
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
 
-              const ecoNovaTokenAddress = await ecoNDeployer.ecoNovaToken()
+              const ecoNovaTokenAddress = await ecoNDeployer.i_ecoNovaToken()
 
               const abiPath = path.resolve(
                   __dirname,
