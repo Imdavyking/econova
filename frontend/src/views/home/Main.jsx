@@ -11,6 +11,8 @@ import { useWallet } from "@/App";
 import { ethers } from "ethers";
 import { getFirstAndLast4Chars } from "../../App";
 import { APP_NAME } from "../../utils/constants";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import ConnectWallet from "../../components/ConnectWallet";
 // import { useAccount, useDisconnect, useChainId } from "wagmi";
 // import { useConnectModal } from "@rainbow-me/rainbowkit";
 
@@ -46,13 +48,13 @@ const Home = () => {
               <span className="text-white text-lg ml-3"> {APP_NAME} </span>
             </a>
             <div>
+              <ConnectWallet accountStatus="address" />
               <button
                 onClick={connectWallet}
                 className="btn  btn-outline-secondary bg-white py-3 text-primary px-4 w-48 mt-3 xl:mt-0 align-top mr-3"
                 style={{ color: "black" }}
               >
                 {getFirstAndLast4Chars(walletAddress) ?? "Connect Wallet"}
-                {/* Connect Wallet */}
               </button>
 
               <Link to="/add-points">
