@@ -40,3 +40,12 @@ type PointsRedeemed @entity {
   blockHeight: BigInt!
   contractAddress: String!
 }
+
+type WithdrawDonation @entity {
+  id: ID!
+  user: String!
+  token: String!
+  amount: BigInt!
+  blockHeight: BigInt!
+  contractAddress: String!
+}

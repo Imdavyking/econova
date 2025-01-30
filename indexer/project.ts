@@ -4,13 +4,16 @@ import {
   EthereumHandlerKind,
 } from "@subql/types-ethereum";
 
-import * as dotenv from 'dotenv';
-import path from 'path';
+import * as dotenv from "dotenv";
+import path from "path";
 
-const mode = process.env.NODE_ENV || 'production';
+const mode = process.env.NODE_ENV || "production";
 
 // Load the appropriate .env file
-const dotenvPath = path.resolve(__dirname, `.env${mode !== 'production' ? `.${mode}` : ''}`);
+const dotenvPath = path.resolve(
+  __dirname,
+  `.env${mode !== "production" ? `.${mode}` : ""}`
+);
 dotenv.config({ path: dotenvPath });
 
 // Can expand the Datasource processor types via the generic param
@@ -47,102 +50,66 @@ const project: EthereumProject = {
      * If you use a rate limited endpoint, adjust the --batch-size and --workers parameters
      * These settings can be found in your docker-compose.yaml, they will slow indexing but prevent your project being rate limited
      */
-    endpoint: process.env.ENDPOINT!?.split(',') as string[] | string,
+    endpoint: process.env.ENDPOINT!?.split(",") as string[] | string,
   },
-  dataSources: [{
-    kind: EthereumDatasourceKind.Runtime,
-    startBlock: 6746942,
-    options: {
-      abi: 'Abi',
-      address: '0x42da0de9dDFEE34fe6f364CE9317F7BF093E7aeE',
+  dataSources: [
+    {
+      kind: EthereumDatasourceKind.Runtime,
+      startBlock: 6746942,
+      options: {
+        abi: "Abi",
+        address: "0x42da0de9dDFEE34fe6f364CE9317F7BF093E7aeE",
+      },
+      assets: new Map([["Abi", { file: "./abis/abi.json" }]]),
+      mapping: {
+        file: "./dist/index.js",
+        handlers: [
+          {
+            handler: "handleWithdrawDonationAbiTx",
+            kind: EthereumHandlerKind.Call,
+            filter: {
+              function: "withdrawDonation(address,uint256)",
+            },
+          },
+          {
+            handler: "handleDonatedAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["Donated(address,address,uint256)"],
+            },
+          },
+          {
+            handler: "handleOwnershipTransferredAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["OwnershipTransferred(address,address)"],
+            },
+          },
+          {
+            handler: "handlePointsAddedAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["PointsAdded(address,uint256)"],
+            },
+          },
+          {
+            handler: "handlePointsRedeemedAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["PointsRedeemed(address,uint256)"],
+            },
+          },
+          {
+            handler: "handleSetOrocleAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["SetOrocle(address,address)"],
+            },
+          },
+        ],
+      },
     },
-    assets: new Map([['Abi', {file: './abis/abi.json'}]]),
-    mapping: {
-      file: './dist/index.js',
-      handlers: [
-  {
-    handler: "handleAddPointFromWeightAbiTx",
-    kind: EthereumHandlerKind.Call,
-    filter: {
-      function: "addPointFromWeight(uint256)"
-    }
-  },
-  {
-    handler: "handleDonateToFoundationAbiTx",
-    kind: EthereumHandlerKind.Call,
-    filter: {
-      function: "donateToFoundation(address,uint256)"
-    }
-  },
-  {
-    handler: "handleRedeemCodeAbiTx",
-    kind: EthereumHandlerKind.Call,
-    filter: {
-      function: "redeemCode(uint256)"
-    }
-  },
-  {
-    handler: "handleRenounceOwnershipAbiTx",
-    kind: EthereumHandlerKind.Call,
-    filter: {
-      function: "renounceOwnership()"
-    }
-  },
-  {
-    handler: "handleTransferOwnershipAbiTx",
-    kind: EthereumHandlerKind.Call,
-    filter: {
-      function: "transferOwnership(address)"
-    }
-  },
-  {
-    handler: "handleDonatedAbiLog",
-    kind: EthereumHandlerKind.Event,
-    filter: {
-      topics: [
-        "Donated(address,address,uint256)"
-      ]
-    }
-  },
-  {
-    handler: "handleOwnershipTransferredAbiLog",
-    kind: EthereumHandlerKind.Event,
-    filter: {
-      topics: [
-        "OwnershipTransferred(address,address)"
-      ]
-    }
-  },
-  {
-    handler: "handlePointsAddedAbiLog",
-    kind: EthereumHandlerKind.Event,
-    filter: {
-      topics: [
-        "PointsAdded(address,uint256)"
-      ]
-    }
-  },
-  {
-    handler: "handlePointsRedeemedAbiLog",
-    kind: EthereumHandlerKind.Event,
-    filter: {
-      topics: [
-        "PointsRedeemed(address,uint256)"
-      ]
-    }
-  },
-  {
-    handler: "handleSetOrocleAbiLog",
-    kind: EthereumHandlerKind.Event,
-    filter: {
-      topics: [
-        "SetOrocle(address,address)"
-      ]
-    }
-  }
-]
-    }
-  },],
+  ],
   repository: "https://github.com/subquery/ethereum-subql-starter",
 };
 
