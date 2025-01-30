@@ -144,7 +144,7 @@ contract EcoNovaManager is Ownable {
      * @param weightInGrams weight in grams of the waste
      */
     function addPointFromWeight(uint256 weightInGrams) public {
-        // accumulate points for the user based on the weight of the waste (calculate with 0.35)
+        // accumulate points for the user based on the weight of the waste
         uint256 points = weightInGrams * POINT_BASIS;
 
         PointData memory userPointData = userPoints[msg.sender];
@@ -162,7 +162,7 @@ contract EcoNovaManager is Ownable {
             );
             userPoints[msg.sender] = pointData;
         }
-        emit PointsAdded(msg.sender, weightInGrams);
+        emit PointsAdded(msg.sender, userPointData.points);
     }
 
     /**

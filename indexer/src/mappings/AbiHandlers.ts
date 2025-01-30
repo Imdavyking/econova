@@ -74,6 +74,8 @@ export async function handlePointsAddedAbiLog(
   logger.info(`New PointsAdded transaction log at block ${log.blockNumber}`);
   assert(log.args, "No log.args");
 
+  const userAddress = log.args.user;
+
   const transaction = PointsAdded.create({
     id: log.transactionHash,
     blockHeight: BigInt(log.blockNumber),

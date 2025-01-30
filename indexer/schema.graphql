@@ -9,7 +9,7 @@ type Donation @entity {
 
 type PointsAdded @entity {
   id: ID!
-  user: String!
+  user: String! @index
   points: BigInt!
   updatedTimeStamp: BigInt!
   createdTimeStamp: BigInt!
