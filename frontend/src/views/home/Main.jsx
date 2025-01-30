@@ -11,6 +11,8 @@ import { useWallet } from "@/App";
 import { ethers } from "ethers";
 import { getFirstAndLast4Chars } from "../../App";
 import { APP_NAME } from "../../utils/constants";
+// import { useAccount, useDisconnect, useChainId } from "wagmi";
+// import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 const Home = () => {
   const { walletAddress, setWalletAddress } = useWallet();

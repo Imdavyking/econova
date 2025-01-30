@@ -23,7 +23,9 @@
     "@hookform/resolvers": "^2.8.8",
     "@left4code/tw-starter": "^3.1.35",
     "@popperjs/core": "^2.7.0",
+    "@rainbow-me/rainbowkit": "^2.2.3",
     "@reduxjs/toolkit": "^1.9.5",
+    "@tanstack/react-query": "^5.65.1",
     "axios": "^1.4.0",
     "chart.js": "^3.7.1",
     "classnames": "^2.3.1",
@@ -56,6 +58,8 @@
     "tippy.js": "^6.2.7",
     "toastify-js": "^1.9.3",
     "tom-select": "^1.7.5",
+    "viem": "2.x",
+    "wagmi": "^2.14.9",
     "xlsx": "^0.16.9",
     "yup": "^0.32.11",
     "zoom-vanilla.js": "^2.0.6"
