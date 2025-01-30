@@ -81,7 +81,7 @@ const project: EthereumProject = {
       },
     },
   ],
-  repository: " https://github.com/Imdavyking/creative_blockchain/indexer",
+  repository: "https://github.com/Imdavyking/creative_blockchain/indexer",
 };
 
 // Must set default to the project instance

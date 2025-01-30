@@ -37,6 +37,7 @@ You can modify the SubQuery project by updating the following files:
 - 📄 **`src/mappings/`** - Contains TypeScript functions that transform and process blockchain events.
 
 ---
+
 ### **Start the SubQuery Indexer**
 
 Run the following command to start your project:
@@ -63,17 +64,15 @@ You can query indexed data with the following example:
 
 ```graphql
 {
-  pointsAdded(first: 5, orderBy: blockHeight_DESC) {
-    nodes {
+  query {
+    pointsAdded(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
       id
       blockHeight
       user
       points
       contractAddress
     }
-  }
-  addPointFromWeight(first: 5, orderBy: blockHeight_DESC) {
-    nodes {
+    addPointFromWeight(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
       id
       blockHeight
       weightInGrams
@@ -82,4 +81,3 @@ You can query indexed data with the following example:
   }
 }
 ```
-
