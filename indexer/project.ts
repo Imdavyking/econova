@@ -10,9 +10,7 @@ import { cleanDB } from "./src/utils/clean";
 
 const mode = process.env.NODE_ENV || "production";
 
-if (mode === "development") {
-  cleanDB();
-}
+cleanDB();
 
 // Load the appropriate .env file
 const dotenvPath = path.resolve(
