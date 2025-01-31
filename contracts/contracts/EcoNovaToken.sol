@@ -13,6 +13,12 @@ contract EcoNovaToken is ERC20 {
         OWNER = msg.sender;
     }
 
+    /**
+     * @dev Mint tokens
+     * @param to - the address to mint tokens to
+     * @param amount - the amount of tokens to mint
+     */
+
     function mint(address to, uint256 amount) external {
         if (msg.sender != OWNER) {
             revert EcoNovaToken__NotOwner();
