@@ -4,6 +4,8 @@ import { oauth } from "./oauth.twitter.services";
 const TW_REQ_TOKEN_URL = "https://api.twitter.com/oauth/request_token";
 const TW_AUTH_URL = "https://api.twitter.com/oauth/authenticate";
 const TW_ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token";
+const TW_VERIFY_CREDENTIALS_URL =
+  "https://api.twitter.com/1.1/account/verify_credentials.json";
 
 export class LoginWithTwitter {
   callbackUrl: string;
@@ -67,6 +69,67 @@ export class LoginWithTwitter {
       throw new Error(`Login request failed: ${err.message}`);
     }
   }
+
+  async validateUserToken(
+    userToken: string,
+    userTokenSecret: string
+  ): Promise<boolean> {
+    const requestData = {
+      url: TW_VERIFY_CREDENTIALS_URL,
+      method: "GET",
+    };
+
+    // Build headers for the authenticated request using the OAuth credentials
+    const oauthHeaders = oauth.toHeader(
+      oauth.authorize(requestData, {
+        key: userToken,
+        secret: userTokenSecret,
+      })
+    );
+
+    try {
+      // Make the request to Twitter's API to verify the credentials
+      const response = await fetch(requestData.url, {
+        method: requestData.method,
+        headers: {
+          ...oauthHeaders,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error verifying credentials: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (data && data.id_str) {
+        // If Twitter responds with a valid user ID, the tokens are valid
+        console.log(`User verified with ID: ${data.id_str}`);
+        return true;
+      } else {
+        throw new Error("Invalid tokens: No user data returned");
+      }
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
+
+  // // Example usage:
+  // const userToken = '716078211797487616-xzWGF83Gpr92Q8yVQmFEmpMw2E9hmco';
+  // const userTokenSecret = 'dKXBIMCVKaV93Jtrgi8aE6ZThknJCpcTXnVLJBqQociNn';
+
+  // validateUserToken(userToken, userTokenSecret)
+  //   .then((isValid) => {
+  //     if (isValid) {
+  //       console.log("User tokens are valid");
+  //     } else {
+  //       console.log("User tokens are invalid");
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.error("Validation failed:", err);
+  //   });
 
   async callback(
     params: { oauth_token?: string; oauth_verifier?: string; denied?: string },
