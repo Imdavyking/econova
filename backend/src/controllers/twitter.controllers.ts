@@ -24,7 +24,9 @@ const twitterLogin = new LoginWithTwitter({
 
 export const loginTwitter = async (req: Request, res: Response) => {
   try {
-    twitterLogin.callbackUrl = `${req.protocol}://${req.get("host")}/twitter/callback`;
+    twitterLogin.callbackUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/twitter/callback`;
     const { tokenSecret, url } = await twitterLogin.login();
 
     req.session.tokenSecret = tokenSecret;
