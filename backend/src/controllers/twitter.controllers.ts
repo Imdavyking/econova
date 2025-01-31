@@ -19,7 +19,7 @@ declare module "express-session" {
 }
 
 const twitterLogin = new LoginWithTwitter({
-  callbackUrl: "",
+  callbackUrl: "http://localhost:5100/callback",
 });
 
 export const loginTwitter = async (req: Request, res: Response) => {
