@@ -5,6 +5,6 @@ import {
 } from "../controllers/twitter.controllers";
 const twitterRoutes = express.Router();
 twitterRoutes.get("/login", loginTwitter);
-twitterRoutes.get("/:id", verifyCallBack);
+twitterRoutes.get("/callback", verifyCallBack);
 
 export default twitterRoutes;
