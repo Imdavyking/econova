@@ -167,7 +167,6 @@ contract EcoNovaManager is Ownable {
      * @param signature signature of the message
      */
     function addPointsFromTwitterBot(uint256 pointToAdd, bytes memory signature) public {
-        // Verify the signature
         bytes32 messageHash = keccak256(
             abi.encodePacked(msg.sender, pointToAdd, userNonce[msg.sender])
         );
