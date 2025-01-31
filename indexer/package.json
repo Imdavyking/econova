@@ -31,6 +31,7 @@
     "@subql/cli": "latest",
     "@subql/node-ethereum": "latest",
     "@subql/testing": "latest",
+    "@types/node": "^22.12.0",
     "dotenv": "latest",
     "ethers": "^5.7.2",
     "typescript": "latest"

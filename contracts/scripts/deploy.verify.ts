@@ -10,12 +10,13 @@ import { cleanDeployments } from "../utils/clean"
 dotenv.config()
 
 async function main() {
-    cleanDeployments()
+    const chainId = network.config.chainId
+    cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
     const ecoAddress = await ecoNovaDeployer.getAddress()
 
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
-    const chainId = network.config.chainId
+
     if (chainId === 31337) return
 
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =

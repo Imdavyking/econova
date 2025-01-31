@@ -6,7 +6,7 @@ import {
 
 import * as dotenv from "dotenv";
 import path from "path";
-import { cleanDB } from "./clean";
+import { cleanDB } from "./src/utils/clean";
 
 const mode = process.env.NODE_ENV || "production";
 
