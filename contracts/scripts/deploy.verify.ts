@@ -6,9 +6,11 @@ import { verify } from "../utils/verify"
 import dotenv from "dotenv"
 import { network } from "hardhat"
 import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
+import { cleanDeployments } from "../utils/clean"
 dotenv.config()
 
 async function main() {
+    cleanDeployments()
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
     const ecoAddress = await ecoNovaDeployer.getAddress()
 
