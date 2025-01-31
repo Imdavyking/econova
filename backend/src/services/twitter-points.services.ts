@@ -3,6 +3,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+/**
+ * Sign a message with the bot private key
+ * @param senderAddress The address of the sender
+ * @param pointToAdd The amount of points to add
+ * @param nonce The nonce
+ * @returns The signature and the amount of points to add
+ */
 export const signTwitterPoints = async (
   senderAddress: string,
   pointToAdd: string | number,
@@ -30,5 +37,5 @@ export const signTwitterPoints = async (
     throw new Error("Invalid signature");
   }
 
-  return signature;
+  return { signature, pointToAdd };
 };
