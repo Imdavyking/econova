@@ -22,23 +22,20 @@ const twitterLogin = new LoginWithTwitter({
   callbackUrl: "http://localhost:3100/twitter/callback",
 });
 
+const getUrlCallback = (req: Request) =>
+  `${req.protocol}://${req.get("host")}/twitter/callback`;
+
 export const loginTwitter = async (req: Request, res: Response) => {
-  try {
-    twitterLogin.callbackUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/twitter/callback`;
-    const { tokenSecret, url } = await twitterLogin.login();
+  twitterLogin.callbackUrl = getUrlCallback(req);
+  const { tokenSecret, url } = await twitterLogin.login();
 
-    req.session.tokenSecret = tokenSecret;
+  req.session.tokenSecret = tokenSecret;
 
-    res.redirect(url);
-  } catch (error) {
-    res.send(error);
-  }
+  res.redirect(url);
 };
 
 export const verifyCallBack = async (req: Request, res: Response) => {
-  twitterLogin.callbackUrl = `${req.protocol}://${req.get("host")}/callback`;
+  twitterLogin.callbackUrl = getUrlCallback(req);
   const { oauth_token, oauth_verifier } = req.query as {
     oauth_token: string;
     oauth_verifier: string;
