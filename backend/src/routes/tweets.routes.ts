@@ -8,6 +8,7 @@ import logger from "../config/logger";
 import { extractMessageFrom429 } from "../utils";
 import redis from "../services/redis.services"; // Adjust path as needed
 import { REDIS_CACHE_TIME } from "../config/database";
+import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 const tweetRoutes = express.Router();
 tweetRoutes.get("/", getTweets);
 tweetRoutes.get("/:id", getTweetByTweetID);
@@ -17,28 +18,10 @@ tweetRoutes.get("/:id", getTweetByTweetID);
  */
 tweetRoutes.get("/:id/retweeters", async (req: Request, res: Response) => {
   try {
-    const tweetId = req.params.id;
-    const cacheKey = `retweeters-${tweetId}`;
-    const cachedData = await redis.get(cacheKey);
-    let data: any = {};
-
-    if (cachedData) {
-      logger.info("Tweeter retweet data fetched from cache");
-      data = JSON.parse(cachedData);
-    } else {
-      logger.info("Tweeter retweet data fetched from API");
-      data = await getRetweeters(tweetId);
-      await redis.set(cacheKey, JSON.stringify(data), "EX", REDIS_CACHE_TIME);
-    }
-
+    const data = await getRetweetersData(req.params.id);
     res.status(200).json(data);
   } catch (error: any) {
-    logger.error(error.message);
-    let { message } = extractMessageFrom429(
-      error,
-      "Failed to fetch retweeters"
-    );
-    res.status(500).json({ error: message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -47,31 +30,10 @@ tweetRoutes.get("/:id/retweeters", async (req: Request, res: Response) => {
  */
 tweetRoutes.get("/:id/liking-users", async (req: Request, res: Response) => {
   try {
-    const tweetId = req.params.id;
-    const cacheKey = `liking-users-${tweetId}`;
-    const cachedData = await redis.get(cacheKey);
-
-    let data: any = {};
-
-    if (cachedData) {
-      data = JSON.parse(cachedData);
-      logger.info("Tweeter liking-users data fetched from cache");
-    } else {
-      data = await getLikingUsers(tweetId);
-      await redis.set(cacheKey, JSON.stringify(data), "EX", REDIS_CACHE_TIME);
-      logger.info("Tweeter liking-users data fetched from API");
-    }
+    const data = await getLikingUsersData(req.params.id);
     res.status(200).json(data);
   } catch (error: any) {
-    logger.error(error.message);
-    console.log(error);
-    let { message } = extractMessageFrom429(
-      error,
-      "Failed to fetch liking users."
-    );
-    res.status(500).json({
-      error: message,
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
