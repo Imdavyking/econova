@@ -15,7 +15,6 @@ contract EcoNovaManager is Ownable {
     mapping(address => uint256) public donations;
     mapping(address => uint256) public userDonations;
     mapping(bytes32 => bool) public usedHashes;
-    mapping(address => uint256) public userNonce;
 
     /**
      * constants
@@ -163,10 +162,12 @@ contract EcoNovaManager is Ownable {
         emit DonationWithdrawed(owner(), token, amount);
     }
 
-    function testHash(uint256 pointToAdd, bytes memory) public view returns (bytes32 message) {
-        bytes32 messageHash = keccak256(
-            abi.encodePacked(msg.sender, pointToAdd, userNonce[msg.sender])
-        );
+    function testHash(
+        uint256 pointToAdd,
+        uint256 tweetId,
+        bytes memory
+    ) public view returns (bytes32 message) {
+        bytes32 messageHash = keccak256(abi.encodePacked(msg.sender, pointToAdd, tweetId));
         bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
         return ethSignedMessageHash;
     }
@@ -176,10 +177,12 @@ contract EcoNovaManager is Ownable {
      * @param pointToAdd points to add
      * @param signature signature of the message
      */
-    function addPointsFromTwitterBot(uint256 pointToAdd, bytes memory signature) public {
-        bytes32 messageHash = keccak256(
-            abi.encodePacked(msg.sender, pointToAdd, userNonce[msg.sender])
-        );
+    function addPointsFromTwitterBot(
+        uint256 pointToAdd,
+        uint256 tweetId,
+        bytes memory signature
+    ) public {
+        bytes32 messageHash = keccak256(abi.encodePacked(msg.sender, pointToAdd, tweetId));
         bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
 
         if (usedHashes[messageHash]) {
@@ -189,7 +192,6 @@ contract EcoNovaManager is Ownable {
         if (EthSign.recoverSigner(ethSignedMessageHash, signature) != botAddress) {
             revert EcoNovaManager__InvalidSignature();
         }
-        userNonce[msg.sender]++;
 
         usedHashes[messageHash] = true;
 
