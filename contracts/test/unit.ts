@@ -6,6 +6,7 @@ import fs from "fs"
 import path from "path"
 import dotenv from "dotenv"
 import { ETH_ADDRESS } from "../hardhat.config"
+import exp from "constants"
 dotenv.config()
 
 const chainId = network.config.chainId
@@ -254,8 +255,11 @@ chainId !== 31337
 
                       const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
 
-                      const signature = await owner.signMessage(
-                          ethers.getBytes(ethSignedMessageHash)
+                      const signature = await owner.signMessage(ethers.getBytes(messageHash))
+
+                      const addressThatSign = ethers.recoverAddress(
+                          ethSignedMessageHash,
+                          signature
                       )
 
                       const botAddress = await ecoNDeployer.botAddress()
@@ -264,14 +268,13 @@ chainId !== 31337
                           .connect(otherAccount)
                           .testHash(points, signature)
 
-                      expect(hash).to.equal(ethSignedMessageHash)
-                      expect(botAddress).to.equal(owner.address)
-
                       const result = await ecoNDeployer
                           .connect(otherAccount)
                           .addPointsFromTwitterBot(points, signature)
 
-                      console.log(result)
+                      expect(hash).to.equal(ethSignedMessageHash)
+                      expect(botAddress).to.equal(owner.address)
+                      expect(addressThatSign).to.equal(owner.address)
                   })
               })
           })

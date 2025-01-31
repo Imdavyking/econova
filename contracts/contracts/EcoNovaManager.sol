@@ -175,10 +175,7 @@ contract EcoNovaManager is Ownable {
      * @param pointToAdd points to add
      * @param signature signature of the message
      */
-    function addPointsFromTwitterBot(
-        uint256 pointToAdd,
-        bytes memory signature
-    ) public view returns (address) {
+    function addPointsFromTwitterBot(uint256 pointToAdd, bytes memory signature) public {
         bytes32 messageHash = keccak256(
             abi.encodePacked(msg.sender, pointToAdd, userNonce[msg.sender])
         );
@@ -188,35 +185,33 @@ contract EcoNovaManager is Ownable {
             revert EcoNovaManager__HashAlreadyUsed();
         }
 
-        return EthSign.recoverSigner(ethSignedMessageHash, signature);
+        if (EthSign.recoverSigner(ethSignedMessageHash, signature) != botAddress) {
+            revert EcoNovaManager__InvalidSignature();
+        }
+        userNonce[msg.sender]++;
 
-        // if (EthSign.recoverSigner(ethSignedMessageHash, signature) != botAddress) {
-        //     revert EcoNovaManager__InvalidSignature();
-        // }
-        // userNonce[msg.sender]++;
+        usedHashes[messageHash] = true;
 
-        // usedHashes[messageHash] = true;
+        // Calculate points based on the weight
+        uint256 points = pointToAdd * POINT_BASIS;
 
-        // // Calculate points based on the weight
-        // uint256 points = pointToAdd * POINT_BASIS;
+        PointData storage userPointData = userPoints[msg.sender];
 
-        // PointData storage userPointData = userPoints[msg.sender];
+        // Update the user's point data
+        if (userPointData.points > 0) {
+            userPointData.points += points;
+            userPointData.updatedTimeStamp = block.timestamp;
+            userPoints[msg.sender] = userPointData;
+        } else {
+            userPoints[msg.sender] = PointData(
+                points,
+                block.timestamp,
+                block.timestamp,
+                msg.sender
+            );
+        }
 
-        // // Update the user's point data
-        // if (userPointData.points > 0) {
-        //     userPointData.points += points;
-        //     userPointData.updatedTimeStamp = block.timestamp;
-        //     userPoints[msg.sender] = userPointData;
-        // } else {
-        //     userPoints[msg.sender] = PointData(
-        //         points,
-        //         block.timestamp,
-        //         block.timestamp,
-        //         msg.sender
-        //     );
-        // }
-
-        // emit PointsAdded(msg.sender, userPoints[msg.sender].points);
+        emit PointsAdded(msg.sender, userPoints[msg.sender].points);
     }
 
     /**
