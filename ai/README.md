@@ -18,9 +18,9 @@
   - Use Twitter's API to fetch user activity related to the bot’s tweets:
     - Check for likes, retweets, or quote-tweets.
     - Calculate interaction points for each action:
-      - Like: 1 point
-      - Retweet: 2 points
-      - Quote-tweet: 3 points
+      - Like: 100 point
+      - Retweet: 200 points
+      - Quote-tweet: 300 points
   - Maintain a record of actions already counted to avoid duplicate points.
 - **Storage**:
   - Store user interaction data (tweet IDs, timestamps, and action type) in a database to track progress.

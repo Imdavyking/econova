@@ -2,6 +2,7 @@ import redis from "../services/redis.services"; // Adjust the path as needed
 import { getRetweeters, getLikingUsers } from "../services/tweets.services";
 import logger from "../config/logger";
 import { extractMessageFrom429 } from "./";
+import { TwitterResponse } from "../types/tweet.like.retweet";
 
 const REDIS_CACHE_TIME = 3600; // Adjust cache time as needed
 
@@ -38,13 +39,17 @@ const fetchAndCache = async (
 /**
  * Fetch retweeters of a tweet.
  */
-export const getRetweetersData = async (tweetId: string) => {
+export const getRetweetersData = async (
+  tweetId: string
+): Promise<TwitterResponse> => {
   return fetchAndCache("retweeters", getRetweeters, tweetId);
 };
 
 /**
  * Fetch users who liked a tweet.
  */
-export const getLikingUsersData = async (tweetId: string) => {
+export const getLikingUsersData = async (
+  tweetId: string
+): Promise<TwitterResponse> => {
   return fetchAndCache("liking-users", getLikingUsers, tweetId);
 };
