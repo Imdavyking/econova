@@ -2,6 +2,7 @@ import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import { APP_NAME, CONTRACT_ADDRESS } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
+import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 // GraphQL Query
 const GET_POINTS = gql`
   query MyQuery {
@@ -27,6 +28,7 @@ const PointsList = () => {
   if (error) return <p>Error: {error.message}</p>;
   return (
     <div className="max-w-4xl mx-auto p-4 ">
+      <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <a href="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
@@ -66,10 +68,10 @@ const PointsList = () => {
                       : "bg-white"
                   } hover:bg-gray-100 transition`}
                 >
-                  <td className="p-3">{index + 1}</td>
-                  <td className="p-3 font-semibold">{item.user}</td>
+                  <td className="p-3 text-black">{index + 1}</td>
+                  <td className="p-3 font-semibold text-black">{item.user}</td>
                   <td className="p-3 font-bold text-blue-600">{item.points}</td>
-                  <td className="p-3">
+                  <td className="p-3 text-black">
                     {new Date(item.updatedTimeStamp * 1000).toLocaleString()}
                   </td>
                 </tr>
