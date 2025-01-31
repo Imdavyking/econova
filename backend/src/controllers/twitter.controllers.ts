@@ -23,15 +23,16 @@ const twitterLogin = new LoginWithTwitter({
 });
 
 export const loginTwitter = async (req: Request, res: Response) => {
-  twitterLogin.callbackUrl = `${req.protocol}://${req.get("host")}/callback`;
-  const { tokenSecret, url } = await twitterLogin.login();
+  try {
+    twitterLogin.callbackUrl = `${req.protocol}://${req.get("host")}/callback`;
+    const { tokenSecret, url } = await twitterLogin.login();
 
-  if (req.session?.tokenSecret) {
+    req.session.tokenSecret = tokenSecret;
+
+    res.redirect(url);
+  } catch (error) {
+    res.send(error);
   }
-
-  req.session.tokenSecret = tokenSecret;
-
-  res.redirect(url);
 };
 
 export const verifyCallBack = async (req: Request, res: Response) => {

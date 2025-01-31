@@ -31,7 +31,12 @@ export class LoginWithTwitter {
       const response = await fetch(requestData.url, {
         method: requestData.method,
         headers: {
-          ...this._oauth.toHeader(this._oauth.authorize(requestData)),
+          ...this._oauth.toHeader(
+            this._oauth.authorize(requestData, {
+              key: process.env.TWITTER_ACCESS_TOKEN!,
+              secret: process.env.TWITTER_ACCESS_TOKEN_SECRET!,
+            })
+          ),
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams(requestData.data as any).toString(),
@@ -63,6 +68,7 @@ export class LoginWithTwitter {
       })}`;
       return { tokenSecret, url };
     } catch (err: any) {
+      console.log(err);
       throw new Error(`Login request failed: ${err.message}`);
     }
   }
