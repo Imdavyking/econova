@@ -4,6 +4,7 @@ import { signTwitterPoints } from "../services/twitter-points.services";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 import { TwitterResponse } from "../types/tweet.like.retweet";
 import { SIGN_TWITTER_POINTS } from "../utils/constants";
+
 export const getTweets = async (_: Request, res: Response) => {
   const tweets = await getAllTweets();
   res.json(tweets);

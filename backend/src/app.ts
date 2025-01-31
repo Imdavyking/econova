@@ -4,11 +4,25 @@ import { connectDB } from "./database/connection";
 import tweetRoutes from "./routes/tweets.routes";
 import logger from "./config/logger";
 import llmRoutes from "./routes/llm.routes";
-import { auth } from "./middlewares/auth";
+import { auth, JWT_SECRET_KEY } from "./middlewares/auth";
 import cors from "cors";
+import session from "express-session";
+import twitterRoutes from "./routes/twitter.routes";
 
 dotenv.config();
 const app = express();
+
+var sess = {
+  secret: JWT_SECRET_KEY,
+  cookie: { secure: false },
+};
+
+if (app.get("env") === "production") {
+  app.set("trust proxy", 1);
+  sess.cookie.secure = true;
+}
+
+app.use(session(sess));
 
 // Middleware
 app.use(express.json());
@@ -23,6 +37,7 @@ connectDB();
 app.use("/api/tweets", tweetRoutes);
 // app.use("/api/llm", auth, llmRoutes);
 app.use("/api/llm", llmRoutes);
+app.use("/twitter", twitterRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
