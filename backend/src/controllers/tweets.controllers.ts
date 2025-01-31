@@ -4,6 +4,7 @@ import { signTwitterPoints } from "../services/twitter-points.services";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 import { TwitterResponse } from "../types/tweet.like.retweet";
 import { SIGN_TWITTER_POINTS } from "../utils/constants";
+import { twitterLogin } from "./twitter.controllers";
 
 export const getTweets = async (_: Request, res: Response) => {
   const tweets = await getAllTweets();
@@ -16,7 +17,23 @@ export const getTweetByTweetID = async (req: Request, res: Response) => {
 };
 
 export const getTweetPoints = async (req: Request, res: Response) => {
-  const { tweetId, usertweeterId } = req.params;
+  const { tweetId } = req.params;
+
+  const { user } = req.session;
+
+  if (!user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const usertweeterId = await twitterLogin.validateUserToken(
+    user.userToken,
+    user.userTokenSecret
+  );
+
+  if (!usertweeterId) {
+    return res.status(401).json({ error: "Invalid user token" });
+  }
+
   const tweet = await getTweetByTweetId(tweetId);
   if (!tweet) {
     return res.status(404).json({ error: "Tweet not found" });

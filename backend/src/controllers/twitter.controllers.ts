@@ -13,7 +13,7 @@ declare module "express-session" {
   }
 }
 
-const twitterLogin = new LoginWithTwitter({
+export const twitterLogin = new LoginWithTwitter({
   callbackUrl: "http://localhost:3100/twitter/callback",
 });
 

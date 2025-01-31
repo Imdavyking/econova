@@ -1,5 +1,6 @@
 import querystring from "querystring";
 import { oauth } from "./oauth.twitter.services";
+import logger from "../config/logger";
 
 const TW_REQ_TOKEN_URL = "https://api.twitter.com/oauth/request_token";
 const TW_AUTH_URL = "https://api.twitter.com/oauth/authenticate";
@@ -73,7 +74,7 @@ export class LoginWithTwitter {
   async validateUserToken(
     userToken: string,
     userTokenSecret: string
-  ): Promise<boolean> {
+  ): Promise<string | undefined> {
     const requestData = {
       url: TW_VERIFY_CREDENTIALS_URL,
       method: "GET",
@@ -102,34 +103,17 @@ export class LoginWithTwitter {
       }
 
       const data = await response.json();
+
       if (data && data.id_str) {
-        // If Twitter responds with a valid user ID, the tokens are valid
-        console.log(`User verified with ID: ${data.id_str}`);
-        return true;
+        logger.info(`User verified with ID: ${data.id_str}`);
+        return data.id_str;
       } else {
         throw new Error("Invalid tokens: No user data returned");
       }
     } catch (err) {
       console.error(err);
-      return false;
     }
   }
-
-  // // Example usage:
-  // const userToken = '716078211797487616-xzWGF83Gpr92Q8yVQmFEmpMw2E9hmco';
-  // const userTokenSecret = 'dKXBIMCVKaV93Jtrgi8aE6ZThknJCpcTXnVLJBqQociNn';
-
-  // validateUserToken(userToken, userTokenSecret)
-  //   .then((isValid) => {
-  //     if (isValid) {
-  //       console.log("User tokens are valid");
-  //     } else {
-  //       console.log("User tokens are invalid");
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.error("Validation failed:", err);
-  //   });
 
   async callback(
     params: { oauth_token?: string; oauth_verifier?: string; denied?: string },
