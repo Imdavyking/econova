@@ -113,7 +113,7 @@ const project: EthereumProject = {
       },
     },
   ],
-  repository: "https://github.com/Imdavyking/econova/indexer",
+  repository: "https://github.com/Imdavyking/econova",
 };
 
 // Must set default to the project instance

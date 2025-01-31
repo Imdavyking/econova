@@ -17,7 +17,7 @@ EcoNova is a decentralized platform built on the **Creative ETH** network, desig
 ## Quickstart
 
 ```bash
-git clone https://github.com/Imdavyking/creative_project/
+git clone https://github.com/Imdavyking/econova/
 cd creative_project/contracts
 yarn
 ```

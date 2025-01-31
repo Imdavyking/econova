@@ -1,16 +1,17 @@
 # EcoNova
 
-This is a solution that rewards users with token for recycling and use them to uphold the SDG goals 
+This is a solution that rewards users with token for recycling and use them to uphold the SDG goals
+
 - Clean Water and Sanitation
 - Climate Action
-- Life on Land 
-- Sustainable Cities and Communities 
+- Life on Land
+- Sustainable Cities and Communities
 
 ## Installation
 
 1. Clone the repository:
    ```
-   git clone https://github.com/Imdavyking/creative_project/
+   git clone https://github.com/Imdavyking/econova/
    ```
 2. Install dependencies:
    ```
@@ -69,7 +70,7 @@ curl -X GET http://localhost:3000/api/tweets/1883180110297120857
   "_id": "67950c24e1289710853e35af",
   "edit_history_tweet_ids": ["1883184787340349875"],
   "id": "1883184787340349875",
-  "text": "In a digital realm filled with complexities, Alxion serves as the savvy navigator guiding you through the maze of blockchain wonders with wit and wisdom. Step into the world of smart contracts and innovation, where every byte holds a story waiting to be unraveled."
+  "text": "In a digital realm filled with complexities, EcoNova serves as the savvy navigator guiding you through the maze of blockchain wonders with wit and wisdom. Step into the world of smart contracts and innovation, where every byte holds a story waiting to be unraveled."
 }
 ```
 
@@ -91,7 +92,7 @@ curl -X GET http://localhost:3000/api/tweets
     "_id": "67950c24e1289710853e35af",
     "edit_history_tweet_ids": ["1883184787340349875"],
     "id": "1883184787340349875",
-    "text": "In a digital realm filled with complexities, Alxion serves as the savvy navigator guiding you through the maze of blockchain wonders with wit and wisdom. Step into the world of smart contracts and innovation, where every byte holds a story waiting to be unraveled."
+    "text": "In a digital realm filled with complexities, EcoNova serves as the savvy navigator guiding you through the maze of blockchain wonders with wit and wisdom. Step into the world of smart contracts and innovation, where every byte holds a story waiting to be unraveled."
   },
   {
     "_id": "12345c24e1289710853e35af",

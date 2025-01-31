@@ -1,5 +1,5 @@
 {
-  "name": "alxion-chat-backend",
+  "name": "backend",
   "version": "1.0.0",
   "main": "dist/app.js",
   "scripts": {

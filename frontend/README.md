@@ -10,7 +10,7 @@ This is a solution that rewards users with token for recycling and use them to u
 # Methodolgy
 
 Contract
-[ecoNova Contracts](https://github.com/Imdavyking/creative_project/contracts)
+[ecoNova Contracts](https://github.com/Imdavyking/econova/contracts)
 
 ## Requirements
 
@@ -27,7 +27,7 @@ Contract
 ## Quickstart
 
 ```
-git clone https://github.com/Imdavyking/creative_project/
+git clone https://github.com/Imdavyking/econova/
 cd creative_project/frontend
 yarn
 ```
