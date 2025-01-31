@@ -4,6 +4,7 @@ import "./EcoNovaToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@orochi-network/contracts/IOrocleAggregatorV2.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./helpers/ethsign.sol";
 
 contract EcoNovaManager is Ownable {
     /**
@@ -12,6 +13,8 @@ contract EcoNovaManager is Ownable {
     mapping(address => PointData) public userPoints;
     mapping(address => uint256) public donations;
     mapping(address => uint256) public userDonations;
+    mapping(bytes32 => bool) public usedHashes;
+    mapping(address => uint256) public userNonce;
 
     /**
      * constants
@@ -20,6 +23,7 @@ contract EcoNovaManager is Ownable {
     uint256 public constant DONATION_POINT_PER_USD = POINT_BASIS * 2;
     uint256 public constant FIAT_DECIMALS = 10 ** 2;
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
+    address public botAddress;
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
 
     /**
@@ -37,6 +41,10 @@ contract EcoNovaManager is Ownable {
     error EcoNovaManager__SendingFailed();
     error EcoNovaManager__IncorrectETHAmount();
     error EcoNovaManager__InsufficientBalance();
+    error EcoNovaManager__HashAlreadyUsed();
+    error EcoNovaManager__AddressCannotBeZero();
+    error EcoNovaManager__InvalidSignature();
+    error EcoNovaManager__Unauthorized();
 
     /**
      * events
@@ -46,6 +54,7 @@ contract EcoNovaManager is Ownable {
     event SetOrocle(address indexed oldOrocle, address indexed newOrocle);
     event Donated(address indexed user, address indexed token, uint256 amount);
     event DonationWithdrawed(address indexed user, address indexed token, uint256 amount);
+    event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
 
     /**
      * structs
@@ -153,6 +162,51 @@ contract EcoNovaManager is Ownable {
     }
 
     /**
+     * @dev Adds points signed by twitter bot to the user
+     * @param pointToAdd points to add
+     * @param signature signature of the message
+     */
+    function addPointsFromTwitterBot(uint256 pointToAdd, bytes memory signature) public {
+        // Verify the signature
+        bytes32 messageHash = keccak256(
+            abi.encodePacked(msg.sender, pointToAdd, userNonce[msg.sender])
+        );
+        bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
+
+        if (usedHashes[messageHash]) {
+            revert EcoNovaManager__HashAlreadyUsed();
+        }
+
+        if (EthSign.recoverSigner(ethSignedMessageHash, signature) != botAddress) {
+            revert EcoNovaManager__InvalidSignature();
+        }
+        userNonce[msg.sender]++;
+
+        usedHashes[messageHash] = true;
+
+        // Calculate points based on the weight
+        uint256 points = pointToAdd * POINT_BASIS;
+
+        PointData storage userPointData = userPoints[msg.sender];
+
+        // Update the user's point data
+        if (userPointData.points > 0) {
+            userPointData.points += points;
+            userPointData.updatedTimeStamp = block.timestamp;
+            userPoints[msg.sender] = userPointData;
+        } else {
+            userPoints[msg.sender] = PointData(
+                points,
+                block.timestamp,
+                block.timestamp,
+                msg.sender
+            );
+        }
+
+        emit PointsAdded(msg.sender, userPoints[msg.sender].points);
+    }
+
+    /**
      * @dev Add points to the user based on the weight of the waste
      * @param weightInGrams weight in grams of the waste
      */
@@ -199,5 +253,18 @@ contract EcoNovaManager is Ownable {
         emit PointsRedeemed(msg.sender, point);
         emit PointsAdded(msg.sender, userPoints[msg.sender].points);
         return true;
+    }
+
+    /**
+     * @dev Update the bot address (only callable by the bot)
+     * @param _newBotAddress The new bot address
+     */
+    function updateBotAddress(address _newBotAddress) public onlyOwner {
+        if (_newBotAddress == address(0)) {
+            revert EcoNovaManager__AddressCannotBeZero();
+        }
+        address oldBotAddress = botAddress;
+        botAddress = _newBotAddress;
+        emit BotAddressUpdated(oldBotAddress, _newBotAddress);
     }
 }
