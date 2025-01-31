@@ -21,6 +21,10 @@ chainId !== 31337
               // Contracts are deployed using the first signer/account by default
               const [owner, otherAccount] = await hre.ethers.getSigners()
 
+              const botPrivateKey = process.env.PRIVATE_KEY!
+
+              const wallet = new ethers.Wallet(botPrivateKey)
+
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
 
               const MockOracleAggregator = await hre.ethers.getContractFactory(
@@ -29,7 +33,7 @@ chainId !== 31337
               const mockOracleDeployer = await MockOracleAggregator.deploy()
               const oracleAddress = await mockOracleDeployer.getAddress()
 
-              const ecoNDeployer = await EcoNovaDeployer.deploy(oracleAddress)
+              const ecoNDeployer = await EcoNovaDeployer.deploy(oracleAddress, wallet.address)
 
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
 

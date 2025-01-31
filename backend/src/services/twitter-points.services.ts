@@ -8,7 +8,7 @@ export const signTwitterPoints = async (
   pointToAdd: string | number,
   nonce: string | number
 ) => {
-  const botPrivateKey = process.env.TWITTER_BOT_ETH_PRIVATE_KEY!;
+  const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
 
   const wallet = new ethers.Wallet(botPrivateKey);
 

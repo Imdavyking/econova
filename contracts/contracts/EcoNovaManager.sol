@@ -4,7 +4,7 @@ import "./EcoNovaToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@orochi-network/contracts/IOrocleAggregatorV2.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./helpers/ethsign.sol";
+import "./helpers/Ethsign.sol";
 import "hardhat/console.sol";
 
 contract EcoNovaManager is Ownable {
@@ -67,9 +67,10 @@ contract EcoNovaManager is Ownable {
         address user;
     }
 
-    constructor(address orocleAddress) Ownable(msg.sender) {
+    constructor(address orocleAddress, address _botAddress) Ownable(msg.sender) {
         i_ecoNovaToken = new EcoNovaToken();
         i_orocle = IOrocleAggregatorV2(orocleAddress);
+        botAddress = _botAddress;
         emit SetOrocle(address(i_orocle), orocleAddress);
     }
 
