@@ -11,12 +11,24 @@ export const signTwitterPoints = async (
   const botPrivateKey = process.env.TWITTER_BOT_ETH_PRIVATE_KEY!;
 
   const wallet = new ethers.Wallet(botPrivateKey);
-  const messageHash = ethers.utils.solidityKeccak256(
+
+  const messageHash = ethers.solidityPackedKeccak256(
     ["address", "uint256", "uint256"],
     [senderAddress, pointToAdd, nonce]
   );
-  const ethSignedMessageHash = ethers.utils.hashMessage(
-    ethers.utils.arrayify(messageHash)
+
+  const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));
+
+  const signature = await wallet.signMessage(ethers.getBytes(messageHash));
+
+  const addressThatSign = ethers.recoverAddress(
+    ethSignedMessageHash,
+    signature
   );
-  return await wallet.signMessage(ethers.utils.arrayify(ethSignedMessageHash));
+
+  if (addressThatSign !== wallet.address) {
+    throw new Error("Invalid signature");
+  }
+
+  return signature;
 };
