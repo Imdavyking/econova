@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@orochi-network/contracts/IOrocleAggregatorV2.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./helpers/ethsign.sol";
+import "hardhat/console.sol";
 
 contract EcoNovaManager is Ownable {
     /**
@@ -161,12 +162,23 @@ contract EcoNovaManager is Ownable {
         emit DonationWithdrawed(owner(), token, amount);
     }
 
+    function testHash(uint256 pointToAdd, bytes memory) public view returns (bytes32 message) {
+        bytes32 messageHash = keccak256(
+            abi.encodePacked(msg.sender, pointToAdd, userNonce[msg.sender])
+        );
+        bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
+        return ethSignedMessageHash;
+    }
+
     /**
      * @dev Adds points signed by twitter bot to the user
      * @param pointToAdd points to add
      * @param signature signature of the message
      */
-    function addPointsFromTwitterBot(uint256 pointToAdd, bytes memory signature) public {
+    function addPointsFromTwitterBot(
+        uint256 pointToAdd,
+        bytes memory signature
+    ) public view returns (address) {
         bytes32 messageHash = keccak256(
             abi.encodePacked(msg.sender, pointToAdd, userNonce[msg.sender])
         );
@@ -176,33 +188,35 @@ contract EcoNovaManager is Ownable {
             revert EcoNovaManager__HashAlreadyUsed();
         }
 
-        if (EthSign.recoverSigner(ethSignedMessageHash, signature) != botAddress) {
-            revert EcoNovaManager__InvalidSignature();
-        }
-        userNonce[msg.sender]++;
+        return EthSign.recoverSigner(ethSignedMessageHash, signature);
 
-        usedHashes[messageHash] = true;
+        // if (EthSign.recoverSigner(ethSignedMessageHash, signature) != botAddress) {
+        //     revert EcoNovaManager__InvalidSignature();
+        // }
+        // userNonce[msg.sender]++;
 
-        // Calculate points based on the weight
-        uint256 points = pointToAdd * POINT_BASIS;
+        // usedHashes[messageHash] = true;
 
-        PointData storage userPointData = userPoints[msg.sender];
+        // // Calculate points based on the weight
+        // uint256 points = pointToAdd * POINT_BASIS;
 
-        // Update the user's point data
-        if (userPointData.points > 0) {
-            userPointData.points += points;
-            userPointData.updatedTimeStamp = block.timestamp;
-            userPoints[msg.sender] = userPointData;
-        } else {
-            userPoints[msg.sender] = PointData(
-                points,
-                block.timestamp,
-                block.timestamp,
-                msg.sender
-            );
-        }
+        // PointData storage userPointData = userPoints[msg.sender];
 
-        emit PointsAdded(msg.sender, userPoints[msg.sender].points);
+        // // Update the user's point data
+        // if (userPointData.points > 0) {
+        //     userPointData.points += points;
+        //     userPointData.updatedTimeStamp = block.timestamp;
+        //     userPoints[msg.sender] = userPointData;
+        // } else {
+        //     userPoints[msg.sender] = PointData(
+        //         points,
+        //         block.timestamp,
+        //         block.timestamp,
+        //         msg.sender
+        //     );
+        // }
+
+        // emit PointsAdded(msg.sender, userPoints[msg.sender].points);
     }
 
     /**

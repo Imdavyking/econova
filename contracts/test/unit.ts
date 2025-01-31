@@ -243,6 +243,7 @@ chainId !== 31337
                           deployEcoNovaDeployerFixture
                       )
 
+                      await ecoNDeployer.updateBotAddress(owner.address)
                       const nonce = await ecoNDeployer.userNonce(otherAccount.address)
 
                       const points = 100
@@ -250,17 +251,27 @@ chainId !== 31337
                           ["address", "uint256", "uint256"],
                           [otherAccount.address, points, nonce]
                       )
+
                       const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
 
                       const signature = await owner.signMessage(
                           ethers.getBytes(ethSignedMessageHash)
                       )
 
-                      await ecoNDeployer.updateBotAddress(owner.address)
+                      const botAddress = await ecoNDeployer.botAddress()
 
-                      await ecoNDeployer
+                      const hash = await ecoNDeployer
+                          .connect(otherAccount)
+                          .testHash(points, signature)
+
+                      expect(hash).to.equal(ethSignedMessageHash)
+                      expect(botAddress).to.equal(owner.address)
+
+                      const result = await ecoNDeployer
                           .connect(otherAccount)
                           .addPointsFromTwitterBot(points, signature)
+
+                      console.log(result)
                   })
               })
           })
