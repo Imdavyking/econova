@@ -17,6 +17,7 @@
     "@types/jsonwebtoken": "^9.0.8",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.10",
+    "@types/simple-get": "^4.0.3",
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
@@ -31,9 +32,11 @@
     "ioredis": "^5.4.2",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "login-with-twitter": "^1.2.4",
     "mongoose": "^8.9.5",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.80.1",
+    "simple-get": "^4.0.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
   }
