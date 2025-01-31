@@ -46,7 +46,11 @@ export class LoginWithTwitter {
         oauth_token: token,
         oauth_token_secret: tokenSecret,
         oauth_callback_confirmed: callbackConfirmed,
-      } = querystring.parse(data);
+      } = querystring.parse(data) as {
+        oauth_token: string;
+        oauth_token_secret: string;
+        oauth_callback_confirmed: string;
+      };
 
       if (callbackConfirmed !== "true") {
         throw new Error(
@@ -58,7 +62,7 @@ export class LoginWithTwitter {
         oauth_token: token,
       })}`;
       return { tokenSecret, url };
-    } catch (err) {
+    } catch (err: any) {
       throw new Error(`Login request failed: ${err.message}`);
     }
   }
@@ -113,10 +117,15 @@ export class LoginWithTwitter {
         oauth_token_secret: userTokenSecret,
         screen_name: userName,
         user_id: userId,
-      } = querystring.parse(data);
+      } = querystring.parse(data) as {
+        oauth_token: string;
+        oauth_token_secret: string;
+        screen_name: string;
+        user_id: string;
+      };
 
       return { userName, userId, userToken, userTokenSecret };
-    } catch (err) {
+    } catch (err: any) {
       throw new Error(`Callback request failed: ${err.message}`);
     }
   }
