@@ -37,11 +37,11 @@ export class LoginWithTwitter {
         body: new URLSearchParams(requestData.data as any).toString(),
       });
 
+      const data = await response.text();
+
       if (!response.ok) {
         throw new Error(`Request failed with status ${response.status}`);
       }
-
-      const data = await response.text();
       const {
         oauth_token: token,
         oauth_token_secret: tokenSecret,
