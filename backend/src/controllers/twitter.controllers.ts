@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { LoginWithTwitter } from "../services/login.twitter.services";
+import { UserModel } from "../models/user";
+import { saveUserTwitter } from "../services/save-user.twitter.services";
 
 declare module "express-session" {
   interface SessionData {
@@ -61,6 +63,8 @@ export const verifyCallBack = async (req: Request, res: Response) => {
   delete req.session.tokenSecret;
 
   req.session.user = user;
+
+  await saveUserTwitter(user);
 
   res.redirect("/");
 };
