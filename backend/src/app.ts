@@ -24,7 +24,7 @@ app.use(
     cookie: {
       httpOnly: true, // Make cookies accessible only through HTTP
       secure: process.env.NODE_ENV === "production", // Use Secure cookies in production
-      sameSite: "none", // Important for cross-origin requests
+      // sameSite: "none", // Important for cross-origin requests
     },
   })
 );

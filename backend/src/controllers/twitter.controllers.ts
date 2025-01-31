@@ -64,7 +64,5 @@ export const verifyCallBack = async (req: Request, res: Response) => {
 
   req.session.user = user;
 
-  // await saveUserTwitter(user);
-
   res.redirect("/");
 };
