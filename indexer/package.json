@@ -23,14 +23,16 @@
   "license": "MIT",
   "dependencies": {
     "@subql/types-ethereum": "latest",
-    "assert": "^2.0.0"
+    "assert": "^2.0.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "@subql/cli": "latest",
-    "@subql/testing": "latest",
     "@subql/node-ethereum": "latest",
+    "@subql/testing": "latest",
+    "dotenv": "latest",
     "ethers": "^5.7.2",
-    "typescript": "latest",
-    "dotenv": "latest"
+    "typescript": "latest"
   }
 }

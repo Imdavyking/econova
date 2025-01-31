@@ -6,8 +6,13 @@ import {
 
 import * as dotenv from "dotenv";
 import path from "path";
+import { cleanDB } from "./clean";
 
 const mode = process.env.NODE_ENV || "production";
+
+if (mode === "development") {
+  cleanDB();
+}
 
 // Load the appropriate .env file
 const dotenvPath = path.resolve(
