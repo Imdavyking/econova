@@ -19,10 +19,11 @@ declare module "express-session" {
 }
 
 const twitterLogin = new LoginWithTwitter({
-  callbackUrl: "http://localhost:5100/callback",
+  callbackUrl: "",
 });
 
 export const loginTwitter = async (req: Request, res: Response) => {
+  twitterLogin.callbackUrl = `${req.protocol}://${req.get("host")}/callback`;
   const { tokenSecret, url } = await twitterLogin.login();
 
   if (req.session?.tokenSecret) {
@@ -34,6 +35,7 @@ export const loginTwitter = async (req: Request, res: Response) => {
 };
 
 export const verifyCallBack = async (req: Request, res: Response) => {
+  twitterLogin.callbackUrl = `${req.protocol}://${req.get("host")}/callback`;
   const { oauth_token, oauth_verifier } = req.query as {
     oauth_token: string;
     oauth_verifier: string;
