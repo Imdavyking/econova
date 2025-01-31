@@ -27,13 +27,13 @@ const PointsList = () => {
   if (error) return <p>Error: {error.message}</p>;
   return (
     <div className="max-w-4xl mx-auto p-4 ">
-      <h2 className="text-3xl font-bold text-center text-white mb-4">
-        <a href="/" className="-intro-x flex items-center pt-5">
+      <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
+        <a href="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
-          <span className="text-white text-lg ml-3"> {APP_NAME} </span>
+          <span className="text-lg">{APP_NAME} leaderboard</span>
         </a>
-        <span>Leaderboard</span>
       </h2>
+
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-200 rounded-lg shadow-md">
           <thead>
