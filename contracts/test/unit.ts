@@ -249,12 +249,12 @@ chainId !== 31337
                       )
 
                       await ecoNDeployer.updateBotAddress(owner.address)
-                      const nonce = await ecoNDeployer.userNonce(otherAccount.address)
+                      const tweetId = "1883184787340349875"
 
                       const points = 100
                       const messageHash = ethers.solidityPackedKeccak256(
                           ["address", "uint256", "uint256"],
-                          [otherAccount.address, points, nonce]
+                          [otherAccount.address, points, tweetId]
                       )
 
                       const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
@@ -270,11 +270,31 @@ chainId !== 31337
 
                       const hash = await ecoNDeployer
                           .connect(otherAccount)
-                          .testHash(points, signature)
+                          .testHash(points, tweetId, signature)
 
-                      const result = await ecoNDeployer
+                      expect(
+                          ecoNDeployer.addPointsFromTwitterBot(points, tweetId, signature)
+                      ).to.be.revertedWithCustomError(
+                          ecoNDeployer,
+                          "EcoNovaManager__InvalidSignature"
+                      )
+
+                      await ecoNDeployer
                           .connect(otherAccount)
-                          .addPointsFromTwitterBot(points, signature)
+                          .addPointsFromTwitterBot(points, tweetId, signature)
+
+                      const userPoint = await ecoNDeployer.userPoints(otherAccount.address)
+
+                      expect(Number(userPoint[0])).to.equal(3500)
+
+                      expect(
+                          ecoNDeployer
+                              .connect(otherAccount)
+                              .addPointsFromTwitterBot(points, tweetId, signature)
+                      ).to.be.revertedWithCustomError(
+                          ecoNDeployer,
+                          "EcoNovaManager__HashAlreadyUsed"
+                      )
 
                       expect(hash).to.equal(ethSignedMessageHash)
                       expect(botAddress).to.equal(owner.address)
