@@ -12,17 +12,22 @@ import twitterRoutes from "./routes/twitter.routes";
 dotenv.config();
 const app = express();
 
-var sess = {
-  secret: JWT_SECRET_KEY,
-  cookie: { secure: false },
-};
-
 if (app.get("env") === "production") {
   app.set("trust proxy", 1);
-  sess.cookie.secure = true;
 }
 
-app.use(session(sess));
+app.use(
+  session({
+    secret: JWT_SECRET_KEY, // Use a strong secret
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      httpOnly: true, // Make cookies accessible only through HTTP
+      secure: process.env.NODE_ENV === "production", // Use Secure cookies in production
+      sameSite: "none", // Important for cross-origin requests
+    },
+  })
+);
 
 // Middleware
 app.use(express.json());
