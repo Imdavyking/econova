@@ -238,6 +238,30 @@ chainId !== 31337
                           ["32258064516129", "-32258064516129"]
                       )
                   })
+                  it("Can sign twitter points and redeem the points for tokens", async function () {
+                      const { ecoNDeployer, otherAccount, owner } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
+
+                      const nonce = await ecoNDeployer.userNonce(otherAccount.address)
+
+                      const points = 100
+                      const messageHash = ethers.solidityPackedKeccak256(
+                          ["address", "uint256", "uint256"],
+                          [otherAccount.address, points, nonce]
+                      )
+                      const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
+
+                      const signature = await owner.signMessage(
+                          ethers.getBytes(ethSignedMessageHash)
+                      )
+
+                      await ecoNDeployer.updateBotAddress(owner.address)
+
+                      await ecoNDeployer
+                          .connect(otherAccount)
+                          .addPointsFromTwitterBot(points, signature)
+                  })
               })
           })
       })
