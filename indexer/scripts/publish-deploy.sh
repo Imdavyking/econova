@@ -1,11 +1,10 @@
 #!/bin/bash
 
-while getopts p:o:e flag
+while getopts p:o flag
 do
     case "${flag}" in
         p) PROJECTNAME=${OPTARG};;
         o) ORG=${OPTARG};;
-        e) ENDPOINT=${OPTARG};;
         *) echo "Usage: $0 [-p projectname] [-o org] [-e endpoint]" && exit 1;;
     esac
 done
