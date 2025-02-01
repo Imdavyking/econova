@@ -325,10 +325,10 @@ chainId !== 31337
                       expect(
                           ecoNDeployer
                               .connect(otherAccount)
-                              .addPointsFromTwitterBot(points, tweetId, userTwitterId, signature)
+                              .addPointsFromTwitterBot(points, userTwitterId, tweetId, signature)
                       ).to.be.revertedWithCustomError(
                           ecoNDeployer,
-                          "EcoNovaManager__HashAlreadyUsed"
+                          "EcoNovaManager__TweetIdAlreadyRecorderForUser"
                       )
 
                       expect(hash).to.equal(ethSignedMessageHash)
