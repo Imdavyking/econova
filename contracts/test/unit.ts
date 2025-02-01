@@ -121,6 +121,37 @@ chainId !== 31337
               })
 
               describe("Events", function () {
+                  it("Can deploy token and emit the address", async function () {
+                      const { ecoNDeployer, owner } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
+                      const customToken = {
+                          name: "Beta",
+                          symbol: "BT",
+                          decimals: 10,
+                          initialSupply: 100000,
+                      }
+                      const tokenInfo = await ecoNDeployer.deployToken(
+                          customToken.name,
+                          customToken.symbol,
+                          customToken.decimals,
+                          customToken.initialSupply
+                      )
+
+                      const receipt = await tokenInfo.wait(1)
+
+                      if (!receipt) return
+
+                      const event = receipt.logs[1] as any
+                      const args = event.args as unknown as any[]
+
+                      const [address, name, symbol, decimals, supply] = args
+
+                      expect(name).to.equal(customToken.name)
+                      expect(symbol).to.equal(customToken.symbol)
+                      expect(decimals).to.equal(customToken.decimals)
+                      expect(supply).to.equal(customToken.initialSupply)
+                  })
                   it("Should emit an event on points added", async function () {
                       const { ecoNDeployer, owner } = await loadFixture(
                           deployEcoNovaDeployerFixture

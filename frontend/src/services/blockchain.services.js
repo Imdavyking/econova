@@ -119,8 +119,10 @@ export const deployTokenService = async ({
   try {
     const manager = await getContract();
     const tx = await manager.deployToken(name, symbol, decimals, initialSupply);
-    const logs = await tx.wait(1);
-    const tokenAddress = logs.events[0].args[0];
+    const receipt = await tx.wait(1);
+    const event = receipt.logs[1];
+    const args = event.args;
+    const [tokenAddress] = args;
     return `deployed ${name} token at ${tokenAddress}`;
   } catch (error) {
     return `${FAILED_KEY} to deploy ${name} token`;
