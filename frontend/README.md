@@ -28,7 +28,7 @@ Contract
 
 ```
 git clone https://github.com/Imdavyking/econova/
-cd creative_project/frontend
+cd econova/frontend
 yarn
 ```
 

@@ -7,6 +7,8 @@ dotenv.config()
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 const RPC_URL = process.env.RPC_URL
 const CHAIN_ID = process.env.CHAIN_ID
+const API_URL = process.env.API_URL
+const BROWSER_URL = process.env.BROWSER_URL
 
 if (!PRIVATE_KEY) {
     throw new Error("PRIVATE_KEY is not set")
@@ -18,6 +20,14 @@ if (!RPC_URL) {
 
 if (!CHAIN_ID) {
     throw new Error("CHAIN_ID is not set")
+}
+
+if (!API_URL) {
+    throw new Error("API_URL is not set")
+}
+
+if (!BROWSER_URL) {
+    throw new Error("BROWSER_URL is not set")
 }
 
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
@@ -32,7 +42,7 @@ const config: HardhatUserConfig = {
             chainId: 31337,
         },
         testNetwork: {
-            url: process.env.RPC_URL,
+            url: process.env.RPC_URL || "https://rpc.creatorchain.io",
             accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
             chainId: +CHAIN_ID!,
         },
@@ -40,15 +50,15 @@ const config: HardhatUserConfig = {
     solidity: "0.8.28",
     etherscan: {
         apiKey: {
-            creative: "abc",
+            testNetwork: "abc",
         },
         customChains: [
             {
-                network: "creative",
-                chainId: 66665,
+                network: "testNetwork",
+                chainId: +CHAIN_ID!,
                 urls: {
-                    apiURL: "https://explorer.creatorchain.io/api",
-                    browserURL: "https://explorer.creatorchain.io/",
+                    apiURL: API_URL,
+                    browserURL: BROWSER_URL,
                 },
             },
         ],

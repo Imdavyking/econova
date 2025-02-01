@@ -1,6 +1,6 @@
 # EcoNova Contracts
 
-EcoNova is a decentralized platform built on the **Creative ETH** network, designed to offer users the ability to interact with smart contracts and decentralized applications, while also providing various incentives for participating in its ecosystem.
+EcoNova is a decentralized platform, designed to offer users the ability to interact with smart contracts and decentralized applications, while also providing various incentives for participating in its ecosystem.
 
 ## Requirements
 
@@ -18,7 +18,7 @@ EcoNova is a decentralized platform built on the **Creative ETH** network, desig
 
 ```bash
 git clone https://github.com/Imdavyking/econova/
-cd creative_project/contracts
+cd econova/contracts
 yarn
 ```
 
@@ -36,7 +36,7 @@ yarn deploy
 yarn test
 ```
 
-## Deployment to Creative ETH Testnet
+## Deployment to Testnet
 
 ### 1. Setup Environment Variables
 
@@ -44,14 +44,14 @@ You'll want to set your `RPC_URL` and `PRIVATE_KEY` as environment variables. Yo
 
 -   `PRIVATE_KEY`: The private key of your account (like from [MetaMask](https://metamask.io/)). **NOTE:** FOR DEVELOPMENT, PLEASE USE A KEY THAT DOESN'T HAVE ANY REAL FUNDS ASSOCIATED WITH IT.
     -   You can [learn how to export it here](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key).
--   `RPC_URL`: This is the URL of the Creative ETH testnet node you're working with.
+-   `RPC_URL`: This is the URL of the ETH testnet node you're working with.
 
 ### 2. Get Testnet ETH
 
-Head over to [https://thirdweb.com/creator](https://thirdweb.com/creator) and get some testnet **ETH** tokens. You should see the **ETH** tokens show up in your MetaMask.
+Head over to faucet and get some testnet **ETH** tokens. You should see the **ETH** tokens show up in your MetaMask.
 
 ### 3. Deploy
 
 ```bash
-yarn deploy --network creative
+yarn deploy:staging
 ```

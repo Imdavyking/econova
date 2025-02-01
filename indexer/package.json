@@ -1,7 +1,7 @@
 {
   "name": "subql-starter",
   "version": "0.0.1",
-  "description": "EcoNovais a decentralized platform built on the Creative ETH network",
+  "description": "EcoNovais a decentralized platform",
   "main": "dist/index.js",
   "scripts": {
     "build": "subql codegen && subql build",

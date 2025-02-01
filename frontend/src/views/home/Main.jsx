@@ -6,7 +6,7 @@ import ChatBot from "@/components/chat-bot/Main";
 import { Link } from "react-router-dom";
 import Footer from "@/base-components/footer";
 import logoUrl from "@/assets/images/logo.png";
-import CREATIVE_LOGO from "@/assets/images/creative_eth.png";
+import EVM_LOGO from "@/assets/images/creative_eth.png";
 import { useWallet } from "@/App";
 import { ethers } from "ethers";
 import { getFirstAndLast4Chars } from "../../App";
@@ -86,7 +86,7 @@ const Home = () => {
               SPONSORS
             </h2>
             <div className="flex items-center gap-3">
-              <img alt={APP_NAME} className="w-32" src={CREATIVE_LOGO} />
+              <img alt={APP_NAME} className="w-32" src={EVM_LOGO} />
             </div>
           </div>
           <Footer />

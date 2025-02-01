@@ -15,7 +15,7 @@ This is a solution that rewards users with token for recycling and use them to u
    ```
 2. Install dependencies:
    ```
-   cd creative_project/backend
+   cd econova/backend
    yarn
    ```
 3. Configure X Request API credentials:
