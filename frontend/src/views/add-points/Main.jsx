@@ -34,7 +34,7 @@ function Main() {
       try {
         setIsAddingPoints(true);
 
-        const response = await addPointService(weight);
+        const response = await addPointService({ weight });
         rethrowFailedResponse(response);
         toast.success(response);
       } catch (e) {

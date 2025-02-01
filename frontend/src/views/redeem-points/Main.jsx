@@ -44,7 +44,7 @@ function Main() {
     } else {
       try {
         setIsRedeeming(true);
-        const response = await redeemCodeService(points);
+        const response = await redeemCodeService({ points });
         rethrowFailedResponse(response);
         toast.success(response);
         getPointsService()

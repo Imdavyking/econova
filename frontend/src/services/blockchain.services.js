@@ -76,7 +76,7 @@ const getContract = async () => {
   return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 };
 
-export const addPointService = async (weight) => {
+export const addPointService = async ({ weight }) => {
   try {
     const manager = await getContract();
     const tx = await manager.addPointFromWeight(Math.trunc(weight));
@@ -125,14 +125,14 @@ export const getPointsService = async () => {
   }
 };
 
-export const redeemCodeService = async (point) => {
+export const redeemCodeService = async ({ points }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.redeemCode(Math.trunc(point));
+    const tx = await manager.redeemCode(Math.trunc(points));
     await tx.wait(1);
-    return `redeemed ${point} points`;
+    return `redeemed ${points} points`;
   } catch (error) {
-    return `${FAILED_KEY} to redeem ${point} points`;
+    return `${FAILED_KEY} to redeem ${points} points`;
   }
 };
 
