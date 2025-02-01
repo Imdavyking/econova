@@ -21,6 +21,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16
+      - name: Change directory to indexer
+        run: cd indexer
       - run: yarn
       - name: Codegen
         run: yarn codegen
