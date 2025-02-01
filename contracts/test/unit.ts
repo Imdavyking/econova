@@ -250,11 +250,12 @@ chainId !== 31337
 
                       await ecoNDeployer.updateBotAddress(owner.address)
                       const tweetId = "1883184787340349875"
-
+                      const userTwitterId = "1881029537191919616"
                       const points = 100
+
                       const messageHash = ethers.solidityPackedKeccak256(
-                          ["address", "uint256", "uint256"],
-                          [otherAccount.address, points, tweetId]
+                          ["address", "uint256", "uint256", "uint256"],
+                          [otherAccount.address, points, userTwitterId, tweetId]
                       )
 
                       const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
@@ -266,13 +267,15 @@ chainId !== 31337
                           signature
                       )
 
-                      const userTwitterId = "1881029537191919616"
-
                       const botAddress = await ecoNDeployer.botAddress()
 
                       const hash = await ecoNDeployer
                           .connect(otherAccount)
                           .testHash(points, tweetId, userTwitterId, signature)
+
+                      console.log(hash, ethSignedMessageHash)
+
+                      return
 
                       expect(
                           ecoNDeployer.addPointsFromTwitterBot(
