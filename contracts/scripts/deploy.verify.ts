@@ -1,4 +1,4 @@
-import hre from "hardhat"
+import hre, { ethers } from "hardhat"
 import path from "path"
 
 import EcoNovaDeployer from "../ignition/modules/EcoNovaDeployer"
@@ -14,7 +14,8 @@ async function main() {
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
     const ecoAddress = await ecoNovaDeployer.getAddress()
-
+    const botPrivateKey = process.env.PRIVATE_KEY!
+    const wallet = new ethers.Wallet(botPrivateKey)
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
 
     if (chainId === 31337) return
@@ -22,9 +23,7 @@ async function main() {
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
         process.env.OROCHI_ORACLE_ADDRESS!
 
-    await verify(ecoAddress, [oracle])
-
-    console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
+    await verify(ecoAddress, [oracle, wallet.address])
 }
 
 main().catch(console.error)
