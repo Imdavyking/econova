@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { OpenAIService } from "../services/openai.services";
+import { runAIAgent } from "../services/agent.services";
 import dotenv from "dotenv";
+import { HumanMessage } from "@langchain/core/messages";
 dotenv.config();
 
 const openAIApiKey = process.env.OPENAI_API_KEY || "your-api-key";
@@ -36,14 +38,16 @@ export const processLLMRequest = async (req: Request, res: Response) => {
       return;
     }
 
-    // Get AI-generated next action
-    const nextAction = await aiService.getNextAction(
-      task,
-      toolsDescription,
-      context
-    );
+    const nextActionAgent = await runAIAgent([new HumanMessage(task)]);
 
-    res.json(nextAction);
+    // Get AI-generated next action
+    // const nextAction = await aiService.getNextAction(
+    //   task,
+    //   toolsDescription,
+    //   context
+    // );
+
+    res.json(nextActionAgent);
   } catch (error) {
     console.error("LLM Controller Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
