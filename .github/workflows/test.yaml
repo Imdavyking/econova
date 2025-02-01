@@ -16,6 +16,14 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    env:
+      PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+      RPC_URL: ${{secrets.RPC_URL}}
+      OROCHI_ORACLE_ADDRESS: ${{secrets.OROCHI_ORACLE_ADDRESS}}
+      NODE_ENV: ${{secrets.NODE_ENV}}
+      CHAIN_ID: ${{secrets.CHAIN_ID}}
+      API_URL: ${{secrets.API_URL}}
+      BROWSER_URL: ${{secrets.BROWSER_URL}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -34,11 +42,3 @@ jobs:
       # Run tests
       - name: Run tests
         run: yarn test
-        env:
-          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
-          RPC_URL: ${{secrets.RPC_URL}}
-          OROCHI_ORACLE_ADDRESS: ${{secrets.OROCHI_ORACLE_ADDRESS}}
-          NODE_ENV: ${{secrets.NODE_ENV}}
-          CHAIN_ID: ${{secrets.CHAIN_ID}}
-          API_URL: ${{secrets.API_URL}}
-          BROWSER_URL: ${{secrets.BROWSER_URL}}
