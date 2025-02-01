@@ -7,15 +7,45 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
-import { creatorTestnet } from "wagmi/chains";
 import { ApolloProvider } from "@apollo/client";
 import client from "./services/apollo.services";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@rainbow-me/rainbowkit/styles.css";
+import { defineChain } from "viem";
+import {
+  CHAIN_BLOCKEXPLORER_URL,
+  CHAIN_CURRENCY_NAME,
+  CHAIN_ID,
+  CHAIN_NAME,
+  CHAIN_RPC,
+  CHAIN_SYMBOL,
+  WALLET_CONNECT_PROJECT_ID,
+} from "./utils/constants";
+
+export const chainInfo = defineChain({
+  id: CHAIN_ID,
+  name: CHAIN_NAME,
+  nativeCurrency: {
+    decimals: 18,
+    name: CHAIN_CURRENCY_NAME,
+    symbol: CHAIN_SYMBOL,
+  },
+  rpcUrls: {
+    default: { http: [CHAIN_RPC] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Testnet Explorer",
+      url: CHAIN_BLOCKEXPLORER_URL,
+    },
+  },
+  testnet: true,
+});
+
 const config = getDefaultConfig({
   appName: "EcoNova",
-  projectId: "YOUR_PROJECT_ID",
-  chains: [creatorTestnet],
+  projectId: WALLET_CONNECT_PROJECT_ID,
+  chains: [chainInfo],
 });
 const queryClient = new QueryClient();
 

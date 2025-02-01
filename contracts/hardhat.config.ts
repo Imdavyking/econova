@@ -22,6 +22,11 @@ const config: HardhatUserConfig = {
             accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
             chainId: 66665,
         },
+        sonic: {
+            url: process.env.SONIC_TESTNET_RPC_URL || "https://rpc.blaze.soniclabs.com",
+            accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+            chainId: 57054,
+        },
     },
     solidity: "0.8.28",
     etherscan: {

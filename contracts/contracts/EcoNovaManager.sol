@@ -112,7 +112,14 @@ contract EcoNovaManager is Ownable {
      * @return price
      */
     function _getPrice(bytes20 identifier) internal view returns (uint256) {
-        return uint256(i_orocle.getLatestData(1, identifier));
+        uint256 chainId = block.chainid;
+        if (chainId == 66665) {
+            return uint256(i_orocle.getLatestData(1, identifier));
+        }
+        if (chainId == 57054) {
+            return uint256(i_orocle.getLatestData(2, identifier));
+        }
+        return 0;
     }
 
     /**

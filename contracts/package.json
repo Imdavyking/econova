@@ -9,7 +9,7 @@
         "test": "yarn hardhat test",
         "test-staging": "yarn hardhat test --network creative",
         "deploy": "yarn hardhat clean && npx hardhat run scripts/deploy.verify.ts",
-        "deploy:creative": "yarn hardhat clean && npx hardhat run scripts/deploy.verify.ts --network creative"
+        "deploy:staging": "yarn hardhat clean && npx hardhat run scripts/deploy.verify.ts --network creative"
     },
     "devDependencies": {
         "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
