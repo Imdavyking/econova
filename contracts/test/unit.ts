@@ -271,17 +271,14 @@ chainId !== 31337
 
                       const hash = await ecoNDeployer
                           .connect(otherAccount)
-                          .testHash(points, tweetId, userTwitterId, signature)
-
-                      console.log(hash, ethSignedMessageHash)
-
-                      return
+                          .testHash(points, userTwitterId, tweetId, signature)
 
                       expect(
                           ecoNDeployer.addPointsFromTwitterBot(
                               points,
-                              tweetId,
                               userTwitterId,
+                              tweetId,
+
                               signature
                           )
                       ).to.be.revertedWithCustomError(
@@ -291,7 +288,7 @@ chainId !== 31337
 
                       await ecoNDeployer
                           .connect(otherAccount)
-                          .addPointsFromTwitterBot(points, tweetId, userTwitterId, signature)
+                          .addPointsFromTwitterBot(points, userTwitterId, tweetId, signature)
 
                       const userPoint = await ecoNDeployer.userPoints(otherAccount.address)
 
