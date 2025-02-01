@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract CustomToken is ERC20 {
     address public immutable OWNER;
     uint8 public DECIMALS;
-    uint256 public constant MAX_SUPPLY = 21_000_000 * 10 ** 18; // 1 million tokens with 18 decimals
 
     error CustomToken__NotOwner();
     error CustomToken__MaxSupplyExceeded();
@@ -21,6 +20,9 @@ contract CustomToken is ERC20 {
         _mint(msg.sender, initialSupply * (10 ** uint256(DECIMALS))); // Mint tokens with correct decimals
     }
 
+    /**
+     * @dev Returns the number of decimals used to get its user representation.
+     */
     function decimals() public view override returns (uint8) {
         return DECIMALS;
     }
@@ -35,9 +37,14 @@ contract CustomToken is ERC20 {
         if (msg.sender != OWNER) {
             revert CustomToken__NotOwner();
         }
+        uint256 MAX_SUPPLY = 21_000_000 * 10 ** decimals(); // 1 million tokens with 18 decimals
         if (totalSupply() + amount > MAX_SUPPLY) {
             revert CustomToken__MaxSupplyExceeded();
         }
         _mint(to, amount);
+    }
+
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
     }
 }

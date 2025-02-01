@@ -22,27 +22,44 @@ const assets = [
 
 const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
+
 const tools = {
   donate: tool(() => undefined, {
     name: "donate",
     description: "Make a donation in USD (paid using native token).",
     schema: z.object({
       tokenAddress: tokenSchema.describe("The token to donate"),
-      amountInUsd: z.union([z.number(), z.string()]),
+      amountInUsd: z
+        .union([z.number(), z.string()])
+        .describe("The amount in USD"),
     }),
   }),
   redeemCode: tool(() => undefined, {
     name: "redeemCode",
     description: "Redeem points for rewards.",
     schema: z.object({
-      points: z.union([z.number(), z.string()]),
+      points: z
+        .union([z.number(), z.string()])
+        .describe("The points to redeem"),
     }),
   }),
   addPoints: tool(() => undefined, {
     name: "addPoints",
     description: "Add points (measured in grams) to your account.",
     schema: z.object({
-      weight: z.union([z.number(), z.string()]),
+      weight: z
+        .union([z.number(), z.string()])
+        .describe("The weight of the points"),
+    }),
+  }),
+  deployToken: tool(() => undefined, {
+    name: "deployToken",
+    description: "Deploy a new token.",
+    schema: z.object({
+      name: z.string().describe("The token's name"),
+      symbol: z.string().describe("The token's symbol"),
+      decimals: z.number().describe("The token's decimals"),
+      initialSupply: z.number().describe("The token's initial supply"),
     }),
   }),
 };

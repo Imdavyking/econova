@@ -3,6 +3,7 @@
 import { callLLMApi } from "../services/openai.services";
 import {
   addPointService,
+  deployTokenService,
   donateToFoundationService,
   redeemCodeService,
 } from "../services/blockchain.services";
@@ -17,11 +18,13 @@ export class AIAgent {
       donate: donateToFoundationService,
       redeemCode: redeemCodeService,
       addPoints: addPointService,
+      deployToken: deployTokenService,
     };
     this.toolsInfo = {
       donate: "Make a donation in USD (paid using native token).",
       redeemCode: "Redeem points for rewards.",
       addPoints: "Add points (measured in grams) to your account.",
+      deployToken: "Deploy a new token.",
     };
   }
 
