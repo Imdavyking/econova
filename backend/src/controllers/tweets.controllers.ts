@@ -83,11 +83,11 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     tweetSignature
   );
 
-  const { signature, pointToAdd } = await signTwitterPoints(
+  const { signature } = await signTwitterPoints(
     userAddress,
     Object.values(points).reduce((a, b) => a + b, 0),
     usertweeterId,
     tweetId
   );
-  res.json({ signature, pointToAdd, tweetId });
+  res.json({ signature, points, tweetId });
 };
