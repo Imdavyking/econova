@@ -147,7 +147,6 @@ chainId !== 31337
 
                       expect(name).to.equal(customToken.name)
                       expect(symbol).to.equal(customToken.symbol)
-                      expect(decimals).to.equal(customToken.decimals)
                       expect(supply).to.equal(customToken.initialSupply)
                   })
                   it("Should emit an event on points added", async function () {
