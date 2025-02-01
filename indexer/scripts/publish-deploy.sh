@@ -9,6 +9,6 @@ do
     esac
 done
 
-IPFSCID=$(npx subql publish -o -f .)
+IPFSCID=$(npx subql publish -o -f . | awk '/SubQuery Project project.yaml uploaded to IPFS:/ {print $NF}')
 
 npx subql deployment:deploy -d --ipfsCID="$IPFSCID" --projectName="${PROJECTNAME}" --org="${ORG%/*}" --endpoint="https://indexing.onfinality.io"
