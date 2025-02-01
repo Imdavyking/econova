@@ -266,14 +266,21 @@ chainId !== 31337
                           signature
                       )
 
+                      const userTwitterId = "1881029537191919616"
+
                       const botAddress = await ecoNDeployer.botAddress()
 
                       const hash = await ecoNDeployer
                           .connect(otherAccount)
-                          .testHash(points, tweetId, signature)
+                          .testHash(points, tweetId, userTwitterId, signature)
 
                       expect(
-                          ecoNDeployer.addPointsFromTwitterBot(points, tweetId, signature)
+                          ecoNDeployer.addPointsFromTwitterBot(
+                              points,
+                              tweetId,
+                              userTwitterId,
+                              signature
+                          )
                       ).to.be.revertedWithCustomError(
                           ecoNDeployer,
                           "EcoNovaManager__InvalidSignature"
@@ -281,7 +288,7 @@ chainId !== 31337
 
                       await ecoNDeployer
                           .connect(otherAccount)
-                          .addPointsFromTwitterBot(points, tweetId, signature)
+                          .addPointsFromTwitterBot(points, tweetId, userTwitterId, signature)
 
                       const userPoint = await ecoNDeployer.userPoints(otherAccount.address)
 
@@ -290,7 +297,7 @@ chainId !== 31337
                       expect(
                           ecoNDeployer
                               .connect(otherAccount)
-                              .addPointsFromTwitterBot(points, tweetId, signature)
+                              .addPointsFromTwitterBot(points, tweetId, userTwitterId, signature)
                       ).to.be.revertedWithCustomError(
                           ecoNDeployer,
                           "EcoNovaManager__HashAlreadyUsed"

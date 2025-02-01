@@ -15,6 +15,7 @@ contract EcoNovaManager is Ownable {
     mapping(address => uint256) public donations;
     mapping(address => uint256) public userDonations;
     mapping(bytes32 => bool) public usedHashes;
+    mapping(uint256 => mapping(uint256 => bool)) userAddedTweets;
 
     /**
      * constants
@@ -45,6 +46,7 @@ contract EcoNovaManager is Ownable {
     error EcoNovaManager__AddressCannotBeZero();
     error EcoNovaManager__InvalidSignature();
     error EcoNovaManager__Unauthorized();
+    error EcoNovaManager__TweetIdAlreadyRecorderForUser();
 
     /**
      * events
@@ -165,9 +167,12 @@ contract EcoNovaManager is Ownable {
     function testHash(
         uint256 pointToAdd,
         uint256 tweetId,
+        uint256 userTwitterId,
         bytes memory
     ) public view returns (bytes32 message) {
-        bytes32 messageHash = keccak256(abi.encodePacked(msg.sender, pointToAdd, tweetId));
+        bytes32 messageHash = keccak256(
+            abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId)
+        );
         bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
         return ethSignedMessageHash;
     }
@@ -180,10 +185,17 @@ contract EcoNovaManager is Ownable {
     function addPointsFromTwitterBot(
         uint256 pointToAdd,
         uint256 tweetId,
+        uint256 userTwitterId,
         bytes memory signature
     ) public {
-        bytes32 messageHash = keccak256(abi.encodePacked(msg.sender, pointToAdd, tweetId));
+        bytes32 messageHash = keccak256(
+            abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId)
+        );
         bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
+
+        if (userAddedTweets[userTwitterId][tweetId]) {
+            revert EcoNovaManager__TweetIdAlreadyRecorderForUser();
+        }
 
         if (usedHashes[messageHash]) {
             revert EcoNovaManager__HashAlreadyUsed();
@@ -194,6 +206,7 @@ contract EcoNovaManager is Ownable {
         }
 
         usedHashes[messageHash] = true;
+        userAddedTweets[userTwitterId][tweetId] = true;
 
         // Calculate points based on the weight
         uint256 points = pointToAdd * POINT_BASIS;
