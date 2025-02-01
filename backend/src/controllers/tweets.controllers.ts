@@ -5,6 +5,7 @@ import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 import { TwitterResponse } from "../types/tweet.like.retweet";
 import { SIGN_TWITTER_POINTS } from "../utils/constants";
 import { twitterLogin } from "./twitter.controllers";
+import { ethers } from "ethers";
 
 export const getTweets = async (_: Request, res: Response) => {
   const tweets = await getAllTweets();
@@ -17,7 +18,7 @@ export const getTweetByTweetID = async (req: Request, res: Response) => {
 };
 
 export const getTweetPoints = async (req: Request, res: Response) => {
-  const { tweetId } = req.params;
+  const { tweetId, tweetSignature } = req.params;
 
   const { user } = req.session;
 
@@ -42,14 +43,14 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     return;
   }
 
-  let userLikes: TwitterResponse | undefined;
-  let userRetweets: TwitterResponse | undefined;
+  let likesInfo: TwitterResponse | undefined;
+  let retweetsInfo: TwitterResponse | undefined;
   try {
-    userLikes = await getLikingUsersData(tweetId);
+    likesInfo = await getLikingUsersData(tweetId);
   } catch (_) {}
 
   try {
-    userRetweets = await getRetweetersData(tweetId);
+    retweetsInfo = await getRetweetersData(tweetId);
   } catch (_) {}
 
   let points = {
@@ -57,8 +58,8 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     retweets: 0,
   };
 
-  if (userRetweets) {
-    const hasRetweeted = userRetweets.data.find(
+  if (retweetsInfo) {
+    const hasRetweeted = retweetsInfo.data.find(
       (user) => user.id === usertweeterId
     );
     if (hasRetweeted) {
@@ -66,15 +67,24 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     }
   }
 
-  if (userLikes) {
-    const hasLiked = userLikes.data.find((user) => user.id === usertweeterId);
+  if (likesInfo) {
+    const hasLiked = likesInfo.data.find((user) => user.id === usertweeterId);
     if (hasLiked) {
       points.likes += SIGN_TWITTER_POINTS.like;
     }
   }
 
+  const messageHash = ethers.solidityPackedKeccak256(["uint256"], [tweetId]);
+
+  const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));
+
+  const userAddress = ethers.recoverAddress(
+    ethSignedMessageHash,
+    tweetSignature
+  );
+
   const { signature, pointToAdd } = await signTwitterPoints(
-    "",
+    userAddress,
     Object.values(points).reduce((a, b) => a + b, 0),
     tweetId
   );
