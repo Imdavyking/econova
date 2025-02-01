@@ -45,7 +45,7 @@ const project: EthereumProject = {
      * If you use a rate limited endpoint, adjust the --batch-size and --workers parameters
      * These settings can be found in your docker-compose.yaml, they will slow indexing but prevent your project being rate limited
      */
-    endpoint: process.env.ENDPOINT!?.split(",") as string[] | string,
+    endpoint: process.env.RPC_URL!?.split(",") as string[] | string,
   },
   dataSources: [
     {
