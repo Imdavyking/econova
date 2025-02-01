@@ -146,6 +146,7 @@ chainId !== 31337
                       const [address, name, symbol, supply] = args
 
                       expect(name).to.equal(customToken.name)
+                      expect(address).to.not.equal("")
                       expect(symbol).to.equal(customToken.symbol)
                       expect(supply).to.equal(customToken.initialSupply)
                   })
