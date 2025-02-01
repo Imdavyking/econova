@@ -22,7 +22,8 @@ export const getTweetPoints = async (req: Request, res: Response) => {
   const { user } = req.session;
 
   if (!user) {
-    return res.status(401).json({ error: "Unauthorized" });
+    res.status(401).json({ error: "Unauthorized" });
+    return;
   }
 
   const usertweeterId = await twitterLogin.validateUserToken(
@@ -31,12 +32,14 @@ export const getTweetPoints = async (req: Request, res: Response) => {
   );
 
   if (!usertweeterId) {
-    return res.status(401).json({ error: "Invalid user token" });
+    res.status(401).json({ error: "Invalid user token" });
+    return;
   }
 
   const tweet = await getTweetByTweetId(tweetId);
   if (!tweet) {
-    return res.status(404).json({ error: "Tweet not found" });
+    res.status(404).json({ error: "Tweet not found" });
+    return;
   }
 
   let userLikes: TwitterResponse | undefined;

@@ -3,6 +3,7 @@ import { getRetweeters, getLikingUsers } from "../services/tweets.services";
 import {
   getTweets,
   getTweetByTweetID,
+  getTweetPoints,
 } from "../controllers/tweets.controllers";
 import logger from "../config/logger";
 import { extractMessageFrom429 } from "../utils";
@@ -11,6 +12,7 @@ import { REDIS_CACHE_TIME } from "../config/database";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 const tweetRoutes = express.Router();
 tweetRoutes.get("/", getTweets);
+tweetRoutes.get("/points", getTweetPoints);
 tweetRoutes.get("/:id", getTweetByTweetID);
 
 /**

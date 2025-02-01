@@ -3,3 +3,5 @@ export const SIGN_TWITTER_POINTS = {
   retweet: 200,
   quoteTweet: 300,
 };
+
+export const FRONTEND_URL = process.env.FRONTEND_URL;
