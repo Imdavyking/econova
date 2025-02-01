@@ -2,7 +2,6 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./assets/css/app.css";
 import {
-  darkTheme,
   getDefaultConfig,
   lightTheme,
   RainbowKitProvider,
@@ -10,7 +9,7 @@ import {
 import { WagmiProvider } from "wagmi";
 import { creatorTestnet } from "wagmi/chains";
 import { ApolloProvider } from "@apollo/client";
-import client from "./services/apollo.services"; // Import the client
+import client from "./services/apollo.services";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@rainbow-me/rainbowkit/styles.css";
 const config = getDefaultConfig({
@@ -26,7 +25,7 @@ root.render(
   <ApolloProvider client={client}>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={false ? darkTheme() : lightTheme()}>
+        <RainbowKitProvider theme={lightTheme()}>
           <App />
         </RainbowKitProvider>
       </QueryClientProvider>

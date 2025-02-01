@@ -57,7 +57,7 @@ async function switchOrAddChain(ethProvider) {
   } catch (error) {}
 }
 
-const getSigner = async () => {
+export const getSigner = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
