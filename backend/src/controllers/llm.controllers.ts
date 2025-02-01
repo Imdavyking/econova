@@ -4,8 +4,6 @@ import dotenv from "dotenv";
 import { HumanMessage } from "@langchain/core/messages";
 dotenv.config();
 
-const openAIApiKey = process.env.OPENAI_API_KEY || "your-api-key";
-
 /**
  * Handles LLM API requests
  * @route POST /api/llm

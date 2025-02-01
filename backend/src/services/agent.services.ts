@@ -6,6 +6,9 @@ import {
 } from "@langchain/core/messages";
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
+import dotenv from "dotenv";
+dotenv.config();
+const openAIApiKey = process.env.OPENAI_API_KEY || "your-api-key";
 
 const assets = [
   {
@@ -43,10 +46,11 @@ const tools = {
   }),
 };
 
-// const newMessage = new HumanMessage('message');
-
 export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
-  const llm = new ChatOpenAI({ model: "gpt-4o-mini" }).bind({
+  const llm = new ChatOpenAI({
+    model: "gpt-4o-mini",
+    apiKey: openAIApiKey,
+  }).bind({
     tools: Object.values(tools),
   });
   const systemPrompt = new SystemMessage(
