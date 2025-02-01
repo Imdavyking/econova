@@ -4,7 +4,7 @@ import "./EcoNovaToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@orochi-network/contracts/IOrocleAggregatorV2.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./helpers/Ethsign.sol";
+import "./helpers/ethsign.sol";
 import "hardhat/console.sol";
 import "./CustomToken.sol";
 
