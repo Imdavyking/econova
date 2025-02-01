@@ -1,14 +1,9 @@
 import express, { Request, Response } from "express";
-import { getRetweeters, getLikingUsers } from "../services/tweets.services";
 import {
   getTweets,
   getTweetByTweetID,
   getTweetPoints,
 } from "../controllers/tweets.controllers";
-import logger from "../config/logger";
-import { extractMessageFrom429 } from "../utils";
-import redis from "../services/redis.services"; // Adjust path as needed
-import { REDIS_CACHE_TIME } from "../config/database";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 const tweetRoutes = express.Router();
 tweetRoutes.get("/", getTweets);
