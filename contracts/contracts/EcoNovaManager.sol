@@ -6,6 +6,7 @@ import "@orochi-network/contracts/IOrocleAggregatorV2.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./helpers/Ethsign.sol";
 import "hardhat/console.sol";
+import "./CustomToken.sol";
 
 contract EcoNovaManager is Ownable {
     /**
@@ -57,6 +58,13 @@ contract EcoNovaManager is Ownable {
     event Donated(address indexed user, address indexed token, uint256 amount);
     event DonationWithdrawed(address indexed user, address indexed token, uint256 amount);
     event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
+    event TokenCreated(
+        address indexed token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        uint256 initialSupply
+    );
 
     /**
      * structs
@@ -73,6 +81,16 @@ contract EcoNovaManager is Ownable {
         i_orocle = IOrocleAggregatorV2(orocleAddress);
         botAddress = _botAddress;
         emit SetOrocle(address(i_orocle), orocleAddress);
+    }
+
+    function deployToken(
+        string memory name,
+        string memory symbol,
+        uint8 decimals,
+        uint256 initialSupply
+    ) public {
+        CustomToken token = new CustomToken(name, symbol, decimals, initialSupply);
+        emit TokenCreated(address(token), name, symbol, decimals, initialSupply);
     }
 
     /**

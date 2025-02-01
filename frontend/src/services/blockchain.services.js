@@ -110,6 +110,23 @@ export const donateToFoundationService = async ({
   }
 };
 
+export const deployTokenService = async ({
+  name,
+  symbol,
+  decimals,
+  initialSupply,
+}) => {
+  try {
+    const manager = await getContract();
+    const tx = await manager.deployToken(name, symbol, decimals, initialSupply);
+    const logs = await tx.wait(1);
+    const tokenAddress = logs.events[0].args[0];
+    return `deployed ${name} token at ${tokenAddress}`;
+  } catch (error) {
+    return `${FAILED_KEY} to deploy ${name} token`;
+  }
+};
+
 export const getPointsService = async () => {
   try {
     const signer = await getSigner();
