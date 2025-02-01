@@ -7,14 +7,23 @@ import {
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 
+const assets = [
+  {
+    name: "ETH",
+    symbol: "ETH",
+    address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    decimals: 18,
+  },
+];
+
+const availableTokens = assets.map((asset) => asset.symbol) as [string];
+const tokenSchema = z.enum(availableTokens);
 const tools = {
   donate: tool(() => undefined, {
     name: "donate",
     description: "Make a donation in USD (paid using native token).",
     schema: z.object({
-      tokenAddress: z
-        .literal("The token address used for donation")
-        .describe("Ethereum address of the token to donate"),
+      tokenAddress: tokenSchema.describe("The token to donate"),
       amountInUsd: z.union([z.number(), z.string()]),
     }),
   }),
