@@ -166,8 +166,8 @@ contract EcoNovaManager is Ownable {
 
     function testHash(
         uint256 pointToAdd,
-        uint256 tweetId,
         uint256 userTwitterId,
+        uint256 tweetId,
         bytes memory
     ) public view returns (bytes32 message) {
         bytes32 messageHash = keccak256(
@@ -184,8 +184,8 @@ contract EcoNovaManager is Ownable {
      */
     function addPointsFromTwitterBot(
         uint256 pointToAdd,
-        uint256 tweetId,
         uint256 userTwitterId,
+        uint256 tweetId,
         bytes memory signature
     ) public {
         bytes32 messageHash = keccak256(

@@ -13,8 +13,8 @@ dotenv.config();
 export const signTwitterPoints = async (
   senderAddress: string,
   pointToAdd: string | number,
-  tweetId: string | number,
-  userTwitterId: string | number
+  userTwitterId: string | number,
+  tweetId: string | number
 ) => {
   const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
 
