@@ -13,15 +13,16 @@ dotenv.config();
 export const signTwitterPoints = async (
   senderAddress: string,
   pointToAdd: string | number,
-  tweetId: string | number
+  tweetId: string | number,
+  userTwitterId: string | number
 ) => {
   const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
 
   const wallet = new ethers.Wallet(botPrivateKey);
 
   const messageHash = ethers.solidityPackedKeccak256(
-    ["address", "uint256", "uint256"],
-    [senderAddress, pointToAdd, tweetId]
+    ["address", "uint256", "uint256", "uint256"],
+    [senderAddress, pointToAdd, userTwitterId, tweetId]
   );
 
   const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));
