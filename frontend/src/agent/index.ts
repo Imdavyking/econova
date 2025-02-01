@@ -21,10 +21,11 @@ export class AIAgent {
       deployToken: deployTokenService,
     };
     this.toolsInfo = {
-      donate: "Make a donation in USD (paid using native token).",
-      redeemCode: "Redeem points for rewards.",
-      addPoints: "Add points (measured in grams) to your account.",
-      deployToken: "Deploy a new token.",
+      donate: "Example: Donate 100 USD to a cause.",
+      redeemCode: "Example: Redeem 5 reward points.",
+      addPoints: "Example: Add 152 points to your balance.",
+      deployToken:
+        "Example: Deploy a token named 'Token' with symbol 'TKN' and an initial supply of 1,000.",
     };
   }
 

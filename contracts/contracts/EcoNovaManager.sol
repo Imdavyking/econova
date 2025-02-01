@@ -58,13 +58,7 @@ contract EcoNovaManager is Ownable {
     event Donated(address indexed user, address indexed token, uint256 amount);
     event DonationWithdrawed(address indexed user, address indexed token, uint256 amount);
     event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
-    event TokenCreated(
-        address indexed token,
-        string name,
-        string symbol,
-        uint8 decimals,
-        uint256 initialSupply
-    );
+    event TokenCreated(address indexed token, string name, string symbol, uint256 initialSupply);
 
     /**
      * structs
@@ -83,14 +77,9 @@ contract EcoNovaManager is Ownable {
         emit SetOrocle(address(i_orocle), orocleAddress);
     }
 
-    function deployToken(
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
-        uint256 initialSupply
-    ) public {
-        CustomToken token = new CustomToken(name, symbol, decimals, initialSupply);
-        emit TokenCreated(address(token), name, symbol, decimals, initialSupply);
+    function deployToken(string memory name, string memory symbol, uint256 initialSupply) public {
+        CustomToken token = new CustomToken(name, symbol, initialSupply);
+        emit TokenCreated(address(token), name, symbol, initialSupply);
     }
 
     /**

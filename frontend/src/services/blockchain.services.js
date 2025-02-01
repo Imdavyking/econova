@@ -110,15 +110,10 @@ export const donateToFoundationService = async ({
   }
 };
 
-export const deployTokenService = async ({
-  name,
-  symbol,
-  decimals,
-  initialSupply,
-}) => {
+export const deployTokenService = async ({ name, symbol, initialSupply }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.deployToken(name, symbol, decimals, initialSupply);
+    const tx = await manager.deployToken(name, symbol, initialSupply);
     const receipt = await tx.wait(1);
     const event = receipt.logs[1];
     const args = event.args;

@@ -128,13 +128,11 @@ chainId !== 31337
                       const customToken = {
                           name: "Beta",
                           symbol: "BT",
-                          decimals: 10,
                           initialSupply: 100000,
                       }
                       const tokenInfo = await ecoNDeployer.deployToken(
                           customToken.name,
                           customToken.symbol,
-                          customToken.decimals,
                           customToken.initialSupply
                       )
 

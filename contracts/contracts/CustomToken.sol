@@ -4,7 +4,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract CustomToken is ERC20 {
     address public immutable OWNER;
-    uint8 public DECIMALS;
 
     error CustomToken__NotOwner();
     error CustomToken__MaxSupplyExceeded();
@@ -12,19 +11,10 @@ contract CustomToken is ERC20 {
     constructor(
         string memory name,
         string memory symbol,
-        uint8 decimals_,
         uint256 initialSupply
     ) ERC20(name, symbol) {
         OWNER = msg.sender;
-        DECIMALS = decimals_;
-        _mint(msg.sender, initialSupply * (10 ** uint256(DECIMALS))); // Mint tokens with correct decimals
-    }
-
-    /**
-     * @dev Returns the number of decimals used to get its user representation.
-     */
-    function decimals() public view override returns (uint8) {
-        return DECIMALS;
+        _mint(msg.sender, initialSupply * (10 ** uint256(decimals()))); // Mint tokens with correct decimals
     }
 
     /**
