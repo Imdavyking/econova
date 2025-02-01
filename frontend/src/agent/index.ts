@@ -33,54 +33,63 @@ export class AIAgent {
     };
   }
 
-  private async executeAction(
-    action: { [key: string]: any },
-    context: { [key: string]: any }
-  ) {
-    if (action["tool"] == "TASK_COMPLETE") {
-      return "Task completed";
-    }
-    const tool = this.tools[action["tool"]];
+  // private async executeAction(
+  //   action: { [key: string]: any },
+  //   context: { [key: string]: any }
+  // ) {
+  //   if (action["tool"] == "TASK_COMPLETE") {
+  //     return "Task completed";
+  //   }
+  //   const tool = this.tools[action["tool"]];
+  //   if (!tool) {
+  //     return `Tool ${action["tool"]} not found`;
+  //   }
+  //   let args = action["args"];
+  //   if (typeof args == "string") {
+  //     // replace context variables in args
+  //     for (const key in context) {
+  //       args = args.replace(`{{${key}}}`, context[key].toString());
+  //     }
+  //   }
+  //   return tool.bind(this)(args);
+  // }
+
+  private async executeAction(action: ToolCall) {
+    const tool = this.tools[action.name];
     if (!tool) {
-      return `Tool ${action["tool"]} not found`;
+      return `Tool ${action.name} not found`;
     }
-    let args = action["args"];
-    if (typeof args == "string") {
-      // replace context variables in args
-      for (const key in context) {
-        args = args.replace(`{{${key}}}`, context[key].toString());
-      }
-    }
-    return tool.bind(this)(args);
+    return tool.bind(this)(action.args ? action.args : {});
   }
 
   public async solveTask(task: string): Promise<string[]> {
-    const context: { [key: string]: any } = {};
+    const action = (await callLLMApi({
+      task,
+    })) as ResponseType;
+
     const results: string[] = [];
-
-    let step = 0;
-
-    while (true) {
-      const action = await callLLMApi({
-        task,
-        context,
-        toolsDescription: this.toolsDescription,
-      });
-      if (action["tool"] == "TASK_COMPLETE" || action["tool"] == "ERROR") {
-        break;
-      }
-
-      if (!action["tool"]) {
-        console.log("No tool provided");
-        break;
-      }
-
-      const result = await this.executeAction(action, context);
-      console.log(`Result: ${JSON.stringify(result)}`);
-      step += 1;
-      context[`result_${step}`] = result;
+    for (const toolCall of action.tool_calls) {
+      const result = await this.executeAction(toolCall);
       results.push(result);
     }
+
     return results;
   }
 }
+
+type ToolCall = {
+  name: "addPoints" | "redeemCode" | "donate";
+  args: {
+    weight?: number;
+    points?: number;
+    tokenAddress?: string;
+    amountInUsd?: number;
+  };
+  type: "tool_call";
+  id: string;
+};
+
+type ResponseType = {
+  content: string;
+  tool_calls: ToolCall[];
+};

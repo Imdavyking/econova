@@ -10,26 +10,11 @@ dotenv.config();
  */
 export const processLLMRequest = async (req: Request, res: Response) => {
   try {
-    const { task, context, toolsDescription } = req.body;
+    const { task } = req.body;
 
-    // Validate input
     if (!task) {
       res.status(400).json({
         error: "Missing required fields: task",
-      });
-      return;
-    }
-
-    if (!toolsDescription) {
-      res.status(400).json({
-        error: "Missing required fields: toolsDescription",
-      });
-      return;
-    }
-
-    if (!context) {
-      res.status(400).json({
-        error: "Missing required fields: context",
       });
       return;
     }
