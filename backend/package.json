@@ -40,6 +40,11 @@
     "openai": "^4.80.1",
     "simple-get": "^4.0.1",
     "winston": "^3.17.0",
+    "@langchain/core": "^0.3.27",
+    "@langchain/google-genai": "^0.1.6",
+    "@langchain/openai": "^0.3.16",
+    "langchain": "^0.3.10",
+    "zod": "^3.24.1",
     "winston-daily-rotate-file": "^5.0.0"
   }
 }
