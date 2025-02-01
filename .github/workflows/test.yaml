@@ -7,16 +7,16 @@ on:
   pull_request:
     branches:
       - main
+      
+defaults:
+      run:
+        working-directory: ./contracts
 
 jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-
     steps:
-      - name: Change directory to contracts
-        run: cd contracts
-      # Check out the repository
       - name: Checkout code
         uses: actions/checkout@v3
 

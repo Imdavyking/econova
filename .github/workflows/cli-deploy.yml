@@ -7,6 +7,11 @@ on:
         description: "Project name"
         required: true
         type: string
+
+defaults:
+  run:
+    working-directory: ./indexer
+
 jobs:
   deploy:
     name: CLI Deploy
@@ -16,8 +21,6 @@ jobs:
     env:
       SUBQL_ACCESS_TOKEN: ${{ secrets.SUBQL_ACCESS_TOKEN }}
     steps:
-      - name: Change directory to indexer
-        run: cd indexer
       - uses: actions/checkout@v2
       - name: Setup Node.js environment
         uses: actions/setup-node@v2
