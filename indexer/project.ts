@@ -12,12 +12,7 @@ const mode = process.env.NODE_ENV || "production";
 
 cleanDB();
 
-// Load the appropriate .env file
-const dotenvPath = path.resolve(
-  __dirname,
-  `.env${mode !== "production" ? `.${mode}` : ""}`
-);
-dotenv.config({ path: dotenvPath });
+dotenv.config();
 
 // Can expand the Datasource processor types via the generic param
 const project: EthereumProject = {
@@ -58,10 +53,10 @@ const project: EthereumProject = {
   dataSources: [
     {
       kind: EthereumDatasourceKind.Runtime,
-      startBlock: 6787199,
+      startBlock: +process.env.BLOCK_NUMBER!,
       options: {
         abi: "Abi",
-        address: "0x3cF4a1C548A980C6Fad514a1f7297538BA0A0f2c",
+        address: process.env.CONTRACT_ADDRESS!,
       },
       assets: new Map([["Abi", { file: "./abis/abi.json" }]]),
       mapping: {
