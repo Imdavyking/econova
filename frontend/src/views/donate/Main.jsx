@@ -54,12 +54,12 @@ function Main() {
           <div className="block xl:grid grid-cols-2 gap-4">
             <div className="hidden xl:flex flex-col min-h-screen">
               <a href="/" className="-intro-x flex items-center pt-5">
-                <img alt="LifeSource" className="w-10" src={logoUrl} />
-                <span className="text-white text-lg ml-3"> LifeSource </span>
+                <img alt="EcoNova" className="w-10" src={logoUrl} />
+                <span className="text-white text-lg ml-3"> EcoNova </span>
               </a>
               <div className="my-auto">
                 <img
-                  alt="LifeSource"
+                  alt="EcoNova"
                   className="-intro-x w-1/2 -mt-16"
                   src={donateHeart}
                 />
@@ -74,8 +74,8 @@ function Main() {
             </div>
             <div className="h-screen xl:h-auto flex flex-col items-center py-5 xl:py-0  xl:my-0">
               <a href="/" className="-intro-x flex items-center pt-5 my-2">
-                <img alt="LifeSource" className="w-10" src={logoUrl} />
-                <span className="text-white text-lg ml-3"> LifeSource </span>
+                <img alt="EcoNova" className="w-10" src={logoUrl} />
+                <span className="text-white text-lg ml-3"> EcoNova </span>
               </a>
               <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
                 <h2 className="intro-x font-bold text-2xl xl:text-3xl text-center xl:text-left">
