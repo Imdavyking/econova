@@ -37,4 +37,4 @@ jobs:
         run: echo ${{github.repository}}
       - name: Publish and Deploy
         run: |
-          sh ./scripts/publish-deploy.sh -o ${{github.repository}} -p ${{github.event.inputs.projectName}} -e ${{ vars.RPC_URL }}
+          sh ./scripts/publish-deploy.sh -o ${{github.repository}} -p ${{github.event.inputs.projectName}} -e "$RPC_URL"
