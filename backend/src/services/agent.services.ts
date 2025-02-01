@@ -9,17 +9,18 @@ import { z } from "zod";
 import dotenv from "dotenv";
 dotenv.config();
 const openAIApiKey = process.env.OPENAI_API_KEY || "your-api-key";
+const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 const assets = [
   {
     name: "ETH",
     symbol: "ETH",
-    address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    address: ETH_ADDRESS,
     decimals: 18,
   },
 ];
 
-const availableTokens = assets.map((asset) => asset.symbol) as [string];
+const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 const tools = {
   donate: tool(() => undefined, {
@@ -54,7 +55,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     tools: Object.values(tools),
   });
   const systemPrompt = new SystemMessage(
-    "You are an assistant that converts user prompts into structured formats."
+    `You are an assistant that converts user prompts into structured formats.`
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
   return { content: result.content, tool_calls: result.tool_calls };
