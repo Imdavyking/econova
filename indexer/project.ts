@@ -5,10 +5,7 @@ import {
 } from "@subql/types-ethereum";
 
 import * as dotenv from "dotenv";
-import path from "path";
 import { cleanDB } from "./src/utils/clean";
-
-const mode = process.env.NODE_ENV || "production";
 
 cleanDB();
 

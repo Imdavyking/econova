@@ -143,7 +143,7 @@ chainId !== 31337
                       const event = receipt.logs[1] as any
                       const args = event.args as unknown as any[]
 
-                      const [address, name, symbol, decimals, supply] = args
+                      const [address, name, symbol, supply] = args
 
                       expect(name).to.equal(customToken.name)
                       expect(symbol).to.equal(customToken.symbol)
