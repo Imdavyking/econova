@@ -5,6 +5,20 @@ import dotenv from "dotenv"
 dotenv.config()
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
+const RPC_URL = process.env.RPC_URL
+const CHAIN_ID = process.env.CHAIN_ID
+
+if (!PRIVATE_KEY) {
+    throw new Error("PRIVATE_KEY is not set")
+}
+
+if (!RPC_URL) {
+    throw new Error("RPC_URL is not set")
+}
+
+if (!CHAIN_ID) {
+    throw new Error("CHAIN_ID is not set")
+}
 
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
 
@@ -17,15 +31,10 @@ const config: HardhatUserConfig = {
         localhost: {
             chainId: 31337,
         },
-        creative: {
-            url: process.env.CREATIVE_RPC_URL || "https://rpc.creatorchain.io",
+        testNetwork: {
+            url: process.env.RPC_URL,
             accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
-            chainId: 66665,
-        },
-        sonic: {
-            url: process.env.SONIC_TESTNET_RPC_URL || "https://rpc.blaze.soniclabs.com",
-            accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
-            chainId: 57054,
+            chainId: +CHAIN_ID!,
         },
     },
     solidity: "0.8.28",
