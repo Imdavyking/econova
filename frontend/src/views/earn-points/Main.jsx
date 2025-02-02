@@ -5,6 +5,7 @@ import logoUrl from "@/assets/images/logo.png";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { ellipsify } from "../../utils";
 import { FaSpinner } from "react-icons/fa";
+import { getAllTweets } from "../../services/tweets.services";
 // GraphQL Query
 const GET_POINTS = gql`
   query MyQuery {
@@ -19,9 +20,53 @@ const GET_POINTS = gql`
     }
   }
 `;
+const tweets = [
+  {
+    _id: "67950c24e1289710853e35af",
+    edit_history_tweet_ids: ["1883184787340349875"],
+    id: "1883184787340349875",
+    text: "In a digital realm filled with complexities, EcoNova serves as the savvy navigator guiding you through the maze of blockchain wonders with wit and wisdom. Step into the world of smart contracts and innovation, where every byte holds a story waiting to be unraveled.",
+  },
+  {
+    _id: "12345c24e1289710853e35af",
+    edit_history_tweet_ids: ["1883184787340349876"],
+    id: "1883184787340349876",
+    text: "Excited to explore new opportunities in blockchain! #innovation #smartcontracts",
+  },
+];
+
+const Tweet = ({ tweet }) => (
+  <div className="bg-white p-4 rounded-lg shadow-md mb-4 border border-gray-200 flex flex-col justify-between">
+    <p className="text-gray-800 mb-4">{tweet.text}</p>
+    <div className="flex space-x-4">
+      <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        Check
+      </button>
+      <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+        Claim
+      </button>
+    </div>
+  </div>
+);
+
+const TweetList = () => {
+  return (
+    <div className="container mx-auto px-4">
+      <div className="flex flex-col gap-4">
+        {tweets.map((tweet) => (
+          <Tweet key={tweet.id} tweet={tweet} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const EarnPoints = () => {
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getAllTweets()
+      .then((data) => console.log(data))
+      .catch((error) => console.log(error));
+  }, []);
   const { loading, error, data } = useQuery(GET_POINTS);
 
   if (error) return <p>Error: {error.message}</p>;
@@ -31,61 +76,11 @@ const EarnPoints = () => {
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <a href="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
-          <span className="text-lg">{APP_NAME} leaderboard</span>
+          <span className="text-lg">{APP_NAME} tweets</span>
         </a>
       </h2>
 
-      {loading ? (
-        <FaSpinner className="w-5 h-5 animate-spin" />
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-200 rounded-lg shadow-md">
-            <thead>
-              <tr className="bg-gray-800 text-white">
-                <th className="p-3 text-left">Rank</th>
-                <th className="p-3 text-left">User</th>
-                <th className="p-3 text-left">Points</th>
-                <th className="p-3 text-left">Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.pointsAddeds.nodes
-                .filter((item) => {
-                  console.log({ item });
-                  return (
-                    String(item.contractAddress).toLowerCase() ==
-                    String(CONTRACT_ADDRESS).toLowerCase()
-                  );
-                })
-                .map((item, index) => (
-                  <tr
-                    key={item.id}
-                    className={`border-b ${
-                      index === 0
-                        ? "bg-yellow-200"
-                        : index === 1
-                        ? "bg-gray-200"
-                        : index === 2
-                        ? "bg-orange-200"
-                        : "bg-white"
-                    } hover:bg-gray-100 transition`}
-                  >
-                    <td className="p-3 text-black">{index + 1}</td>
-                    <td className="p-3 font-semibold text-black">
-                      {ellipsify(item.user)}
-                    </td>
-                    <td className="p-3 font-bold text-blue-600">
-                      {item.points}
-                    </td>
-                    <td className="p-3 text-black">
-                      {new Date(item.updatedTimeStamp * 1000).toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <TweetList />
     </div>
   );
 };
