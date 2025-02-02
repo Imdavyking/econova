@@ -118,7 +118,7 @@ const Home = () => {
           {/* Sponsors Section */}
           <div className="bg-white w-full px-4 md:px-7 rounded-sm py-8 md:py-12">
             <h2 className="text-black font-extrabold text-xl md:text-2xl my-2">
-              SPONSORS {showLogoutPopup + 1}
+              SPONSORS
             </h2>
             <div className="flex items-center gap-3">
               <img alt={APP_NAME} className="w-24 md:w-32" src={EVM_LOGO} />
