@@ -16,8 +16,7 @@ const Home = () => {
   useEffect(() => {
     getUserTwitterInfo()
       .then((data) => {
-        console.log(data.userTwitterId);
-        setTwitterHandle(data.userTwitterId);
+        setTwitterHandle(data.screen_name);
       })
       .catch((error) => {
         console.log(error);
