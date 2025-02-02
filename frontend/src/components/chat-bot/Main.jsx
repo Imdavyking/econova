@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { AIAgent } from "../../agent/index";
 import { toast } from "react-toastify";
-
+import { FaSpinner } from "react-icons/fa";
 const ChatWithAdminBot = () => {
   const [isChatboxOpen, setIsChatboxOpen] = useState(false);
   const agent = new AIAgent();
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const toggleChatbox = () => {
     setIsChatboxOpen((prev) => !prev);
@@ -21,10 +22,13 @@ const ChatWithAdminBot = () => {
       const data = userInput;
       setUserInput("");
       try {
+        setIsProcessing(true);
         const response = await agent.solveTask(data);
         respondToUser(response);
       } catch (error) {
         toast.error(`Failed to perform action ${error.message}`);
+      } finally {
+        setIsProcessing(false);
       }
     }
   };
@@ -132,7 +136,11 @@ const ChatWithAdminBot = () => {
                 onClick={handleSend}
                 className="bg-[#28334e] text-white px-4 py-2 rounded-r-md hover:bg-[#28334e] transition duration-300"
               >
-                Send
+                {isProcessing ? (
+                  <FaSpinner className="w-5 h-5 animate-spin" />
+                ) : (
+                  "Send"
+                )}
               </button>
             </div>
           </div>
