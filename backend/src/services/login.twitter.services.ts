@@ -104,8 +104,6 @@ export class LoginWithTwitter {
 
       const data = await response.json();
 
-      console.log(data);
-
       if (data && data.id_str) {
         logger.info(`User verified with ID: ${data.id_str}`);
         return { twitter_id: data.id_str, screen_name: data.screen_name };
