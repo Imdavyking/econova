@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { signTwitterPoints } from "../services/twitter-points.services";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 import { TwitterResponse } from "../types/tweet.like.retweet";
-import { SIGN_TWITTER_POINTS } from "../utils/constants";
+import { CHAIN_ID, SIGN_TWITTER_POINTS } from "../utils/constants";
 import { twitterLogin } from "./twitter.controllers";
 import { ethers } from "ethers";
 
@@ -87,7 +87,8 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     userAddress,
     Object.values(points).reduce((a, b) => a + b, 0),
     usertweeterId,
-    tweetId
+    tweetId,
+    CHAIN_ID
   );
   res.json({ signature, points, tweetId });
 };

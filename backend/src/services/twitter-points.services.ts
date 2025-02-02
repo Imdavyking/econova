@@ -14,15 +14,16 @@ export const signTwitterPoints = async (
   senderAddress: string,
   pointToAdd: string | number,
   userTwitterId: string | number,
-  tweetId: string | number
+  tweetId: string | number,
+  chainId: string | number
 ) => {
   const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
 
   const wallet = new ethers.Wallet(botPrivateKey);
 
   const messageHash = ethers.solidityPackedKeccak256(
-    ["address", "uint256", "uint256", "uint256"],
-    [senderAddress, pointToAdd, userTwitterId, tweetId]
+    ["address", "uint256", "uint256", "uint256", "uint256"],
+    [senderAddress, pointToAdd, userTwitterId, tweetId, chainId]
   );
 
   const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));
