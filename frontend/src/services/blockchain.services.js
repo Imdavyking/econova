@@ -115,7 +115,8 @@ export const deployTokenService = async ({ name, symbol, initialSupply }) => {
     const manager = await getContract();
     const tx = await manager.deployToken(name, symbol, initialSupply);
     const receipt = await tx.wait(1);
-    const event = receipt.logs[1];
+
+    const event = receipt.events[1];
     const args = event.args;
     const [tokenAddress] = args;
     return `deployed ${name} token at ${tokenAddress}`;
