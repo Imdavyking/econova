@@ -364,11 +364,6 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "chainId",
-        "type": "uint256"
-      },
-      {
         "internalType": "bytes",
         "name": "signature",
         "type": "bytes"
@@ -556,11 +551,6 @@
       {
         "internalType": "uint256",
         "name": "tweetId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "chainId",
         "type": "uint256"
       },
       {
