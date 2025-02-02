@@ -51,7 +51,7 @@ const ConnectWallet = () => {
                     className="btn btn-outline-secondary bg-white py-3 text-primary px-4 w-48 mt-3 xl:mt-0 align-top mr-3"
                     style={{ color: "black" }}
                   >
-                    <span className="relative text-white">Wrong Network</span>
+                    Wrong Network
                   </motion.button>
                 );
               }
