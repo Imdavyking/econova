@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 dotenv.config();
 
-export const JWT_SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
+export const JWT_SECRET_KEY = process.env.JWT_SECRET!;
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"]; // Express lowercases headers automatically
