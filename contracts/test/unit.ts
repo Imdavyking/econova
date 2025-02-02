@@ -283,8 +283,8 @@ chainId !== 31337
                       const points = 100
 
                       const messageHash = ethers.solidityPackedKeccak256(
-                          ["address", "uint256", "uint256", "uint256"],
-                          [otherAccount.address, points, userTwitterId, tweetId]
+                          ["address", "uint256", "uint256", "uint256", "uint256"],
+                          [otherAccount.address, points, userTwitterId, chainId, tweetId]
                       )
 
                       const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
@@ -307,7 +307,7 @@ chainId !== 31337
                               points,
                               userTwitterId,
                               tweetId,
-
+                              chainId,
                               signature
                           )
                       ).to.be.revertedWithCustomError(
@@ -317,7 +317,13 @@ chainId !== 31337
 
                       await ecoNDeployer
                           .connect(otherAccount)
-                          .addPointsFromTwitterBot(points, userTwitterId, tweetId, signature)
+                          .addPointsFromTwitterBot(
+                              points,
+                              userTwitterId,
+                              tweetId,
+                              chainId,
+                              signature
+                          )
 
                       const userPoint = await ecoNDeployer.userPoints(otherAccount.address)
 
@@ -326,7 +332,13 @@ chainId !== 31337
                       expect(
                           ecoNDeployer
                               .connect(otherAccount)
-                              .addPointsFromTwitterBot(points, userTwitterId, tweetId, signature)
+                              .addPointsFromTwitterBot(
+                                  points,
+                                  userTwitterId,
+                                  tweetId,
+                                  chainId,
+                                  signature
+                              )
                       ).to.be.revertedWithCustomError(
                           ecoNDeployer,
                           "EcoNovaManager__TweetIdAlreadyRecorderForUser"

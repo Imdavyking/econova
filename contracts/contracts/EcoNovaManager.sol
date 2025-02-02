@@ -48,6 +48,7 @@ contract EcoNovaManager is Ownable {
     error EcoNovaManager__InvalidSignature();
     error EcoNovaManager__Unauthorized();
     error EcoNovaManager__TweetIdAlreadyRecorderForUser();
+    error EcoNovaManager__SignatureNotValidForChainId();
 
     /**
      * events
@@ -197,15 +198,20 @@ contract EcoNovaManager is Ownable {
         uint256 pointToAdd,
         uint256 userTwitterId,
         uint256 tweetId,
+        uint256 chainId,
         bytes memory signature
     ) public {
         bytes32 messageHash = keccak256(
-            abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId)
+            abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId, chainId)
         );
         bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
 
         if (userAddedTweets[userTwitterId][tweetId]) {
             revert EcoNovaManager__TweetIdAlreadyRecorderForUser();
+        }
+
+        if (chainId != block.chainid) {
+            revert EcoNovaManager__SignatureNotValidForChainId();
         }
 
         if (usedHashes[messageHash]) {
