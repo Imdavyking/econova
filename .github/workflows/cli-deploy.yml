@@ -22,7 +22,6 @@ jobs:
       CONTRACT_ADDRESS: ${{ secrets.CONTRACT_ADDRESS }}
       BLOCK_NUMBER: ${{ secrets.BLOCK_NUMBER }}
       RPC_URL: ${{ secrets.RPC_URL }}
-      PROJECT_NAME: EcoNova
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node.js environment
@@ -40,4 +39,4 @@ jobs:
         run: echo $RPC_URL
       - name: Publish and Deploy
         run: |
-          sh ./scripts/publish-deploy.sh -o ${{github.repository}} -p $PROJECT_NAME
+          sh ./scripts/publish-deploy.sh -o ${{github.repository}} -p ${{vars.PROJECT_NAME}}
