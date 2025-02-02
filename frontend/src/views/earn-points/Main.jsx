@@ -7,6 +7,13 @@ import { getAllTweets } from "../../services/tweets.services";
 import { Tweet } from "../../components/tweet";
 
 const TweetList = ({ tweets }) => {
+  if (!tweets.length) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <span className="text-white">No tweets found</span>
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto px-4">
       <div className="flex flex-col gap-4">
