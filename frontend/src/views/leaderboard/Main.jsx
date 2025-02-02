@@ -23,7 +23,6 @@ const GET_POINTS = gql`
 const PointsList = () => {
   const { loading, error, data } = useQuery(GET_POINTS);
 
-  // if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   return (
     <div className="max-w-4xl mx-auto p-4 ">
