@@ -5,6 +5,12 @@ import { FaSpinner } from "react-icons/fa";
 import { signTweetId } from "../../services/blockchain.twitter.services";
 import { toast } from "react-toastify";
 import { addPointsFromTwitterService } from "../../services/blockchain.services";
+import { Result } from "ethers/lib/utils";
+import {
+  deleteFromLocalStorage,
+  getFromLocalStorage,
+  saveToLocalStorage,
+} from "../../services/local.storage.db";
 interface Results {
   points: {
     likes: number;
@@ -31,6 +37,7 @@ export const Tweet = ({ tweet }) => {
       );
       const data = await results.json();
       setResults(data);
+      saveToLocalStorage(tweetId.toString(), data);
       console.log(`Check clicked for tweet ID: ${tweetId}`);
     } catch (error) {
       console.log(error);
@@ -43,19 +50,25 @@ export const Tweet = ({ tweet }) => {
   const handleClaim = async (tweetId: string | number) => {
     try {
       setIsClaiming(true);
+      let data: Results | null = results;
       if (!results) {
+        data = getFromLocalStorage(tweetId.toString());
+      }
+      if (!data) {
         toast.error("Please check the tweet first");
         return;
       }
 
-      await addPointsFromTwitterService({
-        points: Object.values(results.points)
+      const txResponse = await addPointsFromTwitterService({
+        points: Object.values(data.points)
           .reduce((acc, curr) => acc + curr, 0)
           .toString(),
-        userTwitterId: results.twitter_id.toString(),
-        tweetId: results.tweetId.toString(),
-        signature: results.signature.toString(),
+        userTwitterId: data.twitter_id.toString(),
+        tweetId: data.tweetId.toString(),
+        signature: data.signature.toString(),
       });
+
+      deleteFromLocalStorage(tweetId.toString());
       console.log(`Claim clicked for tweet ID: ${tweetId}`);
     } catch (error) {
       console.log(error);
