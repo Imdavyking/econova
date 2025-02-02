@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import dotenv from "dotenv";
+import { CHAIN_ID } from "../utils/constants";
 
 dotenv.config();
 
@@ -14,8 +15,7 @@ export const signTwitterPoints = async (
   senderAddress: string,
   pointToAdd: string | number,
   userTwitterId: string | number,
-  tweetId: string | number,
-  chainId: string | number
+  tweetId: string | number
 ) => {
   const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
 
@@ -23,7 +23,7 @@ export const signTwitterPoints = async (
 
   const messageHash = ethers.solidityPackedKeccak256(
     ["address", "uint256", "uint256", "uint256", "uint256"],
-    [senderAddress, pointToAdd, userTwitterId, tweetId, chainId]
+    [senderAddress, pointToAdd, userTwitterId, tweetId, CHAIN_ID]
   );
 
   const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));

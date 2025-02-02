@@ -87,8 +87,7 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     userAddress,
     Object.values(points).reduce((a, b) => a + b, 0),
     usertweeterId,
-    tweetId,
-    CHAIN_ID
+    tweetId
   );
   res.json({ signature, points, tweetId });
 };
