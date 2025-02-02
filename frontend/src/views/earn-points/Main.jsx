@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { APP_NAME, CONTRACT_ADDRESS } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
@@ -20,7 +20,8 @@ const GET_POINTS = gql`
   }
 `;
 
-const LeaderBoard = () => {
+const EarnPoints = () => {
+  useEffect(() => {}, []);
   const { loading, error, data } = useQuery(GET_POINTS);
 
   if (error) return <p>Error: {error.message}</p>;
@@ -89,4 +90,4 @@ const LeaderBoard = () => {
   );
 };
 
-export default LeaderBoard;
+export default EarnPoints;
