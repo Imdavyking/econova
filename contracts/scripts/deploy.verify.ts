@@ -7,7 +7,8 @@ import dotenv from "dotenv"
 import { network } from "hardhat"
 import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
 import { cleanDeployments } from "../utils/clean"
-import { updateEnv } from "./update.address"
+import { updateEnv } from "./update.env"
+import { copyABI } from "./copy.abi"
 dotenv.config()
 
 async function main() {
@@ -27,6 +28,9 @@ async function main() {
     await verify(ecoAddress, [oracle, wallet.address])
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
+
+    copyABI("EcoNovaManager", "frontend/src/assets/json")
+    copyABI("EcoNovaManager", "indexer/abis")
 }
 
 main().catch(console.error)
