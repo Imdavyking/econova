@@ -28,28 +28,30 @@ const Home = () => {
         <DarkModeSwitcher />
         <ChatBot />
 
-        <div>
-          <div className="flex justify-between items-center w-full">
-            <a href="/" className="-intro-x flex items-center pt-5">
-              <img alt={APP_NAME} className="w-10" src={logoUrl} />
-              <span className="text-white text-lg ml-3"> {APP_NAME} </span>
+        <div className="w-full px-4 md:px-8 lg:px-16">
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row justify-between items-center w-full py-5">
+            {/* Logo */}
+            <a href="/" className="flex items-center">
+              <img alt={APP_NAME} className="w-10 md:w-12" src={logoUrl} />
+              <span className="text-white text-lg md:text-xl ml-3">
+                {APP_NAME}
+              </span>
             </a>
+
+            {/* Twitter Login Button */}
             <a
               href={twitterHandle ? "#" : SERVER_URL_TWITTER_LOGIN}
-              className={`-intro-x flex items-center pt-5 ${
+              className={`mt-3 md:mt-0 flex items-center ${
                 twitterHandle ? "cursor-not-allowed opacity-50" : ""
               }`}
-              onClick={(e) => {
-                if (twitterHandle) {
-                  e.preventDefault();
-                }
-              }}
+              onClick={(e) => twitterHandle && e.preventDefault()}
             >
               <button
                 className={`flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 ease-in-out transform ${
                   twitterHandle ? "" : "hover:scale-105"
                 }`}
-                disabled={twitterHandle} // Disable the button if twitterHandle exists
+                disabled={twitterHandle}
               >
                 {twitterHandle ? (
                   twitterHandle
@@ -67,12 +69,12 @@ const Home = () => {
               </button>
             </a>
 
-            <div className="flex">
+            {/* Action Buttons */}
+            <div className="flex mt-3 md:mt-0">
               <ConnectWallet accountStatus="address" />
-
               <Link to="/add-points">
                 <button
-                  className="btn btn-outline-secondary bg-white py-3 text-primary px-4 w-48 mt-3 xl:mt-0 align-top mr-3 "
+                  className="btn btn-outline-secondary bg-white py-2 md:py-3 px-3 md:px-4 text-primary w-40 md:w-48 mt-3 xl:mt-0 mr-2 md:mr-3"
                   style={{ color: "black" }}
                 >
                   Get Started
@@ -81,19 +83,20 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center w-full my-24">
-            <h2 className="-intro-x text-white font-extrabold text-5xl my-2">
+          {/* Main Content */}
+          <div className="flex flex-col items-center justify-center w-full my-12 md:my-24 px-4">
+            <h2 className="text-white font-extrabold text-3xl md:text-5xl my-2 text-center">
               {APP_NAME}
             </h2>
-            <p className="-intro-x text-white font-extrabold text-3xl my-2 text-center w-[50%]">
-              This is a solution that rewards users with token for recycling and
-              use them to uphold the SDG goals
-              <span className="text-[#c54dfc] px-2">blockchain-powered</span>
+            <p className="text-white font-extrabold text-lg md:text-2xl my-2 text-center max-w-[90%] md:max-w-[60%]">
+              This is a solution that rewards users with tokens for recycling
+              and helps uphold the SDG goals through a
+              <span className="text-[#c54dfc] px-1">blockchain-powered</span>
               recycling solution....
             </p>
             <Link to="/redeem-points">
               <button
-                className="btn btn-outline-secondary bg-white py-3 text-primary px-4 w-64 mt-3 xl:mt-0 align-top"
+                className="btn btn-outline-secondary bg-white py-2 md:py-3 px-3 md:px-4 w-48 md:w-64 mt-3 xl:mt-0"
                 style={{ color: "black" }}
               >
                 Redeem Points
@@ -101,14 +104,16 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="bg-white w-full px-7 rounded-sm h-48">
-            <h2 className="-intro-x text-black font-extrabold text-2xl my-2">
+          {/* Sponsors Section */}
+          <div className="bg-white w-full px-4 md:px-7 rounded-sm py-8 md:py-12">
+            <h2 className="text-black font-extrabold text-xl md:text-2xl my-2">
               SPONSORS
             </h2>
             <div className="flex items-center gap-3">
-              <img alt={APP_NAME} className="w-32" src={EVM_LOGO} />
+              <img alt={APP_NAME} className="w-24 md:w-32" src={EVM_LOGO} />
             </div>
           </div>
+
           <Footer />
         </div>
       </div>
