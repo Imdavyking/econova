@@ -61,8 +61,10 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     retweets: 0,
   };
 
+  console.log(likesInfo, retweetsInfo);
+
   if (retweetsInfo) {
-    const hasRetweeted = retweetsInfo.data.find(
+    const hasRetweeted = retweetsInfo?.data?.find(
       (user) => user.id === userTokenData.twitter_id
     );
     if (hasRetweeted) {
@@ -71,7 +73,7 @@ export const getTweetPoints = async (req: Request, res: Response) => {
   }
 
   if (likesInfo) {
-    const hasLiked = likesInfo.data.find(
+    const hasLiked = likesInfo?.data?.find(
       (user) => user.id === userTokenData.twitter_id
     );
     if (hasLiked) {

@@ -10,6 +10,6 @@ type TwitterMeta = {
 };
 
 export type TwitterResponse = {
-  data: TwitterUser[];
+  data: TwitterUser[] | undefined;
   meta: TwitterMeta;
 };
