@@ -7,6 +7,7 @@ import dotenv from "dotenv"
 import { network } from "hardhat"
 import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
 import { cleanDeployments } from "../utils/clean"
+import { updateEnv } from "./update.address"
 dotenv.config()
 
 async function main() {
@@ -24,6 +25,8 @@ async function main() {
         process.env.OROCHI_ORACLE_ADDRESS!
 
     await verify(ecoAddress, [oracle, wallet.address])
+    updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
+    updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
 }
 
 main().catch(console.error)
