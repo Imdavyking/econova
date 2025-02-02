@@ -19,13 +19,10 @@ if (app.get("env") === "production") {
 
 app.use(
   session({
-    secret: JWT_SECRET_KEY, // Use a strong secret
-    resave: false,
-    saveUninitialized: true,
+    secret: JWT_SECRET_KEY,
     cookie: {
-      httpOnly: true, // Make cookies accessible only through HTTP
-      secure: process.env.NODE_ENV === "production", // Use Secure cookies in production
-      // sameSite: "none", // Important for cross-origin requests
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
     },
   })
 );

@@ -1,41 +1,26 @@
 /** @format */
 
-import React from "react";
+import React, { useEffect } from "react";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import ChatBot from "@/components/chat-bot/Main";
 import { Link } from "react-router-dom";
 import Footer from "@/base-components/footer";
 import logoUrl from "@/assets/images/logo.png";
 import EVM_LOGO from "@/assets/images/creative_eth.png";
-import { useWallet } from "@/App";
-import { ethers } from "ethers";
-import { getFirstAndLast4Chars } from "../../App";
 import { APP_NAME, SERVER_URL_TWITTER_LOGIN } from "../../utils/constants";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import ConnectWallet from "../../components/ConnectWallet";
-// import { useAccount, useDisconnect, useChainId } from "wagmi";
-// import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { getUserTwitterInfo } from "../../services/user.twitter.services";
 
 const Home = () => {
-  const { walletAddress, setWalletAddress } = useWallet();
-  const connectWallet = async () => {
-    try {
-      if (!window.ethereum) {
-        alert(
-          "MetaMask is not installed. Please install it to use this feature."
-        );
-        return;
-      }
-
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-      setWalletAddress(address);
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-    }
-  };
+  useEffect(() => {
+    getUserTwitterInfo()
+      .then((data) => {
+        console.log({ data });
+      })
+      .catch((error) => {
+        console.log({ error });
+      });
+  }, []);
   return (
     <>
       <div>
