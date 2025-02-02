@@ -10,7 +10,7 @@ import EVM_LOGO from "@/assets/images/creative_eth.png";
 import { useWallet } from "@/App";
 import { ethers } from "ethers";
 import { getFirstAndLast4Chars } from "../../App";
-import { APP_NAME } from "../../utils/constants";
+import { APP_NAME, SERVER_URL_TWITTER_LOGIN } from "../../utils/constants";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import ConnectWallet from "../../components/ConnectWallet";
 // import { useAccount, useDisconnect, useChainId } from "wagmi";
@@ -41,12 +41,30 @@ const Home = () => {
       <div>
         <DarkModeSwitcher />
         <ChatBot />
+
         <div>
           <div className="flex justify-between items-center w-full">
-            <a href="" className="-intro-x flex items-center pt-5">
+            <a href="/" className="-intro-x flex items-center pt-5">
               <img alt={APP_NAME} className="w-10" src={logoUrl} />
               <span className="text-white text-lg ml-3"> {APP_NAME} </span>
             </a>
+            <a
+              href={SERVER_URL_TWITTER_LOGIN}
+              className="-intro-x flex items-center pt-5"
+            >
+              <button className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M23 3a10.9 10.9 0 0 1-3.157.869A5.45 5.45 0 0 0 22.4 2.006a10.908 10.908 0 0 1-3.464 1.318A5.448 5.448 0 0 0 16.3 1a5.44 5.44 0 0 0-5.442 5.442c0 .426.045.841.132 1.237A15.415 15.415 0 0 1 1.671 3.149a5.43 5.43 0 0 0-.734 2.74c0 1.89.961 3.558 2.418 4.526A5.428 5.428 0 0 1 .639 9.57v.068c0 2.633 1.868 4.834 4.354 5.327a5.478 5.478 0 0 1-2.425.092c.678 2.108 2.654 3.637 5.003 3.675a10.906 10.906 0 0 1-6.74 2.328c-.438 0-.869-.026-1.296-.077a15.429 15.429 0 0 0 8.314 2.442c9.976 0 15.46-8.271 15.46-15.461 0-.236-.005-.472-.015-.707A11.295 11.295 0 0 0 23 3z" />
+                </svg>
+              </button>
+            </a>
+
             <div className="flex">
               <ConnectWallet accountStatus="address" />
 
