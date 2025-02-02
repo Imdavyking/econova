@@ -52,9 +52,9 @@ export const Tweet = ({ tweet }) => {
         points: Object.values(results.points)
           .reduce((acc, curr) => acc + curr, 0)
           .toString(),
-        userTwitterId: `${results.twitter_id}`,
-        tweetId: `${results.tweetId}`,
-        signature: `${results.signature}`,
+        userTwitterId: results.twitter_id.toString(),
+        tweetId: results.tweetId.toString(),
+        signature: results.signature.toString(),
       });
       console.log(`Claim clicked for tweet ID: ${tweetId}`);
     } catch (error) {
