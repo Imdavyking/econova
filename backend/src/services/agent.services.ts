@@ -58,7 +58,6 @@ const tools = {
     schema: z.object({
       name: z.string().describe("The token's name"),
       symbol: z.string().describe("The token's symbol"),
-      decimals: z.number().describe("The token's decimals"),
       initialSupply: z.number().describe("The token's initial supply"),
     }),
   }),
