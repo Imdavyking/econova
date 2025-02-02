@@ -13,4 +13,4 @@ IPFSCID=$(npx subql publish -o -f .)
 
 echo $IPFSCID
 
-npx subql deployment:deploy -d --ipfsCID="$IPFSCID" --projectName="${PROJECTNAME}" --org="${ORG%/*}" --endpoint="https://api.subquery.network"
+npx subql deployment:deploy -d --ipfsCID="$IPFSCID" --projectName="${PROJECTNAME}" --org="${ORG%/*}" --endpoint="https://api.subquery.network/sq/Imdavyking/econova"
