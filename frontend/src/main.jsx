@@ -23,7 +23,7 @@ import {
 } from "./utils/constants";
 
 export const chainInfo = defineChain({
-  id: CHAIN_ID,
+  id: Number(CHAIN_ID),
   name: CHAIN_NAME,
   nativeCurrency: {
     decimals: 18,
