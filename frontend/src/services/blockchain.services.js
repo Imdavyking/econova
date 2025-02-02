@@ -168,6 +168,7 @@ export const addPointsFromTwitterService = async ({
     await tx.wait(1);
     return `claims ${points} points for tweet ${tweetId}`;
   } catch (error) {
+    console.log(error);
     return `${FAILED_KEY} to claim ${points} points for tweet ${tweetId}`;
   }
 };

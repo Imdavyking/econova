@@ -48,13 +48,12 @@ export const Tweet = ({ tweet }) => {
         return;
       }
       await addPointsFromTwitterService({
-        points: Object.values(results.points).reduce(
-          (acc, curr) => acc + curr,
-          0
-        ),
-        userTwitterId: results.twitter_id,
-        tweetId: results.tweetId,
-        signature: results.signature,
+        points: Object.values(results.points)
+          .reduce((acc, curr) => acc + curr, 0)
+          .toString(),
+        userTwitterId: `${results.twitter_id}`,
+        tweetId: `${results.tweetId}`,
+        signature: `${results.signature}`,
       });
       console.log(`Claim clicked for tweet ID: ${tweetId}`);
     } catch (error) {
