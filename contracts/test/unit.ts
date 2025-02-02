@@ -300,14 +300,14 @@ chainId !== 31337
 
                       const hash = await ecoNDeployer
                           .connect(otherAccount)
-                          .testHash(points, userTwitterId, tweetId, chainId, signature)
+                          .testHash(points, userTwitterId, tweetId, signature)
 
                       expect(
                           ecoNDeployer.addPointsFromTwitterBot(
                               points,
                               userTwitterId,
                               tweetId,
-                              chainId,
+
                               signature
                           )
                       ).to.be.revertedWithCustomError(
@@ -315,30 +315,26 @@ chainId !== 31337
                           "EcoNovaManager__InvalidSignature"
                       )
 
-                      await ecoNDeployer
-                          .connect(otherAccount)
-                          .addPointsFromTwitterBot(
-                              points,
-                              userTwitterId,
-                              tweetId,
-                              chainId,
-                              signature
-                          )
+                      await ecoNDeployer.connect(otherAccount).addPointsFromTwitterBot(
+                          points,
+                          userTwitterId,
+                          tweetId,
+
+                          signature
+                      )
 
                       const userPoint = await ecoNDeployer.userPoints(otherAccount.address)
 
                       expect(Number(userPoint[0])).to.equal(3500)
 
                       expect(
-                          ecoNDeployer
-                              .connect(otherAccount)
-                              .addPointsFromTwitterBot(
-                                  points,
-                                  userTwitterId,
-                                  tweetId,
-                                  chainId,
-                                  signature
-                              )
+                          ecoNDeployer.connect(otherAccount).addPointsFromTwitterBot(
+                              points,
+                              userTwitterId,
+                              tweetId,
+
+                              signature
+                          )
                       ).to.be.revertedWithCustomError(
                           ecoNDeployer,
                           "EcoNovaManager__TweetIdAlreadyRecorderForUser"
