@@ -284,7 +284,7 @@ chainId !== 31337
 
                       const messageHash = ethers.solidityPackedKeccak256(
                           ["address", "uint256", "uint256", "uint256", "uint256"],
-                          [otherAccount.address, points, userTwitterId, chainId, tweetId]
+                          [otherAccount.address, points, userTwitterId, tweetId, chainId]
                       )
 
                       const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
@@ -300,7 +300,7 @@ chainId !== 31337
 
                       const hash = await ecoNDeployer
                           .connect(otherAccount)
-                          .testHash(points, userTwitterId, tweetId, signature)
+                          .testHash(points, userTwitterId, tweetId, chainId, signature)
 
                       expect(
                           ecoNDeployer.addPointsFromTwitterBot(

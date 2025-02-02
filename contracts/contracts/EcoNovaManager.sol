@@ -180,10 +180,14 @@ contract EcoNovaManager is Ownable {
         uint256 pointToAdd,
         uint256 userTwitterId,
         uint256 tweetId,
+        uint256 chainId,
         bytes memory
     ) public view returns (bytes32 message) {
+        if (chainId != block.chainid) {
+            revert EcoNovaManager__SignatureNotValidForChainId();
+        }
         bytes32 messageHash = keccak256(
-            abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId)
+            abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId, chainId)
         );
         bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
         return ethSignedMessageHash;
