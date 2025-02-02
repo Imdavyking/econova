@@ -47,7 +47,7 @@ const Home = () => {
               </span>
             </a>
 
-            <a
+            {/* <a
               href={twitterHandle ? "#" : SERVER_URL_TWITTER_LOGIN}
               className={`mt-3 md:mt-0 flex items-center ${
                 twitterHandle ? "cursor-not-allowed opacity-50" : ""
@@ -78,14 +78,14 @@ const Home = () => {
                   </svg>
                 )}
               </button>
-            </a>
+            </a> */}
 
             {/* Action Buttons */}
-            <div className="flex mt-3 md:mt-0">
+            <div className="flex flex-col sm:flex-row mt-3 md:mt-0 space-y-2 sm:space-y-0 sm:space-x-3">
               <ConnectWallet accountStatus="address" />
               <Link to="/add-points">
                 <button
-                  className="btn btn-outline-secondary bg-white py-2 md:py-3 px-3 md:px-4 text-primary w-40 md:w-48 mt-3 xl:mt-0 mr-2 md:mr-3"
+                  className="btn btn-outline-secondary bg-white py-2 md:py-3 px-3 md:px-4 text-primary w-full sm:w-48 mt-3 xl:mt-0"
                   style={{ color: "black" }}
                 >
                   Get Started
