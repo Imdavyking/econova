@@ -39,4 +39,4 @@ jobs:
         run: echo $RPC_URL
       - name: Publish and Deploy
         run: |
-          sh ./scripts/publish-deploy.sh -o ${{github.repository}} -p ${{vars.PROJECT_NAME}} -e ${{vars.PROJECT_NAME}}
+          sh ./scripts/publish-deploy.sh -o ${{github.repository}} -p ${{vars.PROJECT_NAME}} -e ${{vars.END_POINT}}
