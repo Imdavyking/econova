@@ -13,6 +13,14 @@ import { getUserTwitterInfo } from "../../services/user.twitter.services";
 
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
+  const handleLogout = () => {
+    // Clear session logic here (e.g., remove token, reset state)
+    console.log("User logged out");
+    setShowLogoutPopup(false);
+  };
+
   useEffect(() => {
     getUserTwitterInfo()
       .then((data) => {
@@ -39,19 +47,22 @@ const Home = () => {
               </span>
             </a>
 
-            {/* Twitter Login Button */}
             <a
               href={twitterHandle ? "#" : SERVER_URL_TWITTER_LOGIN}
               className={`mt-3 md:mt-0 flex items-center ${
                 twitterHandle ? "cursor-not-allowed opacity-50" : ""
               }`}
-              onClick={(e) => twitterHandle && e.preventDefault()}
+              onClick={(e) => {
+                if (twitterHandle) {
+                  setShowLogoutPopup(true);
+                  e.preventDefault();
+                }
+              }}
             >
               <button
                 className={`flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 ease-in-out transform ${
                   twitterHandle ? "" : "hover:scale-105"
                 }`}
-                disabled={twitterHandle}
               >
                 {twitterHandle ? (
                   twitterHandle
@@ -107,12 +118,35 @@ const Home = () => {
           {/* Sponsors Section */}
           <div className="bg-white w-full px-4 md:px-7 rounded-sm py-8 md:py-12">
             <h2 className="text-black font-extrabold text-xl md:text-2xl my-2">
-              SPONSORS
+              SPONSORS {showLogoutPopup + 1}
             </h2>
             <div className="flex items-center gap-3">
               <img alt={APP_NAME} className="w-24 md:w-32" src={EVM_LOGO} />
             </div>
           </div>
+
+          {showLogoutPopup && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+                <h3 className="text-lg font-semibold">Logout</h3>
+                <p className="my-4">Are you sure you want to log out?</p>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={() => setShowLogoutPopup(false)}
+                    className="bg-gray-300 px-4 py-2 rounded-md"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <Footer />
         </div>
