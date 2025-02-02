@@ -7,7 +7,7 @@ import {
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 const tweetRoutes = express.Router();
 tweetRoutes.get("/", getTweets);
-tweetRoutes.get("/points", getTweetPoints);
+tweetRoutes.get("/points/:tweetId/:tweetSignature", getTweetPoints);
 tweetRoutes.get("/:id", getTweetByTweetID);
 
 /**

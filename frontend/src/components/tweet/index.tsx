@@ -1,16 +1,31 @@
 import React from "react";
 import { TWITTER_PROFILE_URL } from "../../utils/constants";
+import { SERVER_URL } from "../../utils/constants";
+import { FaSpinner } from "react-icons/fa";
 export const Tweet = ({ tweet }) => {
-  // Handle Check button click
-  const handleCheck = (tweetId) => {
-    console.log(`Check clicked for tweet ID: ${tweetId}`);
-    // Perform actions for 'Check' with tweetId
+  const [isChecking, setIsChecking] = React.useState(false);
+  const [isClaiming, setIsClaiming] = React.useState(false);
+  const handleCheck = async (tweetId: string | number) => {
+    try {
+      setIsChecking(true);
+      const signature = "helo";
+      await fetch(`${SERVER_URL}/api/tweets/points/${tweetId}/${signature}`, {
+        credentials: "include",
+      });
+      console.log(`Check clicked for tweet ID: ${tweetId}`);
+    } catch (error) {
+    } finally {
+      setIsChecking(false);
+    }
   };
 
-  // Handle Claim button click
-  const handleClaim = (tweetId) => {
-    console.log(`Claim clicked for tweet ID: ${tweetId}`);
-    // Perform actions for 'Claim' with tweetId
+  const handleClaim = async (tweetId: string | number) => {
+    try {
+      console.log(`Claim clicked for tweet ID: ${tweetId}`);
+    } catch (error) {
+    } finally {
+      setIsClaiming(false);
+    }
   };
 
   return (
@@ -21,13 +36,21 @@ export const Tweet = ({ tweet }) => {
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           onClick={() => handleCheck(tweet.id)}
         >
-          Check
+          {isChecking ? (
+            <FaSpinner className="w-5 h-5 animate-spin" />
+          ) : (
+            "Check"
+          )}
         </button>
         <button
           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
           onClick={() => handleClaim(tweet.id)}
         >
-          Claim
+          {isClaiming ? (
+            <FaSpinner className="w-5 h-5 animate-spin" />
+          ) : (
+            "Claim"
+          )}
         </button>
         <a
           href={`${TWITTER_PROFILE_URL}/status/${tweet.id}`}

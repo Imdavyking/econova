@@ -20,7 +20,7 @@ export const getTweetByTweetID = async (req: Request, res: Response) => {
 export const getTweetPoints = async (req: Request, res: Response) => {
   const { tweetId, tweetSignature } = req.params;
 
-  const { user } = req.session;
+  const { user } = req.cookies;
 
   if (!user) {
     res.status(401).json({ error: "Unauthorized" });
