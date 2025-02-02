@@ -47,6 +47,7 @@ export const Tweet = ({ tweet }) => {
         toast.error("Please check the tweet first");
         return;
       }
+
       await addPointsFromTwitterService({
         points: Object.values(results.points)
           .reduce((acc, curr) => acc + curr, 0)
