@@ -275,7 +275,7 @@ contract EcoNovaManager is Ownable {
      * @param point points to redeem
      * @return success true if the point is redeemed successfully
      */
-    function redeemCode(uint256 point) public returns (bool success) {
+    function redeemPoints(uint256 point) public returns (bool success) {
         // withdraw points from the user
         if (userPoints[msg.sender].points == 0) {
             revert EcoNovaManager__InsufficientPoints();

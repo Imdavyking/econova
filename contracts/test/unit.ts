@@ -85,7 +85,7 @@ chainId !== 31337
                       )
 
                       await ecoNDeployer.addPointFromWeight(100)
-                      await ecoNDeployer.redeemCode(100)
+                      await ecoNDeployer.redeemPoints(100)
 
                       const userPoint = await ecoNDeployer.userPoints(owner.address)
 
@@ -166,7 +166,7 @@ chainId !== 31337
 
                       await ecoNDeployer.addPointFromWeight(100)
 
-                      await expect(ecoNDeployer.redeemCode(100))
+                      await expect(ecoNDeployer.redeemPoints(100))
                           .to.emit(ecoNDeployer, "PointsRedeemed")
                           .withArgs(owner.address, 100)
                   })
@@ -220,8 +220,8 @@ chainId !== 31337
                       )
 
                       await ecoNDeployer.addPointFromWeight(100)
-                      await ecoNDeployer.redeemCode(100)
-                      await expect(ecoNDeployer.redeemCode(100)).to.changeTokenBalance(
+                      await ecoNDeployer.redeemPoints(100)
+                      await expect(ecoNDeployer.redeemPoints(100)).to.changeTokenBalance(
                           ecoNovaToken,
                           owner,
                           "100000000000000000000"

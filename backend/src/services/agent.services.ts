@@ -34,8 +34,8 @@ const tools = {
         .describe("The amount in USD"),
     }),
   }),
-  redeemCode: tool(() => undefined, {
-    name: "redeemCode",
+  redeemPoints: tool(() => undefined, {
+    name: "redeemPoints",
     description: "Redeem points for rewards.",
     schema: z.object({
       points: z

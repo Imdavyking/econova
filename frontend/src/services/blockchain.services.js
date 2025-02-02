@@ -140,10 +140,10 @@ export const getPointsService = async () => {
   }
 };
 
-export const redeemCodeService = async ({ points }) => {
+export const redeemPointsService = async ({ points }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.redeemCode(Math.trunc(points));
+    const tx = await manager.redeemPoints(Math.trunc(points));
     await tx.wait(1);
     return `redeemed ${points} points`;
   } catch (error) {

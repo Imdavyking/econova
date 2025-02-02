@@ -5,7 +5,7 @@ import {
   addPointService,
   deployTokenService,
   donateToFoundationService,
-  redeemCodeService,
+  redeemPointsService,
 } from "../services/blockchain.services";
 import { AiResponseType, ToolCall } from "../types";
 
@@ -16,13 +16,13 @@ export class AIAgent {
   constructor() {
     this.tools = {
       donate: donateToFoundationService,
-      redeemCode: redeemCodeService,
+      redeemPoints: redeemPointsService,
       addPoints: addPointService,
       deployToken: deployTokenService,
     };
     this.toolsInfo = {
       donate: "Example: Donate 100 USD to a cause.",
-      redeemCode: "Example: Redeem 5 reward points.",
+      redeemPoints: "Example: Redeem 5 reward points.",
       addPoints: "Example: Add 152 points to your balance.",
       deployToken:
         "Example: Deploy a token named 'Token' with symbol 'TKN' and an initial supply of 1,000.",

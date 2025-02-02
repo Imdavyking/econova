@@ -7,7 +7,7 @@ import logoUrl from "@/assets/images/logo.png";
 import moneyImage from "@/assets/images/money.svg";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { redeemCodeService } from "@/services/blockchain.services";
+import { redeemPointsService } from "@/services/blockchain.services";
 import {
   getPointsService,
   rethrowFailedResponse,
@@ -43,7 +43,7 @@ function Main() {
     } else {
       try {
         setIsRedeeming(true);
-        const response = await redeemCodeService({ points });
+        const response = await redeemPointsService({ points });
         rethrowFailedResponse(response);
         toast.success(response);
         getPointsService()
