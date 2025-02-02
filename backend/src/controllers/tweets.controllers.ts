@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { signTwitterPoints } from "../services/twitter-points.services";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 import { TwitterResponse } from "../types/tweet.like.retweet";
-import { CHAIN_ID, SIGN_TWITTER_POINTS } from "../utils/constants";
+import { SIGN_TWITTER_POINTS } from "../utils/constants";
 import { twitterLogin } from "./twitter.controllers";
 import { ethers } from "ethers";
 
