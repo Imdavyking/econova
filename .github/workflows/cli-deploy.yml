@@ -37,6 +37,10 @@ jobs:
         run: echo ${{github.repository}}
       - name: Debug RPC_URL
         run: echo $RPC_URL
+      - name: Set environment variable
+        run: echo "MY_URL=http://example.com" >> $GITHUB_ENV
+      - name: Display URL
+        run: echo $MY_URL
       - name: Publish and Deploy
         run: |
           sh ./scripts/publish-deploy.sh -o ${{github.repository}} -p ${{vars.PROJECT_NAME}} -e ${{vars.END_POINT}}
