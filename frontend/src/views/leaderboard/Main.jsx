@@ -3,6 +3,7 @@ import { gql, useQuery } from "@apollo/client";
 import { APP_NAME, CONTRACT_ADDRESS } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import { ellipsify } from "../../utils";
 // GraphQL Query
 const GET_POINTS = gql`
   query MyQuery {
@@ -19,9 +20,6 @@ const GET_POINTS = gql`
 `;
 
 const PointsList = () => {
-  // const { data } = await client.query({
-  //     query: GET_POINTS,
-  //   });
   const { loading, error, data } = useQuery(GET_POINTS);
 
   if (loading) return <p>Loading...</p>;
@@ -69,7 +67,9 @@ const PointsList = () => {
                   } hover:bg-gray-100 transition`}
                 >
                   <td className="p-3 text-black">{index + 1}</td>
-                  <td className="p-3 font-semibold text-black">{item.user}</td>
+                  <td className="p-3 font-semibold text-black">
+                    {ellipsify(item.user)}
+                  </td>
                   <td className="p-3 font-bold text-blue-600">{item.points}</td>
                   <td className="p-3 text-black">
                     {new Date(item.updatedTimeStamp * 1000).toLocaleString()}
