@@ -79,7 +79,7 @@ const getContract = async () => {
 export const addPointService = async ({ weight }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.addPointFromWeight(Math.trunc(weight));
+    const tx = await manager.addPointFromWeight(Math.trunc(weight).toString());
     await tx.wait(1);
     return `added ${weight} points`;
   } catch (error) {
@@ -93,7 +93,9 @@ export const donateToFoundationService = async ({
 }) => {
   const realAmount = amountInUsd;
   try {
-    amountInUsd = Math.trunc(Number(amountInUsd) * 10 ** FIAT_DECIMALS);
+    amountInUsd = Math.trunc(
+      Number(amountInUsd) * 10 ** FIAT_DECIMALS
+    ).toString();
     const manager = await getContract();
     const ethAmountToDonate = await manager.getUsdToTokenPrice(
       tokenAddress,
@@ -101,7 +103,7 @@ export const donateToFoundationService = async ({
     );
 
     const tx = await manager.donateToFoundation(tokenAddress, amountInUsd, {
-      value: ethAmountToDonate,
+      value: ethAmountToDonate.toString(),
     });
     await tx.wait(1);
     return `donated ${realAmount} USD`;
@@ -113,7 +115,11 @@ export const donateToFoundationService = async ({
 export const deployTokenService = async ({ name, symbol, initialSupply }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.deployToken(name, symbol, initialSupply);
+    const tx = await manager.deployToken(
+      name,
+      symbol,
+      initialSupply.toString()
+    );
     const receipt = await tx.wait(1);
 
     const event = receipt.events[1];
@@ -143,7 +149,7 @@ export const getPointsService = async () => {
 export const redeemPointsService = async ({ points }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.redeemPoints(Math.trunc(points));
+    const tx = await manager.redeemPoints(Math.trunc(points).toString());
     await tx.wait(1);
     return `redeemed ${points} points`;
   } catch (error) {
@@ -160,10 +166,11 @@ export const addPointsFromTwitterService = async ({
   try {
     const manager = await getContract();
     const tx = await manager.addPointsFromTwitterBot(
-      Math.trunc(points),
-      Math.trunc(userTwitterId),
-      Math.trunc(tweetId),
-      signature
+      Math.trunc(points).toString(),
+      Math.trunc(userTwitterId).toString(),
+      Math.trunc(tweetId).toString(),
+      signature.toString(),
+      { gasLimit: 500000 }
     );
     await tx.wait(1);
     return `claims ${points} points for tweet ${tweetId}`;
