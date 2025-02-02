@@ -35,8 +35,6 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     user.userTokenSecret
   );
 
-  console.log({ userTokenData });
-
   if (!userTokenData || !userTokenData.twitter_id) {
     res.status(401).json({ error: "Invalid user token" });
     return;
