@@ -10,14 +10,16 @@ import EVM_LOGO from "@/assets/images/creative_eth.png";
 import { APP_NAME, SERVER_URL_TWITTER_LOGIN } from "../../utils/constants";
 import ConnectWallet from "../../components/ConnectWallet";
 import { getUserTwitterInfo } from "../../services/user.twitter.services";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { FaUserCircle, FaCrown } from "react-icons/fa";
 
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
   const handleLogout = () => {
-    // Clear session logic here (e.g., remove token, reset state)
     console.log("User logged out");
+    setTwitterHandle("");
     setShowLogoutPopup(false);
   };
 
@@ -30,6 +32,7 @@ const Home = () => {
         console.log(error);
       });
   }, []);
+
   return (
     <>
       <div>
@@ -47,50 +50,59 @@ const Home = () => {
               </span>
             </a>
 
-            {/* <a
-              href={twitterHandle ? "#" : SERVER_URL_TWITTER_LOGIN}
-              className={`mt-3 md:mt-0 flex items-center ${
-                twitterHandle ? "cursor-not-allowed opacity-50" : ""
-              }`}
-              onClick={(e) => {
-                if (twitterHandle) {
-                  setShowLogoutPopup(true);
-                  e.preventDefault();
-                }
-              }}
-            >
-              <button
-                className={`flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 ease-in-out transform ${
-                  twitterHandle ? "" : "hover:scale-105"
-                }`}
-              >
-                {twitterHandle ? (
-                  twitterHandle
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M23 3a10.9 10.9 0 0 1-3.157.869A5.45 5.45 0 0 0 22.4 2.006a10.908 10.908 0 0 1-3.464 1.318A5.448 5.448 0 0 0 16.3 1a5.44 5.44 0 0 0-5.442 5.442c0 .426.045.841.132 1.237A15.415 15.415 0 0 1 1.671 3.149a5.43 5.43 0 0 0-.734 2.74c0 1.89.961 3.558 2.418 4.526A5.428 5.428 0 0 1 .639 9.57v.068c0 2.633 1.868 4.834 4.354 5.327a5.478 5.478 0 0 1-2.425.092c.678 2.108 2.654 3.637 5.003 3.675a10.906 10.906 0 0 1-6.74 2.328c-.438 0-.869-.026-1.296-.077a15.429 15.429 0 0 0 8.314 2.442c9.976 0 15.46-8.271 15.46-15.461 0-.236-.005-.472-.015-.707A11.295 11.295 0 0 0 23 3z" />
-                  </svg>
-                )}
-              </button>
-            </a> */}
-
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row mt-3 md:mt-0 space-y-2 sm:space-y-0 sm:space-x-3">
+            <div className="flex items-center space-x-4 mt-3 md:mt-0">
               <ConnectWallet accountStatus="address" />
-              <Link to="/add-points">
-                <button
-                  className="btn btn-outline-secondary bg-white py-2 md:py-3 px-3 md:px-4 text-primary w-full sm:w-48 mt-3 xl:mt-0"
-                  style={{ color: "black" }}
-                >
-                  Get Started
-                </button>
-              </Link>
+              <Menu as="div" className="relative">
+                <MenuButton className="focus:outline-none">
+                  <FaUserCircle className="text-white text-2xl cursor-pointer" />
+                </MenuButton>
+                <MenuItems className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2">
+                  {twitterHandle ? (
+                    <MenuItem>
+                      {({ isactive }) => (
+                        <button
+                          onClick={() => setShowLogoutPopup(true)}
+                          className={`block px-4 py-2 text-gray-700 w-full text-left ${
+                            isactive ? "bg-gray-200" : ""
+                          }`}
+                        >
+                          Logout ({twitterHandle})
+                        </button>
+                      )}
+                    </MenuItem>
+                  ) : (
+                    <MenuItem>
+                      {({ isactive }) => (
+                        <a
+                          href={SERVER_URL_TWITTER_LOGIN}
+                          className={`block px-4 py-2 text-gray-700 ${
+                            isactive ? "bg-gray-200" : ""
+                          }`}
+                        >
+                          Login with Twitter
+                        </a>
+                      )}
+                    </MenuItem>
+                  )}
+                  <MenuItem>
+                    {({ isactive }) => (
+                      <a
+                        href="/leaderboard"
+                        className={`flex items-center block px-4 py-2 text-gray-700 w-full text-left ${
+                          isactive ? "bg-gray-200" : ""
+                        }`}
+                      >
+                        Leaderboard
+                        <FaCrown
+                          className="ml-2 text-xl cursor-pointer"
+                          style={{ color: "gold" }}
+                        />
+                      </a>
+                    )}
+                  </MenuItem>
+                </MenuItems>
+              </Menu>
             </div>
           </div>
 

@@ -4,7 +4,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { Link, useNavigate } from "react-router-dom";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import logoUrl from "@/assets/images/logo.png";
-import garbageImage from "@/assets/images/garbage.svg";
+import moneyImage from "@/assets/images/money.svg";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { redeemCodeService } from "@/services/blockchain.services";
@@ -75,7 +75,7 @@ function Main() {
                 <img
                   alt={APP_NAME}
                   className="-intro-x w-1/2 -mt-16"
-                  src={garbageImage}
+                  src={moneyImage}
                 />
                 <div className="-intro-x text-white font-medium text-4xl leading-tight mt-10">
                   Redeem your points <br />
