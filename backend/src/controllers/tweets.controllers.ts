@@ -61,8 +61,6 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     retweets: 0,
   };
 
-  console.log(likesInfo, retweetsInfo);
-
   if (retweetsInfo) {
     const hasRetweeted = retweetsInfo?.data?.find(
       (user) => user.id === userTokenData.twitter_id
@@ -96,5 +94,11 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     userTokenData.twitter_id,
     tweetId
   );
-  res.json({ signature, points, tweetId, chainId });
+  res.json({
+    signature,
+    points,
+    tweetId,
+    chainId,
+    twitter_id: userTokenData.twitter_id,
+  });
 };

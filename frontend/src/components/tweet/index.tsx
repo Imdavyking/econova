@@ -4,16 +4,33 @@ import { SERVER_URL } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import { signTweetId } from "../../services/blockchain.twitter.services";
 import { toast } from "react-toastify";
+import { addPointsFromTwitterService } from "../../services/blockchain.services";
+interface Results {
+  points: {
+    likes: number;
+    retweets: number;
+  };
+  signature: string;
+  tweetId: string;
+  twitter_id: string;
+}
+
 export const Tweet = ({ tweet }) => {
   const [isChecking, setIsChecking] = React.useState(false);
   const [isClaiming, setIsClaiming] = React.useState(false);
+  const [results, setResults] = React.useState<Results | null>(null);
   const handleCheck = async (tweetId: string | number) => {
     try {
       setIsChecking(true);
       const signature = await signTweetId(tweetId);
-      await fetch(`${SERVER_URL}/api/tweets/points/${tweetId}/${signature}`, {
-        credentials: "include",
-      });
+      const results = await fetch(
+        `${SERVER_URL}/api/tweets/points/${tweetId}/${signature}`,
+        {
+          credentials: "include",
+        }
+      );
+      const data = await results.json();
+      setResults(data);
       console.log(`Check clicked for tweet ID: ${tweetId}`);
     } catch (error) {
       console.log(error);
@@ -25,6 +42,20 @@ export const Tweet = ({ tweet }) => {
 
   const handleClaim = async (tweetId: string | number) => {
     try {
+      setIsClaiming(true);
+      if (!results) {
+        toast.error("Please check the tweet first");
+        return;
+      }
+      await addPointsFromTwitterService({
+        points: Object.values(results.points).reduce(
+          (acc, curr) => acc + curr,
+          0
+        ),
+        userTwitterId: results.twitter_id,
+        tweetId: results.tweetId,
+        signature: results.signature,
+      });
       console.log(`Claim clicked for tweet ID: ${tweetId}`);
     } catch (error) {
       console.log(error);

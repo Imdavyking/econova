@@ -151,6 +151,27 @@ export const redeemPointsService = async ({ points }) => {
   }
 };
 
+export const addPointsFromTwitterService = async ({
+  points,
+  userTwitterId,
+  tweetId,
+  signature,
+}) => {
+  try {
+    const manager = await getContract();
+    const tx = await manager.addPointsFromTwitterBot(
+      Math.trunc(points),
+      Math.trunc(userTwitterId),
+      Math.trunc(tweetId),
+      signature
+    );
+    await tx.wait(1);
+    return `claims ${points} points for tweet ${tweetId}`;
+  } catch (error) {
+    return `${FAILED_KEY} to claim ${points} points for tweet ${tweetId}`;
+  }
+};
+
 export const rethrowFailedResponse = (response) => {
   if (String(response).includes(FAILED_KEY)) {
     throw new Error(response);
