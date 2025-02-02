@@ -78,7 +78,7 @@ contract EcoNovaManager is Ownable {
     }
 
     function deployToken(string memory name, string memory symbol, uint256 initialSupply) public {
-        CustomToken token = new CustomToken(name, symbol, initialSupply);
+        CustomToken token = new CustomToken(name, symbol, initialSupply, msg.sender);
         emit TokenCreated(address(token), name, symbol, initialSupply);
     }
 

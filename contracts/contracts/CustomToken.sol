@@ -4,6 +4,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract CustomToken is ERC20 {
     address public immutable OWNER;
+    address public immutable DEPLOYER;
 
     error CustomToken__NotOwner();
     error CustomToken__MaxSupplyExceeded();
@@ -11,9 +12,11 @@ contract CustomToken is ERC20 {
     constructor(
         string memory name,
         string memory symbol,
-        uint256 initialSupply
+        uint256 initialSupply,
+        address owner
     ) ERC20(name, symbol) {
-        OWNER = msg.sender;
+        OWNER = owner;
+        DEPLOYER = msg.sender;
         _mint(msg.sender, initialSupply * (10 ** uint256(decimals()))); // Mint tokens with correct decimals
     }
 
