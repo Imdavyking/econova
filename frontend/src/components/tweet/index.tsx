@@ -2,13 +2,15 @@ import React from "react";
 import { TWITTER_PROFILE_URL } from "../../utils/constants";
 import { SERVER_URL } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
+import { signTweetId } from "../../services/blockchain.twitter.services";
 export const Tweet = ({ tweet }) => {
   const [isChecking, setIsChecking] = React.useState(false);
   const [isClaiming, setIsClaiming] = React.useState(false);
   const handleCheck = async (tweetId: string | number) => {
     try {
       setIsChecking(true);
-      const signature = "helo";
+      const signature = await signTweetId(tweetId);
+      // const signature = "helo";
       await fetch(`${SERVER_URL}/api/tweets/points/${tweetId}/${signature}`, {
         credentials: "include",
       });

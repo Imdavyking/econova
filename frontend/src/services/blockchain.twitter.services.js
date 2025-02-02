@@ -1,4 +1,4 @@
-import ethers from "ethers";
+import { ethers } from "ethers";
 import { getSigner } from "./blockchain.services";
 
 export const signTweetId = async (tweetId) => {
