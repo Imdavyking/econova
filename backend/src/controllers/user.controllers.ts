@@ -10,5 +10,5 @@ export const getUserTwitterInfo = async (req: Request, res: Response) => {
   //   return;
   // }
 
-  res.json(req.sessionID);
+  res.json(req.cookies);
 };

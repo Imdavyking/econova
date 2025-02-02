@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
@@ -25,7 +26,11 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.27",
+    "@langchain/google-genai": "^0.1.6",
+    "@langchain/openai": "^0.3.16",
     "axios": "^1.7.9",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "ethers": "^6.4.0",
@@ -34,17 +39,14 @@
     "ioredis": "^5.4.2",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.10",
     "login-with-twitter": "^1.2.4",
     "mongoose": "^8.9.5",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.80.1",
     "simple-get": "^4.0.1",
     "winston": "^3.17.0",
-    "@langchain/core": "^0.3.27",
-    "@langchain/google-genai": "^0.1.6",
-    "@langchain/openai": "^0.3.16",
-    "langchain": "^0.3.10",
-    "zod": "^3.24.1",
-    "winston-daily-rotate-file": "^5.0.0"
+    "winston-daily-rotate-file": "^5.0.0",
+    "zod": "^3.24.1"
   }
 }

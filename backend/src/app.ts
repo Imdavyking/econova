@@ -1,14 +1,15 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./database/connection";
 import tweetRoutes from "./routes/tweets.routes";
 import logger from "./config/logger";
 import llmRoutes from "./routes/llm.routes";
-import { auth, JWT_SECRET_KEY } from "./middlewares/auth";
+import { JWT_SECRET_KEY } from "./middlewares/auth";
 import cors from "cors";
 import session from "express-session";
 import twitterRoutes from "./routes/twitter.routes";
 import userRoutes from "./routes/user.routes";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -26,6 +27,8 @@ app.use(
     },
   })
 );
+
+app.use(cookieParser());
 
 // Middleware
 app.use(express.json());
