@@ -4,7 +4,10 @@ import { SERVER_URL } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import { signTweetId } from "../../services/blockchain.twitter.services";
 import { toast } from "react-toastify";
-import { addPointsFromTwitterService } from "../../services/blockchain.services";
+import {
+  addPointsFromTwitterService,
+  rethrowFailedResponse,
+} from "../../services/blockchain.services";
 import { Result } from "ethers/lib/utils";
 import {
   deleteFromLocalStorage,
@@ -59,7 +62,7 @@ export const Tweet = ({ tweet }) => {
         return;
       }
 
-      const txResponse = await addPointsFromTwitterService({
+      const response = await addPointsFromTwitterService({
         points: Object.values(data.points)
           .reduce((acc, curr) => acc + curr, 0)
           .toString(),
@@ -67,6 +70,8 @@ export const Tweet = ({ tweet }) => {
         tweetId: data.tweetId.toString(),
         signature: data.signature.toString(),
       });
+
+      rethrowFailedResponse(response);
 
       deleteFromLocalStorage(tweetId.toString());
       console.log(`Claim clicked for tweet ID: ${tweetId}`);
