@@ -56,8 +56,6 @@
   - Show the token balance in the user’s connected wallet using a Web3 provider.
   - Include an option for the user to view their transaction history.
 
----
-
 ### **Components to Build**
 
 #### **Frontend**
@@ -101,8 +99,6 @@
 - **Authentication**:
   - Use OAuth for Twitter and wallet connection (e.g., MetaMask).
 
----
-
 ### **User Flow Summary**
 
 1. User connects their Twitter account.
@@ -110,3 +106,79 @@
 3. Points are calculated and displayed on the user's dashboard.
 4. User redeems points to mint ERC20 tokens.
 5. Tokens are sent to the user’s wallet.
+
+## Installation
+
+1. First, install Poetry for dependency management if you haven't already:
+
+Follow the steps here to use the official installation: https://python-poetry.org/docs/#installing-with-the-official-installer
+
+2. Clone the repository:
+
+```bash
+git clone  https://github.com/Imdavyking/econova
+```
+
+3. Go to the `/ai` directory:
+
+```bash
+cd econova/ai
+```
+
+4. Install dependencies:
+
+```bash
+poetry install --no-root
+```
+
+This will create a virtual environment and install all required dependencies.
+
+## Usage
+
+1. Activate the virtual environment:
+
+```bash
+poetry shell
+```
+
+2. Run the application:
+
+```bash
+poetry run python main.py
+```
+
+## Configure connections & launch an agent
+
+1. Configure your desired connections:
+
+   ```
+   configure-connection twitter    # For Twitter/X integration
+   configure-connection openai     # For OpenAI
+   configure-connection anthropic  # For Anthropic
+   configure-connection farcaster  # For Farcaster
+   configure-connection eternalai  # For EternalAI
+   configure-connection solana     # For Solana
+   configure-connection goat       # For Goat
+   configure-connection galadriel  # For Galadriel
+   configure-connection ethereum   # For Ethereum
+   configure-connection sonic      # For Sonic
+   configure-connection discord    # For Discord
+   configure-connection ollama     # For Ollama
+   configure-connection xai        # For Grok
+   configure-connection allora     # For Allora
+   configure-connection hyperbolic # For Hyperbolic
+   configure-connection groq       # For GROQ
+   ```
+
+2. Use `list-connections` to see all available connections and their status
+
+3. Load your agent (usually one is loaded by default, which can be set using the CLI or in agents/general.json):
+
+   ```
+   load-agent example
+   ```
+
+4. Start your agent:
+   ```
+   start
+   ```
