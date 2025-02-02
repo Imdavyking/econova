@@ -38,6 +38,7 @@ export const Tweet = ({ tweet }) => {
         { credentials: "include" }
       );
       const data = await response.json();
+
       setResults(data);
       saveToLocalStorage(tweetId.toString(), data);
       console.log(`Checked tweet ID: ${tweetId}`);
