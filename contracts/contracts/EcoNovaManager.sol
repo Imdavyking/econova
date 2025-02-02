@@ -217,6 +217,10 @@ contract EcoNovaManager is Ownable {
             revert EcoNovaManager__InvalidSignature();
         }
 
+        if (pointToAdd <= 0) {
+            revert EcoNovaManager__InsufficientPoints();
+        }
+
         usedHashes[messageHash] = true;
         userAddedTweets[userTwitterId][tweetId] = true;
 
@@ -251,6 +255,10 @@ contract EcoNovaManager is Ownable {
         uint256 points = weightInGrams * POINT_BASIS;
 
         PointData memory userPointData = userPoints[msg.sender];
+
+        if (weightInGrams <= 0) {
+            revert EcoNovaManager__InsufficientPoints();
+        }
 
         // check if the user already has points
         if (userPointData.points > 0) {

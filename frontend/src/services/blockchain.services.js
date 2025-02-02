@@ -79,7 +79,7 @@ const getContract = async () => {
 export const addPointService = async ({ weight }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.addPointFromWeight(Math.trunc(weight).toString());
+    const tx = await manager.addPointFromWeight(weight.toString());
     await tx.wait(1);
     return `added ${weight} points`;
   } catch (error) {
@@ -93,9 +93,7 @@ export const donateToFoundationService = async ({
 }) => {
   const realAmount = amountInUsd;
   try {
-    amountInUsd = Math.trunc(
-      Number(amountInUsd) * 10 ** FIAT_DECIMALS
-    ).toString();
+    amountInUsd = (Number(amountInUsd) * 10 ** FIAT_DECIMALS).toString();
     const manager = await getContract();
     const ethAmountToDonate = await manager.getUsdToTokenPrice(
       tokenAddress,
@@ -149,7 +147,7 @@ export const getPointsService = async () => {
 export const redeemPointsService = async ({ points }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.redeemPoints(Math.trunc(points).toString());
+    const tx = await manager.redeemPoints(points.toString());
     await tx.wait(1);
     return `redeemed ${points} points`;
   } catch (error) {
@@ -166,9 +164,9 @@ export const addPointsFromTwitterService = async ({
   try {
     const manager = await getContract();
     const tx = await manager.addPointsFromTwitterBot(
-      Math.trunc(points).toString(),
-      Math.trunc(userTwitterId).toString(),
-      Math.trunc(tweetId).toString(),
+      points.toString(),
+      userTwitterId.toString(),
+      tweetId.toString(),
       signature.toString(),
       { gasLimit: 500000 }
     );
