@@ -18,14 +18,19 @@ export const getUserTwitterInfo = async (req: Request, res: Response) => {
 
     const userInfo = JSON.parse(user);
 
-    const userTwitterId = await twitterLogin.validateUserToken(
+    const userTokenData = await twitterLogin.validateUserToken(
       userInfo.userToken,
       userInfo.userTokenSecret
     );
 
-    console.log({ userTwitterId });
+    if (!userTokenData) {
+      res.status(400).json({ error: "Invalid user token" });
+      return;
+    }
 
-    res.json({ userTwitterId });
+    const { twitter_id, screen_name } = userTokenData;
+
+    res.json({ twitter_id, screen_name });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }

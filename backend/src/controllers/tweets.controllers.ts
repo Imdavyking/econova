@@ -27,12 +27,12 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     return;
   }
 
-  const usertweeterId = await twitterLogin.validateUserToken(
+  const userTokenData = await twitterLogin.validateUserToken(
     user.userToken,
     user.userTokenSecret
   );
 
-  if (!usertweeterId) {
+  if (!userTokenData || !userTokenData.twitter_id) {
     res.status(401).json({ error: "Invalid user token" });
     return;
   }
@@ -60,7 +60,7 @@ export const getTweetPoints = async (req: Request, res: Response) => {
 
   if (retweetsInfo) {
     const hasRetweeted = retweetsInfo.data.find(
-      (user) => user.id === usertweeterId
+      (user) => user.id === userTokenData.twitter_id
     );
     if (hasRetweeted) {
       points.retweets += SIGN_TWITTER_POINTS.retweet;
@@ -68,7 +68,9 @@ export const getTweetPoints = async (req: Request, res: Response) => {
   }
 
   if (likesInfo) {
-    const hasLiked = likesInfo.data.find((user) => user.id === usertweeterId);
+    const hasLiked = likesInfo.data.find(
+      (user) => user.id === userTokenData.twitter_id
+    );
     if (hasLiked) {
       points.likes += SIGN_TWITTER_POINTS.like;
     }
@@ -86,7 +88,7 @@ export const getTweetPoints = async (req: Request, res: Response) => {
   const { signature, chainId } = await signTwitterPoints(
     userAddress,
     Object.values(points).reduce((a, b) => a + b, 0),
-    usertweeterId,
+    userTokenData.twitter_id,
     tweetId
   );
   res.json({ signature, points, tweetId, chainId });
