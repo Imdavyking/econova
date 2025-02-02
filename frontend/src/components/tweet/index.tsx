@@ -3,6 +3,7 @@ import { TWITTER_PROFILE_URL } from "../../utils/constants";
 import { SERVER_URL } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import { signTweetId } from "../../services/blockchain.twitter.services";
+import { toast } from "react-toastify";
 export const Tweet = ({ tweet }) => {
   const [isChecking, setIsChecking] = React.useState(false);
   const [isClaiming, setIsClaiming] = React.useState(false);
@@ -16,6 +17,7 @@ export const Tweet = ({ tweet }) => {
       console.log(`Check clicked for tweet ID: ${tweetId}`);
     } catch (error) {
       console.log(error);
+      toast.error("Error checking points");
     } finally {
       setIsChecking(false);
     }
@@ -25,6 +27,8 @@ export const Tweet = ({ tweet }) => {
     try {
       console.log(`Claim clicked for tweet ID: ${tweetId}`);
     } catch (error) {
+      console.log(error);
+      toast.error("Error claiming points");
     } finally {
       setIsClaiming(false);
     }
