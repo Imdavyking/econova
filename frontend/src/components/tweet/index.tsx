@@ -10,12 +10,13 @@ export const Tweet = ({ tweet }) => {
     try {
       setIsChecking(true);
       const signature = await signTweetId(tweetId);
-      // const signature = "helo";
+      console.log(`${SERVER_URL}/api/tweets/points/${tweetId}/${signature}`);
       await fetch(`${SERVER_URL}/api/tweets/points/${tweetId}/${signature}`, {
         credentials: "include",
       });
       console.log(`Check clicked for tweet ID: ${tweetId}`);
     } catch (error) {
+      console.log(error);
     } finally {
       setIsChecking(false);
     }

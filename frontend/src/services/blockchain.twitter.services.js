@@ -9,6 +9,7 @@ export const signTweetId = async (tweetId) => {
   );
 
   const wallet = await getSigner();
+  const walletAddress = await wallet.getAddress();
 
   const signature = await wallet.signMessage(
     ethers.utils.arrayify(messageHash)
@@ -19,7 +20,7 @@ export const signTweetId = async (tweetId) => {
     signature
   );
 
-  if (signerAddress !== wallet.address) {
+  if (signerAddress !== walletAddress) {
     throw new Error("Invalid signature");
   }
 
