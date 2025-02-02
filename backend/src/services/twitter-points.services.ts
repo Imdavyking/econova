@@ -39,5 +39,5 @@ export const signTwitterPoints = async (
     throw new Error("Invalid signature");
   }
 
-  return { signature };
+  return { signature, chainId: CHAIN_ID, pointToAdd };
 };
