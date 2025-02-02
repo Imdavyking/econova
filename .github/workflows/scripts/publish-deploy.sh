@@ -14,4 +14,4 @@ IPFSCID=$(npx subql publish -o -f .)
 
 echo $IPFSCID
 
-npx subql deployment:deploy -d --ipfsCID="$IPFSCID" --projectName="${PROJECTNAME}" --org="${ORG%/*}" --endpoint="${ENDPOINT}"
+npx subql deployment:deploy -d --ipfsCID="$IPFSCID" --projectName="${PROJECTNAME}" --org="${ORG%/*}"
