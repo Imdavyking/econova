@@ -8,6 +8,7 @@ import { auth, JWT_SECRET_KEY } from "./middlewares/auth";
 import cors from "cors";
 import session from "express-session";
 import twitterRoutes from "./routes/twitter.routes";
+import userRoutes from "./routes/user.routes";
 
 dotenv.config();
 const app = express();
@@ -43,6 +44,7 @@ app.use("/api/tweets", tweetRoutes);
 // app.use("/api/llm", auth, llmRoutes);
 app.use("/api/llm", llmRoutes);
 app.use("/twitter", twitterRoutes);
+app.use("/api/user", userRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
