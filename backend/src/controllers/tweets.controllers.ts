@@ -20,7 +20,10 @@ export const getTweetByTweetID = async (req: Request, res: Response) => {
 export const getTweetPoints = async (req: Request, res: Response) => {
   const { tweetId, tweetSignature } = req.params;
 
-  const { user } = req.cookies;
+  const user = JSON.parse(req.cookies.user) as {
+    userToken: string;
+    userTokenSecret: string;
+  };
 
   if (!user) {
     res.status(401).json({ error: "Unauthorized" });
@@ -31,6 +34,8 @@ export const getTweetPoints = async (req: Request, res: Response) => {
     user.userToken,
     user.userTokenSecret
   );
+
+  console.log({ userTokenData });
 
   if (!userTokenData || !userTokenData.twitter_id) {
     res.status(401).json({ error: "Invalid user token" });
