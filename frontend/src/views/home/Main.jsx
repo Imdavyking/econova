@@ -11,7 +11,7 @@ import { APP_NAME, SERVER_URL_TWITTER_LOGIN } from "../../utils/constants";
 import ConnectWallet from "../../components/ConnectWallet";
 import { getUserTwitterInfo } from "../../services/user.twitter.services";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { FaUserCircle, FaCrown } from "react-icons/fa";
+import { FaUserCircle, FaCrown, FaCoins } from "react-icons/fa";
 
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
@@ -85,22 +85,46 @@ const Home = () => {
                       )}
                     </MenuItem>
                   )}
-                  <MenuItem>
-                    {({ isactive }) => (
-                      <a
-                        href="/leaderboard"
-                        className={`flex items-center block px-4 py-2 text-gray-700 w-full text-left ${
-                          isactive ? "bg-gray-200" : ""
-                        }`}
-                      >
-                        Leaderboard
-                        <FaCrown
-                          className="ml-2 text-xl cursor-pointer"
-                          style={{ color: "gold" }}
-                        />
-                      </a>
-                    )}
-                  </MenuItem>
+                  {twitterHandle ? (
+                    <MenuItem>
+                      {({ isactive }) => (
+                        <a
+                          href="/leaderboard"
+                          className={`flex items-center px-4 py-2 text-gray-700 w-full text-left ${
+                            isactive ? "bg-gray-200" : ""
+                          }`}
+                        >
+                          Leaderboard
+                          <FaCrown
+                            className="ml-2 text-xl cursor-pointer"
+                            style={{ color: "gold" }}
+                          />
+                        </a>
+                      )}
+                    </MenuItem>
+                  ) : (
+                    <></>
+                  )}
+                  {twitterHandle ? (
+                    <MenuItem>
+                      {({ isactive }) => (
+                        <a
+                          href="/earn-points"
+                          className={`flex items-center  px-4 py-2 text-gray-700 w-full text-left ${
+                            isactive ? "bg-gray-200" : ""
+                          }`}
+                        >
+                          Earn Points
+                          <FaCoins
+                            className="ml-2 text-xl cursor-pointer"
+                            style={{ color: "gold" }}
+                          />
+                        </a>
+                      )}
+                    </MenuItem>
+                  ) : (
+                    <></>
+                  )}
                 </MenuItems>
               </Menu>
             </div>
