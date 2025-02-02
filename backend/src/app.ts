@@ -10,6 +10,7 @@ import session from "express-session";
 import twitterRoutes from "./routes/twitter.routes";
 import userRoutes from "./routes/user.routes";
 import cookieParser from "cookie-parser";
+import { FRONTEND_URL } from "./utils/constants";
 
 dotenv.config();
 const app = express();
@@ -37,6 +38,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
+    origin: FRONTEND_URL,
   })
 );
 
