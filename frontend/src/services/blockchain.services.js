@@ -119,7 +119,7 @@ export const deployTokenService = async ({ name, symbol, initialSupply }) => {
     const tx = await manager.deployToken(
       name,
       symbol,
-      initialSupply.toString()
+      getWholeNumber(initialSupply).toString()
     );
     const receipt = await tx.wait(1);
 
