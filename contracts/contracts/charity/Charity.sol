@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 contract Charity is Ownable, ReentrancyGuard {
     /** state variables */
     bool public canWithdrawFunds = true;
-    Category public category;
+    Category public charityCategory;
     /** constants */
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
@@ -30,7 +30,7 @@ contract Charity is Ownable, ReentrancyGuard {
     event DonationWithdrawn(address indexed organization, address indexed token, uint256 amount);
 
     constructor(Category _category) Ownable(msg.sender) {
-        category = _category;
+        charityCategory = _category;
     }
 
     function canWithdraw() public view returns (bool) {
