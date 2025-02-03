@@ -2,7 +2,6 @@
 pragma solidity ^0.8.7;
 import "./EcoNovaToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@orochi-network/contracts/IOrocleAggregatorV2.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./helpers/ethsign.sol";
 import "hardhat/console.sol";
@@ -35,8 +34,6 @@ contract EcoNovaManager is Ownable {
      * immutable variables
      */
     EcoNovaToken public immutable i_ecoNovaToken;
-    bytes20 public immutable i_ethIdentifier = "ETH";
-    IOrocleAggregatorV2 private i_oracle;
     IPyth public immutable pyth;
 
     /**
@@ -77,10 +74,9 @@ contract EcoNovaManager is Ownable {
 
     constructor(address oracleAddress, address _botAddress) Ownable(msg.sender) {
         i_ecoNovaToken = new EcoNovaToken();
-        i_oracle = IOrocleAggregatorV2(oracleAddress);
         botAddress = _botAddress;
         pyth = IPyth(oracleAddress);
-        emit SetOracle(address(i_oracle), oracleAddress);
+        emit SetOracle(oracleAddress, oracleAddress);
     }
 
     function deployToken(string memory name, string memory symbol, uint256 initialSupply) public {
@@ -109,15 +105,6 @@ contract EcoNovaManager is Ownable {
             return amountToSend / FIAT_DECIMALS;
         }
         revert EcoNovaManager__ConversionNotAvailable();
-    }
-
-    /**
-     * @dev Token price will use 18 decimal for all token
-     * @param identifier The identifier of the token.
-     * @return price
-     */
-    function _getPrice(bytes20 identifier) internal view returns (uint256, uint8) {
-        return (uint256(i_oracle.getLatestData(1, identifier)), 18);
     }
 
     /**
