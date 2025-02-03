@@ -20,7 +20,7 @@ chainId !== 31337
           // and reset Hardhat Network to that snapshot in every test.
           async function deployEcoNovaDeployerFixture() {
               // Contracts are deployed using the first signer/account by default
-              const [owner, otherAccount] = await hre.ethers.getSigners()
+              const [owner, otherAccount, orgAccount] = await hre.ethers.getSigners()
 
               const botPrivateKey = process.env.PRIVATE_KEY!
 
@@ -204,7 +204,7 @@ chainId !== 31337
                           })
                       )
                           .to.emit(ecoNDeployer, "Donated")
-                          .withArgs(owner, ETH_ADDRESS, "271210873559917723")
+                          .withArgs(owner, ETH_ADDRESS, "271210873559917723", category)
                   })
 
                   it("Should emit an event on withdraw", async function () {
@@ -231,8 +231,8 @@ chainId !== 31337
                               otherAccount
                           )
                       )
-                          .to.emit(charityDeployer, "DonationWithdrawed")
-                          .withArgs(owner, ETH_ADDRESS, ethAmountToDonate)
+                          .to.emit(charityDeployer, "DonationWithdrawn")
+                          .withArgs(otherAccount, ETH_ADDRESS, ethAmountToDonate)
                   })
               })
 
@@ -296,8 +296,8 @@ chainId !== 31337
                               otherAccount
                           )
                       ).to.changeEtherBalances(
-                          [owner, otherAccount],
-                          ["271210873559917723", "-271210873559917723"]
+                          [charityDeployer, otherAccount],
+                          ["-271210873559917723", "271210873559917723"]
                       )
                   })
                   it("Can sign twitter points and redeem the points for tokens", async function () {
@@ -312,7 +312,7 @@ chainId !== 31337
 
                       const messageHash = ethers.solidityPackedKeccak256(
                           ["address", "uint256", "uint256", "uint256", "uint256"],
-                          [otherAccount, points, userTwitterId, tweetId, chainId]
+                          [otherAccount.address, points, userTwitterId, tweetId, chainId]
                       )
 
                       const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
