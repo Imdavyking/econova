@@ -133,6 +133,12 @@ contract EcoNovaManager is Ownable {
         );
     }
 
+    /**
+     * Adds a charity organization to the contract.
+     * @param charityOrg the name of the charity organization.
+     * @param charityAddress the address of the charity organization.
+     */
+
     function addCharity(string memory charityOrg, address charityAddress) public onlyOwner {
         if (charityOrganizations[charityOrg] != address(0)) {
             revert EcoNovaManager__CharityNameCanNotBeNull();
@@ -146,6 +152,10 @@ contract EcoNovaManager is Ownable {
         emit CharityAdded(charityOrg, charityAddress, true);
     }
 
+    /**
+     * Removes a charity organization from the contract.
+     * @param charityOrg the name of the charity organization.
+     */
     function removeCharity(string memory charityOrg) public onlyOwner {
         if (charityOrganizations[charityOrg] == address(0)) {
             revert EcoNovaManager__CharityNameNotFound();
@@ -154,6 +164,11 @@ contract EcoNovaManager is Ownable {
         emit CharityAdded(charityOrg, charityOrganizations[charityOrg], false);
         delete charityOrganizations[charityOrg];
     }
+
+    /**
+     * @dev Validates the charity organization.
+     * @param charityAddress The address of the charity organization.
+     */
 
     function validateCharity(address charityAddress) public returns (bool) {
         uint256 size;

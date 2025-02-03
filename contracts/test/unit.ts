@@ -24,14 +24,27 @@ chainId !== 31337
               const botPrivateKey = process.env.PRIVATE_KEY!
 
               const wallet = new ethers.Wallet(botPrivateKey)
+              const categories = {
+                  Education: 0,
+                  Health: 1,
+                  Environment: 2,
+                  Animals: 3,
+                  HumanRights: 4,
+                  Poverty: 5,
+                  Other: 6,
+              }
 
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
-
+              const CharityDeployer = await hre.ethers.getContractFactory("Charity")
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
+              const charityDeployer = await CharityDeployer.deploy(categories.Education, "UN")
+              const charityAddress = await charityDeployer.getAddress()
+              const charityName = await charityDeployer.name()
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
               const oracleAddress = await mockPythPriceFeedDeployer.getAddress()
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(oracleAddress, wallet.address)
+              ecoNDeployer.addCharity(charityName, charityAddress)
 
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
 
@@ -53,6 +66,8 @@ chainId !== 31337
                   otherAccount,
                   mockPythPriceFeedDeployer,
                   ecoNDeployerAddress,
+                  charityName,
+                  charityDeployer,
               }
           }
 
@@ -106,7 +121,9 @@ chainId !== 31337
                   })
 
                   it("Can donate and withdraw accordingly.", async function () {
-                      const { ecoNDeployer } = await loadFixture(deployEcoNovaDeployerFixture)
+                      const { ecoNDeployer, charityName, charityDeployer } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
 
                       const DOLLAR_AMOUNT = 10
 
@@ -115,11 +132,16 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      await ecoNDeployer.donateToFoundation(ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
-                      })
+                      await ecoNDeployer.donateToFoundation(
+                          charityName,
+                          ETH_ADDRESS,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
 
-                      await ecoNDeployer.withdrawDonation(ETH_ADDRESS, DOLLAR_AMOUNT)
+                      await charityDeployer.withdrawDonation(ETH_ADDRESS, DOLLAR_AMOUNT)
                   })
               })
 
@@ -174,7 +196,7 @@ chainId !== 31337
                           .withArgs(owner.address, 100)
                   })
                   it("Should emit an event on donated", async function () {
-                      const { ecoNDeployer, owner } = await loadFixture(
+                      const { ecoNDeployer, owner, charityName } = await loadFixture(
                           deployEcoNovaDeployerFixture
                       )
 
@@ -186,18 +208,22 @@ chainId !== 31337
                       )
 
                       await expect(
-                          ecoNDeployer.donateToFoundation(ETH_ADDRESS, DOLLAR_AMOUNT, {
-                              value: ethAmountToDonate,
-                          })
+                          ecoNDeployer.donateToFoundation(
+                              charityName,
+                              ETH_ADDRESS,
+                              DOLLAR_AMOUNT,
+                              {
+                                  value: ethAmountToDonate,
+                              }
+                          )
                       )
                           .to.emit(ecoNDeployer, "Donated")
                           .withArgs(owner.address, ETH_ADDRESS, "271210873559917723")
                   })
 
                   it("Should emit an event on withdraw", async function () {
-                      const { ecoNDeployer, owner } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
+                      const { ecoNDeployer, owner, charityName, charityDeployer } =
+                          await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
@@ -206,12 +232,19 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      await ecoNDeployer.donateToFoundation(ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
-                      })
+                      await ecoNDeployer.donateToFoundation(
+                          charityName,
+                          ETH_ADDRESS,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
 
-                      await expect(ecoNDeployer.withdrawDonation(ETH_ADDRESS, ethAmountToDonate))
-                          .to.emit(ecoNDeployer, "DonationWithdrawed")
+                      await expect(
+                          charityDeployer.withdrawDonation(ETH_ADDRESS, ethAmountToDonate)
+                      )
+                          .to.emit(charityDeployer, "DonationWithdrawed")
                           .withArgs(owner.address, ETH_ADDRESS, ethAmountToDonate)
                   })
               })
@@ -232,9 +265,8 @@ chainId !== 31337
                   })
 
                   it("Can donate with ether change.", async function () {
-                      const { ecoNDeployer, owner, ecoNDeployerAddress } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
+                      const { ecoNDeployer, owner, ecoNDeployerAddress, charityName } =
+                          await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
@@ -244,18 +276,27 @@ chainId !== 31337
                       )
 
                       await expect(
-                          ecoNDeployer.donateToFoundation(ETH_ADDRESS, DOLLAR_AMOUNT, {
-                              value: ethAmountToDonate,
-                          })
+                          ecoNDeployer.donateToFoundation(
+                              charityName,
+                              ETH_ADDRESS,
+                              DOLLAR_AMOUNT,
+                              {
+                                  value: ethAmountToDonate,
+                              }
+                          )
                       ).to.changeEtherBalances(
                           [owner, ecoNDeployerAddress],
                           ["-271210873559917723", "271210873559917723"]
                       )
                   })
                   it("Can withdraw with ether change.", async function () {
-                      const { ecoNDeployer, owner, ecoNDeployerAddress } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
+                      const {
+                          ecoNDeployer,
+                          owner,
+                          ecoNDeployerAddress,
+                          charityName,
+                          charityDeployer,
+                      } = await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
@@ -264,12 +305,17 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      await ecoNDeployer.donateToFoundation(ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
-                      })
+                      await ecoNDeployer.donateToFoundation(
+                          charityName,
+                          ETH_ADDRESS,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
 
                       await expect(
-                          ecoNDeployer.withdrawDonation(ETH_ADDRESS, ethAmountToDonate)
+                          charityDeployer.withdrawDonation(ETH_ADDRESS, ethAmountToDonate)
                       ).to.changeEtherBalances(
                           [owner, ecoNDeployerAddress],
                           ["271210873559917723", "-271210873559917723"]
