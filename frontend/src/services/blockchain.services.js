@@ -180,12 +180,17 @@ export const addPointsFromTwitterService = async ({
       getWholeNumber(points).toString(),
       userTwitterId.toString(),
       tweetId.toString(),
-      signature.toString()
+      signature.toString(),
+      { gasLimit: 500000 }
     );
 
     await tx.wait(1);
     return `claims ${points} points for tweet ${tweetId}`;
   } catch (error) {
+    console.dir(error.data);
+    console.dir(error.reason);
+    console.dir(error.code);
+    console.dir(error.transactionHash);
     return `${FAILED_KEY} to claim ${points} points for tweet ${tweetId}`;
   }
 };
