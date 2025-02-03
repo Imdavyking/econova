@@ -12,6 +12,7 @@ import {
   FAILED_KEY,
   FIAT_DECIMALS,
 } from "../utils/constants";
+import { getWholeNumber } from "../utils/whole.util";
 
 async function switchOrAddChain(ethProvider) {
   try {
@@ -79,7 +80,9 @@ const getContract = async () => {
 export const addPointService = async ({ weight }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.addPointFromWeight(weight.toString());
+    const tx = await manager.addPointFromWeight(
+      getWholeNumber(weight).toString()
+    );
     await tx.wait(1);
     return `added ${weight} points`;
   } catch (error) {
@@ -147,7 +150,7 @@ export const getPointsService = async () => {
 export const redeemPointsService = async ({ points }) => {
   try {
     const manager = await getContract();
-    const tx = await manager.redeemPoints(points.toString());
+    const tx = await manager.redeemPoints(getWholeNumber(points).toString());
     await tx.wait(1);
     return `redeemed ${points} points`;
   } catch (error) {
@@ -164,7 +167,7 @@ export const addPointsFromTwitterService = async ({
   try {
     const manager = await getContract();
     const tx = await manager.addPointsFromTwitterBot(
-      points.toString(),
+      getWholeNumber(points).toString(),
       userTwitterId.toString(),
       tweetId.toString(),
       signature.toString(),
