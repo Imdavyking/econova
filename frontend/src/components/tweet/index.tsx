@@ -45,8 +45,8 @@ export const Tweet = ({ tweet }) => {
       console.log(`Checked tweet ID: ${tweetId}`);
     } catch (error) {
       console.error(error);
-      if (typeof error === "string") {
-        toast.error(error);
+      if (error instanceof Error) {
+        toast.error(error.message);
       } else {
         toast.error("Error checking points");
       }
@@ -95,8 +95,8 @@ export const Tweet = ({ tweet }) => {
       toast.success(response);
       console.log(`Claimed points for tweet ID: ${tweetId}`);
     } catch (error) {
-      if (typeof error === "string") {
-        toast.error(error);
+      if (error instanceof Error) {
+        toast.error(error.message);
       } else {
         toast.error("Error claiming points");
       }
