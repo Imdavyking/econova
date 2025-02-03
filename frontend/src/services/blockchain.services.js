@@ -172,8 +172,7 @@ export const checkForClaimService = async ({ userTwitterId, tweetId }) => {
     const claim = await manager.userAddedTweets(userTwitterId, tweetId);
     return claim;
   } catch (error) {
-    console.log(error);
-    return `${FAILED_KEY} to check for claim`;
+    return false;
   }
 };
 
