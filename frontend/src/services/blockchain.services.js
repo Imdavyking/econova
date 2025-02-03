@@ -166,6 +166,17 @@ const errDecoder = async (e) => {
   }
 };
 
+export const checkForClaim = async ({ userTwitterId, tweetId }) => {
+  try {
+    const manager = await getContract();
+    const claim = await manager.userAddedTweets(userTwitterId, tweetId);
+    return claim;
+  } catch (error) {
+    console.log(error);
+    return `${FAILED_KEY} to check for claim`;
+  }
+};
+
 export const addPointsFromTwitterService = async ({
   points,
   userTwitterId,

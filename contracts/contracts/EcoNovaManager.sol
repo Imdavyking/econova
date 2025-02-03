@@ -16,7 +16,7 @@ contract EcoNovaManager is Ownable {
     mapping(address => uint256) public donations;
     mapping(address => uint256) public userDonations;
     mapping(bytes32 => bool) public usedHashes;
-    mapping(uint256 => mapping(uint256 => bool)) userAddedTweets;
+    mapping(uint256 => mapping(uint256 => bool)) public userAddedTweets;
 
     /**
      * constants

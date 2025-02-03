@@ -6,6 +6,7 @@ import { signTweetId } from "../../services/blockchain.twitter.services";
 import { toast } from "react-toastify";
 import {
   addPointsFromTwitterService,
+  checkForClaim,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
 import {
@@ -59,6 +60,13 @@ export const Tweet = ({ tweet }) => {
         toast.error("Please check the tweet first");
         return;
       }
+
+      const isClaimed = await checkForClaim({
+        userTwitterId: data.twitter_id,
+        tweetId: data.tweetId,
+      });
+
+      console.log("isClaimed", isClaimed);
 
       const totalPoints = Object.values(data.points).reduce(
         (acc, curr) => acc + curr,
