@@ -94,10 +94,9 @@ contract EcoNovaManager is Ownable {
      */
     function getUsdToTokenPrice(address token, uint256 amountInUsd) public view returns (uint256) {
         if (token == ETH_ADDRESS) {
-            uint256 priceOfTokenInUsd = _getPrice(i_ethIdentifier);
+            (uint256 priceOfTokenInUsd, uint8 priceDecimals) = _getPrice(i_ethIdentifier);
 
             uint8 tokenDecimals = 18;
-            uint8 priceDecimals = 18;
 
             uint256 amountToSendNumerator = amountInUsd *
                 (10 ** tokenDecimals) *
@@ -116,14 +115,14 @@ contract EcoNovaManager is Ownable {
      * @param identifier The identifier of the token.
      * @return price
      */
-    function _getPrice(bytes20 identifier) internal view returns (uint256) {
+    function _getPrice(bytes20 identifier) internal view returns (uint256, uint8) {
         uint256 chainId = block.chainid;
         if (chainId == 66665 || chainId == 31337) {
-            return uint256(i_oracle.getLatestData(1, identifier));
+            return (uint256(i_oracle.getLatestData(1, identifier)), 18);
         }
         bytes32 priceFeedId = 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d; // S/USD
         PythStructs.Price memory price = pyth.getPriceNoOlderThan(priceFeedId, 60);
-        return uint256(uint64(price.price));
+        return (uint256(uint64(price.price)), uint8(uint32(price.expo)));
     }
 
     /**
