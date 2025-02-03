@@ -26,9 +26,11 @@ async function main() {
         process.env.OROCHI_ORACLE_ADDRESS!
 
     await verify(ecoAddress, [oracle, wallet.address])
+
+    const blockNumber = await ethers.provider.getBlockNumber()
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
-    updateEnv(ecoAddress, "indexer", "BLOCK_NUMBER")
+    updateEnv(blockNumber.toString(), "indexer", "BLOCK_NUMBER")
 
     copyABI("EcoNovaManager", "frontend/src/assets/json")
     copyABI("EcoNovaManager", "indexer/abis")
