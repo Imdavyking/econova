@@ -45,7 +45,11 @@ export const Tweet = ({ tweet }) => {
       console.log(`Checked tweet ID: ${tweetId}`);
     } catch (error) {
       console.error(error);
-      toast.error("Error checking points");
+      if (typeof error === "string") {
+        toast.error(error);
+      } else {
+        toast.error("Error checking points");
+      }
     } finally {
       setIsChecking(false);
     }
