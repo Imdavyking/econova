@@ -42,9 +42,12 @@ const config: HardhatUserConfig = {
             chainId: 31337,
         },
         testNetwork: {
-            url: process.env.RPC_URL || "https://rpc.creatorchain.io",
-            accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+            url: process.env.RPC_URL,
+            accounts: [PRIVATE_KEY],
             chainId: +CHAIN_ID!,
+            ignition: {
+                explorerUrl: process.env.CHAIN_BLOCKEXPLORER_URL,
+            },
         },
     },
     solidity: "0.8.28",

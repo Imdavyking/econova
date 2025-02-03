@@ -18,6 +18,9 @@ async function main() {
     const ecoAddress = await ecoNovaDeployer.getAddress()
     const botPrivateKey = process.env.PRIVATE_KEY!
     const wallet = new ethers.Wallet(botPrivateKey)
+    const chainName = process.env.CHAIN_NAME!
+    const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
+    const chainSymbol = process.env.CHAIN_SYMBOL!
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
 
     if (chainId === 31337) return
@@ -28,9 +31,28 @@ async function main() {
     await verify(ecoAddress, [oracle, wallet.address])
 
     const blockNumber = await ethers.provider.getBlockNumber()
+    const rpcUrl = (network.config as any).url
+    const blockExplorerUrl = network.config.ignition.explorerUrl!
+    /** contract address */
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
+    /** block number */
     updateEnv(blockNumber.toString(), "indexer", "BLOCK_NUMBER")
+    /** chainid */
+    updateEnv(chainId!.toString()!, "frontend", "VITE_CHAIN_ID")
+    updateEnv(chainId!.toString()!, "backend", "CHAIN_ID")
+    updateEnv(chainId!.toString()!, "indexer", "CHAIN_ID")
+    /** rpc url */
+    updateEnv(rpcUrl, "frontend", "VITE_CHAIN_RPC")
+    updateEnv(rpcUrl, "indexer", "RPC_URL")
+    /** block explorer url (3091) */
+    updateEnv(blockExplorerUrl, "frontend", "VITE_CHAIN_BLOCKEXPLORER_URL")
+    /** update chain name */
+    updateEnv(chainName, "frontend", "VITE_CHAIN_NAME")
+    /** update chain currency name */
+    updateEnv(chainCurrencyName, "frontend", "VITE_CHAIN_CURRENCY_NAME")
+    /** update chain currency name */
+    updateEnv(chainSymbol, "frontend", "VITE_CHAIN_SYMBOL")
 
     copyABI("EcoNovaManager", "frontend/src/assets/json")
     copyABI("EcoNovaManager", "indexer/abis")
