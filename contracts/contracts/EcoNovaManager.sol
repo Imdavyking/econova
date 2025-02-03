@@ -36,7 +36,7 @@ contract EcoNovaManager is Ownable {
     EcoNovaToken public immutable i_ecoNovaToken;
     bytes20 public immutable i_ethIdentifier = "ETH";
     IOrocleAggregatorV2 private i_oracle;
-    IPyth pyth;
+    IPyth public immutable pyth;
 
     /**
      * error messages
