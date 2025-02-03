@@ -158,6 +158,16 @@ export const redeemPointsService = async ({ points }) => {
   }
 };
 
+const errDecoder = async (e) => {
+  const manager = await getContract();
+  if (e.data && contract) {
+    const decodedError = manager.interface.parseError(e.data);
+    return `Transaction failed: ${decodedError?.name}`;
+  } else {
+    return e;
+  }
+};
+
 export const addPointsFromTwitterService = async ({
   points,
   userTwitterId,
@@ -172,10 +182,10 @@ export const addPointsFromTwitterService = async ({
       tweetId.toString(),
       signature.toString()
     );
+
     await tx.wait(1);
     return `claims ${points} points for tweet ${tweetId}`;
   } catch (error) {
-    console.log(error);
     return `${FAILED_KEY} to claim ${points} points for tweet ${tweetId}`;
   }
 };
