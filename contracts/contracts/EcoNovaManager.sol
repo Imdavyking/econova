@@ -121,7 +121,7 @@ contract EcoNovaManager is Ownable {
         if (chainId == 66665 || chainId == 31337) {
             return uint256(i_oracle.getLatestData(1, identifier));
         }
-        bytes32 priceFeedId = 0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace; // ETH/USD
+        bytes32 priceFeedId = 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d; // S/USD
         PythStructs.Price memory price = pyth.getPriceNoOlderThan(priceFeedId, 60);
         return uint256(uint64(price.price));
     }
