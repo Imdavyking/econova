@@ -54,6 +54,8 @@ contract EcoNovaManager is Ownable {
     error EcoNovaManager__SignatureNotValidForChainId();
     error EcoNovaManager__CharityNameNotFound();
     error EcoNovaManager__CanNotBeZero();
+    error EcoNovaManager__InvalidCharityAddress();
+    error EcoNovaManager__CharityCannotWithdraw();
 
     /**
      * events
@@ -145,6 +147,25 @@ contract EcoNovaManager is Ownable {
             revert EcoNovaManager__CharityNameNotFound();
         }
 
+        address charityAddress = charityOrganizations[charityOrg];
+
+        uint256 size;
+        assembly {
+            size := extcodesize(charityAddress)
+        }
+        if (size == 0) {
+            revert EcoNovaManager__InvalidCharityAddress(); // New revert error to handle invalid charity contract address
+        }
+
+        // Check if the charity contract implements a withdraw function (or similar)
+        (bool canWithdraw, bytes memory data) = charityAddress.call(
+            abi.encodeWithSignature("canWithdraw()")
+        );
+
+        if (!canWithdraw || (data.length > 0 && abi.decode(data, (bool)) == false)) {
+            revert EcoNovaManager__CharityCannotWithdraw();
+        }
+
         if (amountInUsd <= 0) {
             revert EcoNovaManager__CanNotBeZero();
         }
@@ -172,12 +193,12 @@ contract EcoNovaManager is Ownable {
             donations[ETH_ADDRESS] += msg.value;
             userDonations[caller] += msg.value;
             userDonationsOrgs[caller][charityOrg] += msg.value;
-            (bool success, ) = charityOrganizations[charityOrg].call{value: amountToSend}("");
+            (bool success, ) = charityAddress.call{value: amountToSend}("");
             if (!success) {
                 revert EcoNovaManager__SendingFailed();
             }
         } else {
-            IERC20(token).transfer(charityOrganizations[charityOrg], amountToSend);
+            IERC20(token).transfer(charityAddress, amountToSend);
         }
 
         emit PointsAdded(caller, userPoints[caller].points);
