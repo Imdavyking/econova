@@ -185,13 +185,6 @@ export const addPointsFromTwitterService = async ({
   try {
     const manager = await getContract();
 
-    const info = await manager.getPricePyth();
-
-    console.log({
-      price: Number(info[0]),
-      exp: Number(info[1]),
-    });
-
     const tx = await manager.addPointsFromTwitterBot(
       getWholeNumber(points).toString(),
       userTwitterId.toString(),

@@ -95,7 +95,8 @@ contract EcoNovaManager is Ownable {
      */
     function getUsdToTokenPrice(address token, uint256 amountInUsd) public view returns (uint256) {
         if (token == ETH_ADDRESS) {
-            (uint256 priceOfTokenInUsd, uint8 priceDecimals) = _getPrice(i_ethIdentifier);
+            // (uint256 priceOfTokenInUsd, uint8 priceDecimals) = _getPrice(i_ethIdentifier);
+            (uint256 priceOfTokenInUsd, uint8 priceDecimals) = getPricePyth();
 
             uint8 tokenDecimals = 18;
 
