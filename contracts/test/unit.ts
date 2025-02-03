@@ -68,6 +68,7 @@ chainId !== 31337
                   ecoNDeployerAddress,
                   charityName,
                   charityDeployer,
+                  charityAddress,
               }
           }
 
@@ -265,8 +266,13 @@ chainId !== 31337
                   })
 
                   it("Can donate with ether change.", async function () {
-                      const { ecoNDeployer, owner, ecoNDeployerAddress, charityName } =
-                          await loadFixture(deployEcoNovaDeployerFixture)
+                      const {
+                          ecoNDeployer,
+                          owner,
+                          ecoNDeployerAddress,
+                          charityName,
+                          charityAddress,
+                      } = await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
@@ -285,7 +291,7 @@ chainId !== 31337
                               }
                           )
                       ).to.changeEtherBalances(
-                          [owner, ecoNDeployerAddress],
+                          [owner, charityAddress],
                           ["-271210873559917723", "271210873559917723"]
                       )
                   })
@@ -295,6 +301,7 @@ chainId !== 31337
                           owner,
                           ecoNDeployerAddress,
                           charityName,
+                          charityAddress,
                           charityDeployer,
                       } = await loadFixture(deployEcoNovaDeployerFixture)
 
@@ -317,7 +324,7 @@ chainId !== 31337
                       await expect(
                           charityDeployer.withdrawDonation(ETH_ADDRESS, ethAmountToDonate)
                       ).to.changeEtherBalances(
-                          [owner, ecoNDeployerAddress],
+                          [owner, charityAddress],
                           ["271210873559917723", "-271210873559917723"]
                       )
                   })
