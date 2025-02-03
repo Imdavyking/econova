@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./helpers/ethsign.sol";
 import "hardhat/console.sol";
 import "./CustomToken.sol";
+import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
+import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
 
 contract EcoNovaManager is Ownable {
     /**
@@ -33,7 +35,8 @@ contract EcoNovaManager is Ownable {
      */
     EcoNovaToken public immutable i_ecoNovaToken;
     bytes20 public immutable i_ethIdentifier = "ETH";
-    IOrocleAggregatorV2 private i_orocle;
+    IOrocleAggregatorV2 private i_oracle;
+    IPyth pyth;
 
     /**
      * error messages
@@ -55,7 +58,7 @@ contract EcoNovaManager is Ownable {
      */
     event PointsAdded(address indexed user, uint256 points);
     event PointsRedeemed(address indexed user, uint256 points);
-    event SetOrocle(address indexed oldOrocle, address indexed newOrocle);
+    event SetOracle(address indexed oldOrocle, address indexed newOrocle);
     event Donated(address indexed user, address indexed token, uint256 amount);
     event DonationWithdrawed(address indexed user, address indexed token, uint256 amount);
     event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
@@ -71,11 +74,12 @@ contract EcoNovaManager is Ownable {
         address user;
     }
 
-    constructor(address orocleAddress, address _botAddress) Ownable(msg.sender) {
+    constructor(address oracleAddress, address _botAddress) Ownable(msg.sender) {
         i_ecoNovaToken = new EcoNovaToken();
-        i_orocle = IOrocleAggregatorV2(orocleAddress);
+        i_oracle = IOrocleAggregatorV2(oracleAddress);
         botAddress = _botAddress;
-        emit SetOrocle(address(i_orocle), orocleAddress);
+        pyth = IPyth(oracleAddress);
+        emit SetOracle(address(i_oracle), oracleAddress);
     }
 
     function deployToken(string memory name, string memory symbol, uint256 initialSupply) public {
@@ -115,9 +119,11 @@ contract EcoNovaManager is Ownable {
     function _getPrice(bytes20 identifier) internal view returns (uint256) {
         uint256 chainId = block.chainid;
         if (chainId == 66665 || chainId == 31337) {
-            return uint256(i_orocle.getLatestData(1, identifier));
+            return uint256(i_oracle.getLatestData(1, identifier));
         }
-        return 0;
+        bytes32 priceFeedId = 0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace; // ETH/USD
+        PythStructs.Price memory price = pyth.getPriceNoOlderThan(priceFeedId, 60);
+        return uint256(uint64(price.price));
     }
 
     /**
