@@ -30,12 +30,10 @@ chainId !== 31337
               const CharityDeployer = await hre.ethers.getContractFactory("Charity")
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
               const charityDeployer = await CharityDeployer.deploy(charityCategories.Education)
-              const charityAddress = await charityDeployer.getAddress()
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
-              const oracleAddress = await mockPythPriceFeedDeployer.getAddress()
 
-              const ecoNDeployer = await EcoNovaDeployer.deploy(oracleAddress, wallet.address)
-              ecoNDeployer.addCharity(charityName, charityAddress)
+              const ecoNDeployer = await EcoNovaDeployer.deploy(mockPythPriceFeedDeployer, wallet)
+              ecoNDeployer.addCharity(charityDeployer)
 
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
 
@@ -57,9 +55,7 @@ chainId !== 31337
                   otherAccount,
                   mockPythPriceFeedDeployer,
                   ecoNDeployerAddress,
-                  charityName,
                   charityDeployer,
-                  charityAddress,
               }
           }
 
@@ -81,7 +77,7 @@ chainId !== 31337
                       )
 
                       await ecoNDeployer.addPointFromWeight(100)
-                      const userPoint = await ecoNDeployer.userPoints(owner.address)
+                      const userPoint = await ecoNDeployer.userPoints(owner)
                       expect(Number(userPoint[0])).to.equal(3500)
                   })
                   it("Can withdraw points based on point gained.", async function () {
@@ -92,7 +88,7 @@ chainId !== 31337
                       await ecoNDeployer.addPointFromWeight(100)
                       await ecoNDeployer.redeemPoints(100)
 
-                      const userPoint = await ecoNDeployer.userPoints(owner.address)
+                      const userPoint = await ecoNDeployer.userPoints(owner)
 
                       expect(Number(userPoint[0])).to.equal(3400)
                   })
@@ -113,7 +109,7 @@ chainId !== 31337
                   })
 
                   it("Can donate and withdraw accordingly.", async function () {
-                      const { ecoNDeployer, charityName, charityDeployer } = await loadFixture(
+                      const { ecoNDeployer, charityDeployer, otherAccount } = await loadFixture(
                           deployEcoNovaDeployerFixture
                       )
 
@@ -124,16 +120,17 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      await ecoNDeployer.donateToFoundation(
-                          charityName,
+                      const category = await charityDeployer.category()
+
+                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                          value: ethAmountToDonate,
+                      })
+
+                      await charityDeployer.withdrawToOrganization(
                           ETH_ADDRESS,
                           DOLLAR_AMOUNT,
-                          {
-                              value: ethAmountToDonate,
-                          }
+                          otherAccount
                       )
-
-                      await charityDeployer.withdrawDonation(ETH_ADDRESS, DOLLAR_AMOUNT)
                   })
               })
 
@@ -174,7 +171,7 @@ chainId !== 31337
 
                       await expect(ecoNDeployer.addPointFromWeight(100))
                           .to.emit(ecoNDeployer, "PointsAdded")
-                          .withArgs(owner.address, 3500)
+                          .withArgs(owner, 3500)
                   })
                   it("Should emit an event on redeem code", async function () {
                       const { ecoNDeployer, owner } = await loadFixture(
@@ -185,10 +182,10 @@ chainId !== 31337
 
                       await expect(ecoNDeployer.redeemPoints(100))
                           .to.emit(ecoNDeployer, "PointsRedeemed")
-                          .withArgs(owner.address, 100)
+                          .withArgs(owner, 100)
                   })
                   it("Should emit an event on donated", async function () {
-                      const { ecoNDeployer, owner, charityName } = await loadFixture(
+                      const { ecoNDeployer, owner, charityDeployer } = await loadFixture(
                           deployEcoNovaDeployerFixture
                       )
 
@@ -199,22 +196,19 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
+                      const category = await charityDeployer.category()
+
                       await expect(
-                          ecoNDeployer.donateToFoundation(
-                              charityName,
-                              ETH_ADDRESS,
-                              DOLLAR_AMOUNT,
-                              {
-                                  value: ethAmountToDonate,
-                              }
-                          )
+                          ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                              value: ethAmountToDonate,
+                          })
                       )
                           .to.emit(ecoNDeployer, "Donated")
-                          .withArgs(owner.address, ETH_ADDRESS, "271210873559917723")
+                          .withArgs(owner, ETH_ADDRESS, "271210873559917723")
                   })
 
                   it("Should emit an event on withdraw", async function () {
-                      const { ecoNDeployer, owner, charityName, charityDeployer } =
+                      const { ecoNDeployer, owner, charityDeployer, otherAccount } =
                           await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
@@ -224,20 +218,21 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      await ecoNDeployer.donateToFoundation(
-                          charityName,
-                          ETH_ADDRESS,
-                          DOLLAR_AMOUNT,
-                          {
-                              value: ethAmountToDonate,
-                          }
-                      )
+                      const category = await charityDeployer.category()
+
+                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                          value: ethAmountToDonate,
+                      })
 
                       await expect(
-                          charityDeployer.withdrawDonation(ETH_ADDRESS, ethAmountToDonate)
+                          charityDeployer.withdrawToOrganization(
+                              ETH_ADDRESS,
+                              ethAmountToDonate,
+                              otherAccount
+                          )
                       )
                           .to.emit(charityDeployer, "DonationWithdrawed")
-                          .withArgs(owner.address, ETH_ADDRESS, ethAmountToDonate)
+                          .withArgs(owner, ETH_ADDRESS, ethAmountToDonate)
                   })
               })
 
@@ -257,13 +252,8 @@ chainId !== 31337
                   })
 
                   it("Can donate with ether change.", async function () {
-                      const {
-                          ecoNDeployer,
-                          owner,
-                          ecoNDeployerAddress,
-                          charityName,
-                          charityAddress,
-                      } = await loadFixture(deployEcoNovaDeployerFixture)
+                      const { ecoNDeployer, owner, charityDeployer, otherAccount } =
+                          await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
@@ -272,29 +262,19 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
+                      const category = await charityDeployer.category()
                       await expect(
-                          ecoNDeployer.donateToFoundation(
-                              charityName,
-                              ETH_ADDRESS,
-                              DOLLAR_AMOUNT,
-                              {
-                                  value: ethAmountToDonate,
-                              }
-                          )
+                          ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                              value: ethAmountToDonate,
+                          })
                       ).to.changeEtherBalances(
-                          [owner, charityAddress],
+                          [owner, charityDeployer],
                           ["-271210873559917723", "271210873559917723"]
                       )
                   })
                   it("Can withdraw with ether change.", async function () {
-                      const {
-                          ecoNDeployer,
-                          owner,
-                          ecoNDeployerAddress,
-                          charityName,
-                          charityAddress,
-                          charityDeployer,
-                      } = await loadFixture(deployEcoNovaDeployerFixture)
+                      const { ecoNDeployer, owner, charityDeployer, otherAccount } =
+                          await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
@@ -303,19 +283,20 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      await ecoNDeployer.donateToFoundation(
-                          charityName,
-                          ETH_ADDRESS,
-                          DOLLAR_AMOUNT,
-                          {
-                              value: ethAmountToDonate,
-                          }
-                      )
+                      const category = await charityDeployer.category()
+
+                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                          value: ethAmountToDonate,
+                      })
 
                       await expect(
-                          charityDeployer.withdrawDonation(ETH_ADDRESS, ethAmountToDonate)
+                          charityDeployer.withdrawToOrganization(
+                              ETH_ADDRESS,
+                              ethAmountToDonate,
+                              otherAccount
+                          )
                       ).to.changeEtherBalances(
-                          [owner, charityAddress],
+                          [owner, otherAccount],
                           ["271210873559917723", "-271210873559917723"]
                       )
                   })
@@ -324,14 +305,14 @@ chainId !== 31337
                           deployEcoNovaDeployerFixture
                       )
 
-                      await ecoNDeployer.updateBotAddress(owner.address)
+                      await ecoNDeployer.updateBotAddress(owner)
                       const tweetId = "1883184787340349875"
                       const userTwitterId = "1881029537191919616"
                       const points = 100
 
                       const messageHash = ethers.solidityPackedKeccak256(
                           ["address", "uint256", "uint256", "uint256", "uint256"],
-                          [otherAccount.address, points, userTwitterId, tweetId, chainId]
+                          [otherAccount, points, userTwitterId, tweetId, chainId]
                       )
 
                       const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
@@ -370,7 +351,7 @@ chainId !== 31337
                           signature
                       )
 
-                      const userPoint = await ecoNDeployer.userPoints(otherAccount.address)
+                      const userPoint = await ecoNDeployer.userPoints(otherAccount)
 
                       expect(Number(userPoint[0])).to.equal(3500)
 
@@ -388,8 +369,8 @@ chainId !== 31337
                       )
 
                       expect(hash).to.equal(ethSignedMessageHash)
-                      expect(botAddress).to.equal(owner.address)
-                      expect(addressThatSign).to.equal(owner.address)
+                      expect(botAddress).to.equal(owner)
+                      expect(addressThatSign).to.equal(owner)
                   })
               })
           })

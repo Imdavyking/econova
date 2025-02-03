@@ -27,7 +27,7 @@ contract Charity is Ownable, ReentrancyGuard {
     }
 
     /** events */
-    event DonationWithdrawed(address indexed organization, address indexed token, uint256 amount);
+    event DonationWithdrawn(address indexed organization, address indexed token, uint256 amount);
 
     constructor(Category _category) Ownable(msg.sender) {
         category = _category;
@@ -73,9 +73,12 @@ contract Charity is Ownable, ReentrancyGuard {
                 revert Charity__SendingFailed();
             }
         } else {
-            IERC20(token).transfer(organization, amount);
+            bool sendSuccess = IERC20(token).transfer(organization, amount);
+            if (!sendSuccess) {
+                revert Charity__SendingFailed();
+            }
         }
-        emit DonationWithdrawed(organization, token, amount);
+        emit DonationWithdrawn(organization, token, amount);
     }
 
     receive() external payable {}
