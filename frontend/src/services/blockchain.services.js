@@ -15,7 +15,6 @@ import {
 import { getWholeNumber } from "../utils/whole.util";
 
 async function switchOrAddChain(ethProvider) {
-  console.log(ethProvider.provider);
   try {
     const chainId = await ethProvider.provider.send("eth_chainId", []);
     console.log(`Current chainId: ${Number(chainId)}`);
