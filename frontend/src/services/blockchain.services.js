@@ -15,35 +15,32 @@ import {
 import { getWholeNumber } from "../utils/whole.util";
 
 async function switchOrAddChain(ethProvider) {
+  console.log(ethProvider.provider);
   try {
-    const chainId = await ethProvider.provider.request({
-      method: "eth_chainId",
-    });
+    const chainId = await ethProvider.provider.send("eth_chainId", []);
+    console.log(`Current chainId: ${Number(chainId)}`);
+
     if (Number(chainId) !== Number(CHAIN_ID)) {
       try {
-        await ethProvider.provider.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: CHAIN_ID }],
-        });
+        await ethProvider.provider.send("wallet_switchEthereumChain", [
+          { chainId: CHAIN_ID },
+        ]);
         console.log(`Switched to ${CHAIN_NAME} Testnet`);
       } catch (error) {
         if (error.code === 4902) {
-          await ethProvider.provider.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: CHAIN_ID,
-                chainName: CHAIN_NAME,
-                nativeCurrency: {
-                  name: CHAIN_CURRENCY_NAME,
-                  symbol: CHAIN_SYMBOL,
-                  decimals: 18,
-                },
-                rpcUrls: [CHAIN_RPC], // Replace with your RPC URL
-                blockExplorerUrls: [CHAIN_BLOCKEXPLORER_URL],
+          await ethProvider.provider.send("wallet_addEthereumChain", [
+            {
+              chainId: CHAIN_ID,
+              chainName: CHAIN_NAME,
+              nativeCurrency: {
+                name: CHAIN_CURRENCY_NAME,
+                symbol: CHAIN_SYMBOL,
+                decimals: 18,
               },
-            ],
-          });
+              rpcUrls: [CHAIN_RPC], // Replace with your RPC URL
+              blockExplorerUrls: [CHAIN_BLOCKEXPLORER_URL],
+            },
+          ]);
           console.log(`${CHAIN_NAME} Testnet added and switched`);
         } else {
           console.error(
@@ -176,6 +173,7 @@ export const addPointsFromTwitterService = async ({
 }) => {
   try {
     const manager = await getContract();
+    return;
     const tx = await manager.addPointsFromTwitterBot(
       getWholeNumber(points).toString(),
       userTwitterId.toString(),
@@ -187,7 +185,7 @@ export const addPointsFromTwitterService = async ({
     await tx.wait(1);
     return `claims ${points} points for tweet ${tweetId}`;
   } catch (error) {
-    console.log(error.message);
+    console.log(JSON.stringify(error));
     return `${FAILED_KEY} to claim ${points} points for tweet ${tweetId}`;
   }
 };
