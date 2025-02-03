@@ -88,7 +88,7 @@ export const Tweet = ({ tweet }) => {
       rethrowFailedResponse(response);
       deleteFromLocalStorage(tweetId.toString());
 
-      toast.success("Points claimed successfully");
+      toast.success(response);
       console.log(`Claimed points for tweet ID: ${tweetId}`);
     } catch (error) {
       console.error(error);
