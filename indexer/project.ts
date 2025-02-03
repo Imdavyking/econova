@@ -95,10 +95,10 @@ const project: EthereumProject = {
             },
           },
           {
-            handler: "handleSetOrocleAbiLog",
+            handler: "handleSetOracleAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
-              topics: ["SetOrocle(address,address)"],
+              topics: ["SetOracle(address,address)"],
             },
           },
         ],

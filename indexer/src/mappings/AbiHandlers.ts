@@ -4,7 +4,7 @@ import {
   OwnershipTransferredLog,
   PointsAddedLog,
   PointsRedeemedLog,
-  SetOrocleLog,
+  SetOracleLog,
   WithdrawDonationTransaction,
 } from "../types/abi-interfaces/Abi";
 
@@ -115,7 +115,7 @@ export async function handlePointsRedeemedAbiLog(
   await transaction.save();
 }
 
-export async function handleSetOrocleAbiLog(log: SetOrocleLog): Promise<void> {
+export async function handleSetOracleAbiLog(log: SetOracleLog): Promise<void> {
   logger.info(`New OrocleUpdate transaction log at block ${log.blockNumber}`);
   assert(log.args, "No log.args");
 
