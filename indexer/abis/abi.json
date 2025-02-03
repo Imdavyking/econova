@@ -3,7 +3,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "orocleAddress",
+        "name": "oracleAddress",
         "type": "address"
       },
       {
@@ -234,7 +234,7 @@
         "type": "address"
       }
     ],
-    "name": "SetOrocle",
+    "name": "SetOracle",
     "type": "event"
   },
   {
