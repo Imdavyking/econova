@@ -154,10 +154,9 @@ contract EcoNovaManager is Ownable {
             size := extcodesize(charityAddress)
         }
         if (size == 0) {
-            revert EcoNovaManager__InvalidCharityAddress(); // New revert error to handle invalid charity contract address
+            revert EcoNovaManager__InvalidCharityAddress();
         }
 
-        // Check if the charity contract implements a withdraw function (or similar)
         (bool canWithdraw, bytes memory data) = charityAddress.call(
             abi.encodeWithSignature("canWithdraw()")
         );
