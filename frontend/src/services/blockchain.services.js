@@ -56,6 +56,8 @@ async function switchOrAddChain(ethProvider) {
 
 export const getSigner = async () => {
   const provider = new BrowserProvider(window.ethereum);
+  let objectNetwork = await provider.getNetwork();
+  console.log(objectNetwork);
   await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
 };
@@ -172,7 +174,7 @@ export const addPointsFromTwitterService = async ({
 }) => {
   try {
     const manager = await getContract();
-    return;
+
     const tx = await manager.addPointsFromTwitterBot(
       getWholeNumber(points).toString(),
       userTwitterId.toString(),
