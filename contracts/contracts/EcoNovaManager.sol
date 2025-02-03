@@ -116,10 +116,15 @@ contract EcoNovaManager is Ownable {
      * @return price
      */
     function _getPrice(bytes20 identifier) internal view returns (uint256, uint8) {
-        uint256 chainId = block.chainid;
-        if (chainId == 66665 || chainId == 31337) {
-            return (uint256(i_oracle.getLatestData(1, identifier)), 18);
-        }
+        return (uint256(i_oracle.getLatestData(1, identifier)), 18);
+    }
+
+    /**
+     * @dev Token price will use 18 decimal for all token
+     * @return price
+     * @return decimals
+     */
+    function getPricePyth() public view returns (uint256, uint8) {
         bytes32 priceFeedId = 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d; // S/USD
         PythStructs.Price memory price = pyth.getPriceNoOlderThan(priceFeedId, 60);
         return (uint256(uint64(price.price)), uint8(uint32(price.expo)));
