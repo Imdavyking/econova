@@ -253,13 +253,10 @@ contract EcoNovaManager is Ownable {
         usedHashes[messageHash] = true;
         userAddedTweets[userTwitterId][tweetId] = true;
 
-        // Calculate points based on the weight
         uint256 points = pointToAdd * POINT_BASIS;
 
-        // Store user points in memory to optimize gas usage
         PointData storage userPointData = userPoints[msg.sender];
 
-        // Update the user's point data
         userPointData.points += points;
         userPointData.updatedTimeStamp = block.timestamp;
 
@@ -271,7 +268,6 @@ contract EcoNovaManager is Ownable {
      * @param weightInGrams weight in grams of the waste
      */
     function addPointFromWeight(uint256 weightInGrams) public {
-        // accumulate points for the user based on the weight of the waste
         uint256 points = weightInGrams * POINT_BASIS;
 
         PointData memory userPointData = userPoints[msg.sender];
@@ -280,7 +276,6 @@ contract EcoNovaManager is Ownable {
             revert EcoNovaManager__InsufficientPoints();
         }
 
-        // check if the user already has points
         if (userPointData.points > 0) {
             userPointData.points += points;
             userPointData.updatedTimeStamp = block.timestamp;
@@ -304,7 +299,6 @@ contract EcoNovaManager is Ownable {
      * @return success true if the point is redeemed successfully
      */
     function redeemPoints(uint256 point) public returns (bool success) {
-        // withdraw points from the user
         if (userPoints[msg.sender].points == 0) {
             revert EcoNovaManager__InsufficientPoints();
         }
@@ -312,7 +306,7 @@ contract EcoNovaManager is Ownable {
             revert EcoNovaManager__InsufficientPoints();
         }
         userPoints[msg.sender].points -= point;
-        // convert to ERC20 token
+
         i_ecoNovaToken.mint(msg.sender, point * 10 ** i_ecoNovaToken.decimals());
         emit PointsRedeemed(msg.sender, point);
         emit PointsAdded(msg.sender, userPoints[msg.sender].points);
