@@ -143,16 +143,16 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      */
 
     function addCharity(Charity charity) external onlyOwner {
-        Charity.Category category = charity.category();
+        Charity.Category charityCategory = charity.category();
         address charityAddress = address(charity);
 
-        uint8 categoryIndex = uint8(category);
+        uint8 categoryIndex = uint8(charityCategory);
         if (charityOrganizations[categoryIndex] != address(0)) {
             revert EcoNovaManager__CharityAlreadyExists();
         }
 
         charityOrganizations[categoryIndex] = charityAddress;
-        emit CharityAdded(uint8(category), charityAddress);
+        emit CharityAdded(categoryIndex, charityAddress);
     }
 
     /**
@@ -160,10 +160,10 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param charity The charity organization to remove.
      */
     function removeCharity(Charity charity) public onlyOwner {
-        Charity.Category category = charity.category();
+        Charity.Category charityCategory = charity.category();
         address charityAddress = address(charity);
 
-        uint8 categoryIndex = uint8(category);
+        uint8 categoryIndex = uint8(charityCategory);
 
         if (charityOrganizations[categoryIndex] != charityAddress) {
             revert EcoNovaManager__CharityNotFound();
@@ -200,16 +200,16 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
 
     /**
      * @dev Donate ETH or ERC20 tokens to the foundation.
-     * @param charityOrg The name of the charity organization.
+     * @param charityCategory The name of the charity organization.
      * @param token The address of the token to donate.
      * @param amountInUsd The amount in USD (assumed to have 2 decimals).
      */
     function donateToFoundation(
-        Charity.Category charityOrg,
+        Charity.Category charityCategory,
         address token,
         uint256 amountInUsd
     ) public payable nonReentrant {
-        uint8 charityOrgIndex = uint8(charityOrg);
+        uint8 charityOrgIndex = uint8(charityCategory);
         if (charityOrganizations[charityOrgIndex] == address(0)) {
             revert EcoNovaManager__CharityNameNotFound();
         }
