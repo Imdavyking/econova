@@ -91,8 +91,11 @@ export const Tweet = ({ tweet }) => {
       toast.success(response);
       console.log(`Claimed points for tweet ID: ${tweetId}`);
     } catch (error) {
-      console.error(error);
-      toast.error("Error claiming points");
+      if (typeof error === "string") {
+        toast.error(error);
+      } else {
+        toast.error("Error claiming points");
+      }
     } finally {
       setIsClaiming(false);
     }
