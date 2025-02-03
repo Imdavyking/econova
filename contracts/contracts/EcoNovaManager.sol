@@ -125,10 +125,21 @@ contract EcoNovaManager is Ownable {
      * @return price
      * @return decimals
      */
-    function getPricePyth() public view returns (int64, int32) {
+    function getPricePyth() public view returns (uint256, uint8) {
         bytes32 priceFeedId = 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d; // S/USD
         PythStructs.Price memory price = pyth.getPriceNoOlderThan(priceFeedId, ONE_DAY);
-        return (price.price, price.expo);
+        uint256 dataPrice = 0;
+        uint8 decimals = 0;
+
+        if (price.price < 0) {
+            dataPrice = uint256(uint64(-price.price));
+        }
+
+        if (price.expo < 0) {
+            decimals = uint8(uint32(-price.expo));
+        }
+
+        return (dataPrice, decimals);
     }
 
     /**
