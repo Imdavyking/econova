@@ -452,14 +452,14 @@
     "name": "getPricePyth",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "int64",
         "name": "",
-        "type": "uint256"
+        "type": "int64"
       },
       {
-        "internalType": "uint8",
+        "internalType": "int32",
         "name": "",
-        "type": "uint8"
+        "type": "int32"
       }
     ],
     "stateMutability": "view",
