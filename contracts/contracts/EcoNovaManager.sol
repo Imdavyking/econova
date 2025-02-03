@@ -53,6 +53,7 @@ contract EcoNovaManager is Ownable {
     error EcoNovaManager__TweetIdAlreadyRecorderForUser();
     error EcoNovaManager__SignatureNotValidForChainId();
     error EcoNovaManager__CharityNameNotFound();
+    error EcoNovaManager__CanNotBeZero();
 
     /**
      * events
@@ -83,6 +84,9 @@ contract EcoNovaManager is Ownable {
     }
 
     function deployToken(string memory name, string memory symbol, uint256 initialSupply) public {
+        if (initialSupply <= 0) {
+            revert EcoNovaManager__CanNotBeZero();
+        }
         CustomToken token = new CustomToken(name, symbol, initialSupply, msg.sender);
         emit TokenCreated(address(token), name, symbol, initialSupply);
     }
@@ -139,6 +143,10 @@ contract EcoNovaManager is Ownable {
     ) public payable {
         if (charityOrganizations[charityOrg] == address(0)) {
             revert EcoNovaManager__CharityNameNotFound();
+        }
+
+        if (amountInUsd <= 0) {
+            revert EcoNovaManager__CanNotBeZero();
         }
 
         address caller = msg.sender;
