@@ -57,8 +57,7 @@ export const Tweet = ({ tweet }) => {
       let data: Results = results || getFromLocalStorage(tweetId.toString());
 
       if (!data) {
-        toast.error("Please check the tweet first");
-        return;
+        throw new Error("No data found");
       }
 
       const isClaimed = await checkForClaim({
@@ -67,8 +66,7 @@ export const Tweet = ({ tweet }) => {
       });
 
       if (isClaimed) {
-        toast.error("Points already claimed");
-        return;
+        throw new Error("Points already claimed");
       }
 
       const totalPoints = Object.values(data.points).reduce(
@@ -77,8 +75,7 @@ export const Tweet = ({ tweet }) => {
       );
 
       if (totalPoints === 0) {
-        toast.error("No points to claim");
-        return;
+        throw new Error("No points to claim");
       }
 
       const response = await addPointsFromTwitterService({
