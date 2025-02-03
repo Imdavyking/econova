@@ -7,6 +7,7 @@ import {
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import dotenv from "dotenv";
+import { charityCategories } from "../utils/charity.categories";
 dotenv.config();
 const openAIApiKey = process.env.OPENAI_API_KEY || "your-api-key";
 const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
@@ -20,14 +21,18 @@ const assets = [
   },
 ];
 
+const categorySchema = Object.values(charityCategories).map(
+  (e) => `${e}`
+) as unknown as readonly [string, ...string[]];
+
 const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
-
 const tools = {
   donate: tool(() => undefined, {
     name: "donate",
-    description: "Make a donation in USD (paid using native token).",
+    description: "Donate funds to a specific foundation based on category.",
     schema: z.object({
+      category: z.enum(categorySchema),
       tokenAddress: tokenSchema.describe("The token to donate"),
       amountInUsd: z
         .union([z.number(), z.string()])
@@ -70,8 +75,19 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
   }).bind({
     tools: Object.values(tools),
   });
+
   const systemPrompt = new SystemMessage(
-    `You are an assistant that converts user prompts into structured formats.`
+    `You are an assistant that converts user prompts into structured formats.
+    The categories available are:
+    ${JSON.stringify(charityCategories)}
+    
+    For each donation request, map the provided category to an index as follows:
+    ${Object.entries(charityCategories)
+      .map(([category, index]) => `- ${category}: ${index}`)
+      .join("\n")}
+    
+    If a user provides a category (e.g., "Health"), select the corresponding index number (e.g., 1). You will return the selected index number as part of your response, in the format: "Category index: <index_number>".
+    `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
   return { content: result.content, tool_calls: result.tool_calls };

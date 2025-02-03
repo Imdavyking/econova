@@ -7,6 +7,7 @@ import path from "path"
 import dotenv from "dotenv"
 import { ETH_ADDRESS } from "../hardhat.config"
 import exp from "constants"
+import { charityCategories } from "../utils/charity.categories"
 dotenv.config()
 
 const chainId = network.config.chainId
@@ -24,20 +25,14 @@ chainId !== 31337
               const botPrivateKey = process.env.PRIVATE_KEY!
 
               const wallet = new ethers.Wallet(botPrivateKey)
-              const categories = {
-                  Education: 0,
-                  Health: 1,
-                  Environment: 2,
-                  Animals: 3,
-                  HumanRights: 4,
-                  Poverty: 5,
-                  Other: 6,
-              }
 
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
               const CharityDeployer = await hre.ethers.getContractFactory("Charity")
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
-              const charityDeployer = await CharityDeployer.deploy(categories.Education, "UN")
+              const charityDeployer = await CharityDeployer.deploy(
+                  charityCategories.Education,
+                  "UN"
+              )
               const charityAddress = await charityDeployer.getAddress()
               const charityName = await charityDeployer.name()
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
