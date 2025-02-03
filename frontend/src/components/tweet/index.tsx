@@ -66,7 +66,10 @@ export const Tweet = ({ tweet }) => {
         tweetId: data.tweetId,
       });
 
-      console.log("isClaimed", isClaimed);
+      if (isClaimed) {
+        toast.error("Points already claimed");
+        return;
+      }
 
       const totalPoints = Object.values(data.points).reduce(
         (acc, curr) => acc + curr,
