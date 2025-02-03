@@ -6,7 +6,7 @@ import { signTweetId } from "../../services/blockchain.twitter.services";
 import { toast } from "react-toastify";
 import {
   addPointsFromTwitterService,
-  checkForClaim,
+  checkForClaimService,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
 import {
@@ -64,7 +64,7 @@ export const Tweet = ({ tweet }) => {
         throw new Error("No data found");
       }
 
-      const isClaimed = await checkForClaim({
+      const isClaimed = await checkForClaimService({
         userTwitterId: data.twitter_id,
         tweetId: data.tweetId,
       });

@@ -166,7 +166,7 @@ const errDecoder = async (e) => {
   }
 };
 
-export const checkForClaim = async ({ userTwitterId, tweetId }) => {
+export const checkForClaimService = async ({ userTwitterId, tweetId }) => {
   try {
     const manager = await getContract();
     const claim = await manager.userAddedTweets(userTwitterId, tweetId);
