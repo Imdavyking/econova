@@ -9,7 +9,7 @@ contract MockPythPriceFeed {
     ) external view returns (PythStructs.Price memory price) {
         price = PythStructs.Price({
             price: 36871678,
-            conf: 0,
+            conf: 99998,
             expo: -8,
             publishTime: uint(block.timestamp - age)
         });

@@ -517,19 +517,6 @@
   },
   {
     "inputs": [],
-    "name": "i_ethIdentifier",
-    "outputs": [
-      {
-        "internalType": "bytes20",
-        "name": "",
-        "type": "bytes20"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "owner",
     "outputs": [
       {
