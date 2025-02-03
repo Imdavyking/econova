@@ -100,7 +100,9 @@ chainId !== 31337
                           ethBytes,
                           60
                       )
-                      expect(result).to.equal(3100000000000000000000n)
+
+                      expect(result[0]).to.equal(36871678n)
+                      expect(result[2]).to.equal(-8n)
                   })
 
                   it("Can donate and withdraw accordingly.", async function () {
@@ -189,7 +191,7 @@ chainId !== 31337
                           })
                       )
                           .to.emit(ecoNDeployer, "Donated")
-                          .withArgs(owner.address, ETH_ADDRESS, 32258064516129)
+                          .withArgs(owner.address, ETH_ADDRESS, "271210873559917723")
                   })
 
                   it("Should emit an event on withdraw", async function () {
@@ -247,7 +249,7 @@ chainId !== 31337
                           })
                       ).to.changeEtherBalances(
                           [owner, ecoNDeployerAddress],
-                          ["-32258064516129", "32258064516129"]
+                          ["-271210873559917723", "271210873559917723"]
                       )
                   })
                   it("Can withdraw with ether change.", async function () {
@@ -270,7 +272,7 @@ chainId !== 31337
                           ecoNDeployer.withdrawDonation(ETH_ADDRESS, ethAmountToDonate)
                       ).to.changeEtherBalances(
                           [owner, ecoNDeployerAddress],
-                          ["32258064516129", "-32258064516129"]
+                          ["271210873559917723", "-271210873559917723"]
                       )
                   })
                   it("Can sign twitter points and redeem the points for tokens", async function () {
