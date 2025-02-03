@@ -170,8 +170,7 @@ export const addPointsFromTwitterService = async ({
       getWholeNumber(points).toString(),
       userTwitterId.toString(),
       tweetId.toString(),
-      signature.toString(),
-      { gasLimit: 500000 }
+      signature.toString()
     );
     await tx.wait(1);
     return `claims ${points} points for tweet ${tweetId}`;
