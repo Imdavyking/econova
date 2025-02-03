@@ -256,22 +256,14 @@ contract EcoNovaManager is Ownable {
         // Calculate points based on the weight
         uint256 points = pointToAdd * POINT_BASIS;
 
+        // Store user points in memory to optimize gas usage
         PointData storage userPointData = userPoints[msg.sender];
 
         // Update the user's point data
-        if (userPointData.points > 0) {
-            userPointData.points += points;
-            userPointData.updatedTimeStamp = block.timestamp;
-        } else {
-            userPoints[msg.sender] = PointData(
-                points,
-                block.timestamp,
-                block.timestamp,
-                msg.sender
-            );
-        }
+        userPointData.points += points;
+        userPointData.updatedTimeStamp = block.timestamp;
 
-        emit PointsAdded(msg.sender, userPoints[msg.sender].points);
+        emit PointsAdded(msg.sender, userPointData.points);
     }
 
     /**
