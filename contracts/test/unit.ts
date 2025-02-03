@@ -119,7 +119,7 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      const category = await charityDeployer.category()
+                      const category = await charityDeployer.charityCategory()
 
                       await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
                           value: ethAmountToDonate,
@@ -195,7 +195,7 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      const category = await charityDeployer.category()
+                      const category = await charityDeployer.charityCategory()
 
                       await expect(
                           ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
@@ -217,7 +217,7 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      const category = await charityDeployer.category()
+                      const category = await charityDeployer.charityCategory()
 
                       await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
                           value: ethAmountToDonate,
@@ -261,7 +261,7 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      const category = await charityDeployer.category()
+                      const category = await charityDeployer.charityCategory()
                       await expect(
                           ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
                               value: ethAmountToDonate,
@@ -282,7 +282,7 @@ chainId !== 31337
                           DOLLAR_AMOUNT
                       )
 
-                      const category = await charityDeployer.category()
+                      const category = await charityDeployer.charityCategory()
 
                       await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
                           value: ethAmountToDonate,

@@ -143,7 +143,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      */
 
     function addCharity(Charity charity) external onlyOwner {
-        Charity.Category charityCategory = charity.category();
+        Charity.Category charityCategory = charity.charityCategory();
         address charityAddress = address(charity);
 
         uint8 categoryIndex = uint8(charityCategory);
@@ -160,7 +160,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param charity The charity organization to remove.
      */
     function removeCharity(Charity charity) public onlyOwner {
-        Charity.Category charityCategory = charity.category();
+        Charity.Category charityCategory = charity.charityCategory();
         address charityAddress = address(charity);
 
         uint8 categoryIndex = uint8(charityCategory);
