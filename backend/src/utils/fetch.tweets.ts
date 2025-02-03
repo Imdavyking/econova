@@ -4,7 +4,7 @@ import logger from "../config/logger";
 import { extractMessageFrom429 } from "./";
 import { TwitterResponse } from "../types/tweet.like.retweet";
 
-const REDIS_CACHE_TIME = 3600; // Adjust cache time as needed
+const REDIS_CACHE_TIME = 60 * 15; // 15 minutes
 
 /**
  * Generic function to fetch and cache Twitter data.
