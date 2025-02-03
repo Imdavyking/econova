@@ -8,7 +8,6 @@ contract Charity is Ownable, ReentrancyGuard {
     /** state variables */
     bool public canWithdrawFunds = true;
     Category public category;
-    string public name;
     /** constants */
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
@@ -28,11 +27,10 @@ contract Charity is Ownable, ReentrancyGuard {
     }
 
     /** events */
-    event DonationWithdrawed(address indexed user, address indexed token, uint256 amount);
+    event DonationWithdrawed(address indexed organization, address indexed token, uint256 amount);
 
-    constructor(Category _category, string memory _name) Ownable(msg.sender) {
+    constructor(Category _category) Ownable(msg.sender) {
         category = _category;
-        name = _name;
     }
 
     function canWithdraw() public view returns (bool) {
@@ -55,8 +53,13 @@ contract Charity is Ownable, ReentrancyGuard {
      * @dev Withdraw the donation from the contract.
      * @param token The address of the token to withdraw.
      * @param amount The amount to withdraw.
+     * @param organization The address to send the funds to.
      */
-    function withdrawDonation(address token, uint256 amount) public onlyOwner nonReentrant {
+    function withdrawToOrganization(
+        address token,
+        uint256 amount,
+        address organization
+    ) public onlyOwner nonReentrant {
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
         }
@@ -65,14 +68,14 @@ contract Charity is Ownable, ReentrancyGuard {
                 revert Charity__SendingFailed();
             }
 
-            (bool success, ) = owner().call{value: amount}("");
+            (bool success, ) = organization.call{value: amount}("");
             if (!success) {
                 revert Charity__SendingFailed();
             }
         } else {
-            IERC20(token).transfer(owner(), amount);
+            IERC20(token).transfer(organization, amount);
         }
-        emit DonationWithdrawed(owner(), token, amount);
+        emit DonationWithdrawed(organization, token, amount);
     }
 
     receive() external payable {}

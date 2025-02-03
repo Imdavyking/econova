@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./helpers/ethsign.sol";
 import "hardhat/console.sol";
 import "./CustomToken.sol";
+import "./charity/Charity.sol";
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
 
@@ -16,10 +17,10 @@ contract EcoNovaManager is Ownable {
     mapping(address => PointData) public userPoints;
     mapping(address => uint256) public donations;
     mapping(address => uint256) public userDonations;
-    mapping(address => mapping(string => uint256)) public userDonationsOrgs;
+    mapping(address => mapping(uint8 => uint256)) public userDonationsOrgs;
     mapping(bytes32 => bool) public usedHashes;
     mapping(uint256 => mapping(uint256 => bool)) public userAddedTweets;
-    mapping(string => address) public charityOrganizations;
+    mapping(uint8 => address) public charityOrganizations;
 
     /**
      * constants
@@ -67,8 +68,8 @@ contract EcoNovaManager is Ownable {
     event Donated(address indexed user, address indexed token, uint256 amount);
     event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
     event TokenCreated(address indexed token, string name, string symbol, uint256 initialSupply);
-    event CharityAdded(string indexed charityOrg, address charityAddress, bool isActive);
-    event CharityRemoved(string indexed charityOrg);
+    event CharityAdded(uint8 indexed charityOrg, address charityAddress, bool isActive);
+    event CharityRemoved(uint8 indexed charityOrg);
 
     /**
      * structs
@@ -139,8 +140,9 @@ contract EcoNovaManager is Ownable {
      * @param charityAddress the address of the charity organization.
      */
 
-    function addCharity(string memory charityOrg, address charityAddress) public onlyOwner {
-        if (charityOrganizations[charityOrg] != address(0)) {
+    function addCharity(Charity.Category charityOrg, address charityAddress) public onlyOwner {
+        uint8 charityOrgIndex = uint8(charityOrg);
+        if (charityOrganizations[charityOrgIndex] != address(0)) {
             revert EcoNovaManager__CharityNameCanNotBeNull();
         }
 
@@ -148,21 +150,22 @@ contract EcoNovaManager is Ownable {
             revert EcoNovaManager__InvalidCharityAddress();
         }
 
-        charityOrganizations[charityOrg] = charityAddress;
-        emit CharityAdded(charityOrg, charityAddress, true);
+        charityOrganizations[charityOrgIndex] = charityAddress;
+        emit CharityAdded(charityOrgIndex, charityAddress, true);
     }
 
     /**
      * Removes a charity organization from the contract.
      * @param charityOrg the name of the charity organization.
      */
-    function removeCharity(string memory charityOrg) public onlyOwner {
-        if (charityOrganizations[charityOrg] == address(0)) {
+    function removeCharity(Charity.Category charityOrg) public onlyOwner {
+        uint8 charityOrgIndex = uint8(charityOrg);
+        if (charityOrganizations[charityOrgIndex] == address(0)) {
             revert EcoNovaManager__CharityNameNotFound();
         }
-        emit CharityRemoved(charityOrg);
-        emit CharityAdded(charityOrg, charityOrganizations[charityOrg], false);
-        delete charityOrganizations[charityOrg];
+        emit CharityRemoved(charityOrgIndex);
+        emit CharityAdded(charityOrgIndex, charityOrganizations[charityOrgIndex], false);
+        delete charityOrganizations[charityOrgIndex];
     }
 
     /**
@@ -197,15 +200,16 @@ contract EcoNovaManager is Ownable {
      */
 
     function donateToFoundation(
-        string memory charityOrg,
+        Charity.Category charityOrg,
         address token,
         uint256 amountInUsd
     ) public payable {
-        if (charityOrganizations[charityOrg] == address(0)) {
+        uint8 charityOrgIndex = uint8(charityOrg);
+        if (charityOrganizations[charityOrgIndex] == address(0)) {
             revert EcoNovaManager__CharityNameNotFound();
         }
 
-        address charityAddress = charityOrganizations[charityOrg];
+        address charityAddress = charityOrganizations[charityOrgIndex];
 
         if (amountInUsd <= 0) {
             revert EcoNovaManager__CanNotBeZero();
@@ -237,7 +241,7 @@ contract EcoNovaManager is Ownable {
             }
             donations[ETH_ADDRESS] += msg.value;
             userDonations[caller] += msg.value;
-            userDonationsOrgs[caller][charityOrg] += msg.value;
+            userDonationsOrgs[caller][charityOrgIndex] += msg.value;
             (bool success, ) = charityAddress.call{value: amountToSend}("");
             if (!success) {
                 revert EcoNovaManager__SendingFailed();
