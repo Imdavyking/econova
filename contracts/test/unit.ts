@@ -27,11 +27,9 @@ chainId !== 31337
 
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
 
-              const MockOracleAggregator = await hre.ethers.getContractFactory(
-                  "MockOracleAggregator"
-              )
-              const mockOracleDeployer = await MockOracleAggregator.deploy()
-              const oracleAddress = await mockOracleDeployer.getAddress()
+              const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
+              const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
+              const oracleAddress = await mockPythPriceFeedDeployer.getAddress()
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(oracleAddress, wallet.address)
 
@@ -53,7 +51,7 @@ chainId !== 31337
                   ecoNovaToken,
                   owner,
                   otherAccount,
-                  mockOracleDeployer,
+                  mockPythPriceFeedDeployer,
                   ecoNDeployerAddress,
               }
           }
@@ -92,13 +90,16 @@ chainId !== 31337
                       expect(Number(userPoint[0])).to.equal(3400)
                   })
                   it("USD to token conversion is correct.", async function () {
-                      const { mockOracleDeployer } = await loadFixture(
+                      const { mockPythPriceFeedDeployer } = await loadFixture(
                           deployEcoNovaDeployerFixture
                       )
 
-                      const ethBytes20 = ethers.encodeBytes32String("ETH").slice(0, 42)
+                      const ethBytes = ethers.encodeBytes32String("ETH")
 
-                      const result = await mockOracleDeployer.getLatestData(1, ethBytes20)
+                      const result = await mockPythPriceFeedDeployer.getPriceNoOlderThan(
+                          ethBytes,
+                          60
+                      )
                       expect(result).to.equal(3100000000000000000000n)
                   })
 
