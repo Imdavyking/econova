@@ -1,7 +1,7 @@
 import path from "path"
 import fs from "fs"
 
-export function updateEnv(contractAddress: string, folder: string, envKey: string) {
+export function updateEnv(envValue: string, folder: string, envKey: string) {
     try {
         const envPath = path.join(__dirname, `../../${folder}/.env`)
 
@@ -14,9 +14,9 @@ export function updateEnv(contractAddress: string, folder: string, envKey: strin
 
         const regex = new RegExp(`^${envKey}=.*`, "m")
         if (regex.test(envContent)) {
-            envContent = envContent.replace(regex, `${envKey}=${contractAddress}`)
+            envContent = envContent.replace(regex, `${envKey}=${envValue}`)
         } else {
-            envContent += `\n${envKey}=${contractAddress}`
+            envContent += `\n${envKey}=${envValue}`
         }
 
         fs.writeFileSync(envPath, envContent)

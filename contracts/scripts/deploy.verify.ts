@@ -28,6 +28,7 @@ async function main() {
     await verify(ecoAddress, [oracle, wallet.address])
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
+    updateEnv(ecoAddress, "indexer", "BLOCK_NUMBER")
 
     copyABI("EcoNovaManager", "frontend/src/assets/json")
     copyABI("EcoNovaManager", "indexer/abis")
