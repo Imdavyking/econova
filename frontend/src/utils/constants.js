@@ -11,7 +11,7 @@ export const CHAIN_ID = chain_id;
 export const CHAIN_NAME = import.meta.env.VITE_CHAIN_NAME;
 export const CHAIN_CURRENCY_NAME = import.meta.env.VITE_CHAIN_CURRENCY_NAME;
 export const CHAIN_SYMBOL = import.meta.env.VITE_CHAIN_SYMBOL;
-export const CHAIN_RPC = import.meta.env.VITE_CHAIN_RPC;
+export const CHAIN_RPC = import.meta.env.VITE_RPC_URL;
 export const CHAIN_BLOCKEXPLORER_URL = import.meta.env
   .VITE_CHAIN_BLOCKEXPLORER_URL;
 export const APP_NAME = import.meta.env.VITE_APP_NAME;

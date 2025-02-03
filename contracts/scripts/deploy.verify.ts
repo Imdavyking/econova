@@ -43,7 +43,7 @@ async function main() {
     updateEnv(chainId!.toString()!, "backend", "CHAIN_ID")
     updateEnv(chainId!.toString()!, "indexer", "CHAIN_ID")
     /** rpc url */
-    updateEnv(rpcUrl, "frontend", "VITE_CHAIN_RPC")
+    updateEnv(rpcUrl, "frontend", "VITE_RPC_URL")
     updateEnv(rpcUrl, "indexer", "RPC_URL")
     /** block explorer url (3091) */
     updateEnv(blockExplorerUrl, "frontend", "VITE_CHAIN_BLOCKEXPLORER_URL")
