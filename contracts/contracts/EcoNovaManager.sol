@@ -56,6 +56,7 @@ contract EcoNovaManager is Ownable {
     error EcoNovaManager__CanNotBeZero();
     error EcoNovaManager__InvalidCharityAddress();
     error EcoNovaManager__CharityCannotWithdraw();
+    error EcoNovaManager__CharityNameCanNotBeNull();
 
     /**
      * events
@@ -64,9 +65,10 @@ contract EcoNovaManager is Ownable {
     event PointsRedeemed(address indexed user, uint256 points);
     event SetOracle(address indexed oldOrocle, address indexed newOrocle);
     event Donated(address indexed user, address indexed token, uint256 amount);
-    event DonationWithdrawed(address indexed user, address indexed token, uint256 amount);
     event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
     event TokenCreated(address indexed token, string name, string symbol, uint256 initialSupply);
+    event CharityAdded(string indexed charityOrg, address charityAddress, bool isActive);
+    event CharityRemoved(string indexed charityOrg);
 
     /**
      * structs
@@ -131,6 +133,47 @@ contract EcoNovaManager is Ownable {
         );
     }
 
+    function addCharity(string memory charityOrg, address charityAddress) public onlyOwner {
+        if (charityOrganizations[charityOrg] != address(0)) {
+            revert EcoNovaManager__CharityNameCanNotBeNull();
+        }
+
+        if (!validateCharity(charityAddress)) {
+            revert EcoNovaManager__InvalidCharityAddress();
+        }
+
+        charityOrganizations[charityOrg] = charityAddress;
+        emit CharityAdded(charityOrg, charityAddress, true);
+    }
+
+    function removeCharity(string memory charityOrg) public onlyOwner {
+        if (charityOrganizations[charityOrg] == address(0)) {
+            revert EcoNovaManager__CharityNameNotFound();
+        }
+        emit CharityRemoved(charityOrg);
+        emit CharityAdded(charityOrg, charityOrganizations[charityOrg], false);
+        delete charityOrganizations[charityOrg];
+    }
+
+    function validateCharity(address charityAddress) public returns (bool) {
+        uint256 size;
+        assembly {
+            size := extcodesize(charityAddress)
+        }
+        if (size == 0) {
+            revert EcoNovaManager__InvalidCharityAddress();
+        }
+
+        (bool canWithdraw, bytes memory data) = charityAddress.call(
+            abi.encodeWithSignature("canWithdraw()")
+        );
+
+        if (!canWithdraw || (data.length > 0 && abi.decode(data, (bool)) == false)) {
+            revert EcoNovaManager__CharityCannotWithdraw();
+        }
+        return true;
+    }
+
     /**
      * @dev Donate ETH or ERC20 tokens to the foundation.
      * @param charityOrg The name of the charity organization.
@@ -149,24 +192,12 @@ contract EcoNovaManager is Ownable {
 
         address charityAddress = charityOrganizations[charityOrg];
 
-        uint256 size;
-        assembly {
-            size := extcodesize(charityAddress)
-        }
-        if (size == 0) {
-            revert EcoNovaManager__InvalidCharityAddress();
-        }
-
-        (bool canWithdraw, bytes memory data) = charityAddress.call(
-            abi.encodeWithSignature("canWithdraw()")
-        );
-
-        if (!canWithdraw || (data.length > 0 && abi.decode(data, (bool)) == false)) {
-            revert EcoNovaManager__CharityCannotWithdraw();
-        }
-
         if (amountInUsd <= 0) {
             revert EcoNovaManager__CanNotBeZero();
+        }
+
+        if (!validateCharity(charityAddress)) {
+            revert EcoNovaManager__InvalidCharityAddress();
         }
 
         address caller = msg.sender;
@@ -202,27 +233,6 @@ contract EcoNovaManager is Ownable {
 
         emit PointsAdded(caller, userPoints[caller].points);
         emit Donated(caller, token, amountToSend);
-    }
-
-    /**
-     * @dev Withdraw the donation from the contract.
-     * @param token The address of the token to withdraw.
-     * @param amount The amount to withdraw.
-     */
-    function withdrawDonation(address token, uint256 amount) public onlyOwner {
-        if (token == ETH_ADDRESS) {
-            if (address(this).balance < amount) {
-                revert EcoNovaManager__InsufficientBalance();
-            }
-
-            (bool success, ) = owner().call{value: amount}("");
-            if (!success) {
-                revert EcoNovaManager__SendingFailed();
-            }
-        } else {
-            IERC20(token).transfer(owner(), amount);
-        }
-        emit DonationWithdrawed(owner(), token, amount);
     }
 
     function testHash(
