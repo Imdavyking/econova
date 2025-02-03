@@ -58,6 +58,9 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     error EcoNovaManager__InvalidCharityAddress();
     error EcoNovaManager__CharityCannotWithdraw();
     error EcoNovaManager__CharityNameCanNotBeNull();
+    error EcoNovaManager__CharityAlreadyExists();
+    error EcoNovaManager__CharityNotFound();
+    error EcoNovaManager__IncorrectBalance();
 
     /**
      * events
@@ -65,10 +68,10 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     event PointsAdded(address indexed user, uint256 points);
     event PointsRedeemed(address indexed user, uint256 points);
     event SetOracle(address indexed oldOrocle, address indexed newOrocle);
-    event Donated(address indexed user, address indexed token, uint256 amount);
+    event Donated(address indexed user, address indexed token, uint256 amount, uint8 charityOrg);
     event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
     event TokenCreated(address indexed token, string name, string symbol, uint256 initialSupply);
-    event CharityAdded(uint8 indexed charityOrg, address charityAddress, bool isActive);
+    event CharityAdded(uint8 indexed charityOrg, address charityAddress);
     event CharityRemoved(uint8 indexed charityOrg);
 
     /**
@@ -136,44 +139,46 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
 
     /**
      * Adds a charity organization to the contract.
-     * @param charityOrg the name of the charity organization.
-     * @param charityAddress the address of the charity organization.
+     * @param charity The charity organization to add.
      */
 
-    function addCharity(Charity.Category charityOrg, address charityAddress) public onlyOwner {
-        uint8 charityOrgIndex = uint8(charityOrg);
-        if (charityOrganizations[charityOrgIndex] != address(0)) {
-            revert EcoNovaManager__CharityNameCanNotBeNull();
+    function addCharity(Charity charity) external onlyOwner {
+        Charity.Category category = charity.category();
+        address charityAddress = address(charity);
+
+        uint8 categoryIndex = uint8(category);
+        if (charityOrganizations[categoryIndex] != address(0)) {
+            revert EcoNovaManager__CharityAlreadyExists();
         }
 
-        if (!validateCharity(charityAddress)) {
-            revert EcoNovaManager__InvalidCharityAddress();
-        }
-
-        charityOrganizations[charityOrgIndex] = charityAddress;
-        emit CharityAdded(charityOrgIndex, charityAddress, true);
+        charityOrganizations[categoryIndex] = charityAddress;
+        emit CharityAdded(uint8(category), charityAddress);
     }
 
     /**
      * Removes a charity organization from the contract.
-     * @param charityOrg the name of the charity organization.
+     * @param charity The charity organization to remove.
      */
-    function removeCharity(Charity.Category charityOrg) public onlyOwner {
-        uint8 charityOrgIndex = uint8(charityOrg);
-        if (charityOrganizations[charityOrgIndex] == address(0)) {
-            revert EcoNovaManager__CharityNameNotFound();
+    function removeCharity(Charity charity) public onlyOwner {
+        Charity.Category category = charity.category();
+        address charityAddress = address(charity);
+
+        uint8 categoryIndex = uint8(category);
+
+        if (charityOrganizations[categoryIndex] != charityAddress) {
+            revert EcoNovaManager__CharityNotFound();
         }
-        emit CharityRemoved(charityOrgIndex);
-        emit CharityAdded(charityOrgIndex, charityOrganizations[charityOrgIndex], false);
-        delete charityOrganizations[charityOrgIndex];
+
+        delete charityOrganizations[categoryIndex];
+
+        emit CharityRemoved(categoryIndex);
     }
 
     /**
      * @dev Validates the charity organization.
      * @param charityAddress The address of the charity organization.
      */
-
-    function validateCharity(address charityAddress) public returns (bool) {
+    function validateCharity(address charityAddress) public view returns (bool) {
         uint256 size;
         assembly {
             size := extcodesize(charityAddress)
@@ -182,13 +187,14 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
             revert EcoNovaManager__InvalidCharityAddress();
         }
 
-        (bool canWithdraw, bytes memory data) = charityAddress.call(
+        (bool canWithdraw, bytes memory data) = charityAddress.staticcall(
             abi.encodeWithSignature("canWithdraw()")
         );
 
         if (!canWithdraw || (data.length > 0 && abi.decode(data, (bool)) == false)) {
             revert EcoNovaManager__CharityCannotWithdraw();
         }
+
         return true;
     }
 
@@ -198,7 +204,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param token The address of the token to donate.
      * @param amountInUsd The amount in USD (assumed to have 2 decimals).
      */
-
     function donateToFoundation(
         Charity.Category charityOrg,
         address token,
@@ -211,7 +216,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
 
         address charityAddress = charityOrganizations[charityOrgIndex];
 
-        if (amountInUsd <= 0) {
+        if (amountInUsd == 0) {
             revert EcoNovaManager__CanNotBeZero();
         }
 
@@ -242,16 +247,30 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
             donations[ETH_ADDRESS] += msg.value;
             userDonations[caller] += msg.value;
             userDonationsOrgs[caller][charityOrgIndex] += msg.value;
+
             (bool success, ) = charityAddress.call{value: amountToSend}("");
             if (!success) {
                 revert EcoNovaManager__SendingFailed();
             }
         } else {
-            IERC20(token).transfer(charityAddress, amountToSend);
+            IERC20 erc20 = IERC20(token);
+            uint256 balanceBefore = erc20.balanceOf(charityAddress);
+
+            bool transferSuccess = erc20.transferFrom(msg.sender, charityAddress, amountToSend);
+
+            if (!transferSuccess) {
+                revert EcoNovaManager__SendingFailed();
+            }
+
+            uint256 balanceAfter = erc20.balanceOf(charityAddress);
+
+            if (balanceAfter - balanceBefore != amountToSend) {
+                revert EcoNovaManager__IncorrectBalance();
+            }
         }
 
         emit PointsAdded(caller, userPoints[caller].points);
-        emit Donated(caller, token, amountToSend);
+        emit Donated(caller, token, amountToSend, charityOrgIndex);
     }
 
     function testHash(
