@@ -11,6 +11,8 @@ import { updateEnv } from "./update.env"
 import { copyABI } from "./copy.abi"
 dotenv.config()
 
+console.log({ info: network.config })
+
 async function main() {
     const chainId = network.config.chainId
     cleanDeployments(chainId!)
