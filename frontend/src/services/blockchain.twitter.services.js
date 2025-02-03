@@ -2,23 +2,16 @@ import { ethers } from "ethers";
 import { getSigner } from "./blockchain.services";
 
 export const signTweetId = async (tweetId) => {
-  const messageHash = ethers.utils.solidityKeccak256(["uint256"], [tweetId]);
+  const messageHash = ethers.solidityPackedKeccak256(["uint256"], [tweetId]);
 
-  const ethSignedMessageHash = ethers.utils.hashMessage(
-    ethers.utils.arrayify(messageHash)
-  );
+  const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));
 
   const wallet = await getSigner();
   const walletAddress = await wallet.getAddress();
 
-  const signature = await wallet.signMessage(
-    ethers.utils.arrayify(messageHash)
-  );
+  const signature = await wallet.signMessage(ethers.getBytes(messageHash));
 
-  const signerAddress = ethers.utils.recoverAddress(
-    ethSignedMessageHash,
-    signature
-  );
+  const signerAddress = ethers.recoverAddress(ethSignedMessageHash, signature);
 
   if (signerAddress !== walletAddress) {
     throw new Error("Invalid signature");

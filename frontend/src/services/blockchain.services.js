@@ -1,6 +1,6 @@
 /** @format */
 import abi from "@/assets/json/abi.json";
-import { ethers } from "ethers";
+import { BrowserProvider, ethers } from "ethers";
 import {
   CHAIN_BLOCKEXPLORER_URL,
   CHAIN_CURRENCY_NAME,
@@ -59,7 +59,7 @@ async function switchOrAddChain(ethProvider) {
 }
 
 export const getSigner = async () => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const provider = new BrowserProvider(window.ethereum);
   await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
 };
@@ -187,10 +187,7 @@ export const addPointsFromTwitterService = async ({
     await tx.wait(1);
     return `claims ${points} points for tweet ${tweetId}`;
   } catch (error) {
-    console.dir(error.data);
-    console.dir(error.reason);
-    console.dir(error.code);
-    console.dir(error.transactionHash);
+    console.log(error.message);
     return `${FAILED_KEY} to claim ${points} points for tweet ${tweetId}`;
   }
 };
