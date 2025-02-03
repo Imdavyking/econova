@@ -36,7 +36,7 @@ contract EcoNovaManager is Ownable {
      * immutable variables
      */
     EcoNovaToken public immutable i_ecoNovaToken;
-    IPyth public immutable pyth;
+    IPyth public immutable i_pyth;
 
     /**
      * error messages
@@ -79,7 +79,7 @@ contract EcoNovaManager is Ownable {
     constructor(address oracleAddress, address _botAddress) Ownable(msg.sender) {
         i_ecoNovaToken = new EcoNovaToken();
         botAddress = _botAddress;
-        pyth = IPyth(oracleAddress);
+        i_pyth = IPyth(oracleAddress);
         emit SetOracle(oracleAddress, oracleAddress);
     }
 
@@ -121,7 +121,7 @@ contract EcoNovaManager is Ownable {
      */
     function getPricePyth() public view returns (uint256, uint8) {
         bytes32 priceFeedId = 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d; // S/USD
-        PythStructs.Price memory price = pyth.getPriceNoOlderThan(priceFeedId, ONE_DAY);
+        PythStructs.Price memory price = i_pyth.getPriceNoOlderThan(priceFeedId, ONE_DAY);
 
         return (
             uint256(uint64(price.price < 0 ? -price.price : price.price)),
