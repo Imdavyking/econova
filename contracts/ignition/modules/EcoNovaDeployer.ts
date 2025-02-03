@@ -9,7 +9,7 @@ dotenv.config()
 const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
     const chainId = network.config.chainId
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
-        process.env.OROCHI_ORACLE_ADDRESS!
+        process.env.ORACLE_ADDRESS!
 
     const botPrivateKey = process.env.PRIVATE_KEY!
 

@@ -23,7 +23,7 @@ async function main() {
     if (chainId === 31337) return
 
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
-        process.env.OROCHI_ORACLE_ADDRESS!
+        process.env.ORACLE_ADDRESS!
 
     await verify(ecoAddress, [oracle, wallet.address])
 

@@ -19,7 +19,7 @@ jobs:
     env:
       PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
       RPC_URL: ${{secrets.RPC_URL}}
-      OROCHI_ORACLE_ADDRESS: ${{secrets.OROCHI_ORACLE_ADDRESS}}
+      ORACLE_ADDRESS: ${{secrets.ORACLE_ADDRESS}}
       NODE_ENV: ${{secrets.NODE_ENV}}
       CHAIN_ID: ${{secrets.CHAIN_ID}}
       API_URL: ${{secrets.API_URL}}
