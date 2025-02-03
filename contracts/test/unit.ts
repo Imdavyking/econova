@@ -29,12 +29,8 @@ chainId !== 31337
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
               const CharityDeployer = await hre.ethers.getContractFactory("Charity")
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
-              const charityDeployer = await CharityDeployer.deploy(
-                  charityCategories.Education,
-                  "UN"
-              )
+              const charityDeployer = await CharityDeployer.deploy(charityCategories.Education)
               const charityAddress = await charityDeployer.getAddress()
-              const charityName = await charityDeployer.name()
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
               const oracleAddress = await mockPythPriceFeedDeployer.getAddress()
 

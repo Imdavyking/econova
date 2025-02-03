@@ -10,7 +10,7 @@ import "./charity/Charity.sol";
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
 
-contract EcoNovaManager is Ownable {
+contract EcoNovaManager is Ownable, ReentrancyGuard {
     /**
      * mappings
      */
@@ -203,7 +203,7 @@ contract EcoNovaManager is Ownable {
         Charity.Category charityOrg,
         address token,
         uint256 amountInUsd
-    ) public payable {
+    ) public payable nonReentrant {
         uint8 charityOrgIndex = uint8(charityOrg);
         if (charityOrganizations[charityOrgIndex] == address(0)) {
             revert EcoNovaManager__CharityNameNotFound();
