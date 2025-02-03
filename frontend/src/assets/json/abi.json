@@ -22,12 +22,47 @@
   },
   {
     "inputs": [],
+    "name": "EcoNovaManager__CanNotBeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EcoNovaManager__CharityAlreadyExists",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EcoNovaManager__CharityCannotWithdraw",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EcoNovaManager__CharityNameCanNotBeNull",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EcoNovaManager__CharityNameNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EcoNovaManager__CharityNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "EcoNovaManager__ConversionNotAvailable",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "EcoNovaManager__HashAlreadyUsed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EcoNovaManager__IncorrectBalance",
     "type": "error"
   },
   {
@@ -43,6 +78,11 @@
   {
     "inputs": [],
     "name": "EcoNovaManager__InsufficientPoints",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EcoNovaManager__InvalidCharityAddress",
     "type": "error"
   },
   {
@@ -93,6 +133,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "ReentrancyGuardReentrantCall",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -116,24 +161,31 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
+        "internalType": "uint8",
+        "name": "charityOrg",
+        "type": "uint8"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "charityAddress",
+        "type": "address"
       }
     ],
-    "name": "Donated",
+    "name": "CharityAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "charityOrg",
+        "type": "uint8"
+      }
+    ],
+    "name": "CharityRemoved",
     "type": "event"
   },
   {
@@ -156,9 +208,15 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "charityOrg",
+        "type": "uint8"
       }
     ],
-    "name": "DonationWithdrawed",
+    "name": "Donated",
     "type": "event"
   },
   {
@@ -349,6 +407,19 @@
   {
     "inputs": [
       {
+        "internalType": "contract Charity",
+        "name": "charity",
+        "type": "address"
+      }
+    ],
+    "name": "addCharity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "weightInGrams",
         "type": "uint256"
@@ -403,6 +474,25 @@
   {
     "inputs": [
       {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "name": "charityOrganizations",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "name",
         "type": "string"
@@ -425,6 +515,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "enum Charity.Category",
+        "name": "charityCategory",
+        "type": "uint8"
+      },
       {
         "internalType": "address",
         "name": "token",
@@ -517,10 +612,10 @@
   },
   {
     "inputs": [],
-    "name": "owner",
+    "name": "i_pyth",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "contract IPyth",
         "name": "",
         "type": "address"
       }
@@ -530,10 +625,10 @@
   },
   {
     "inputs": [],
-    "name": "pyth",
+    "name": "owner",
     "outputs": [
       {
-        "internalType": "contract IPyth",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -557,6 +652,19 @@
         "type": "bool"
       }
     ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract Charity",
+        "name": "charity",
+        "type": "address"
+      }
+    ],
+    "name": "removeCharity",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -695,6 +803,30 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "name": "userDonationsOrgs",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "name": "userPoints",
@@ -727,18 +859,19 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "token",
+        "name": "charityAddress",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
       }
     ],
-    "name": "withdrawDonation",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "validateCharity",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]
