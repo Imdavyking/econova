@@ -16,8 +16,10 @@ contract EcoNovaManager is Ownable {
     mapping(address => PointData) public userPoints;
     mapping(address => uint256) public donations;
     mapping(address => uint256) public userDonations;
+    mapping(address => mapping(string => uint256)) public userDonationsOrgs;
     mapping(bytes32 => bool) public usedHashes;
     mapping(uint256 => mapping(uint256 => bool)) public userAddedTweets;
+    mapping(string => address) public charityOrganizations;
 
     /**
      * constants
@@ -50,6 +52,7 @@ contract EcoNovaManager is Ownable {
     error EcoNovaManager__Unauthorized();
     error EcoNovaManager__TweetIdAlreadyRecorderForUser();
     error EcoNovaManager__SignatureNotValidForChainId();
+    error EcoNovaManager__CharityNameNotFound();
 
     /**
      * events
@@ -124,24 +127,25 @@ contract EcoNovaManager is Ownable {
 
     /**
      * @dev Donate ETH or ERC20 tokens to the foundation.
+     * @param charityOrg The name of the charity organization.
      * @param token The address of the token to donate.
      * @param amountInUsd The amount in USD (assumed to have 2 decimals).
      */
 
-    function donateToFoundation(address token, uint256 amountInUsd) public payable {
+    function donateToFoundation(
+        string memory charityOrg,
+        address token,
+        uint256 amountInUsd
+    ) public payable {
+        if (charityOrganizations[charityOrg] == address(0)) {
+            revert EcoNovaManager__CharityNameNotFound();
+        }
+
         address caller = msg.sender;
         uint256 amountToSend = getUsdToTokenPrice(token, amountInUsd);
 
         uint256 minTokenAmount = (amountToSend * (10000 - SLIPPAGE_TOLERANCE_BPS)) / 10000;
         uint256 maxTokenAmount = (amountToSend * (10000 + SLIPPAGE_TOLERANCE_BPS)) / 10000;
-
-        if (token == ETH_ADDRESS) {
-            if (msg.value < minTokenAmount || msg.value > maxTokenAmount) {
-                revert EcoNovaManager__IncorrectETHAmount();
-            }
-            donations[ETH_ADDRESS] += msg.value;
-            userDonations[caller] += msg.value;
-        }
 
         uint256 pointsEarned = (amountInUsd * DONATION_POINT_PER_USD) / FIAT_DECIMALS;
         PointData storage userPointData = userPoints[caller];
@@ -151,6 +155,21 @@ contract EcoNovaManager is Ownable {
             userPointData.updatedTimeStamp = block.timestamp;
         } else {
             userPoints[caller] = PointData(pointsEarned, block.timestamp, block.timestamp, caller);
+        }
+
+        if (token == ETH_ADDRESS) {
+            if (msg.value < minTokenAmount || msg.value > maxTokenAmount) {
+                revert EcoNovaManager__IncorrectETHAmount();
+            }
+            donations[ETH_ADDRESS] += msg.value;
+            userDonations[caller] += msg.value;
+            userDonationsOrgs[caller][charityOrg] += msg.value;
+            (bool success, ) = charityOrganizations[charityOrg].call{value: amountToSend}("");
+            if (!success) {
+                revert EcoNovaManager__SendingFailed();
+            }
+        } else {
+            IERC20(token).transfer(charityOrganizations[charityOrg], amountToSend);
         }
 
         emit PointsAdded(caller, userPoints[caller].points);
@@ -235,7 +254,6 @@ contract EcoNovaManager is Ownable {
         if (userPointData.points > 0) {
             userPointData.points += points;
             userPointData.updatedTimeStamp = block.timestamp;
-            userPoints[msg.sender] = userPointData;
         } else {
             userPoints[msg.sender] = PointData(
                 points,
