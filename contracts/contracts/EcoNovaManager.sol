@@ -29,6 +29,7 @@ contract EcoNovaManager is Ownable {
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
     address public botAddress;
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
+    uint256 public constant ONE_DAY = 60 * 60 * 24;
 
     /**
      * immutable variables
@@ -126,7 +127,7 @@ contract EcoNovaManager is Ownable {
      */
     function getPricePyth() public view returns (int64, int32) {
         bytes32 priceFeedId = 0xb2748e718cf3a75b0ca099cb467aea6aa8f7d960b381b3970769b5a2d6be26dc; // SONIC/USD
-        PythStructs.Price memory price = pyth.getPriceNoOlderThan(priceFeedId, 60 * 60 * 24);
+        PythStructs.Price memory price = pyth.getPriceNoOlderThan(priceFeedId, ONE_DAY);
         return (price.price, price.expo);
     }
 
