@@ -12,37 +12,50 @@ import {
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
 import { ETH_ADDRESS } from "../../utils/constants";
+import { charityCategories } from "../../utils/charity.categories";
+
 function Main() {
   useEffect(() => {
     dom("body").removeClass("main").removeClass("error-page").addClass("login");
   }, []);
-  const [isDonating, setIsDonating] = useState(false);
 
+  const [isDonating, setIsDonating] = useState(false);
   const [amountInUsd, setAmountUSDToDonate] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   const handleChange = (setState) => (e) => {
     setState(e.target.value);
   };
-  const handleClick = async () => {
-    if (amountInUsd === "") {
-      toast.error("Please fill all fields");
-    } else {
-      try {
-        setIsDonating(true);
 
-        const response = await donateToFoundationService({
-          tokenAddress: ETH_ADDRESS,
-          amountInUsd: amountInUsd,
-        });
-        console.log(response);
-        rethrowFailedResponse(response);
-        toast.success("Donated successfully");
-        setAmountUSDToDonate("");
-      } catch (e) {
-        console.log(e);
-        toast.error(e.message);
-      } finally {
-        setIsDonating(false);
-      }
+  const handleClick = async () => {
+    if (amountInUsd === "" || selectedCategory === "") {
+      toast.error("Please select a category and enter an amount");
+      return;
+    }
+
+    try {
+      setIsDonating(true);
+      console.log({
+        tokenAddress: ETH_ADDRESS,
+        amountInUsd,
+        category: selectedCategory, // Include category in the donation request
+      });
+      const response = await donateToFoundationService({
+        tokenAddress: ETH_ADDRESS,
+        amountInUsd,
+        category: selectedCategory, // Include category in the donation request
+      });
+      console.log(response);
+      rethrowFailedResponse(response);
+      toast.success("Donated successfully");
+
+      setAmountUSDToDonate("");
+      setSelectedCategory("");
+    } catch (e) {
+      console.log(e);
+      toast.error(e.message);
+    } finally {
+      setIsDonating(false);
     }
   };
 
@@ -72,7 +85,7 @@ function Main() {
                 </div>
               </div>
             </div>
-            <div className="h-screen xl:h-auto flex flex-col items-center py-5 xl:py-0  xl:my-0">
+            <div className="h-screen xl:h-auto flex flex-col items-center py-5 xl:py-0 xl:my-0">
               <a href="/" className="-intro-x flex items-center pt-5 my-2">
                 <img alt="EcoNova" className="w-10" src={logoUrl} />
                 <span className="text-white text-lg ml-3"> EcoNova </span>
@@ -85,6 +98,24 @@ function Main() {
                   ...Blockchain-powered recycling solution
                 </div>
                 <div className="intro-x mt-8">
+                  {/* Dropdown for Category Selection */}
+                  <select
+                    value={selectedCategory}
+                    onChange={handleChange(setSelectedCategory)}
+                    className="intro-x form-control py-3 px-4 block w-full mb-3"
+                  >
+                    <option value="">Select a Category</option>
+                    {Object.keys(charityCategories).map((category) => (
+                      <option
+                        key={category}
+                        value={charityCategories[category]}
+                      >
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Amount Input */}
                   <input
                     type="number"
                     value={amountInUsd}
