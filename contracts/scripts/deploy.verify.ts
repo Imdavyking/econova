@@ -17,9 +17,12 @@ async function main() {
 
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
-    const { charityDeployer } = await hre.ignition.deploy(CharityDeployer[0])
+    for (let i = 0; i < CharityDeployer.length; i++) {
+        const { charityDeployer } = await hre.ignition.deploy(CharityDeployer[i])
+        const charityAddress = await charityDeployer.getAddress()
+        console.log(`CharityDeployer deployed to: ${charityAddress}`)
+    }
 
-    const charityAddress = await charityDeployer.getAddress()
     const ecoAddress = await ecoNovaDeployer.getAddress()
     const botPrivateKey = process.env.PRIVATE_KEY!
     const wallet = new ethers.Wallet(botPrivateKey)
@@ -27,7 +30,6 @@ async function main() {
     const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
     const chainSymbol = process.env.CHAIN_SYMBOL!
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
-    console.log(`CharityDeployer deployed to: ${charityAddress}`)
 
     if (chainId === 31337) return
 

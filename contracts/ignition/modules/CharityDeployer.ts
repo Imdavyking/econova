@@ -3,16 +3,18 @@ import dotenv from "dotenv"
 import { charityCategories } from "../../utils/charity.categories"
 
 dotenv.config()
+
 const charityModules: Array<ReturnType<typeof buildModule>> = []
 
-for (const category of Object.keys(charityCategories) as Array<keyof typeof charityCategories>) {
-    const category = charityCategories[category]
-    charityModules.push(
-        buildModule("CharityDeployerModule", (m) => {
-            const charityDeployer = m.contract("Charity", [category], { id: category })
-            return { charityDeployer }
-        })
-    )
+for (const categoryKey of Object.keys(charityCategories) as (keyof typeof charityCategories)[]) {
+    const category = charityCategories[categoryKey]
+
+    const charityModule = buildModule(`CharityDeployerModule_${categoryKey}`, (m) => {
+        const charityDeployer = m.contract("Charity", [category], { id: categoryKey })
+        return { charityDeployer }
+    })
+
+    charityModules.push(charityModule)
 }
 
 export default charityModules
