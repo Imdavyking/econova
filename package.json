@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "dev": "node copy.readme.js"
+  },
   "name": "econova",
   "version": "1.0.0",
   "main": "index.js",
