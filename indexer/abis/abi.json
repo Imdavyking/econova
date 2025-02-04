@@ -167,7 +167,7 @@
       {
         "indexed": true,
         "internalType": "uint8",
-        "name": "charityOrg",
+        "name": "charityCategory",
         "type": "uint8"
       },
       {
@@ -186,7 +186,7 @@
       {
         "indexed": true,
         "internalType": "uint8",
-        "name": "charityOrg",
+        "name": "charityCategory",
         "type": "uint8"
       }
     ],

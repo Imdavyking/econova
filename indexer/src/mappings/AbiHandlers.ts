@@ -1,5 +1,6 @@
 import assert from "assert";
 import {
+  CharityAddedLog,
   DonatedLog,
   OwnershipTransferredLog,
   PointsAddedLog,
@@ -13,6 +14,7 @@ import {
   PointsRedeemed,
   OrocleUpdate,
   OwnershipTransfer,
+  CharityAdded,
 } from "../types";
 
 export async function handleDonatedAbiLog(log: DonatedLog): Promise<void> {
@@ -26,6 +28,22 @@ export async function handleDonatedAbiLog(log: DonatedLog): Promise<void> {
     charityCategory: BigInt(log.args.charityCategory),
     token: log.args.token,
     amount: log.args.amount.toBigInt(),
+    contractAddress: log.address,
+  });
+
+  await transaction.save();
+}
+export async function handleCharityAddedAbiLog(
+  log: CharityAddedLog
+): Promise<void> {
+  logger.info(`New Donation transaction log at block ${log.blockNumber}`);
+  assert(log.args, "No log.args");
+
+  const transaction = CharityAdded.create({
+    id: log.transactionHash,
+    blockHeight: BigInt(log.blockNumber),
+    charityAddress: log.args.charityAddress,
+    charityCategory: BigInt(log.args.charityCategory),
     contractAddress: log.address,
   });
 
