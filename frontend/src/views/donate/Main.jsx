@@ -137,6 +137,15 @@ function Main() {
                       "Donate"
                     )}
                   </button>
+                  {/* Link to Donate Categories */}
+                  <div className="mt-3">
+                    <a
+                      href="/donate-categories"
+                      className="text-blue-500 hover:underline text-sm"
+                    >
+                      View Charity Categories
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
