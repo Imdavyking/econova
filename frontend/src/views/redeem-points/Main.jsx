@@ -113,7 +113,7 @@ function Main() {
 
                 <div className="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                   <button
-                    className="btn btn-primary py-3 px-4 w-full xl:w-64 xl:mr-3 align-top"
+                    className="btn btn-primary py-3 px-4 w-full xl:w-full xl:mr-3 align-top"
                     onClick={handleClick}
                     disabled={isRedeeming}
                   >
@@ -123,11 +123,6 @@ function Main() {
                       "Redeem Points"
                     )}
                   </button>
-                  <Link to="/add-points">
-                    <button className="btn btn-outline-secondary py-3 px-4 w-full  xl:w-32 mt-3 xl:mt-0 align-top">
-                      Add Point
-                    </button>
-                  </Link>
                 </div>
               </div>
             </div>
