@@ -110,6 +110,16 @@ export const donateToFoundationService = async ({
   }
 };
 
+export const getCharityCategoryAddressService = async ({ charityCatogory }) => {
+  try {
+    const manager = await getContract();
+    const charityAddress = await manager.charityOrganizations(charityCatogory);
+    return `${charityAddress}`;
+  } catch (error) {
+    return `${FAILED_KEY} to get ${charityCatogory} address`;
+  }
+};
+
 export const deployTokenService = async ({ name, symbol, initialSupply }) => {
   try {
     const manager = await getContract();

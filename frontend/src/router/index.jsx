@@ -5,6 +5,7 @@ import RedeemPoints from "../views/redeem-points/Main";
 import EarnPoints from "../views/earn-points/Main";
 import Home from "../views/home/Main";
 import Donate from "../views/donate/Main";
+import DonationCategories from "../views/donate/Categories";
 import LeaderBoard from "../views/leaderboard/Main";
 
 function Router() {
@@ -24,6 +25,10 @@ function Router() {
     {
       path: "/donate",
       element: <Donate />,
+    },
+    {
+      path: "/donate-categories",
+      element: <DonationCategories />,
     },
     {
       path: "/leaderboard",
