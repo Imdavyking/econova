@@ -1,5 +1,4 @@
 # EcoNova Robot
-
 #### **1. User Interaction with Bot Tweets**
 
 - **Action**: Users like, retweet, or quote-tweet content from the bot's Twitter account.
@@ -62,7 +61,7 @@
 
 #### **Frontend**
 
-- **Framework**: React.
+- **Framework**: React, Vue, or your preferred frontend framework.
 - **Features**:
   - Twitter OAuth integration.
   - Dashboard to show points, interactions, and token balance.
@@ -70,10 +69,10 @@
 
 #### **Backend**
 
-- **Language**: Node.js.
+- **Language**: Node.js, Python, or any backend framework.
 - **Features**:
   - Twitter API integration for fetching user interactions.
-  - Database (MongoDB) to store user data, interactions, and points.
+  - Database (e.g., MongoDB, PostgreSQL) to store user data, interactions, and points.
   - Web3 integration to interact with the smart contract.
   - API endpoints for:
     - Authenticating Twitter accounts.
@@ -82,7 +81,7 @@
 
 #### **Smart Contract**
 
-- **Blockchain**: Ethereum or any EVM-compatible chain.
+- **Blockchain**: Ethereum or any EVM-compatible chain (e.g., Polygon, Binance Smart Chain).
 - **ERC20 Contract**:
   - Define functions for minting tokens:
     ```solidity
@@ -121,10 +120,10 @@ Follow the steps here to use the official installation: https://python-poetry.or
 git clone  https://github.com/Imdavyking/econova
 ```
 
-3. Go to the `/robot` directory:
+3. Go to the `/ai` directory:
 
 ```bash
-cd econova/robot
+cd econova/ai
 ```
 
 4. Install dependencies:
