@@ -23,7 +23,7 @@ export async function handleDonatedAbiLog(log: DonatedLog): Promise<void> {
     id: log.transactionHash,
     blockHeight: BigInt(log.blockNumber),
     user: log.args.user,
-    charityCategory: log.args.charityCategory,
+    charityCategory: BigInt(log.args.charityCategory),
     token: log.args.token,
     amount: log.args.amount.toBigInt(),
     contractAddress: log.address,

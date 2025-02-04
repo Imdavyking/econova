@@ -212,7 +212,7 @@
       {
         "indexed": false,
         "internalType": "uint8",
-        "name": "charityOrg",
+        "name": "charityCategory",
         "type": "uint8"
       }
     ],
