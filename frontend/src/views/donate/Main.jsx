@@ -45,9 +45,8 @@ function Main() {
         amountInUsd,
         category: selectedCategory, // Include category in the donation request
       });
-      console.log(response);
       rethrowFailedResponse(response);
-      toast.success("Donated successfully");
+      toast.success(response);
 
       setAmountUSDToDonate("");
       setSelectedCategory("");
