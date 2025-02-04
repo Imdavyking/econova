@@ -80,7 +80,7 @@ const config: Config = {
           label: "Tutorial",
         },
         {
-          href: "https://github.com/Imdavyking/econova/docs",
+          href: "https://github.com/Imdavyking/econova",
           label: "GitHub",
           position: "right",
         },
@@ -112,7 +112,7 @@ const config: Config = {
           items: [
             {
               label: "GitHub",
-              href: "https://github.com/Imdavyking/econova/docs",
+              href: "https://github.com/Imdavyking/econova",
             },
           ],
         },
