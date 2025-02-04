@@ -13,6 +13,7 @@ import {
   FIAT_DECIMALS,
 } from "../utils/constants";
 import { getWholeNumber } from "../utils/whole.util";
+import { charityCategories } from "../utils/charity.categories";
 
 async function switchOrAddChain(ethProvider) {
   try {
@@ -99,7 +100,11 @@ export const donateToFoundationService = async ({
       }
     );
     await tx.wait(1);
-    return `donated ${realAmount} USD`;
+    console.log(category);
+
+    return `donated ${realAmount} USD to ${Object.keys(charityCategories).find(
+      (categoryKey) => `${charityCategories[categoryKey]}` === `${category}`
+    )}`;
   } catch (error) {
     return `${FAILED_KEY} to donate ${realAmount} USD`;
   }

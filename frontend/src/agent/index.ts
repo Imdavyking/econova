@@ -17,7 +17,6 @@ export class AIAgent {
     this.tools = {
       donate: donateToFoundationService,
       redeemPoints: redeemPointsService,
-
       deployToken: deployTokenService,
     };
     this.toolsInfo = {
