@@ -7,7 +7,7 @@ async function copyFile(source, destination) {
     const sourcePath = path.join(__dirname, source);
     const destinationPath = path.join(__dirname, destination);
 
-    await fs.copyFileSync(sourcePath, destinationPath);
+    fs.copyFileSync(sourcePath, destinationPath);
     console.log(
       `File copied successfully from ${sourcePath} to ${destinationPath}`
     );
@@ -16,10 +16,7 @@ async function copyFile(source, destination) {
   }
 }
 
-// // Example usage
 copyFile("frontend/README.md", "documentation/docs/intro.md");
 copyFile("backend/README.md", "documentation/docs/Tutorial/backend.md");
 copyFile("indexer/README.md", "documentation/docs/Tutorial/indexer.md");
 copyFile("contracts/README.md", "documentation/docs/Tutorial/contracts.md");
-
-console.log(path.resolve(path.dirname("")));
