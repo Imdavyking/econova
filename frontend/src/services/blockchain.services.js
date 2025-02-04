@@ -89,6 +89,7 @@ export const addPointService = async ({ weight }) => {
 };
 
 export const donateToFoundationService = async ({
+  category,
   tokenAddress,
   amountInUsd,
 }) => {
@@ -101,9 +102,14 @@ export const donateToFoundationService = async ({
       amountInUsd
     );
 
-    const tx = await manager.donateToFoundation(tokenAddress, amountInUsd, {
-      value: ethAmountToDonate.toString(),
-    });
+    const tx = await manager.donateToFoundation(
+      category,
+      tokenAddress,
+      amountInUsd,
+      {
+        value: ethAmountToDonate.toString(),
+      }
+    );
     await tx.wait(1);
     return `donated ${realAmount} USD`;
   } catch (error) {
