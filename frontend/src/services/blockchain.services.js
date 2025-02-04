@@ -75,19 +75,6 @@ const getContract = async () => {
   return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 };
 
-export const addPointService = async ({ weight }) => {
-  try {
-    const manager = await getContract();
-    const tx = await manager.addPointFromWeight(
-      getWholeNumber(weight).toString()
-    );
-    await tx.wait(1);
-    return `added ${weight} points`;
-  } catch (error) {
-    return `${FAILED_KEY} to add ${weight} points`;
-  }
-};
-
 export const donateToFoundationService = async ({
   category,
   tokenAddress,

@@ -70,27 +70,6 @@ chainId !== 31337
 
           describe("Withdrawals", function () {
               describe("Validations", function () {
-                  it("Can add points based on waste weight.", async function () {
-                      const { ecoNDeployer, owner } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
-
-                      await ecoNDeployer.addPointFromWeight(100)
-                      const userPoint = await ecoNDeployer.userPoints(owner)
-                      expect(Number(userPoint[0])).to.equal(3500)
-                  })
-                  it("Can withdraw points based on point gained.", async function () {
-                      const { ecoNDeployer, owner } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
-
-                      await ecoNDeployer.addPointFromWeight(100)
-                      await ecoNDeployer.redeemPoints(100)
-
-                      const userPoint = await ecoNDeployer.userPoints(owner)
-
-                      expect(Number(userPoint[0])).to.equal(3400)
-                  })
                   it("USD to token conversion is correct.", async function () {
                       const { mockPythPriceFeedDeployer } = await loadFixture(
                           deployEcoNovaDeployerFixture
@@ -163,26 +142,7 @@ chainId !== 31337
                       expect(symbol).to.equal(customToken.symbol)
                       expect(supply).to.equal(customToken.initialSupply)
                   })
-                  it("Should emit an event on points added", async function () {
-                      const { ecoNDeployer, owner } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
 
-                      await expect(ecoNDeployer.addPointFromWeight(100))
-                          .to.emit(ecoNDeployer, "PointsAdded")
-                          .withArgs(owner, 3500)
-                  })
-                  it("Should emit an event on redeem code", async function () {
-                      const { ecoNDeployer, owner } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
-
-                      await ecoNDeployer.addPointFromWeight(100)
-
-                      await expect(ecoNDeployer.redeemPoints(100))
-                          .to.emit(ecoNDeployer, "PointsRedeemed")
-                          .withArgs(owner, 100)
-                  })
                   it("Should emit an event on donated", async function () {
                       const { ecoNDeployer, owner, charityDeployer } = await loadFixture(
                           deployEcoNovaDeployerFixture
@@ -236,20 +196,6 @@ chainId !== 31337
               })
 
               describe("Transfers", function () {
-                  it("Should be able to redeem points with ERC20 balance change", async function () {
-                      const { ecoNDeployer, ecoNovaToken, owner } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
-
-                      await ecoNDeployer.addPointFromWeight(100)
-                      await ecoNDeployer.redeemPoints(100)
-                      await expect(ecoNDeployer.redeemPoints(100)).to.changeTokenBalance(
-                          ecoNovaToken,
-                          owner,
-                          "100000000000000000000"
-                      )
-                  })
-
                   it("Can donate with ether change.", async function () {
                       const { ecoNDeployer, owner, charityDeployer, otherAccount } =
                           await loadFixture(deployEcoNovaDeployerFixture)

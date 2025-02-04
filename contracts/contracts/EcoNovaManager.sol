@@ -337,36 +337,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     }
 
     /**
-     * @dev Add points to the user based on the weight of the waste
-     * @param weightInGrams weight in grams of the waste
-     */
-    function addPointFromWeight(uint256 weightInGrams) public {
-        uint256 points = weightInGrams * POINT_BASIS;
-
-        PointData memory userPointData = userPoints[msg.sender];
-
-        if (weightInGrams <= 0) {
-            revert EcoNovaManager__InsufficientPoints();
-        }
-
-        if (userPointData.points > 0) {
-            userPointData.points += points;
-            userPointData.updatedTimeStamp = block.timestamp;
-            userPoints[msg.sender] = userPointData;
-        } else {
-            PointData memory pointData = PointData(
-                points,
-                block.timestamp,
-                block.timestamp,
-                msg.sender
-            );
-            userPoints[msg.sender] = pointData;
-        }
-
-        emit PointsAdded(msg.sender, userPoints[msg.sender].points);
-    }
-
-    /**
      * @dev Redeem points to get ERC20 token
      * @param point points to redeem
      * @return success true if the point is redeemed successfully
