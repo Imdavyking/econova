@@ -5,7 +5,6 @@ import {
   PointsAddedLog,
   PointsRedeemedLog,
   SetOracleLog,
-  WithdrawDonationTransaction,
 } from "../types/abi-interfaces/Abi";
 
 import {
@@ -14,26 +13,7 @@ import {
   PointsRedeemed,
   OrocleUpdate,
   OwnershipTransfer,
-  WithdrawDonation,
 } from "../types";
-
-export async function handleWithdrawDonationAbiTx(
-  tx: WithdrawDonationTransaction
-): Promise<void> {
-  logger.info(`New Withdraw Donation transaction at block ${tx.blockNumber}`);
-  assert(tx.args, "No tx.args");
-
-  const transaction = WithdrawDonation.create({
-    id: tx.hash,
-    user: tx.from,
-    token: tx.args[0],
-    blockHeight: BigInt(tx.blockNumber),
-    amount: BigInt(tx.args[1].toString()),
-    contractAddress: tx.to || "",
-  });
-
-  await transaction.save();
-}
 
 export async function handleDonatedAbiLog(log: DonatedLog): Promise<void> {
   logger.info(`New Donation transaction log at block ${log.blockNumber}`);
@@ -43,6 +23,7 @@ export async function handleDonatedAbiLog(log: DonatedLog): Promise<void> {
     id: log.transactionHash,
     blockHeight: BigInt(log.blockNumber),
     user: log.args.user,
+    charityCategory: log.args.charityCategory,
     token: log.args.token,
     amount: log.args.amount.toBigInt(),
     contractAddress: log.address,

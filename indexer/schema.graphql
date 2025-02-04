@@ -3,6 +3,7 @@ type Donation @entity {
   user: String!
   token: String!
   amount: BigInt!
+  charityCategory: String!
   blockHeight: BigInt!
   contractAddress: String!
 }
@@ -37,15 +38,6 @@ type PointsRedeemed @entity {
   id: ID!
   user: String!
   points: BigInt!
-  blockHeight: BigInt!
-  contractAddress: String!
-}
-
-type WithdrawDonation @entity {
-  id: ID!
-  user: String!
-  token: String!
-  amount: BigInt!
   blockHeight: BigInt!
   contractAddress: String!
 }

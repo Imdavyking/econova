@@ -68,7 +68,12 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     event PointsAdded(address indexed user, uint256 points);
     event PointsRedeemed(address indexed user, uint256 points);
     event SetOracle(address indexed oldOrocle, address indexed newOrocle);
-    event Donated(address indexed user, address indexed token, uint256 amount, uint8 charityOrg);
+    event Donated(
+        address indexed user,
+        address indexed token,
+        uint256 amount,
+        uint8 charityCategory
+    );
     event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
     event TokenCreated(address indexed token, string name, string symbol, uint256 initialSupply);
     event CharityAdded(uint8 indexed charityOrg, address charityAddress);

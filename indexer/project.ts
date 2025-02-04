@@ -60,17 +60,10 @@ const project: EthereumProject = {
         file: "./dist/index.js",
         handlers: [
           {
-            handler: "handleWithdrawDonationAbiTx",
-            kind: EthereumHandlerKind.Call,
-            filter: {
-              function: "withdrawDonation(address,uint256)",
-            },
-          },
-          {
             handler: "handleDonatedAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
-              topics: ["Donated(address,address,uint256)"],
+              topics: ["Donated(address,address,uint256,uint8)"],
             },
           },
           {
