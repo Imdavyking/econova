@@ -31,7 +31,11 @@ chainId !== 31337
               const charityDeployer = await CharityDeployer.deploy(charityCategories.Education)
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
 
-              const ecoNDeployer = await EcoNovaDeployer.deploy(mockPythPriceFeedDeployer, wallet)
+              const ecoNDeployer = await EcoNovaDeployer.deploy(
+                  mockPythPriceFeedDeployer,
+                  wallet,
+                  [charityDeployer]
+              )
               ecoNDeployer.addCharity(charityDeployer)
 
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
