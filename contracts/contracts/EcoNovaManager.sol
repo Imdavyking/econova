@@ -76,8 +76,8 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     );
     event BotAddressUpdated(address indexed oldBotAddress, address indexed newBotAddress);
     event TokenCreated(address indexed token, string name, string symbol, uint256 initialSupply);
-    event CharityAdded(uint8 indexed charityOrg, address charityAddress);
-    event CharityRemoved(uint8 indexed charityOrg);
+    event CharityAdded(uint8 indexed charityCategory, address charityAddress);
+    event CharityRemoved(uint8 indexed charityCategory);
 
     /**
      * structs

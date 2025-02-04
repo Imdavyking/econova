@@ -41,3 +41,11 @@ type PointsRedeemed @entity {
   blockHeight: BigInt!
   contractAddress: String!
 }
+# event CharityAdded(uint8 indexed charityOrg, address charityAddress)
+type CharityAdded @entity {
+  id: ID!
+  charityOrg: BigInt!
+  charityAddress: String!
+  blockHeight: BigInt!
+  contractAddress: String!
+}

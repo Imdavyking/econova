@@ -94,6 +94,13 @@ const project: EthereumProject = {
               topics: ["SetOracle(address,address)"],
             },
           },
+          {
+            handler: "handleCharityAddedAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["CharityAdded(uint8,address)"],
+            },
+          },
         ],
       },
     },
