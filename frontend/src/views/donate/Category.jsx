@@ -13,7 +13,7 @@ export default function CharityCategory({ categoryName, charityCategory }) {
     getCharityCategoryAddressService({ charityCatogory: charityCategory })
       .then((address) => {
         console.log(address);
-        setCharityAddress(ellipsify(address));
+        setCharityAddress(address);
       })
       .catch((error) => {
         console.log(error);
@@ -29,11 +29,14 @@ export default function CharityCategory({ categoryName, charityCategory }) {
       </span>
       <button
         onClick={() => handleCopy(charityAddress)}
-        className="text-gray-600 hover:text-gray-900"
+        className="text-gray-600 hover:text-gray-900 flex"
       >
         <span className="text-sm text-gray-500">
-          {charityAddress.trim() != "" ? charityAddress : charityCategory}
+          {ellipsify(
+            charityAddress.trim() != "" ? charityAddress : charityCategory
+          )}
         </span>
+        <span className="mx-2"></span>
         <FaCopy className="w-5 h-5" />
       </button>
     </li>
