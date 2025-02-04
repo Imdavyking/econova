@@ -8,7 +8,6 @@ This project specifically indexes the following:
 ✅ **OwnershipTransfer** - Recording changes in contract ownership.
 ✅ **OrocleUpdate** - Tracking updates to the system oracle.
 ✅ **PointsRedeemed** - Logging when users redeem their reward points.
-✅ **WithdrawDonation** - Tracking withdrawals of donations.
 
 ## **Getting Started**
 

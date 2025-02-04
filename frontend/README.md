@@ -1,11 +1,6 @@
 # EcoNova
 
-This is a solution that rewards users with token for recycling and use them to uphold the SDG goals
-
-- Clean Water and Sanitation
-- Climate Action
-- Life on Land
-- Sustainable Cities and Communities
+EcoNova is a decentralized charity management system that enables transparent and secure donations using blockchain technology. It allows users to contribute to verified charitable organizations across different categories, ensuring trust, security, and efficiency in the donation process.
 
 # Methodolgy
 
