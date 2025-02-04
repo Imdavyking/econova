@@ -2,7 +2,6 @@ import hre, { ethers } from "hardhat"
 import path from "path"
 
 import EcoNovaDeployer from "../ignition/modules/EcoNovaDeployer"
-import CharityDeployer from "../ignition/modules/CharityDeployer"
 import { verify } from "../utils/verify"
 import dotenv from "dotenv"
 import { network } from "hardhat"
@@ -17,12 +16,6 @@ async function main() {
 
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
-    for (let i = 0; i < CharityDeployer.length; i++) {
-        const currentCharity = CharityDeployer[i]
-        const { charityDeployer } = await hre.ignition.deploy(currentCharity)
-        const charityAddress = await charityDeployer.getAddress()
-        console.log(`${currentCharity.id} deployed to: ${charityAddress}`)
-    }
 
     const ecoAddress = await ecoNovaDeployer.getAddress()
     const botPrivateKey = process.env.PRIVATE_KEY!

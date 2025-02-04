@@ -89,10 +89,17 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         address user;
     }
 
-    constructor(address oracleAddress, address _botAddress) Ownable(msg.sender) {
+    constructor(
+        address oracleAddress,
+        address _botAddress,
+        Charity[] memory _charity
+    ) Ownable(msg.sender) {
         i_ecoNovaToken = new EcoNovaToken();
         botAddress = _botAddress;
         i_pyth = IPyth(oracleAddress);
+        for (uint256 i = 0; i < _charity.length; i++) {
+            addCharity(_charity[i]);
+        }
         emit SetOracle(oracleAddress, oracleAddress);
     }
 
@@ -147,7 +154,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param charity The charity organization to add.
      */
 
-    function addCharity(Charity charity) external onlyOwner {
+    function addCharity(Charity charity) public onlyOwner {
         Charity.Category charityCategory = charity.charityCategory();
         address charityAddress = address(charity);
 
