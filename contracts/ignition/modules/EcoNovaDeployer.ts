@@ -6,19 +6,6 @@ import { charityCategories } from "../../utils/charity.categories"
 
 dotenv.config()
 
-// const charityModules: Array<ReturnType<typeof buildModule>> = []
-
-// for (const categoryKey of Object.keys(charityCategories) as (keyof typeof charityCategories)[]) {
-//     const category = charityCategories[categoryKey]
-
-//     const charityModule = buildModule(`Charity_${categoryKey}`, (m) => {
-//         const charityDeployer = m.contract("Charity", [category], { id: categoryKey })
-//         return { charityDeployer }
-//     })
-
-//     charityModules.push(charityModule)
-// }
-
 const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
     const chainId = network.config.chainId
     let oracle: NamedArtifactContractDeploymentFuture<"MockPythPriceFeed"> | string =
