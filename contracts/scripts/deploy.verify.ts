@@ -2,6 +2,7 @@ import hre, { ethers } from "hardhat"
 import path from "path"
 
 import EcoNovaDeployer from "../ignition/modules/EcoNovaDeployer"
+import CharityDeployer from "../ignition/modules/CharityDeployer"
 import { verify } from "../utils/verify"
 import dotenv from "dotenv"
 import { network } from "hardhat"
@@ -13,8 +14,12 @@ dotenv.config()
 
 async function main() {
     const chainId = network.config.chainId
+
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
+    const { charityDeployer } = await hre.ignition.deploy(CharityDeployer)
+
+    const charityAddress = await charityDeployer.getAddress()
     const ecoAddress = await ecoNovaDeployer.getAddress()
     const botPrivateKey = process.env.PRIVATE_KEY!
     const wallet = new ethers.Wallet(botPrivateKey)
@@ -22,6 +27,7 @@ async function main() {
     const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
     const chainSymbol = process.env.CHAIN_SYMBOL!
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
+    console.log(`CharityDeployer deployed to: ${charityAddress}`)
 
     if (chainId === 31337) return
 
