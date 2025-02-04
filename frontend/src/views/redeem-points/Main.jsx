@@ -82,7 +82,7 @@ function Main() {
                   to earn money.
                 </div>
                 <div className="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400">
-                  ...Blockchain-powered recycling solution
+                  ...A blockchain-powered charitable impact
                 </div>
               </div>
             </div>
@@ -98,7 +98,7 @@ function Main() {
                   Redeem your points to earn money. {accumulatedPoints} LFT
                 </h2>
                 <div className="intro-x mt-2 text-slate-400 dark:text-slate-400 xl:hidden text-center">
-                  ...Blockchain-powered recycling solution
+                  ...A blockchain-powered charitable impact
                 </div>
                 <div className="intro-x mt-8">
                   <input

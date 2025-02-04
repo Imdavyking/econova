@@ -136,10 +136,11 @@ const Home = () => {
               {APP_NAME}
             </h2>
             <p className="text-white font-extrabold text-lg md:text-2xl my-2 text-center max-w-[90%] md:max-w-[60%]">
-              This is a solution that rewards users with tokens for recycling
-              and helps uphold the SDG goals through a
-              <span className="text-[#c54dfc] px-1">blockchain-powered</span>
-              recycling solution....
+              This solution enables donations through blockchain
+              <span className="text-[#c54dfc] px-1">
+                and connects with Twitter
+              </span>
+              for updates.
             </p>
             <Link to="/redeem-points">
               <button

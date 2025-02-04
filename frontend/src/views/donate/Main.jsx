@@ -77,11 +77,11 @@ function Main() {
                   src={donateHeart}
                 />
                 <div className="-intro-x text-white font-medium text-4xl leading-tight mt-10">
-                  Donating <br />
-                  will assist to recycle more waste.
+                  Your <br />
+                  donation creates impact.
                 </div>
                 <div className="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400">
-                  ...Blockchain-powered recycling solution
+                  ...A blockchain-powered charitable impact
                 </div>
               </div>
             </div>
@@ -95,7 +95,7 @@ function Main() {
                   Donate to the foundation
                 </h2>
                 <div className="intro-x mt-2 text-slate-400 dark:text-slate-400 xl:hidden text-center">
-                  ...Blockchain-powered recycling solution
+                  ...A blockchain-powered charitable impact
                 </div>
                 <div className="intro-x mt-8">
                   {/* Dropdown for Category Selection */}
