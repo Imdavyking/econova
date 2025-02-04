@@ -2,12 +2,12 @@
 
 import { callLLMApi } from "../services/openai.services";
 import {
-  addPointService,
   deployTokenService,
   donateToFoundationService,
   redeemPointsService,
 } from "../services/blockchain.services";
 import { AiResponseType, ToolCall } from "../types";
+import { charityCategories } from "../utils/charity.categories";
 
 export class AIAgent {
   tools: { [key: string]: Function };
@@ -17,15 +17,16 @@ export class AIAgent {
     this.tools = {
       donate: donateToFoundationService,
       redeemPoints: redeemPointsService,
-      addPoints: addPointService,
+
       deployToken: deployTokenService,
     };
     this.toolsInfo = {
-      donate: "Example: Donate 100 USD to a cause.",
-      redeemPoints: "Example: Redeem 5 reward points.",
-      addPoints: "Example: Add 152 points to your balance.",
+      donate: `Example: Donate 100 USD to a cause. e.g ${Object.keys(
+        charityCategories
+      ).join(", ")}`,
+      redeemPoints: "Example: Redeem 5 reward points",
       deployToken:
-        "Example: Deploy a token named 'Token' with symbol 'TKN' and an initial supply of 1,000.",
+        "Example: Deploy a token named 'Token' with symbol 'TKN' and an initial supply of 1,000",
     };
   }
 

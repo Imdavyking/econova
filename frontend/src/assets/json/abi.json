@@ -10,6 +10,11 @@
         "internalType": "address",
         "name": "_botAddress",
         "type": "address"
+      },
+      {
+        "internalType": "contract Charity[]",
+        "name": "_charity",
+        "type": "address[]"
       }
     ],
     "stateMutability": "nonpayable",
@@ -413,19 +418,6 @@
       }
     ],
     "name": "addCharity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "weightInGrams",
-        "type": "uint256"
-      }
-    ],
-    "name": "addPointFromWeight",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
