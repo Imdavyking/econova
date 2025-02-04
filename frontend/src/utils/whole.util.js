@@ -1,3 +1,3 @@
-export const getWholeNumber = (number) => {
-  return number.split(".")[0];
+export const getWholeNumber = (digitNumber) => {
+  return `${digitNumber}`.split(".")[0];
 };

@@ -125,6 +125,7 @@ export const deployTokenService = async ({ name, symbol, initialSupply }) => {
     const [tokenAddress] = args;
     return `deployed ${name} token at ${tokenAddress}`;
   } catch (error) {
+    console.log(error);
     return `${FAILED_KEY} to deploy ${name} token`;
   }
 };
