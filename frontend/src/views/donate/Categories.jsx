@@ -10,7 +10,7 @@ export default function CharityCategories() {
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <a href="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
-          <span className="text-lg">{APP_NAME} charity organizations</span>
+          <span className="text-lg">{APP_NAME} charity</span>
         </a>
       </h2>
       <div className="max-w-2xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
