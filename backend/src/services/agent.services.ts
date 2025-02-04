@@ -48,15 +48,6 @@ const tools = {
         .describe("The points to redeem"),
     }),
   }),
-  addPoints: tool(() => undefined, {
-    name: "addPoints",
-    description: "Add points (measured in grams) to your account.",
-    schema: z.object({
-      weight: z
-        .union([z.number(), z.string()])
-        .describe("The weight of the points"),
-    }),
-  }),
   deployToken: tool(() => undefined, {
     name: "deployToken",
     description: "Deploy a new token.",
