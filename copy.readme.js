@@ -1,0 +1,25 @@
+import fs from "fs";
+import path from "path";
+
+async function copyFile(source, destination) {
+  try {
+    const __dirname = path.resolve(path.dirname(""));
+    const sourcePath = path.join(__dirname, source);
+    const destinationPath = path.join(__dirname, destination);
+
+    await fs.copyFileSync(sourcePath, destinationPath);
+    console.log(
+      `File copied successfully from ${sourcePath} to ${destinationPath}`
+    );
+  } catch (err) {
+    console.error("Error copying file:", err);
+  }
+}
+
+// // Example usage
+copyFile("frontend/README.md", "documentation/docs/intro.md");
+copyFile("backend/README.md", "documentation/docs/Tutorial/backend.md");
+copyFile("indexer/README.md", "documentation/docs/Tutorial/indexer.md");
+copyFile("contracts/README.md", "documentation/docs/Tutorial/contracts.md");
+
+console.log(path.resolve(path.dirname("")));
