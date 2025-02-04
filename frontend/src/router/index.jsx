@@ -18,10 +18,6 @@ function Router() {
       element: <Home />,
     },
     {
-      path: "/add-points",
-      element: <AddPoint />,
-    },
-    {
       path: "/earn-points",
       element: <EarnPoints />,
     },
