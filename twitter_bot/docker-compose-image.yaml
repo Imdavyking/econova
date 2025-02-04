@@ -1,0 +1,19 @@
+services:
+  eliza:
+    platform: linux/amd64
+    command: ["pnpm", "start", "--character=./characters/bot.character.json"]
+    build:
+      context: .
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./data:/app/data
+    environment:
+      - STARKNET_ADDRESS=starknet-address
+      - STARKNET_PRIVATE_KEY=starknet-private-key
+      - OPENROUTER_API_KEY="sk-xx-xx-xxx
+      - TELEGRAM_BOT_TOKEN=telegram-bot-token
+      - SERVER_PORT=3000
+    ports:
+      - "3000:3000"
+    restart: always
