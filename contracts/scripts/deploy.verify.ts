@@ -17,7 +17,7 @@ async function main() {
 
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
-    const { charityDeployer } = await hre.ignition.deploy(CharityDeployer)
+    const { charityDeployer } = await hre.ignition.deploy(CharityDeployer[0])
 
     const charityAddress = await charityDeployer.getAddress()
     const ecoAddress = await ecoNovaDeployer.getAddress()
