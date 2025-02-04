@@ -9,7 +9,7 @@ const charityModules: Array<ReturnType<typeof buildModule>> = []
 for (const categoryKey of Object.keys(charityCategories) as (keyof typeof charityCategories)[]) {
     const category = charityCategories[categoryKey]
 
-    const charityModule = buildModule(`CharityDeployerModule_${categoryKey}`, (m) => {
+    const charityModule = buildModule(`Charity_${categoryKey}`, (m) => {
         const charityDeployer = m.contract("Charity", [category], { id: categoryKey })
         return { charityDeployer }
     })
