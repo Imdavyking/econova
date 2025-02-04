@@ -107,6 +107,7 @@ export const donateToFoundationService = async ({
       tokenAddress,
       amountInUsd,
       {
+        gasLimit: 500000,
         value: ethAmountToDonate.toString(),
       }
     );
