@@ -45,9 +45,9 @@ class TwitterGuestAuth:
             "User-Agent": "Mozilla/5.0",
             "Content-Type": "application/json"
         }
-        self.guest_token = self.get_guest_token()
+        self.guest_token = self.update_guest_token()
 
-    def get_guest_token(self):
+    def update_guest_token(self):
         """
         Fetches a guest token required for making unauthenticated API requests.
         """
@@ -152,3 +152,71 @@ class TwitterGuestAuth:
 class TwitterUserAuth(TwitterGuestAuth):
     def __init__(self, bearer_token, options=None):
         super().__init__(bearer_token, options)
+
+    def login(self, username, password, email=None, twoFactorSecret=None, appKey=None, appSecret=None, accessToken=None, accessSecret=None):    
+        self.update_guest_token()
+        next = init_login()
+
+    def init_login(self):
+        self.cookie_jar.clear()
+
+
+
+#       private async initLogin() {
+#     // Reset certain session-related cookies because Twitter complains sometimes if we don't
+#     this.removeCookie('twitter_ads_id=');
+#     this.removeCookie('ads_prefs=');
+#     this.removeCookie('_twitter_sess=');
+#     this.removeCookie('zipbox_forms_auth_token=');
+#     this.removeCookie('lang=');
+#     this.removeCookie('bouncer_reset_cookie=');
+#     this.removeCookie('twid=');
+#     this.removeCookie('twitter_ads_idb=');
+#     this.removeCookie('email_uid=');
+#     this.removeCookie('external_referer=');
+#     this.removeCookie('ct0=');
+#     this.removeCookie('aa_u=');
+
+#     return await this.executeFlowTask({
+#       flow_name: 'login',
+#       input_flow_data: {
+#         flow_context: {
+#           debug_overrides: {},
+#           start_location: {
+#             location: 'splash_screen',
+#           },
+#         },
+#       },
+#     });
+#   }
+
+#  protected async removeCookie(key: string): Promise<void> {
+#     //@ts-expect-error don't care
+#     const store: MemoryCookieStore = this.jar.store;
+#     const cookies = await this.jar.getCookies(this.getCookieJarUrl());
+#     for (const cookie of cookies) {
+#       if (!cookie.domain || !cookie.path) continue;
+#       store.removeCookie(cookie.domain, cookie.path, key);
+
+#       if (typeof document !== 'undefined') {
+#         document.cookie = `${cookie.key}=; Max-Age=0; path=${cookie.path}; domain=${cookie.domain}`;
+#       }
+#     }
+#   }
+
+#  private getCookieJarUrl(): string {
+#     return typeof document !== 'undefined'
+#       ? document.location.toString()
+#       : 'https://twitter.com';
+#   }
+
+#   async login(
+#     username: string,
+#     password: string,
+#     email?: string,
+#     twoFactorSecret?: string,
+#     appKey?: string,
+#     appSecret?: string,
+#     accessToken?: string,
+#     accessSecret?: string,
+#   ): Promise<void> {
