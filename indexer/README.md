@@ -1,4 +1,4 @@
-## **Project Overview**
+# EcoNova Indexer
 
 **EcoNova** is a decentralized platform, enabling seamless interaction with smart contracts and decentralized applications (dApps). This SubQuery project indexes key on-chain data, focusing on **user interactions, incentive distributions, and transaction tracking**. By providing structured and real-time data, it enhances **analytics, transparency, and user engagement** within the EcoNova ecosystem.
 
