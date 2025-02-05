@@ -4,14 +4,16 @@ import requests
 import json
 from dotenv import load_dotenv
 from http.cookiejar import CookieJar
-
+import http.cookiejar
+import requests
+from requests.utils import cookiejar_from_dict
+from typing import Union, Dict
 load_dotenv()
 
 
 class Scraper:
-    # constructor
     def __init__(self, url):
-        self.token = os.getenv("BEARER_TOKEN")
+        self.token = os.getenv("TWITTER_BEARER_TOKEN")
         self.useGuestAuth()
 
     def get_auth_options(self):
@@ -43,7 +45,8 @@ class TwitterGuestAuth:
         self.headers = {
             "Authorization": f"Bearer {self.bearer_token}",
             "User-Agent": "Mozilla/5.0",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Referrer-Policy": 'no-referrer',
         }
         self.guest_token = self.update_guest_token()
 
@@ -52,14 +55,38 @@ class TwitterGuestAuth:
         Fetches a guest token required for making unauthenticated API requests.
         """
         url = "https://api.twitter.com/1.1/guest/activate.json"
-        response = requests.post(url, headers=self.headers)
+        response = requests.post(url, headers=self.headers, cookies=self.cookie_jar)
+
+        self.update_cookie_jar(response.headers)
 
         if response.status_code == 200:
             guest_token = response.json().get("guest_token")
-            self.headers["x-guest-token"] = guest_token
             return guest_token
         else:
             raise Exception(f"Failed to get guest token: {response.text}")
+        
+
+
+    def update_cookie_jar(cookie_jar: http.cookiejar.CookieJar, headers: Union[Dict[str, str], requests.structures.CaseInsensitiveDict]):
+        """
+        Updates a cookie jar with the Set-Cookie headers from the provided headers dictionary.
+
+        :param cookie_jar: The cookie jar to update.
+        :param headers: The response headers containing Set-Cookie values.
+        """
+        set_cookie_header = headers.get("Set-Cookie")
+        
+        if set_cookie_header:
+            cookies = requests.utils.dict_from_cookiejar(cookie_jar)
+            for cookie in set_cookie_header.split(";"):
+                cookie_parts = cookie.strip().split("=")
+                if len(cookie_parts) == 2:
+                    key, value = cookie_parts
+                    cookies[key] = value
+            
+            cookie_jar = cookiejar_from_dict(cookies)
+        
+        return cookie_jar
 
 
     def send_tweet(self, text, reply_to_tweet_id=None, hide_link_preview=False):
@@ -160,63 +187,3 @@ class TwitterUserAuth(TwitterGuestAuth):
     def init_login(self):
         self.cookie_jar.clear()
 
-
-
-#       private async initLogin() {
-#     // Reset certain session-related cookies because Twitter complains sometimes if we don't
-#     this.removeCookie('twitter_ads_id=');
-#     this.removeCookie('ads_prefs=');
-#     this.removeCookie('_twitter_sess=');
-#     this.removeCookie('zipbox_forms_auth_token=');
-#     this.removeCookie('lang=');
-#     this.removeCookie('bouncer_reset_cookie=');
-#     this.removeCookie('twid=');
-#     this.removeCookie('twitter_ads_idb=');
-#     this.removeCookie('email_uid=');
-#     this.removeCookie('external_referer=');
-#     this.removeCookie('ct0=');
-#     this.removeCookie('aa_u=');
-
-#     return await this.executeFlowTask({
-#       flow_name: 'login',
-#       input_flow_data: {
-#         flow_context: {
-#           debug_overrides: {},
-#           start_location: {
-#             location: 'splash_screen',
-#           },
-#         },
-#       },
-#     });
-#   }
-
-#  protected async removeCookie(key: string): Promise<void> {
-#     //@ts-expect-error don't care
-#     const store: MemoryCookieStore = this.jar.store;
-#     const cookies = await this.jar.getCookies(this.getCookieJarUrl());
-#     for (const cookie of cookies) {
-#       if (!cookie.domain || !cookie.path) continue;
-#       store.removeCookie(cookie.domain, cookie.path, key);
-
-#       if (typeof document !== 'undefined') {
-#         document.cookie = `${cookie.key}=; Max-Age=0; path=${cookie.path}; domain=${cookie.domain}`;
-#       }
-#     }
-#   }
-
-#  private getCookieJarUrl(): string {
-#     return typeof document !== 'undefined'
-#       ? document.location.toString()
-#       : 'https://twitter.com';
-#   }
-
-#   async login(
-#     username: string,
-#     password: string,
-#     email?: string,
-#     twoFactorSecret?: string,
-#     appKey?: string,
-#     appSecret?: string,
-#     accessToken?: string,
-#     accessSecret?: string,
-#   ): Promise<void> {
