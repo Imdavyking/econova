@@ -1,4 +1,4 @@
-# EcoNova Contracts
+# Contracts
 
 EcoNova is a decentralized platform, designed to offer users the ability to interact with smart contracts and decentralized applications, while also providing various incentives for participating in its ecosystem.
 

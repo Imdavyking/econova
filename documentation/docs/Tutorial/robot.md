@@ -1,4 +1,4 @@
-# EcoNova Robot
+# Robot
 
 #### **1. User Interaction with Bot Tweets**
 
