@@ -22,7 +22,7 @@ class FlowTokenResultSuccess(TypedDict):
 class Scraper:
     def __init__(self, options: Optional[Dict[str, Any]] = None):
         self.options: Dict[str, Any] = options if options is not None else {}
-        self.token = os.getenv("TWITTER_BEARER_TOKEN")
+        self.token = 'AAAAAAAAAAAAAAAAAAAAAFQODgEAAAAAVHTp76lzh3rFzcHbmHVvQxYYpTw%3DckAlMINMjmCwxUcaXbAN4XqJVdgMJaHqNOFgPMK0zN1qLqLQCF'
         self.useGuestAuth()
 
     def get_auth_options(self):
