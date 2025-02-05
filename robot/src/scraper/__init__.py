@@ -10,11 +10,11 @@ from requests.utils import cookiejar_from_dict
 from typing import Union, Dict
 load_dotenv()
 
-
 class Scraper:
-    def __init__(self, url):
+    def __init__(self, options=None):
         self.token = os.getenv("TWITTER_BEARER_TOKEN")
         self.useGuestAuth()
+        self.options = options
 
     def get_auth_options(self):
         """
@@ -42,6 +42,8 @@ class TwitterGuestAuth:
         self.bearer_token = bearer_token
         self.options = options or {}
         self.cookie_jar = CookieJar()
+        self.session = requests.Session()
+        self.is_browser_env = False
         self.headers = {
             "Authorization": f"Bearer {self.bearer_token}",
             "User-Agent": "Mozilla/5.0",
@@ -65,8 +67,11 @@ class TwitterGuestAuth:
         else:
             raise Exception(f"Failed to get guest token: {response.text}")
         
-
-
+    def get_cookie_string(self) -> str:
+        """Returns the cookies as a formatted string."""
+        cookies = [f"{cookie.name}={cookie.value}" for cookie in self.cookie_jar]
+        return "; ".join(cookies)
+        
     def update_cookie_jar(cookie_jar: http.cookiejar.CookieJar, headers: Union[Dict[str, str], requests.structures.CaseInsensitiveDict]):
         """
         Updates a cookie jar with the Set-Cookie headers from the provided headers dictionary.
@@ -158,6 +163,20 @@ class TwitterGuestAuth:
         else:
             raise Exception(f"Failed to send tweet: {response.text}")
 
+    
+    def get_cookie_jar_url(self) -> str:
+        """Returns the cookie jar URL based on the environment."""
+        if self.is_browser_env:
+            # In a real browser environment, you'd fetch this dynamically
+            return "http://localhost"  # Simulating document.location
+        return "https://twitter.com"
+
+
+    def get_cookies(self):
+        """Retrieve all cookies for the base URL."""
+        jar_url = self.get_cookie_jar_url()
+        return [cookie for cookie in self.cookie_jar if jar_url in cookie.domain]
+
     def get_csrf_token(self):
         """
         Extracts CSRF token from cookies.
@@ -171,7 +190,19 @@ class TwitterGuestAuth:
                 if cookie.name == "ct0":
                     return cookie.value
         return None
+    
+    def remove_cookie(self, key: str):
+        """
+        Removes a cookie from the cookie jar.
 
+        :param key: The name of the cookie to remove.
+        """
+        cookies = list(self.jar)  # Convert to list to allow modification during iteration
+        for cookie in cookies:
+            if not cookie.domain or not cookie.path:
+                continue
+            # Remove the cookie from the jar
+            self.cookie_jar.clear(domain=cookie.domain, path=cookie.path, name=key)
 
 
 
@@ -182,8 +213,91 @@ class TwitterUserAuth(TwitterGuestAuth):
 
     def login(self, username, password, email=None, twoFactorSecret=None, appKey=None, appSecret=None, accessToken=None, accessSecret=None):    
         self.update_guest_token()
-        next = init_login()
+        next = self.init_login()
+
+    def install_csrf_token(self, headers):
+        """Add CSRF token to headers if available in cookies."""
+        cookies = self.get_cookies()
+        x_csrf_token = next((c["value"] for c in cookies if c["key"] == "ct0"), None)
+
+        if x_csrf_token:
+            headers["x-csrf-token"] = x_csrf_token
+
+    def execute_flow_task(self, data):
+        onboarding_task_url = "https://api.twitter.com/1.1/onboarding/task.json"
+
+        if self.guest_token is None:
+            raise ValueError("Authentication token is null or undefined.")
+
+        headers = {
+            "authorization": f"Bearer {self.bearer_token}",
+            "cookie": self.get_cookie_string(),
+            "content-type": "application/json",
+            "User-Agent": (
+                "Mozilla/5.0 (Linux; Android 11; Nokia G20) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/91.0.4472.88 Mobile Safari/537.36"
+            ),
+            "x-guest-token": self.guest_token,
+            "x-twitter-auth-type": "OAuth2Client",
+            "x-twitter-active-user": "yes",
+            "x-twitter-client-language": "en",
+        }
+
+        self.install_csrf_token(headers)
+
+        response = self.session.post(
+            onboarding_task_url, headers=headers, json=data
+        )
+
+        # Update the cookie jar with response cookies
+        self.cookie_jar.update(self.session.cookies)
+
+        if not response.ok:
+            return {"status": "error", "err": response.text}
+
+        flow = response.json()
+
+        if "flow_token" not in flow or not isinstance(flow["flow_token"], str):
+            return {"status": "error", "err": "flow_token not found or invalid."}
+
+        if "errors" in flow and flow["errors"]:
+            return {
+                "status": "error",
+                "err": f"Authentication error ({flow['errors'][0]['code']}): {flow['errors'][0]['message']}",
+            }
+
+        subtask = flow.get("subtasks", [None])[0]
+
+        if subtask and subtask.get("subtask_id") == "DenyLoginSubtask":
+            return {"status": "error", "err": "Authentication error: DenyLoginSubtask"}
+
+        return {"status": "success", "subtask": subtask, "flowToken": flow["flow_token"]}
 
     def init_login(self):
-        self.cookie_jar.clear()
+        self.remove_cookie('twitter_ads_id=')
+        self.remove_cookie('ads_prefs=')
+        self.remove_cookie('_twitter_sess=')
+        self.remove_cookie('zipbox_forms_auth_token=')
+        self.remove_cookie('lang=')
+        self.remove_cookie('bouncer_reset_cookie=')
+        self.remove_cookie('twid=')
+        self.remove_cookie('twitter_ads_idb=')
+        self.remove_cookie('email_uid=')
+        self.remove_cookie('external_referer=')
+        self.remove_cookie('ct0=')
+        self.remove_cookie('aa_u=')
+
+        
+
+        # return await this.executeFlowTask({
+        #     flow_name: 'login',
+        #     input_flow_data: {
+        #         flow_context: {
+        #         debug_overrides: {},
+        #         start_location: {
+        #             location: 'splash_screen',
+        #         },
+        #         },
+        #     },
+        # });
 
