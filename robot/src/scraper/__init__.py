@@ -42,7 +42,6 @@ class TwitterGuestAuth:
         self.bearer_token = bearer_token
         self.options = options or {}
         self.cookie_jar = CookieJar()
-        self.session = requests.Session()
         self.is_browser_env = False
         self.headers = {
             "Authorization": f"Bearer {self.bearer_token}",
@@ -211,9 +210,46 @@ class TwitterUserAuth(TwitterGuestAuth):
     def __init__(self, bearer_token, options=None):
         super().__init__(bearer_token, options)
 
-    def login(self, username, password, email=None, twoFactorSecret=None, appKey=None, appSecret=None, accessToken=None, accessSecret=None):    
+    async def process_subtask(self, next_task, username=None, email=None, password=None, two_factor_secret=None):
+        """Processes Twitter authentication subtasks."""
+        while "subtask" in next_task and next_task["subtask"]:
+            subtask_id = next_task["subtask"]["subtask_id"]
+
+            if subtask_id == "LoginJsInstrumentationSubtask":
+                next_task = await self.handle_js_instrumentation_subtask(next_task)
+            elif subtask_id == "LoginEnterUserIdentifierSSO":
+                next_task = await self.handle_enter_user_identifier_sso(next_task, username)
+            elif subtask_id == "LoginEnterAlternateIdentifierSubtask":
+                next_task = await self.handle_enter_alternate_identifier_subtask(next_task, email)
+            elif subtask_id == "LoginEnterPassword":
+                next_task = await self.handle_enter_password(next_task, password)
+            elif subtask_id == "AccountDuplicationCheck":
+                next_task = await self.handle_account_duplication_check(next_task)
+            elif subtask_id == "LoginTwoFactorAuthChallenge":
+                if two_factor_secret:
+                    next_task = await self.handle_two_factor_auth_challenge(next_task, two_factor_secret)
+                else:
+                    raise ValueError("Requested two-factor authentication code but no secret provided")
+            elif subtask_id == "LoginAcid":
+                next_task = await self.handle_acid(next_task, email)
+            elif subtask_id == "LoginSuccessSubtask":
+                next_task = await self.handle_success_subtask(next_task)
+            else:
+                raise ValueError(f"Unknown subtask {subtask_id}")
+        
+        return next_task
+
+
+    def login(self, username, password, email=None, twoFactorSecret=None, app_key=None, app_secret=None, access_token=None, access_secret=None):    
         self.update_guest_token()
         next = self.init_login()
+        next = self.process_subtask(next, username, email, password, twoFactorSecret)
+        if app_key and app_secret and access_token and access_secret:
+            self.login_with_v2(app_key, app_secret, access_token, access_secret)
+
+        if "err" in next:
+            raise next["err"]
+
 
     def install_csrf_token(self, headers):
         """Add CSRF token to headers if available in cookies."""
@@ -245,12 +281,11 @@ class TwitterUserAuth(TwitterGuestAuth):
 
         self.install_csrf_token(headers)
 
-        response = self.session.post(
+        response = requests.post(
             onboarding_task_url, headers=headers, json=data
         )
 
-        # Update the cookie jar with response cookies
-        self.cookie_jar.update(self.session.cookies)
+        self.update_cookie_jar(response.cookies, response.headers)
 
         if not response.ok:
             return {"status": "error", "err": response.text}
@@ -286,18 +321,16 @@ class TwitterUserAuth(TwitterGuestAuth):
         self.remove_cookie('external_referer=')
         self.remove_cookie('ct0=')
         self.remove_cookie('aa_u=')
+        self.execute_flow_task({
+            "flow_name": "login",
+            "input_flow_data": {
+                "flow_context": {
+                    "debug_overrides": {},
+                    "start_location": {
+                        "location": "splash_screen",
+                    },
+                },
+            },
+        })
 
         
-
-        # return await this.executeFlowTask({
-        #     flow_name: 'login',
-        #     input_flow_data: {
-        #         flow_context: {
-        #         debug_overrides: {},
-        #         start_location: {
-        #             location: 'splash_screen',
-        #         },
-        #         },
-        #     },
-        # });
-
