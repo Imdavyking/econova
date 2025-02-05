@@ -22,13 +22,19 @@ npm install -g @subql/cli
 
 You can clone this GitHub repository:
 
+```sh
+git clone https://github.com/Imdavyking/econova/
+cd econova/frontend
+yarn
+```
+
 install dependencies with:
 
 ```sh
 yarn install  # or npm install
 ```
 
-### **3. Environment Variables
+### \*\*3. Environment Variables
 
 Create a `.env` file in the project root and add the following variables:
 
