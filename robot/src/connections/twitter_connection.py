@@ -440,8 +440,12 @@ class TwitterConnection(BaseConnection):
         logger.debug("Posting new tweet")
         self._validate_tweet_text(message)
         self.scraper.login()
-
-        response = self._make_request('post', 'tweets', json={'text': message})
+        try:
+            logger.info("Tweet posted successfully with scraper")
+            response = self.scraper.post_tweet(message)
+        except Exception as e:
+            logger.error(f"Failed to post tweet with scraper: {str(e)}")
+            response = self._make_request('post', 'tweets', json={'text': message})
 
         logger.info("Tweet posted successfully")
         db = Database()

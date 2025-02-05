@@ -7,7 +7,7 @@ from http.cookiejar import CookieJar
 import http.cookiejar
 import requests
 from requests.utils import cookiejar_from_dict
-from typing import Union, Dict, TypedDict, Optional
+from typing import Union, Dict, TypedDict, Optional,Any
 import pyotp
 import time
 load_dotenv()
@@ -20,10 +20,10 @@ class FlowTokenResultSuccess(TypedDict):
     subtask: Optional[TwitterUserAuthSubtask] 
 
 class Scraper:
-    def __init__(self, options=None):
+    def __init__(self, options: Optional[Dict[str, Any]] = None):
+        self.options: Dict[str, Any] = options if options is not None else {}
         self.token = os.getenv("TWITTER_BEARER_TOKEN")
         self.useGuestAuth()
-        self.options = options
 
     def get_auth_options(self):
         """
@@ -62,6 +62,221 @@ class Scraper:
     def useGuestAuth(self):
         self.auth =  TwitterGuestAuth(self.token, self.get_auth_options())
         self.authTrends =  TwitterGuestAuth(self.token, self.get_auth_options())
+
+
+    def upload_media(self, media_data: bytes, auth, media_type: str) -> str:
+        upload_url = 'https://upload.twitter.com/1.1/media/upload.json'
+
+        # Get authentication headers
+        cookies =  self.auth.get_cookies(upload_url)
+        x_csrf_token = next((cookie['value'] for cookie in cookies if cookie['key'] == 'ct0'), None)
+        headers = {
+            'Authorization': f'Bearer {self.token}',
+            'Cookie':  self.auth.get_cookie_string(upload_url),
+            'x-csrf-token': x_csrf_token,
+        }
+
+        # Detect if media is a video based on mediaType
+        is_video = media_type.startswith('video/')
+
+        if is_video:
+            # Handle video upload using chunked media upload
+            media_id =  self.upload_video_in_chunks(media_data, media_type, headers, upload_url)
+            return media_id
+        else:
+            # Handle image upload
+            response = requests.post(upload_url, headers=headers, files={'media': media_data})
+
+            if response.status_code != 200:
+                raise Exception(response.text)
+
+            data = response.json()
+            return data['media_id_string']
+
+
+    def upload_video_in_chunks(self,media_data: bytes, media_type: str, headers: dict, upload_url: str) -> str:
+        # Initialize upload
+        init_params = {
+            'command': 'INIT',
+            'media_type': media_type,
+            'total_bytes': str(len(media_data)),
+        }
+
+        init_response = requests.post(upload_url, headers=headers, params=init_params)
+
+        if init_response.status_code != 200:
+            raise Exception(init_response.text)
+
+        init_data = init_response.json()
+        media_id = init_data['media_id_string']
+
+        # Append upload in chunks
+        segment_size = 5 * 1024 * 1024  # 5 MB per chunk
+        segment_index = 0
+
+        for offset in range(0, len(media_data), segment_size):
+            chunk = media_data[offset:offset + segment_size]
+            append_form = {
+                'command': 'APPEND',
+                'media_id': media_id,
+                'segment_index': str(segment_index),
+                'media': chunk,
+            }
+
+            append_response = requests.post(upload_url, headers=headers, files=append_form)
+
+            if append_response.status_code != 200:
+                raise Exception(append_response.text)
+
+            segment_index += 1
+
+        # Finalize upload
+        finalize_params = {
+            'command': 'FINALIZE',
+            'media_id': media_id,
+        }
+
+        finalize_response = requests.post(upload_url, headers=headers, params=finalize_params)
+
+        if finalize_response.status_code != 200:
+            raise Exception(finalize_response.text)
+
+        finalize_data = finalize_response.json()
+
+        # Check processing status for videos
+        if 'processing_info' in finalize_data:
+            self.check_upload_status(media_id, headers, upload_url)
+
+        return media_id
+
+
+    def check_upload_status(media_id: str, headers: dict, upload_url: str) -> None:
+        processing = True
+        while processing:
+            time.sleep(5)  # Wait 5 seconds
+
+            status_params = {
+                'command': 'STATUS',
+                'media_id': media_id,
+            }
+
+            status_response = requests.get(f'{upload_url}?{status_params}', headers=headers)
+
+            if status_response.status_code != 200:
+                raise Exception(status_response.text)
+
+            status_data = status_response.json()
+            state = status_data.get('processing_info', {}).get('state')
+
+            if state == 'succeeded':
+                processing = False
+            elif state == 'failed':
+                raise Exception('Video processing failed')
+
+
+    def create_create_tweet_request(self,text, tweet_id=None, media_data=None, hide_link_preview=False):
+        onboarding_task_url = 'https://api.twitter.com/1.1/onboarding/task.json'
+
+        # Get cookies from the cookie jar
+        cookies = self.auth.get_cookies(onboarding_task_url)
+        x_csrf_token = next((cookie['value'] for cookie in cookies if cookie['key'] == 'ct0'), None)
+
+        headers = {
+            'Authorization': f"Bearer {self.token}",
+            'Cookie': self.auth.get_cookie_string(onboarding_task_url),
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 11; Nokia G20) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.88 Mobile Safari/537.36',
+            'X-Guest-Token': self.auth.guest_token,
+            'X-Twitter-Auth-Type': 'OAuth2Client',
+            'X-Twitter-Active-User': 'yes',
+            'X-Twitter-Client-Language': 'en',
+            'X-Csrf-Token': x_csrf_token,
+        }
+
+        variables = {
+            'tweet_text': text,
+            'dark_request': False,
+            'media': {
+                'media_entities': [],
+                'possibly_sensitive': False,
+            },
+            'semantic_annotation_ids': [],
+        }
+
+        if hide_link_preview:
+            variables["card_uri"] = "tombstone://card"
+
+        if media_data and len(media_data) > 0:
+            media_ids = [self.upload_media(data['data'], self.auth, data['mediaType']) for data in media_data]
+            variables['media']['media_entities'] = [{'media_id': media_id, 'tagged_users': []} for media_id in media_ids]
+
+        if tweet_id:
+            variables['reply'] = {'in_reply_to_tweet_id': tweet_id}
+
+        payload = {
+            'variables': variables,
+            'features': {
+                'interactive_text_enabled': True,
+                'longform_notetweets_inline_media_enabled': False,
+                'responsive_web_text_conversations_enabled': False,
+                'tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled': False,
+                'vibe_api_enabled': False,
+                'rweb_lists_timeline_redesign_enabled': True,
+                'responsive_web_graphql_exclude_directive_enabled': True,
+                'verified_phone_label_enabled': False,
+                'creator_subscriptions_tweet_preview_api_enabled': True,
+                'responsive_web_graphql_timeline_navigation_enabled': True,
+                'responsive_web_graphql_skip_user_profile_image_extensions_enabled': False,
+                'tweetypie_unmention_optimization_enabled': True,
+                'responsive_web_edit_tweet_api_enabled': True,
+                'graphql_is_translatable_rweb_tweet_is_translatable_enabled': True,
+                'view_counts_everywhere_api_enabled': True,
+                'longform_notetweets_consumption_enabled': True,
+                'tweet_awards_web_tipping_enabled': False,
+                'freedom_of_speech_not_reach_fetch_enabled': True,
+                'standardized_nudges_misinfo': True,
+                'longform_notetweets_rich_text_read_enabled': True,
+                'responsive_web_enhance_cards_enabled': False,
+                'subscriptions_verification_info_enabled': True,
+                'subscriptions_verification_info_reason_enabled': True,
+                'subscriptions_verification_info_verified_since_enabled': True,
+                'super_follow_badge_privacy_enabled': False,
+                'super_follow_exclusive_tweet_notifications_enabled': False,
+                'super_follow_tweet_api_enabled': False,
+                'super_follow_user_api_enabled': False,
+                'android_graphql_skip_api_media_color_palette': False,
+                'creator_subscriptions_subscription_count_enabled': False,
+                'blue_business_profile_image_shape_enabled': False,
+                'unified_cards_ad_metadata_container_dynamic_card_content_query_enabled': False,
+                'rweb_video_timestamps_enabled': False,
+                'c9s_tweet_anatomy_moderator_badge_enabled': False,
+                'responsive_web_twitter_article_tweet_consumption_enabled': False,
+            },
+            'fieldToggles': {},
+        }
+
+        response = requests.post(
+            'https://twitter.com/i/api/graphql/a1p9RWpkYKBjWv_I3WzS-A/CreateTweet',
+            headers=headers,
+            data=json.dumps(payload),
+        )
+
+        # Update the cookie jar after the response
+        self.auth.update_cookie_jar(self.auth.cookie_jar, response.headers)
+
+        if not response.ok:
+            raise Exception(response.text)
+
+        return response
+
+
+    def send_tweet(self, text, reply_to_tweet_id=None,media_data=None, hide_link_preview=False):
+        return self.create_create_tweet_request(
+            text,
+            reply_to_tweet_id,
+            media_data,
+            hide_link_preview,
+            )
 
 
 class TwitterGuestAuth:
@@ -478,3 +693,9 @@ class TwitterUserAuth(TwitterGuestAuth):
         })
 
         
+
+
+
+
+
+
