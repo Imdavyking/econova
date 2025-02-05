@@ -288,8 +288,6 @@ class TwitterConnection(BaseConnection):
                 client_secret=credentials['consumer_secret'],
                 resource_owner_key=oauth_tokens.get('oauth_token'),
                 resource_owner_secret=oauth_tokens.get('oauth_token_secret'))
-            
-            self.scraper = Scraper()
 
             self._oauth_session = temp_oauth
             user_id, username = self._get_authenticated_user_info()
@@ -439,13 +437,15 @@ class TwitterConnection(BaseConnection):
         """Post a new tweet"""
         logger.debug("Posting new tweet")
         self._validate_tweet_text(message)
-        self.scraper.login()
         try:
-            logger.info("Tweet posted successfully with scraper")
-            response = self.scraper.post_tweet(message)
-        except Exception as e:
-            logger.error(f"Failed to post tweet with scraper: {str(e)}")
             response = self._make_request('post', 'tweets', json={'text': message})
+            logger.info("Tweet posted successfully with V2")
+        except Exception as e:
+            scraper = Scraper()
+            scraper.login()
+            response = scraper.send_tweet(message)
+            logger.info("Tweet posted successfully with Scraper")
+
 
         logger.info("Tweet posted successfully")
         db = Database()
