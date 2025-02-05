@@ -35,6 +35,24 @@ class Scraper:
         }
     
     def login(self, username, password, email=None, twoFactorSecret=None, appKey=None, appSecret=None, accessToken=None, accessSecret=None):
+        if not username:
+            os.getenv("TWITTER_USERNAME")
+        if not password:
+            os.getenv("TWITTER_PASSWORD")
+        if not email:
+            os.getenv("TWITTER_EMAIL")
+        if not twoFactorSecret:
+            os.getenv("TWITTER_2FA_SECRET")
+        if not appKey:
+            os.getenv("TWITTER_CONSUMER_KEY")
+        if not appSecret:
+            os.getenv("TWITTER_CONSUMER_SECRET")
+        if not accessToken:
+            os.getenv("TWITTER_ACCESS_TOKEN")
+        if not accessSecret:
+            os.getenv("TWITTER_ACCESS_TOKEN_SECRET")
+        
+
         userAuth = TwitterUserAuth(self.token, self.get_auth_options())
         userAuth.login(username, password, email, twoFactorSecret, appKey, appSecret, accessToken, accessSecret)
         self.auth = userAuth
