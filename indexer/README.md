@@ -24,7 +24,7 @@ You can clone this GitHub repository:
 
 ```sh
 git clone https://github.com/Imdavyking/econova/
-cd econova/frontend
+cd econova/indexer
 yarn
 ```
 
