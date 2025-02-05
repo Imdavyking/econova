@@ -288,6 +288,7 @@ class TwitterConnection(BaseConnection):
                 client_secret=credentials['consumer_secret'],
                 resource_owner_key=oauth_tokens.get('oauth_token'),
                 resource_owner_secret=oauth_tokens.get('oauth_token_secret'))
+            
             self.scraper = Scraper()
 
             self._oauth_session = temp_oauth

@@ -14,8 +14,6 @@ load_dotenv()
 
 class TwitterUserAuthSubtask(TypedDict):
     subtask_id: str
-    # Add other necessary fields based on the subtask structure
-
 class FlowTokenResultSuccess(TypedDict):
     status: str  # Always 'success'
     flowToken: str
