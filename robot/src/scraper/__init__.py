@@ -7,8 +7,19 @@ from http.cookiejar import CookieJar
 import http.cookiejar
 import requests
 from requests.utils import cookiejar_from_dict
-from typing import Union, Dict
+from typing import Union, Dict, TypedDict, Optional
+import pyotp
+import time
 load_dotenv()
+
+class TwitterUserAuthSubtask(TypedDict):
+    subtask_id: str
+    # Add other necessary fields based on the subtask structure
+
+class FlowTokenResultSuccess(TypedDict):
+    status: str  # Always 'success'
+    flowToken: str
+    subtask: Optional[TwitterUserAuthSubtask] 
 
 class Scraper:
     def __init__(self, options=None):
@@ -71,7 +82,7 @@ class TwitterGuestAuth:
         cookies = [f"{cookie.name}={cookie.value}" for cookie in self.cookie_jar]
         return "; ".join(cookies)
         
-    def update_cookie_jar(cookie_jar: http.cookiejar.CookieJar, headers: Union[Dict[str, str], requests.structures.CaseInsensitiveDict]):
+    def update_cookie_jar(cookie_jar: http.cookiejar.CookieJar, headers: Dict[str, str] = {}) -> http.cookiejar.CookieJar:
         """
         Updates a cookie jar with the Set-Cookie headers from the provided headers dictionary.
 
@@ -196,7 +207,7 @@ class TwitterGuestAuth:
 
         :param key: The name of the cookie to remove.
         """
-        cookies = list(self.jar)  # Convert to list to allow modification during iteration
+        cookies = list(self.cookie_jar)  # Convert to list to allow modification during iteration
         for cookie in cookies:
             if not cookie.domain or not cookie.path:
                 continue
@@ -210,30 +221,145 @@ class TwitterUserAuth(TwitterGuestAuth):
     def __init__(self, bearer_token, options=None):
         super().__init__(bearer_token, options)
 
+    def handle_js_instrumentation_subtask(self, prev: FlowTokenResultSuccess):
+        return self.execute_flow_task({
+            "flow_token": prev["flowToken"],
+            "subtask_inputs": [
+                {
+                    "subtask_id": "LoginJsInstrumentationSubtask",
+                    "js_instrumentation": {
+                        "response": "{}",
+                        "link": "next_link",
+                    },
+                }
+            ],
+        })
+    
+    def handle_enter_alternate_identifier_subtask(self, prev: FlowTokenResultSuccess, email: str) -> dict:
+        return self.execute_flow_task({
+            'flow_token': prev.flowToken,
+            'subtask_inputs': [{
+                'subtask_id': 'LoginEnterAlternateIdentifierSubtask',
+                'enter_text': {
+                    'text': email,
+                    'link': 'next_link',
+                },
+            }],
+        })
+
+    def handle_enter_user_identifier_sso(self, prev: FlowTokenResultSuccess, username: str) -> dict:
+        return self.execute_flow_task({
+            'flow_token': prev.flowToken,
+            'subtask_inputs': [{
+                'subtask_id': 'LoginEnterUserIdentifierSSO',
+                'settings_list': {
+                    'setting_responses': [{
+                        'key': 'user_identifier',
+                        'response_data': {
+                            'text_data': {'result': username}
+                        }
+                    }],
+                    'link': 'next_link',
+                },
+            }],
+        })
+
+    def handle_enter_password(self, prev: FlowTokenResultSuccess, password: str) -> dict:
+        return self.execute_flow_task({
+            'flow_token': prev.flowToken,
+            'subtask_inputs': [{
+                'subtask_id': 'LoginEnterPassword',
+                'enter_password': {
+                    'password': password,
+                    'link': 'next_link',
+                },
+            }],
+        })
+
+    def handle_account_duplication_check(self, prev: FlowTokenResultSuccess) -> dict:
+        return self.execute_flow_task({
+            'flow_token': prev.flowToken,
+            'subtask_inputs': [{
+                'subtask_id': 'AccountDuplicationCheck',
+                'check_logged_in_account': {
+                    'link': 'AccountDuplicationCheck_false',
+                },
+            }],
+        })
+    
+    def generate_totp(self, secret: str) -> str:
+        # Generate TOTP using pyotp library
+        totp = pyotp.TOTP(secret)
+        return totp.now()
+    
+    def async_sleep(self, seconds: int) -> None:
+        # Simulate async sleep (for delay)
+        time.sleep(seconds)
+
+    def handle_two_factor_auth_challenge(self, prev: FlowTokenResultSuccess, secret: str) -> dict:
+        totp = self.generate_totp(secret)
+        error = None
+        for attempts in range(1, 4):
+            try:
+                return self.execute_flow_task({
+                    'flow_token': prev.flowToken,
+                    'subtask_inputs': [{
+                        'subtask_id': 'LoginTwoFactorAuthChallenge',
+                        'enter_text': {
+                            'link': 'next_link',
+                            'text': totp,
+                        },
+                    }],
+                })
+            except Exception as err:
+                error = err
+                self.async_sleep(2 * attempts)  # Simulating delay between retries
+        if error:
+            raise error
+
+    def handle_acid(self, prev: FlowTokenResultSuccess, email: str) -> dict:
+        return self.execute_flow_task({
+            'flow_token': prev.flowToken,
+            'subtask_inputs': [{
+                'subtask_id': 'LoginAcid',
+                'enter_text': {
+                    'text': email,
+                    'link': 'next_link',
+                },
+            }],
+        })
+
+    def handle_success_subtask(self, prev: FlowTokenResultSuccess) -> dict:
+        return self.execute_flow_task({
+            'flow_token': prev.flowToken,
+            'subtask_inputs': [],
+        })
+
+
     async def process_subtask(self, next_task, username=None, email=None, password=None, two_factor_secret=None):
         """Processes Twitter authentication subtasks."""
         while "subtask" in next_task and next_task["subtask"]:
             subtask_id = next_task["subtask"]["subtask_id"]
 
             if subtask_id == "LoginJsInstrumentationSubtask":
-                next_task = await self.handle_js_instrumentation_subtask(next_task)
+                next_task = self.handle_js_instrumentation_subtask(next_task)
             elif subtask_id == "LoginEnterUserIdentifierSSO":
-                next_task = await self.handle_enter_user_identifier_sso(next_task, username)
+                next_task = self.handle_enter_user_identifier_sso(next_task, username)
             elif subtask_id == "LoginEnterAlternateIdentifierSubtask":
-                next_task = await self.handle_enter_alternate_identifier_subtask(next_task, email)
+                next_task = self.handle_enter_alternate_identifier_subtask(next_task, email)
             elif subtask_id == "LoginEnterPassword":
-                next_task = await self.handle_enter_password(next_task, password)
+                next_task = self.handle_enter_password(next_task, password)
             elif subtask_id == "AccountDuplicationCheck":
-                next_task = await self.handle_account_duplication_check(next_task)
+                next_task = self.handle_account_duplication_check(next_task)
             elif subtask_id == "LoginTwoFactorAuthChallenge":
                 if two_factor_secret:
-                    next_task = await self.handle_two_factor_auth_challenge(next_task, two_factor_secret)
+                    next_task = self.handle_two_factor_auth_challenge(next_task, two_factor_secret)
                 else:
                     raise ValueError("Requested two-factor authentication code but no secret provided")
             elif subtask_id == "LoginAcid":
-                next_task = await self.handle_acid(next_task, email)
+                next_task = self.handle_acid(next_task, email)
             elif subtask_id == "LoginSuccessSubtask":
-                next_task = await self.handle_success_subtask(next_task)
+                next_task = self.handle_success_subtask(next_task)
             else:
                 raise ValueError(f"Unknown subtask {subtask_id}")
         
@@ -245,7 +371,9 @@ class TwitterUserAuth(TwitterGuestAuth):
         next = self.init_login()
         next = self.process_subtask(next, username, email, password, twoFactorSecret)
         if app_key and app_secret and access_token and access_secret:
-            self.login_with_v2(app_key, app_secret, access_token, access_secret)
+            # not implemented yet
+            # self.login_with_v2(app_key, app_secret, access_token, access_secret)
+            pass
 
         if "err" in next:
             raise next["err"]
