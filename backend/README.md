@@ -19,12 +19,18 @@ EcoNova is a decentralized charity management system that enables transparent an
      ```
         MONGO_URI=
         TWITTER_BEARER_TOKEN=
-        TWITTER_CONSUMER_SECRET=
-        TWITTER_ACCESS_TOKEN=
+        TWITTER_CONSUMER_SECRET=          
+        TWITTER_ACCESS_TOKEN=          
         TWITTER_ACCESS_TOKEN_SECRET=
-        REDIS_HOST=localhost
-        REDIS_PORT=6379
+        REDIS_HOST=
+        REDIS_PORT=
         REDIS_PASSWORD=
+        NODE_ENV=
+        OPENAI_API_KEY=
+        JWT_SECRET=
+        BOT_PRIVATE_KEY=
+        FRONTEND_URL=
+        CHAIN_ID=
      ```
 4. **Start the application** with Docker:
 
