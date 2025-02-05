@@ -22,6 +22,25 @@ cd econova/frontend
 yarn
 ```
 
+
+## Environment Variables
+   Create a `.env` file in the project root and add the following variables:
+
+   ```env
+    VITE_SERVER_URL=
+    VITE_CONTRACT_ADDRESS=
+    VITE_CHAIN_ID=
+    VITE_CHAIN_NAME=
+    VITE_CHAIN_CURRENCY_NAME=
+    VITE_CHAIN_SYMBOL=
+    VITE_RPC_URL=
+    VITE_CHAIN_BLOCKEXPLORER_URL=
+    VITE_APP_NAME=
+    VITE_GRAPH_QL_ENDPOINT=
+    VITE_WALLET_CONNECT_PROJECT_ID=
+    VITE_TWITTER_NAME=
+   ```
+
 # Usage
 
 Run:

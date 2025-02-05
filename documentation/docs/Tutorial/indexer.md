@@ -28,6 +28,18 @@ install dependencies with:
 yarn install  # or npm install
 ```
 
+### **3. Environment Variables
+
+Create a `.env` file in the project root and add the following variables:
+
+```env
+  RPC_URL=
+  CHAIN_ID=
+  CONTRACT_ADDRESS=
+  BLOCK_NUMBER=
+  SUBQL_ACCESS_TOKEN=
+```
+
 ---
 
 ## **Editing Your SubQuery Project**
