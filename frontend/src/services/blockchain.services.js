@@ -14,6 +14,7 @@ import {
 } from "../utils/constants";
 import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
+import { checkBMI } from "./zk.bmi.services";
 
 async function switchOrAddChain(ethProvider) {
   try {
@@ -83,29 +84,32 @@ export const donateToFoundationService = async ({
 }) => {
   const realAmount = amountInUsd;
   try {
-    amountInUsd = (Number(amountInUsd) * 10 ** FIAT_DECIMALS).toString();
+    const usdWithDecimals = getWholeNumber(
+      Number(amountInUsd) * 10 ** FIAT_DECIMALS
+    ).toString();
+
     const manager = await getContract();
     const ethAmountToDonate = await manager.getUsdToTokenPrice(
       tokenAddress,
-      amountInUsd
+      usdWithDecimals
     );
 
     const tx = await manager.donateToFoundation(
       category,
       tokenAddress,
-      amountInUsd,
+      usdWithDecimals,
       {
         gasLimit: 500000,
         value: ethAmountToDonate.toString(),
       }
     );
     await tx.wait(1);
-    console.log(category);
 
     return `donated ${realAmount} USD to ${Object.keys(charityCategories).find(
       (categoryKey) => `${charityCategories[categoryKey]}` === `${category}`
     )}`;
   } catch (error) {
+    console.log(error);
     return `${FAILED_KEY} to donate ${realAmount} USD`;
   }
 };
@@ -156,6 +160,7 @@ export const getPointsService = async () => {
 
 export const redeemPointsService = async ({ points }) => {
   try {
+    await checkBMI();
     const manager = await getContract();
     const tx = await manager.redeemPoints(getWholeNumber(points).toString());
     await tx.wait(1);

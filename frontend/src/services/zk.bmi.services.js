@@ -1,6 +1,4 @@
-import snarkjs from "snarkjs";
-
-async function run() {
+export async function checkBMI() {
   const { proof, publicSignals } = await snarkjs.groth16.fullProve(
     { height: 10, weight: 21 },
     "bmi_checker.wasm",
