@@ -25,12 +25,13 @@ template BMIChecker() {
     var bmi;
     bmi = div(weight, height_squared);
 
-    signal inv;
+    signal output inv;
     inv <-- bmi > min && bmi < max ? 1 : 0;
 
     log("isHealthy: ", inv);
 
     isHealthy <== inv;
+    isHealthy === 1;
 }
 
 
