@@ -5,14 +5,14 @@ template BMIChecker() {
     // Declaration of signals.
     signal input height;
     signal input weight;
-    signal input bmi;
+    signal output isHealthy;
 
     // BMI calculation
+    signal bmi;
     bmi <== weight / (height * height);
 
-    // BMI range check
-    bmi >= 18.5;
-    bmi <= 24.9;
+    // Check if BMI is in healthy range (18.5 - 24.9)
+    isHealthy <== (bmi >= 18500) && (bmi <= 24900);
 }
 
 

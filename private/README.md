@@ -29,7 +29,7 @@ You can get `snarkjs` and `circomlibjs` with `npm install`, and circom from the 
 ### Compiling a circuit (in the circuit's folder):
 
 `mkdir build` <br/>
-`circom <circuit-name>.circom --wasm --r1cs -o ./build`
+`circom circuits/bmi_checker.circom --wasm --r1cs -o ./build`
 
 ### Generating proving key (zkey):
 
