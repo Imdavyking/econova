@@ -10,11 +10,17 @@ template BMIChecker() {
     signal height_squared;
     var max = 25000;
     var min = 18499;
-    component greaterThan = GreaterThan(bitWidth);
-    component lessThan = LessThan(bitWidth);
+    // var bitWidth = 16;
+    // component greaterThan = GreaterThan(bitWidth);
+    // component lessThan = LessThan(bitWidth);
     
     height_squared <== height * height;
+
+    bmi <-- weight / height_squared;
     bmi * height_squared === weight;
+
+    // greaterThan.in[0] <== bmi;
+    // greaterThan.in[1] <== min;
 }
 
 
