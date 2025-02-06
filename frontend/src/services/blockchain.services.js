@@ -101,7 +101,9 @@ export const saveHealthyBMIProofService = async ({
       [_pC[0], _pA[1]],
       _pubSignals
     );
-    await tx.wait(1);
+    const receipt = await tx.wait(1);
+
+    console.log({ receipt });
 
     const signer = await getSigner();
 
