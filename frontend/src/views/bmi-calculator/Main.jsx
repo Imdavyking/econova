@@ -1,37 +1,23 @@
 import { useState } from "react";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import { saveHealthyBMIProofService } from "../../services/blockchain.services";
 export default function BMICalculator() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
-  const [bmi, setBMI] = useState(null);
   const [suggestion, setSuggestion] = useState("");
 
-  const calculateBMI = () => {
+  const checkBMISummary = async () => {
     if (!weight || !height) return;
-    const heightInMeters = height / 100;
-    const bmiValue = (weight / (heightInMeters * heightInMeters)).toFixed(2);
-    setBMI(bmiValue);
-    generateAISuggestion(bmiValue);
-  };
+    const response = await saveHealthyBMIProofService({
+      weightInKg: weight,
+      heightInCm: height,
+    });
 
-  const generateAISuggestion = (bmi) => {
-    if (bmi < 18.5) {
-      setSuggestion(
-        "You are underweight. Consider eating a balanced diet with more protein and calories."
-      );
-    } else if (bmi >= 18.5 && bmi < 24.9) {
-      setSuggestion(
-        "You have a healthy weight. Maintain a balanced diet and regular exercise."
-      );
-    } else if (bmi >= 25 && bmi < 29.9) {
-      setSuggestion(
-        "You are overweight. Consider a diet plan with exercise to stay fit."
-      );
-    } else {
-      setSuggestion(
-        "You are obese. A structured workout and diet plan might help in reducing weight."
-      );
-    }
+    console.log(response);
+    // const heightInMeters = height / 100;
+    // const bmiValue = (weight / (heightInMeters * heightInMeters)).toFixed(2);
+    // setBMI(bmiValue);
+    // generateAISuggestion(bmiValue);
   };
 
   return (
@@ -64,14 +50,13 @@ export default function BMICalculator() {
           />
         </div>
         <button
-          onClick={calculateBMI}
+          onClick={checkBMISummary}
           className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
           AI Summary
         </button>
-        {bmi && (
+        {suggestion && (
           <div className="mt-4 text-center">
-            <p className="text-lg font-semibold">Your BMI: {bmi}</p>
             <p className="text-gray-700 mt-2">{suggestion}</p>
           </div>
         )}
