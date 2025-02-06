@@ -77,27 +77,6 @@ const getContract = async () => {
   return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 };
 
-export const checkBMIHealthyService = async ({
-  proof: { proof, publicSignals },
-}) => {
-  const realAmount = amountInUsd;
-  try {
-    const manager = await getContract();
-    const tx = await manager.checkBMIHealthy(proof);
-
-    const receipt = await tx.wait(1);
-
-    const event = receipt.events[1];
-    const args = event.args;
-    const [_, isHealthy] = args;
-
-    return `BMI is ${isHealthy ? "healthy" : "unhealthy"}`;
-  } catch (error) {
-    console.log(error);
-    return `${FAILED_KEY} to donate ${realAmount} USD`;
-  }
-};
-
 export const saveHealthyBMIProofService = async ({
   weightInKg,
   heightInCm,
