@@ -26,11 +26,6 @@ template BMIChecker() {
     
     height_squared <== height * height;
 
-    log(height);
-    log(weight);
-
-    log(height_squared);
-
     var bmi = div(weight, height_squared);
 
     greaterThan.in[0] <== bmi;
@@ -38,9 +33,6 @@ template BMIChecker() {
 
     lessThan.in[0] <== bmi;
     lessThan.in[1] <== max;
-
-    log(greaterThan.out * lessThan.out);
-    log(greaterThan.out);
 
     isHealthy <== greaterThan.out * lessThan.out;
 }
