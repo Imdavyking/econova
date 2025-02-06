@@ -1,4 +1,5 @@
 pragma circom  2.0.0;
+include "./circomlib/circuits/comparators.circom";
 
 template BMIChecker() {
 
@@ -11,8 +12,18 @@ template BMIChecker() {
     signal bmi;
     bmi <-- weight / (height * height);
 
-    // Check if BMI is in healthy range (18.5 - 24.9)
-    isHealthy === (bmi >= 18500) && (bmi <= 24900);
+    // BMI comparison
+    signal bmiComparator;
+    component greaterThan = GreaterThan(10);
+    component lessThan = LessThan(10);
+
+    greaterThan.in[0] <== bmi;
+    greaterThan.in[1] <== 18499;
+
+    lessThan.in[0] <== bmi;
+    lessThan.in[1] <== 2500;
+
+    isHealthy <== greaterThan.out * lessThan.out;
 }
 
 
