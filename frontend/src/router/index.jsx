@@ -7,7 +7,7 @@ import Home from "../views/home/Main";
 import Donate from "../views/donate/Main";
 import DonationCategories from "../views/donate/Categories";
 import LeaderBoard from "../views/leaderboard/Main";
-import BMICalculator from "../views/bmi-calculator/Main";
+import AIHealth from "../views/ai-health/Main";
 
 function Router() {
   const routes = [
@@ -36,8 +36,8 @@ function Router() {
       element: <LeaderBoard />,
     },
     {
-      path: "/bmi-calculator",
-      element: <BMICalculator />,
+      path: "/ai-health",
+      element: <AIHealth />,
     },
   ];
 
