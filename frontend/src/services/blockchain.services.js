@@ -59,7 +59,6 @@ async function switchOrAddChain(ethProvider) {
 export const getSigner = async () => {
   const provider = new BrowserProvider(window.ethereum);
   let objectNetwork = await provider.getNetwork();
-  console.log(objectNetwork);
   await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
 };
@@ -102,8 +101,6 @@ export const saveHealthyBMIProofService = async ({
       _pubSignals
     );
     const receipt = await tx.wait(1);
-
-    console.log({ receipt });
 
     const signer = await getSigner();
 
@@ -256,7 +253,6 @@ export const addPointsFromTwitterService = async ({
     await tx.wait(1);
     return `claims ${points} points for tweet ${tweetId}`;
   } catch (error) {
-    console.log(JSON.stringify(error));
     return `${FAILED_KEY} to claim ${points} points for tweet ${tweetId}`;
   }
 };
