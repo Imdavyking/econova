@@ -1,6 +1,6 @@
 import vKey from "@/assets/json/verification_key.json";
 export async function checkBMI() {
-  const weight = 100; // kg
+  const weight = 70; // kg
   const height = 194; // cm
   const weightDecimals = 10000000;
 
