@@ -1,8 +1,16 @@
-## Zero Knowledge Proofs
+## EcoNova BMI ZK Proof
 
-This directory contains the Zero Knowledge Proof circuits, written in circom, which allow a party to prove knowledge of a set of secret inputs. The circuits allow the party to create a set of public and secret inputs to generate a proof which reveals the public inputs and the results of the circuit computation. The circuits are designed in such a way that a boolean true result is only achieved if the expected secret inputs were definitely provided. This can be guaranteed by, for example, providing a secret hash input and a public hash output, which allows the party to guarantee the knowledge of the hash pre-image without actually revealing the knowledge. A party can also supply a secret number and whether it's odd or even publicly and the circuit will only return true if the checks are valid.
+This directory contains Zero Knowledge Proof (ZKP) circuits written in Circom, designed to allow a party to prove knowledge of secret inputs without revealing them. The circuits enable a party to generate a proof based on both public and secret inputs, ensuring that the computation's result is verifiable while keeping certain data private.  
 
-The circuits in this folder are primarily structured around proving the hash of a valid input or a concatenation of inputs. In that sense, they are very easy to understand if you have basic familiarity with zero knowledge proofs or even just what a hash function itself is. The circuits are in the folders for their respective use case with a `.circom` extension. The purpose of proving the knowledge of the hash preimages and providing the hashes are elaborated upon further in the contexts where they are used through other documentation.
+The **BMIChecker** circuit specifically allows a party to prove that a given height and weight produce a Body Mass Index (BMI) within a healthy range (18.5 to 24.9) without revealing the exact values. The circuit enforces the correct calculation of BMI using the formula:  
+
+\[
+BMI = \frac{\text{weight}}{\text{height}^2}
+\]
+
+The verification logic ensures that only valid inputs satisfying the expected BMI range will pass the check. This guarantees that a user can prove they meet the required health criteria without disclosing their exact height or weight.  
+
+The circuits in this directory follow a similar pattern, focusing on proving the validity of secret inputs through computations like hashing or mathematical constraints. By structuring the circuits in this way, we provide a transparent yet privacy-preserving mechanism for verifiable claims.
 
 ## Circuit, Verifier, and Proof Setup
 
