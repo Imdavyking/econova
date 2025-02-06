@@ -105,11 +105,21 @@ export const donateToFoundationService = async ({
 }) => {
   const realAmount = amountInUsd;
   try {
+    const { proof, publicSignals } = await checkBMI({
+      weightInKg: 70,
+      heightInCm: 170,
+    });
+
+    console.log(proof);
+
     const usdWithDecimals = getWholeNumber(
       Number(amountInUsd) * 10 ** FIAT_DECIMALS
     ).toString();
 
     const manager = await getContract();
+    const txProof = await manager.checkBMIHealthy(proof);
+
+    return;
     const ethAmountToDonate = await manager.getUsdToTokenPrice(
       tokenAddress,
       usdWithDecimals

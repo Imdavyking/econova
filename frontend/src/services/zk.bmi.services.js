@@ -14,22 +14,7 @@ export async function checkBMI({ weightInKg, heightInCm }) {
     proof
   );
 
-  console.log({ hasValidProof });
-
-  //   `const vKey = JSON.parse(fs.readFileSync("verification_key.json"));`
-  // ``
-  // `npx snarkjs wtns calculate build/bmi_checker_js/bmi_checker.wasm input.json witness.wtns`
-
-  console.log("Proof: ");
-  console.log(JSON.stringify(proof, null, 1));
-
-  //   const vKey = JSON.parse(fs.readFileSync("verification_key.json"));
-
-  //   const res = await snarkjs.groth16.verify(vKey, publicSignals, proof);
-
-  //   if (res === true) {
-  //     console.log("Verification OK");
-  //   } else {
-  //     console.log("Invalid proof");
-  //   }
+  if (hasValidProof) {
+    return { proof, publicSignals };
+  }
 }
