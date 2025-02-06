@@ -28,7 +28,7 @@ export default function BMICalculator() {
       {" "}
       <DarkModeSwitcher />
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-4 text-center">
+        <h1 className="text-2xl font-bold mb-4 text-center text-black">
           AI Health Advisor
         </h1>
         <div className="mb-4">
