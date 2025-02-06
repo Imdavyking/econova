@@ -6,7 +6,7 @@ export default function BMICalculator() {
   const [height, setHeight] = useState("");
   const [suggestion, setSuggestion] = useState("");
 
-  const checkBMISummary = async () => {
+  const checkHealthSummary = async () => {
     if (!weight || !height) return;
     const response = await saveHealthyBMIProofService({
       weightInKg: weight,
@@ -28,14 +28,16 @@ export default function BMICalculator() {
       {" "}
       <DarkModeSwitcher />
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-4 text-center">BMI Calculator</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center">
+          AI Health Advisor
+        </h1>
         <div className="mb-4">
-          <label className="block text-gray-700">Weight (kg):</label>
+          <label className="block text-black">Weight (kg):</label>
           <input
             type="number"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded mt-1"
+            className="w-full p-2 border rounded mt-1"
             placeholder="Enter weight in kg"
           />
         </div>
@@ -50,7 +52,7 @@ export default function BMICalculator() {
           />
         </div>
         <button
-          onClick={checkBMISummary}
+          onClick={checkHealthSummary}
           className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
           AI Summary
