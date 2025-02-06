@@ -9,9 +9,9 @@ import "./CustomToken.sol";
 import "./charity/Charity.sol";
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
-import "./zk-verifiers/bmiVerifier.sol";
+import "./interfaces/IGroth16VerifierP3.sol";
 
-contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
+contract EcoNovaManager is Ownable, ReentrancyGuard {
     /**
      * mappings
      */
@@ -39,7 +39,9 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
      * immutable variables
      */
     EcoNovaToken public immutable i_ecoNovaToken;
+
     IPyth public immutable i_pyth;
+    IGroth16VerifierP3 public immutable i_groth16VerifierP3;
 
     /**
      * error messages
@@ -95,11 +97,13 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
     constructor(
         address oracleAddress,
         address _botAddress,
-        Charity[] memory _charity
+        Charity[] memory _charity,
+        IGroth16VerifierP3 _groth16VerifierP3
     ) Ownable(msg.sender) {
         i_ecoNovaToken = new EcoNovaToken();
         botAddress = _botAddress;
         i_pyth = IPyth(oracleAddress);
+        i_groth16VerifierP3 = _groth16VerifierP3;
         for (uint256 i = 0; i < _charity.length; i++) {
             addCharity(_charity[i]);
         }
@@ -403,6 +407,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
         uint256[2] calldata _pC,
         uint256[2] calldata _pubSignals
     ) public {
-        recordBMI(msg.sender, verifyProof(_pA, _pB, _pC, _pubSignals));
+        recordBMI(msg.sender, i_groth16VerifierP3.verifyProof(_pA, _pB, _pC, _pubSignals));
     }
 }
