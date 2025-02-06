@@ -8,13 +8,13 @@ export async function checkBMI({ weightInKg, heightInCm }) {
     "bmi_checker.zkey"
   );
 
-  const hasValidProof = await window.snarkjs.groth16.verify(
+  const isHealthyProof = await window.snarkjs.groth16.verify(
     vKey,
     publicSignals,
     proof
   );
 
-  if (hasValidProof) {
+  if (isHealthyProof) {
     return { proof, publicSignals };
   }
   throw new Error("Invalid proof");
