@@ -4,6 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "verify:zk": "./snark_setup.sh && npx snarkjs wtns calculate build/bmi_checker_js/bmi_checker.wasm input.json witness.wtns"
+    "verify:zk": "./snark_setup.sh"
   }
 }

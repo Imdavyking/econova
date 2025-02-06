@@ -58,6 +58,7 @@ npx snarkjs zkey export solidityverifier *.zkey bmiVerifier.sol
 
 `const vKey = JSON.parse(fs.readFileSync("verification_key.json"));`
 `const res = await snarkjs.groth16.verify(vKey, publicSignals, proof);`
+`npx snarkjs wtns calculate build/bmi_checker_js/bmi_checker.wasm input.json witness.wtns`
 
 ### Hash computation:
 
@@ -84,5 +85,6 @@ to prove with solidity, the proof and publicSignals need to be supplied to the s
 - `npx snarkjs groth16 setup build/*.r1cs pot12_final.ptau bmi_checker.zkey`
 - `npx snarkjs zkey export verificationkey *.zkey verification_key.json`
 - `npx snarkjs zkey export solidityverifier *.zkey bmiVerifier.sol`
+- `npx snarkjs wtns calculate build/bmi_checker_js/bmi_checker.wasm input.json witness.wtns`
 
 Or, navigate to the target circuit folder and run `snark_setup.sh`

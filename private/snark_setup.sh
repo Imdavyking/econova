@@ -6,3 +6,4 @@ npx snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau
 npx snarkjs groth16 setup build/*.r1cs pot12_final.ptau bmi_checker.zkey
 npx snarkjs zkey export verificationkey *.zkey verification_key.json
 npx snarkjs zkey export solidityverifier *.zkey bmiVerifier.sol
+npx snarkjs wtns calculate build/bmi_checker_js/bmi_checker.wasm input.json witness.wtns
