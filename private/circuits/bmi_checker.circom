@@ -13,7 +13,6 @@ template BMIChecker() {
     bmi <-- weight / (height * height);
 
     // BMI comparison
-    signal bmiComparator;
     component greaterThan = GreaterThan(10);
     component lessThan = LessThan(10);
 
