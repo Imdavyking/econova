@@ -102,9 +102,17 @@ export const saveHealthyBMIProofService = async ({
     );
     const receipt = await tx.wait(1);
 
+    const event = receipt.events[1];
+    const args = event.args;
+    const [user, isHealthy] = args;
+
+    console.log({ user, isHealthy });
+
     const signer = await getSigner();
 
     const userHealthy = await manager.userBMIHealthy(await signer.getAddress());
+
+    console.log({ userHealthy });
 
     if (!userHealthy) {
       throw new Error(BMI_UNHEALTHY);
@@ -112,6 +120,7 @@ export const saveHealthyBMIProofService = async ({
 
     return `BMI is healthy, keep up the good work`;
   } catch (error) {
+    console.log(error);
     if (typeof error === "string") {
       return error;
     } else {
