@@ -11,8 +11,8 @@ template BMIChecker() {
     signal bmi;
     bmi <-- weight / (height * height);
 
-    // // Check if BMI is in healthy range (18.5 - 24.9)
-    // isHealthy <== (bmi >= 18500) && (bmi <= 24900);
+    // Check if BMI is in healthy range (18.5 - 24.9)
+    isHealthy === (bmi >= 18500) && (bmi <= 24900);
 }
 
 
