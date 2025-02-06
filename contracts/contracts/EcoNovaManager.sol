@@ -379,11 +379,24 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
         emit BotAddressUpdated(oldBotAddress, _newBotAddress);
     }
 
+    /**
+     * @dev Record BMI of the user
+     * @param user address of the user
+     * @param isBMIHealthy true if the BMI is healthy
+     */
     function recordBMI(address user, bool isBMIHealthy) private {
         userBMIHealthy[user] = isBMIHealthy;
         emit BMIRecorded(user, isBMIHealthy);
     }
 
+    /**
+     * @notice Verifies a zero-knowledge proof for BMI health status and records the result.
+     * @dev Uses a zk-SNARK proof to validate if the user's BMI is within a healthy range.
+     * @param _pA - First part of the zk-SNARK proof.
+     * @param _pB - Second part of the zk-SNARK proof (nested array for pairing checks).
+     * @param _pC - Third part of the zk-SNARK proof.
+     * @param _pubSignals - Public input signals for the proof (e.g., BMI threshold).
+     */
     function checkBMIHealthy(
         uint256[2] calldata _pA,
         uint256[2][2] calldata _pB,
