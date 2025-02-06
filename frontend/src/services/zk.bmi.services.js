@@ -1,5 +1,5 @@
 import vKey from "@/assets/json/verification_key.json";
-export async function checkBMI({ weightInKg, heightInCm }) {
+export async function getHealthyBMIProof({ weightInKg, heightInCm }) {
   const weightDecimals = 10000000;
 
   const { proof, publicSignals } = await window.snarkjs.groth16.fullProve(

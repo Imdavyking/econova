@@ -14,7 +14,7 @@ import {
 } from "../utils/constants";
 import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
-import { checkBMI } from "./zk.bmi.services";
+import { getHealthyBMIProof } from "./zk.bmi.services";
 
 async function switchOrAddChain(ethProvider) {
   try {
@@ -82,7 +82,7 @@ export const saveHealthyBMIProofService = async ({
   heightInCm,
 }) => {
   try {
-    const { proof, publicSignals } = await checkBMI({
+    const { proof, publicSignals } = await getHealthyBMIProof({
       weightInKg,
       heightInCm,
     });
