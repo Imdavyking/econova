@@ -33,11 +33,11 @@ You can get `snarkjs` and `circomlibjs` with `npm install`, and circom from the 
 
 ### Generating proving key (zkey):
 
-`npx snarkjs groth16 setup build/*.r1cs ../*.ptau <circuit-key-name>.zkey` in the circuit's folder, zkey name is whatever you set
+`npx snarkjs groth16 setup build/*.r1cs ../*.ptau bmi_checker.zkey` in the circuit's folder, zkey name is whatever you set
 
 ### Proof generation (adjust input values and circuit/key folder/file names as appropriate, pass integer inputs as strings to avoid problems w/BigInt):
 
-`const { proof, publicSignals } = await snarkjs.groth16.fullProve({ "input_val": 15 }, "build/circuit_name_js/circuit_name.wasm", "circuit_key_file.zkey");`
+`const { proof, publicSignals } = await snarkjs.groth16.fullProve({ "input_val": 15 }, "build/bmi_checker_js/bmi_checker.wasm", "bmi_checker.zkey");`
 
 ### Verification key generation (.json):
 
