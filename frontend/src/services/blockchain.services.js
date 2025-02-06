@@ -89,7 +89,7 @@ export const checkBMIHealthyService = async ({
 
     const event = receipt.events[1];
     const args = event.args;
-    const [isHealthy] = args;
+    const [_, isHealthy] = args;
 
     return `BMI is ${isHealthy ? "healthy" : "unhealthy"}`;
   } catch (error) {
