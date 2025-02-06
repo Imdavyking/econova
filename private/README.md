@@ -48,7 +48,9 @@ npx snarkjs zkey export solidityverifier *.zkey bmiVerifier.sol
 
 ### Proof generation (adjust input values and circuit/key folder/file names as appropriate, pass integer inputs as strings to avoid problems w/BigInt):
 
-`const { proof, publicSignals } = await snarkjs.groth16.fullProve({ "input_val": 15 }, "build/bmi_checker_js/bmi_checker.wasm", "bmi_checker.zkey");`
+`const weightDecimals = 10000000;`
+
+`const { proof, publicSignals } = await window.snarkjs.groth16.fullProve({ height: heightInCm, weight: weightInKg * weightDecimals }"bmi_checker.wasm",bmi_checker.zkey");`
 
 ### Verification key generation (.json):
 
