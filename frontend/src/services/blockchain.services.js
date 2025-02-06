@@ -84,6 +84,7 @@ export const donateToFoundationService = async ({
 }) => {
   const realAmount = amountInUsd;
   try {
+    await checkBMI();
     const usdWithDecimals = getWholeNumber(
       Number(amountInUsd) * 10 ** FIAT_DECIMALS
     ).toString();
@@ -160,7 +161,6 @@ export const getPointsService = async () => {
 
 export const redeemPointsService = async ({ points }) => {
   try {
-    await checkBMI();
     const manager = await getContract();
     const tx = await manager.redeemPoints(getWholeNumber(points).toString());
     await tx.wait(1);
