@@ -114,13 +114,13 @@ export const saveHealthyBMIProofService = async ({
     const _pubSignals = publicSignals;
 
     const manager = await getContract();
-    const txProof = await manager.checkBMIHealthy(
+    const tx = await manager.checkBMIHealthy(
       [_pA[0], _pA[1]],
       [_pB[0], _pB[1]],
       [_pC[0], _pC[1]],
       _pubSignals
     );
-
+    const receipt = await tx.wait(1);
     const event = receipt.events[1];
     const args = event.args;
     const [_, isBMIHealthy] = args;
