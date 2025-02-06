@@ -1,7 +1,5 @@
 # BMI ZK Proof
 
-This directory contains Zero Knowledge Proof (ZKP) circuits written in Circom, designed to allow a party to prove knowledge of secret inputs without revealing them. The circuits enable a party to generate a proof based on both public and secret inputs, ensuring that the computation's result is verifiable while keeping certain data private.
-
 The **BMIChecker** circuit specifically allows a party to prove that a given height and weight produce a Body Mass Index (BMI) within a healthy range (18.5 to 24.9) without revealing the exact values. The circuit enforces the correct calculation of BMI using the formula:
 
 $$
