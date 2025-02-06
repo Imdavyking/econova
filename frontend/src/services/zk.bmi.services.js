@@ -10,9 +10,11 @@ export async function checkBMI() {
     "bmi_checker.zkey"
   );
 
-  // const res = await snarkjs.groth16.verify(vKey, publicSignals, proof);
+  console.log(proof);
 
-  // console.log({ res });
+  const isValid = await snarkjs.groth16.verify(vKey, publicSignals, proof);
+
+  console.log({ isValid });
 
   //   `const vKey = JSON.parse(fs.readFileSync("verification_key.json"));`
   // ``
