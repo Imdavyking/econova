@@ -68,13 +68,9 @@ Circomlibjs is not very easily exposed in the browser, however it's relatively e
 
 to be safe, each of a, b, c, etc. can be a 30-byte string that is cast to a uint256 input to the function - pass large integers like 10\*\*20 inside quotes
 
-### Exposing Poseidon in the browser:
-
-Exposing the Poseidon hash function in the browser client-side is not very simple - please see how this is achieved through WASM and Go in this [folder](site/client/public/poseidon)
-
 ### Solidity verifier:
 
-`npx snarkjs zkey export solidityverifier *.zkey verifier.sol` in the circuit's folder - you can name the Solidity file differently
+`npx snarkjs zkey export solidityverifier *.zkey bmiVerifier.sol` in the circuit's folder - you can name the Solidity file differently
 
 to prove with solidity, the proof and publicSignals need to be supplied to the smart contract
 
