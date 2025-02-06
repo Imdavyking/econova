@@ -1,20 +1,20 @@
 import vKey from "@/assets/json/verification_key.json";
-export async function checkBMI() {
-  const weight = 70; // kg
-  const height = 194; // cm
+export async function checkBMI({ weightInKg, heightInCm }) {
   const weightDecimals = 10000000;
 
   const { proof, publicSignals } = await window.snarkjs.groth16.fullProve(
-    { height, weight: weight * weightDecimals },
+    { height: heightInCm, weight: weightInKg * weightDecimals },
     "bmi_checker.wasm",
     "bmi_checker.zkey"
   );
 
-  console.log(proof);
+  const hasValidProof = await snarkjs.groth16.verify(
+    vKey,
+    publicSignals,
+    proof
+  );
 
-  const isValid = await snarkjs.groth16.verify(vKey, publicSignals, proof);
-
-  console.log({ isValid });
+  console.log({ hasValidProof });
 
   //   `const vKey = JSON.parse(fs.readFileSync("verification_key.json"));`
   // ``
