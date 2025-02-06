@@ -22,6 +22,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
     mapping(bytes32 => bool) public usedHashes;
     mapping(uint256 => mapping(uint256 => bool)) public userAddedTweets;
     mapping(uint8 => address) public charityOrganizations;
+    mapping(address => bool) public userBMIHealthy;
 
     /**
      * constants
@@ -79,6 +80,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
     event TokenCreated(address indexed token, string name, string symbol, uint256 initialSupply);
     event CharityAdded(uint8 indexed charityCategory, address charityAddress);
     event CharityRemoved(uint8 indexed charityCategory);
+    event BMIRecorded(address indexed user, bool isHealthy);
 
     /**
      * structs
@@ -377,12 +379,17 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
         emit BotAddressUpdated(oldBotAddress, _newBotAddress);
     }
 
-    function doProof(
+    function recordBMI(address user, bool isBMIHealthy) internal {
+        userBMIHealthy[user] = isBMIHealthy;
+        emit BMIRecorded(user, isBMIHealthy);
+    }
+
+    function checkBMIHealthy(
         uint256[2] calldata _pA,
         uint256[2][2] calldata _pB,
         uint256[2] calldata _pC,
         uint256[1] calldata _pubSignals
-    ) public view returns (bool) {
-        return verifyProof(_pA, _pB, _pC, _pubSignals);
+    ) public {
+        recordBMI(msg.sender, verifyProof(_pA, _pB, _pC, _pubSignals));
     }
 }

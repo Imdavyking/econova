@@ -3,6 +3,7 @@ export async function checkBMI() {
   const height = 194; // cm
   const weightDecimals = 10000000;
 
+  console.log({ height, weight: weight * weightDecimals });
   const { proof } = await window.snarkjs.groth16.fullProve(
     { height, weight: weight * weightDecimals },
     "bmi_checker.wasm",
