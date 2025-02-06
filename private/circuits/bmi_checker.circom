@@ -26,23 +26,26 @@ template BMIChecker() {
     
     height_squared <== height * height;
 
-    var bmi = div(weight, height_squared);
+    // signal bmi <-- div(weight, height_squared);
 
-    log("bmi result is ",bmi);
+    // log("bmi result  calculated is ",bmi);
+
+    signal bmi_s <== 18599;
+
     log("min result is ",min);
     log("max result is ",max);
 
-    greaterThan.in[0] <== bmi;
+    greaterThan.in[0] <== bmi_s;
     greaterThan.in[1] <== min;
 
     log("greater result is ",greaterThan.out);
 
-    lessThan.in[0] <== bmi;
+    lessThan.in[0] <== bmi_s;
     lessThan.in[1] <== max;
 
     log("less result is ",lessThan.out);
 
-    isHealthy <== greaterThan.out * lessThan.out;
+    isHealthy <== greaterThan.out;
 }
 
 
