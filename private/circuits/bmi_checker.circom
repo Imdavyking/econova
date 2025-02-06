@@ -20,11 +20,11 @@ template BMIChecker() {
     component lessThan = LessThan(bitWidth);
 
 
-    // greaterThan.in[0] <== bmi;
-    // greaterThan.in[1] <== min;
+    greaterThan.in[0] <== bmi;
+    greaterThan.in[1] <== min;
 
     lessThan.in[0] <== bmi;
-    lessThan.in[1] <== bmi;
+    lessThan.in[1] <== max;
 
     isHealthy <== 0;
 }
