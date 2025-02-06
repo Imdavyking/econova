@@ -16,17 +16,17 @@ template BMIChecker() {
     bmi <-- weight / (height * height);
 
     // BMI comparison
-    component greaterThan = GreaterThan(bitWidth);
+    // component greaterThan = GreaterThan(bitWidth);
     component lessThan = LessThan(bitWidth);
 
 
-    greaterThan.in[0] <== bmi;
-    greaterThan.in[1] <== min;
+    // greaterThan.in[0] <== bmi;
+    // greaterThan.in[1] <== min;
 
     lessThan.in[0] <== bmi;
-    lessThan.in[1] <== max;
+    lessThan.in[1] <== bmi;
 
-    isHealthy <== greaterThan.out * lessThan.out;
+    isHealthy <== 0;
 }
 
 
