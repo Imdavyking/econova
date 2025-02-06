@@ -14,8 +14,8 @@ template BMIChecker() {
 
     // Declaration of signals.
     signal input height; // in cm(centimeters)
-    signal input weight; // in kg(kilograms) * 1000
-    signal output isHealthy;
+    signal input weight; // in kg(kilograms) * 10000000(10^7)
+    signal output isHealthy; // 1 if healthy, 0 if not healthy
     signal height_squared;
     var max = 25000;
     var min = 18499;
