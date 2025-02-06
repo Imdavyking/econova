@@ -16,7 +16,7 @@ template BMIChecker() {
     signal x;
     signal y;
     x <== height * height;
-    y <== weight * x; //TODO: change * to /
+    y <-- weight / height; //TODO: change * to /
     bmi <== x;
 
     // BMI comparison
