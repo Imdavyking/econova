@@ -7,6 +7,7 @@ import Home from "../views/home/Main";
 import Donate from "../views/donate/Main";
 import DonationCategories from "../views/donate/Categories";
 import LeaderBoard from "../views/leaderboard/Main";
+import BMICalculator from "../views/bmi-calculator/Main";
 
 function Router() {
   const routes = [
@@ -33,6 +34,10 @@ function Router() {
     {
       path: "/leaderboard",
       element: <LeaderBoard />,
+    },
+    {
+      path: "/bmi-calculator",
+      element: <BMICalculator />,
     },
   ];
 
