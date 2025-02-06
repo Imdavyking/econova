@@ -32,11 +32,12 @@ You can get `snarkjs` and `circomlibjs` with `npm install`, and circom from the 
 `circom circuits/bmi_checker.circom --wasm --r1cs -o ./build`
 
 ### Prepare Power of Tau
+
 ```sh
-snarkjs powersoftau new bn128 12 pot12_0000.ptau -v
-snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="YourName" --randomness="your_random_string"
-snarkjs powersoftau verify pot12_0001.ptau
-snarkjs groth16 setup build/*.r1cs pot12_0001.ptau bmi_checker.zkey
+snarkjs powersoftau new bn128 12 pot12_0000.ptau
+snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="EcoNova" --randomness="46e0b00af407k9e80d0"
+snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau
+snarkjs groth16 setup build/*.r1cs pot12_final.ptau bmi_checker.zkey
 ```
 
 ### Generating proving key (zkey):
