@@ -85,9 +85,13 @@ export const checkBMIHealthyService = async ({
     const manager = await getContract();
     const tx = await manager.checkBMIHealthy(proof);
 
-    await tx.wait(1);
+    const receipt = await tx.wait(1);
 
-    return `BMI is healthy`;
+    const event = receipt.events[1];
+    const args = event.args;
+    const [isHealthy] = args;
+
+    return `BMI is ${isHealthy ? "healthy" : "unhealthy"}`;
   } catch (error) {
     console.log(error);
     return `${FAILED_KEY} to donate ${realAmount} USD`;
