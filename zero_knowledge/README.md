@@ -4,14 +4,9 @@ This directory contains Zero Knowledge Proof (ZKP) circuits written in Circom, d
 
 The **BMIChecker** circuit specifically allows a party to prove that a given height and weight produce a Body Mass Index (BMI) within a healthy range (18.5 to 24.9) without revealing the exact values. The circuit enforces the correct calculation of BMI using the formula:
 
-<p style="text-align: center;">
-  BMI = <sup>weight</sup>&frasl;<sub>height²</sub>
-</p>
-
 $$
 BMI = \frac{\text{weight}}{\text{height}^2}
 $$
-
 
 The verification logic ensures that only valid inputs satisfying the expected BMI range will pass the check. This guarantees that a user can prove they meet the required health criteria without disclosing their exact height or weight.
 
