@@ -27,10 +27,12 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
 
         charityContracts.push(m.contract(`Charity`, [category], { id: categoryKey }))
     }
+    const groth16Verifier = m.contract("Groth16Verifier")
     const ecoNovaDeployer = m.contract("EcoNovaManager", [
         oracle,
         wallet.address,
         charityContracts,
+        groth16Verifier,
     ])
 
     return { ecoNovaDeployer }
