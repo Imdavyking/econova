@@ -34,7 +34,7 @@ install dependencies with:
 yarn install  # or npm install
 ```
 
-### \*\*3. Environment Variables
+### **3. Clone the Project**
 
 Create a `.env` file in the project root and add the following variables:
 
