@@ -34,10 +34,12 @@ You can get `snarkjs` and `circomlibjs` with `npm install`, and circom from the 
 ### Prepare Power of Tau
 
 ```sh
-snarkjs powersoftau new bn128 12 pot12_0000.ptau
-snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="EcoNova" --randomness="46e0b00af407k9e80d0"
-snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau
-snarkjs groth16 setup build/*.r1cs pot12_final.ptau bmi_checker.zkey
+npx snarkjs powersoftau new bn128 12 pot12_0000.ptau
+npx snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="EcoNova" --randomness="46e0b00af407k9e80d0"
+npx snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau
+npx snarkjs groth16 setup build/*.r1cs pot12_final.ptau bmi_checker.zkey
+npx snarkjs zkey export verificationkey *.zkey verification_key.json
+npx snarkjs zkey export solidityverifier *.zkey verifier.sol
 ```
 
 ### Generating proving key (zkey):
