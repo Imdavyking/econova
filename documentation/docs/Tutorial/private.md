@@ -29,15 +29,26 @@ You can get `snarkjs` and `circomlibjs` with `npm install`, and circom from the 
 ### Compiling a circuit (in the circuit's folder):
 
 `mkdir build` <br/>
-`circom <circuit-name>.circom --wasm --r1cs -o ./build`
+`circom circuits/bmi_checker.circom --wasm --r1cs -o ./build`
+
+### Prepare Power of Tau
+
+```sh
+npx snarkjs powersoftau new bn128 12 pot12_0000.ptau
+npx snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="EcoNova" --randomness="46e0b00af407k9e80d0"
+npx snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau
+npx snarkjs groth16 setup build/*.r1cs pot12_final.ptau bmi_checker.zkey
+npx snarkjs zkey export verificationkey *.zkey verification_key.json
+npx snarkjs zkey export solidityverifier *.zkey bmiVerifier.sol
+```
 
 ### Generating proving key (zkey):
 
-`npx snarkjs groth16 setup build/*.r1cs ../*.ptau <circuit-key-name>.zkey` in the circuit's folder, zkey name is whatever you set
+`npx snarkjs groth16 setup build/*.r1cs ../*.ptau bmi_checker.zkey` in the circuit's folder, zkey name is whatever you set
 
 ### Proof generation (adjust input values and circuit/key folder/file names as appropriate, pass integer inputs as strings to avoid problems w/BigInt):
 
-`const { proof, publicSignals } = await snarkjs.groth16.fullProve({ "input_val": 15 }, "build/circuit_name_js/circuit_name.wasm", "circuit_key_file.zkey");`
+`const { proof, publicSignals } = await snarkjs.groth16.fullProve({ "input_val": 15 }, "build/bmi_checker_js/bmi_checker.wasm", "bmi_checker.zkey");`
 
 ### Verification key generation (.json):
 
@@ -70,9 +81,12 @@ to prove with solidity, the proof and publicSignals need to be supplied to the s
 ### Combined:
 
 - `mkdir build`
-- `circom *.circom --wasm --r1cs -o ./build`
-- `npx snarkjs groth16 setup build/*.r1cs ../*.ptau circuit.zkey`
+- `circom circuits/bmi_checker.circom --wasm --r1cs -o ./build`
+- `npx snarkjs powersoftau new bn128 12 pot12_0000.ptau`
+- `npx snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="EcoNova" --randomness="46e0b00af407k9e80d0"`
+- `npx snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau`
+- `npx snarkjs groth16 setup build/*.r1cs pot12_final.ptau bmi_checker.zkey`
 - `npx snarkjs zkey export verificationkey *.zkey verification_key.json`
-- `npx snarkjs zkey export solidityverifier *.zkey verifier.sol`
+- `npx snarkjs zkey export solidityverifier *.zkey bmiVerifier.sol`
 
 Or, navigate to the target circuit folder and run `snark_setup.sh`

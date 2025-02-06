@@ -9,8 +9,9 @@ import "./CustomToken.sol";
 import "./charity/Charity.sol";
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
+import "./zk-verifiers/bmiVerifier.sol";
 
-contract EcoNovaManager is Ownable, ReentrancyGuard {
+contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
     /**
      * mappings
      */
@@ -374,5 +375,14 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         address oldBotAddress = botAddress;
         botAddress = _newBotAddress;
         emit BotAddressUpdated(oldBotAddress, _newBotAddress);
+    }
+
+    function doProof(
+        uint256[2] calldata _pA,
+        uint256[2][2] calldata _pB,
+        uint256[2] calldata _pC,
+        uint256[1] calldata _pubSignals
+    ) public view returns (bool) {
+        return verifyProof(_pA, _pB, _pC, _pubSignals);
     }
 }
