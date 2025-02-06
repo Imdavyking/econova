@@ -1,0 +1,9 @@
+{
+  "name": "private",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "verify:zk": "npx snarkjs wtns calculate build/bmi_checker_js/bmi_checker.wasm input.json witness.wtns"
+  }
+}
