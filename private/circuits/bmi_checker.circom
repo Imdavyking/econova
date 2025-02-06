@@ -16,7 +16,7 @@ template BMIChecker() {
     signal x;
     signal y;
     x <== height * height;
-    y <-- weight / height; //TODO: change * to /
+    y <== weight * height; //TODO: change * to /
     bmi <== x;
 
     // BMI comparison
@@ -30,7 +30,7 @@ template BMIChecker() {
     lessThan.in[0] <== bmi;
     lessThan.in[1] <== max;
 
-    isHealthy <== 0;
+    isHealthy <== greaterThan.out * lessThan.out;
 }
 
 
