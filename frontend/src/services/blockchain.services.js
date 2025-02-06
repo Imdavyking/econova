@@ -98,21 +98,16 @@ export const checkBMIHealthyService = async ({
   }
 };
 
-export const donateToFoundationService = async ({
-  category,
-  tokenAddress,
-  amountInUsd,
+export const saveHealthyBMIProofService = async ({
+  weightInKg,
+  heightInCm,
 }) => {
-  const realAmount = amountInUsd;
   try {
     const { proof, publicSignals } = await checkBMI({
-      weightInKg: 70,
-      heightInCm: 170,
+      weightInKg,
+      heightInCm,
     });
 
-    const usdWithDecimals = getWholeNumber(
-      Number(amountInUsd) * 10 ** FIAT_DECIMALS
-    ).toString();
     const _pA = proof.pi_a;
     const _pB = proof.pi_b;
     const _pC = proof.pi_c;
@@ -126,7 +121,32 @@ export const donateToFoundationService = async ({
       _pubSignals
     );
 
-    return;
+    const event = receipt.events[1];
+    const args = event.args;
+    const [_, isBMIHealthy] = args;
+    if (!isBMIHealthy) {
+      throw Error("BMI not at a healthy range");
+    }
+    return `BMI is healthy, keep up the good work`;
+  } catch (error) {
+    console.log(error);
+    return `BMI is likely to be healthy, we will suggest you how to improve your BMI`;
+  }
+};
+
+export const donateToFoundationService = async ({
+  category,
+  tokenAddress,
+  amountInUsd,
+}) => {
+  const realAmount = amountInUsd;
+  try {
+    const usdWithDecimals = getWholeNumber(
+      Number(amountInUsd) * 10 ** FIAT_DECIMALS
+    ).toString();
+
+    const manager = await getContract();
+
     const ethAmountToDonate = await manager.getUsdToTokenPrice(
       tokenAddress,
       usdWithDecimals
