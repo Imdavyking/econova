@@ -13,8 +13,8 @@ function div(a, b) {
 template BMIChecker() {
 
     // Declaration of signals.
-    signal input height;
-    signal input weight;
+    signal input height; // in cm(centimeters)
+    signal input weight; // in kg(kilograms) * 1000
     signal output isHealthy;
     signal height_squared;
     var max = 25000;
