@@ -26,7 +26,9 @@ template BMIChecker() {
     bmi = div(weight, height_squared);
 
     signal inv;
-    inv <-- bmi > min || bmi < max ? 1 : 0;
+    inv <-- bmi > min && bmi < max ? 1 : 0;
+
+    log("isHealthy: ", inv);
 
     isHealthy <== inv;
 }
