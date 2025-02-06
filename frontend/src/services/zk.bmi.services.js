@@ -1,6 +1,10 @@
 export async function checkBMI() {
+  const weight = 70; // kg
+  const height = 194; // cm
+  const weightDecimals = 10000000;
+
   const { proof } = await window.snarkjs.groth16.fullProve(
-    { height: 10, weight: 21 },
+    { height, weight: weight * weightDecimals },
     "bmi_checker.wasm",
     "bmi_checker.zkey"
   );
