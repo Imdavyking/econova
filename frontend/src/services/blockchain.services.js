@@ -102,11 +102,11 @@ export const saveHealthyBMIProofService = async ({
     );
     const receipt = await tx.wait(1);
 
-    const event = receipt.events[1];
-    const args = event.args;
-    const [user, isHealthy] = args;
+    // const event = receipt.events[1];
+    // const args = event.args;
+    // const [user, isHealthy] = args;
 
-    console.log({ user, isHealthy });
+    // console.log({ user, isHealthy });
 
     const signer = await getSigner();
 

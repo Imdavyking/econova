@@ -388,7 +388,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param user address of the user
      * @param isBMIHealthy true if the BMI is healthy
      */
-    function recordBMI(address user, bool isBMIHealthy) private {
+    function recordUserHealthy(address user, bool isBMIHealthy) private {
         userBMIHealthy[user] = isBMIHealthy;
         emit BMIRecorded(user, isBMIHealthy);
     }
@@ -407,7 +407,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         uint256[2] calldata _pC,
         uint256[2] calldata _pubSignals
     ) public {
-        // recordBMI(msg.sender, i_groth16VerifierP3.verifyProof(_pA, _pB, _pC, _pubSignals));
-        recordBMI(msg.sender, true);
+        recordUserHealthy(msg.sender, i_groth16VerifierP3.verifyProof(_pA, _pB, _pC, _pubSignals));
+        // recordUserHealthy(msg.sender, true);
     }
 }
