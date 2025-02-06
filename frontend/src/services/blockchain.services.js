@@ -110,14 +110,12 @@ export const donateToFoundationService = async ({
       heightInCm: 170,
     });
 
-    console.log(proof);
-
     const usdWithDecimals = getWholeNumber(
       Number(amountInUsd) * 10 ** FIAT_DECIMALS
     ).toString();
 
     const manager = await getContract();
-    const txProof = await manager.checkBMIHealthy(proof);
+    const txProof = await manager.checkBMIHealthy(Object.values(proof));
 
     return;
     const ethAmountToDonate = await manager.getUsdToTokenPrice(
