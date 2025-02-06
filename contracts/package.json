@@ -42,6 +42,7 @@
         "@pythnetwork/pyth-sdk-solidity": "^4.0.0",
         "dotenv": "^16.4.7",
         "fs": "^0.0.1-security",
-        "path": "^0.12.7"
+        "path": "^0.12.7",
+        "snarkjs": "^0.7.5"
     }
 }
