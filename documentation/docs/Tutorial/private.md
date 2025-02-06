@@ -8,8 +8,6 @@ $$
 
 The verification logic ensures that only valid inputs satisfying the expected BMI range will pass the check. This guarantees that a user can prove they meet the required health criteria without disclosing their exact height or weight.
 
-The circuits in this directory follow a similar pattern, focusing on proving the validity of secret inputs through computations like hashing or mathematical constraints. By structuring the circuits in this way, we provide a transparent yet privacy-preserving mechanism for verifiable claims.
-
 ## Circuit, Verifier, and Proof Setup
 
 ### Circom installation:
