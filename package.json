@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "node copy.readme.js"
+    "dev": "node copy.file.js"
   },
   "name": "econova",
   "version": "1.0.0",
