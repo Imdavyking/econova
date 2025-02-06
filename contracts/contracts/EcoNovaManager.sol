@@ -379,7 +379,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
         emit BotAddressUpdated(oldBotAddress, _newBotAddress);
     }
 
-    function recordBMI(address user, bool isBMIHealthy) internal {
+    function recordBMI(address user, bool isBMIHealthy) private {
         userBMIHealthy[user] = isBMIHealthy;
         emit BMIRecorded(user, isBMIHealthy);
     }
