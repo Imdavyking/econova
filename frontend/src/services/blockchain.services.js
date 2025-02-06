@@ -81,6 +81,8 @@ export const saveHealthyBMIProofService = async ({
   weightInKg,
   heightInCm,
 }) => {
+  const BMI_UNHEALTHY =
+    "BMI is likely to be unhealthy, we will suggest you how to improve your BMI";
   try {
     const { proof, publicSignals } = await getHealthyBMIProof({
       weightInKg,
@@ -96,20 +98,26 @@ export const saveHealthyBMIProofService = async ({
     const tx = await manager.checkBMIHealthy(
       [_pA[0], _pA[1]],
       [_pB[0], _pB[1]],
-      [_pC[0], _pC[1]],
+      [_pC[0], _pA[1]],
       _pubSignals
     );
-    const receipt = await tx.wait(1);
-    const event = receipt.events[1];
-    const args = event.args;
-    const [_, isBMIHealthy] = args;
-    if (!isBMIHealthy) {
-      throw Error("BMI not at a healthy range");
+    await tx.wait(1);
+
+    const signer = await getSigner();
+
+    const userHealthy = await manager.userBMIHealthy(await signer.getAddress());
+
+    if (!userHealthy) {
+      throw new Error(BMI_UNHEALTHY);
     }
+
     return `BMI is healthy, keep up the good work`;
   } catch (error) {
-    console.log(error);
-    return `BMI is likely to be healthy, we will suggest you how to improve your BMI`;
+    if (typeof error === "string") {
+      return error;
+    } else {
+      return `${FAILED_KEY} to save BMI proof`;
+    }
   }
 };
 
