@@ -401,7 +401,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard, Groth16Verifier {
         uint256[2] calldata _pA,
         uint256[2][2] calldata _pB,
         uint256[2] calldata _pC,
-        uint256[1] calldata _pubSignals
+        uint256[2] calldata _pubSignals
     ) public {
         recordBMI(msg.sender, verifyProof(_pA, _pB, _pC, _pubSignals));
     }
