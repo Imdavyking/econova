@@ -31,6 +31,14 @@ You can get `snarkjs` and `circomlibjs` with `npm install`, and circom from the 
 `mkdir build` <br/>
 `circom circuits/bmi_checker.circom --wasm --r1cs -o ./build`
 
+### Prepare Power of Tau
+```sh
+snarkjs powersoftau new bn128 12 first_phase.ptau
+snarkjs powersoftau contribute first_phase.ptau second_phase.ptau --name="YourName" --randomness="your_random_string"
+snarkjs powersoftau verify second_phase.ptau
+snarkjs groth16 setup build/*.r1cs second_phase.ptau bmi_checker.zkey
+```
+
 ### Generating proving key (zkey):
 
 `npx snarkjs groth16 setup build/*.r1cs ../*.ptau bmi_checker.zkey` in the circuit's folder, zkey name is whatever you set
