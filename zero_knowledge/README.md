@@ -14,10 +14,6 @@ The circuits in this directory follow a similar pattern, focusing on proving the
 
 ## Circuit, Verifier, and Proof Setup
 
-### Circom playground:
-
-https://play.zkaccel.io/
-
 ### Circom installation:
 
 https://docs.circom.io/getting-started/installation/
