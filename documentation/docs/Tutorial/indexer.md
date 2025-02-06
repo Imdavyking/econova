@@ -46,38 +46,6 @@ Create a `.env` file in the project root and add the following variables:
   SUBQL_ACCESS_TOKEN=
 ```
 
----
-
-## **Editing Your SubQuery Project**
-
-You can modify the SubQuery project by updating the following files:
-
-- 📄 **`project.ts`** - Defines the key project configuration and mapping handler filters.
-- 📄 **`schema.graphql`** - Defines the data schema, shaping how indexed data is stored.
-- 📄 **`src/mappings/`** - Contains TypeScript functions that transform and process blockchain events.
-
----
-
-### **Start the SubQuery Indexer**
-
-Run the following command to start your project:
-
-```sh
-yarn dev  # or npm run dev
-```
-
-This will:
-
-1. 🛠 **Generate TypeScript types** from GraphQL schema and contract ABIs (`yarn codegen`).
-2. 🚀 **Build the project** into the `/dist` directory (`yarn build`).
-3. 🐳 **Start the indexer and database** using Docker (`docker-compose up`).
-
-Ensure you have [Docker installed](https://docs.docker.com/engine/install) before running step 3.
-
-Once running, open your browser and go to [http://localhost:5100](http://localhost:5100) to use the GraphQL Playground.
-
----
-
 ## **GraphQL Query Examples**
 
 You can query indexed data with the following example:
