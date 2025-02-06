@@ -7,16 +7,16 @@ template BMIChecker() {
     signal input height;
     signal input weight;
     signal output isHealthy;
-    signal x;
-    signal y;
     var max = 25000;
     var min = 18499;
     var bitWidth = 16;
 
     // BMI calculation
     signal bmi;
+    signal x;
+    signal y;
     x <== height * height;
-    y * x === weight;
+    y <== weight * x;
     bmi <== x;
 
     // BMI comparison
