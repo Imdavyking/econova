@@ -1,14 +1,22 @@
+import vKey from "@/assets/json/verification_key.json";
 export async function checkBMI() {
-  const weight = 70; // kg
+  const weight = 1000; // kg
   const height = 194; // cm
   const weightDecimals = 10000000;
 
-  console.log({ height, weight: weight * weightDecimals });
-  const { proof } = await window.snarkjs.groth16.fullProve(
+  const { proof, publicSignals } = await window.snarkjs.groth16.fullProve(
     { height, weight: weight * weightDecimals },
     "bmi_checker.wasm",
     "bmi_checker.zkey"
   );
+
+  const res = await snarkjs.groth16.verify(vKey, publicSignals, proof);
+
+  console.log({ res });
+
+  //   `const vKey = JSON.parse(fs.readFileSync("verification_key.json"));`
+  // ``
+  // `npx snarkjs wtns calculate build/bmi_checker_js/bmi_checker.wasm input.json witness.wtns`
 
   console.log("Proof: ");
   console.log(JSON.stringify(proof, null, 1));

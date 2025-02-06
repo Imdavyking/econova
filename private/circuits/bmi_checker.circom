@@ -28,11 +28,19 @@ template BMIChecker() {
 
     var bmi = div(weight, height_squared);
 
+    log("bmi result is ",bmi);
+    log("min result is ",min);
+    log("max result is ",max);
+
     greaterThan.in[0] <== bmi;
     greaterThan.in[1] <== min;
 
+    log("greater result is ",greaterThan.out);
+
     lessThan.in[0] <== bmi;
     lessThan.in[1] <== max;
+
+    log("less result is ",lessThan.out);
 
     isHealthy <== greaterThan.out * lessThan.out;
 }

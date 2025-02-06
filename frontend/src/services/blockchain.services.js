@@ -106,6 +106,7 @@ export const donateToFoundationService = async ({
   const realAmount = amountInUsd;
   try {
     await checkBMI();
+    return;
     const usdWithDecimals = getWholeNumber(
       Number(amountInUsd) * 10 ** FIAT_DECIMALS
     ).toString();
