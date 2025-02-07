@@ -25,12 +25,28 @@ async function main() {
     const chainSymbol = process.env.CHAIN_SYMBOL!
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
 
+    const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
+
+    const verifier = await contract.i_groth16VerifierP3()
+
+    console.log(`Verifier deployed to: ${verifier}`)
+
+    const charityLength = await contract.charityLength()
+
+    const charities = []
+
+    for (let i = 0; i < Number(charityLength); i++) {
+        const charity = await contract.charityOrganizations(i)
+        console.log(`Charity(${i}):deployed to: ${charity}`)
+        charities.push(charity)
+    }
+
     if (chainId === 31337) return
 
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
         process.env.ORACLE_ADDRESS!
 
-    await verify(ecoAddress, [oracle, wallet.address])
+    await verify(ecoAddress, [oracle, wallet.address, [...charities], verifier])
 
     const blockNumber = await ethers.provider.getBlockNumber()
     const rpcUrl = (network.config as any).url

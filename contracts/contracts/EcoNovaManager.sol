@@ -34,6 +34,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     address public botAddress;
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
     uint256 public constant ONE_DAY = 60 * 60 * 24;
+    uint256 public charityLength;
 
     /**
      * immutable variables
@@ -171,6 +172,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         }
 
         charityOrganizations[categoryIndex] = charityAddress;
+        charityLength++;
         emit CharityAdded(categoryIndex, charityAddress);
     }
 
@@ -189,6 +191,8 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         }
 
         delete charityOrganizations[categoryIndex];
+
+        charityLength--;
 
         emit CharityRemoved(categoryIndex);
     }
