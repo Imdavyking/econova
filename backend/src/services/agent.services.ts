@@ -39,6 +39,16 @@ const tools = {
         .describe("The amount in USD"),
     }),
   }),
+  adviceOnHealth: tool(() => undefined, {
+    name: "adviceOnHealth",
+    description: "",
+    schema: z.object({
+      isHealthy: z.boolean().describe("user is healthy using BMI"),
+      advice: z
+        .string()
+        .describe("AI advice to the user on how to improve their health"),
+    }),
+  }),
   redeemPoints: tool(() => undefined, {
     name: "redeemPoints",
     description: "Redeem points for rewards.",
