@@ -3,7 +3,8 @@ pragma solidity ^0.8.7;
 import "./EcoNovaToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./helpers/ethsign.sol";
+import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "hardhat/console.sol";
 import "./CustomToken.sol";
 import "./charity/Charity.sol";
@@ -305,7 +306,9 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         bytes32 messageHash = keccak256(
             abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId, block.chainid)
         );
-        bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
+
+        bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(messageHash);
+        // bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
         return ethSignedMessageHash;
     }
 
@@ -323,7 +326,9 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         bytes32 messageHash = keccak256(
             abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId, block.chainid)
         );
-        bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
+        bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(messageHash);
+
+        // bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
 
         if (userAddedTweets[userTwitterId][tweetId]) {
             revert EcoNovaManager__TweetIdAlreadyRecorderForUser();
@@ -333,7 +338,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
             revert EcoNovaManager__HashAlreadyUsed();
         }
 
-        if (EthSign.recoverSigner(ethSignedMessageHash, signature) != botAddress) {
+        if (ECDSA.recover(ethSignedMessageHash, signature) != botAddress) {
             revert EcoNovaManager__InvalidSignature();
         }
 
