@@ -71,7 +71,9 @@ const Footer = () => {
           <li className="font-semibold">Connect</li>
 
           <li>
-            <Link to="/https://x.com/EcoNova_Bot">Twitter</Link>
+            <Link to="https://x.com/EcoNova_Bot" target="_blank">
+              Twitter
+            </Link>
           </li>
           {/* <li>
             <Link to="/">Facebook</Link>

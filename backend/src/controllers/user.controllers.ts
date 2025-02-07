@@ -5,6 +5,11 @@ import { LoginWithTwitter } from "../services/login.twitter.services";
 export const twitterLogin = new LoginWithTwitter({
   callbackUrl: "http://localhost:3100/twitter/callback",
 });
+
+export const deleteTwitterCookie = async (req: Request, res: Response) => {
+  res.clearCookie("user");
+  res.json({ message: "User logged out" });
+};
 export const getUserTwitterInfo = async (req: Request, res: Response) => {
   try {
     const user = req.cookies.user;
