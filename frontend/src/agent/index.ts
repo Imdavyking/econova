@@ -45,6 +45,10 @@ export class AIAgent {
     })) as AiResponseType;
 
     const results: string[] = [];
+
+    if (action.tool_calls.length === 0 && action.content.trim() !== "") {
+      results.push(action.content);
+    }
     for (const toolCall of action.tool_calls) {
       const result = await this.executeAction(toolCall);
       results.push(result);
@@ -53,4 +57,3 @@ export class AIAgent {
     return results;
   }
 }
-

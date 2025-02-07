@@ -21,7 +21,7 @@ const Footer = () => {
           <li>
             <Link to="/">Terms & Condition</Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/">Privacy Policy</Link>
           </li>
           <li>
@@ -32,15 +32,15 @@ const Footer = () => {
           </li>
           <li>
             <Link to="/">Terms of Use</Link>
-          </li>
+          </li> */}
         </ul>
 
         <ul className="space-y-2">
-          <li className="font-semibold">Learn More</li>
+          <li className="font-semibold">Charity</li>
           <li>
-            <Link to="/">Reviews</Link>
+            <Link to="/donate">Donate</Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/">Privacy Policy</Link>
           </li>
           <li>
@@ -48,37 +48,32 @@ const Footer = () => {
           </li>
           <li>
             <Link to="/">Career</Link>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <Link to="/">Our Story</Link>
-          </li>
+          </li> */}
         </ul>
 
         <ul className="space-y-2">
-          <li className="font-semibold">Contact</li>
-          <li>
-            <Link to="/">Contact Us</Link>
-          </li>
+          <li className="font-semibold">Advice</li>
           <li>
             <Link to="/ai-health">AI Health Advisor</Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/">Careers</Link>
           </li>
           <li>
             <Link to="/">Offers</Link>
-          </li>
+          </li> */}
         </ul>
 
         <ul className="space-y-2">
           <li className="font-semibold">Connect</li>
+
           <li>
-            <Link to="/donate">Donate</Link>
+            <Link to="/https://x.com/EcoNova_Bot">Twitter</Link>
           </li>
-          <li>
-            <Link to="/">Twitter</Link>
-          </li>
-          <li>
+          {/* <li>
             <Link to="/">Facebook</Link>
           </li>
           <li>
@@ -89,7 +84,7 @@ const Footer = () => {
           </li>
           <li>
             <Link to="/">LinkedIn</Link>
-          </li>
+          </li> */}
         </ul>
       </div>
 
