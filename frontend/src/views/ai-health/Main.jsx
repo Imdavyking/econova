@@ -5,6 +5,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { saveHealthyBMIProofService } from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { AIAgent } from "../../agent";
 
 const AIHealth = () => {
   const checkHealthSummary = async () => {
@@ -18,8 +19,15 @@ const AIHealth = () => {
         weightInKg: weight,
         heightInCm: height,
       });
+      const agent = new AIAgent();
 
-      setSuggestion(response);
+      const results = await agent.solveTask(response);
+
+      const info = results.find((result) => result.isHealthy && result.advice);
+
+      if (info) {
+        setSuggestion(info.advice);
+      }
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     } finally {

@@ -1,4 +1,5 @@
 import vKey from "@/assets/json/verification_key.json";
+import { FAILED_KEY } from "../utils/constants";
 export async function getHealthyBMIProof({ weightInKg, heightInCm }) {
   const weightDecimals = 10000000;
 
@@ -17,5 +18,5 @@ export async function getHealthyBMIProof({ weightInKg, heightInCm }) {
   if (isHealthyProof) {
     return { proof, publicSignals };
   }
-  throw new Error("Invalid proof");
+  throw new Error(`${FAILED_KEY} : unhealthy BMI`);
 }

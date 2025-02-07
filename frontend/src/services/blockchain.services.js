@@ -77,15 +77,13 @@ const getContract = async () => {
 };
 
 export const adviceOnHealthService = async ({ isHealthy, advice }) => {
-  console.log({ isHealthy, advice });
+  return { isHealthy, advice };
 };
 
 export const saveHealthyBMIProofService = async ({
   weightInKg,
   heightInCm,
 }) => {
-  const BMI_UNHEALTHY =
-    "BMI is likely to be unhealthy, we will suggest you how to improve your BMI";
   try {
     const { proof, publicSignals } = await getHealthyBMIProof({
       weightInKg,
@@ -107,22 +105,15 @@ export const saveHealthyBMIProofService = async ({
 
     const logs = manager.interface.parseLog(receipt.logs[0]);
 
-    console.log(logs.args.at(1));
-
     const userHealthy = logs.args.at(1);
 
     if (!userHealthy) {
-      throw new Error(BMI_UNHEALTHY);
+      throw new Error("User not healthy");
     }
 
     return `BMI is healthy, keep up the good work`;
   } catch (error) {
-    console.log(error);
-    if (typeof error === "string") {
-      return error;
-    } else {
-      return `${FAILED_KEY} to save BMI proof`;
-    }
+    return `${FAILED_KEY} : Unhealthy BMI`;
   }
 };
 
