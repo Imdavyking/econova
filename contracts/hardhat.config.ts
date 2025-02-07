@@ -9,6 +9,7 @@ const RPC_URL = process.env.RPC_URL
 const CHAIN_ID = process.env.CHAIN_ID
 const API_URL = process.env.API_URL
 const BROWSER_URL = process.env.BROWSER_URL
+const API_SCAN_VERIFIER_KEY = process.env.API_SCAN_VERIFIER_KEY
 
 if (!PRIVATE_KEY) {
     throw new Error("PRIVATE_KEY is not set")
@@ -28,6 +29,10 @@ if (!API_URL) {
 
 if (!BROWSER_URL) {
     throw new Error("BROWSER_URL is not set")
+}
+
+if (!API_SCAN_VERIFIER_KEY) {
+    throw new Error("API_SCAN_VERIFIER_KEY is not set, used to verify contracts on explorer")
 }
 
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
@@ -53,7 +58,7 @@ const config: HardhatUserConfig = {
     solidity: "0.8.28",
     etherscan: {
         apiKey: {
-            testNetwork: "abc",
+            testNetwork: API_SCAN_VERIFIER_KEY,
         },
         customChains: [
             {
