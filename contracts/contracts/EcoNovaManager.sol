@@ -407,7 +407,13 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         uint256[2] calldata _pC,
         uint256[2] calldata _pubSignals
     ) public {
-        recordUserHealthy(msg.sender, i_groth16VerifierP3.verifyProof(_pA, _pB, _pC, _pubSignals));
+        bool verified = i_groth16VerifierP3.verifyProof(_pA, _pB, _pC, _pubSignals);
+        if (!verified) {
+            revert EcoNovaManager__InvalidSignature();
+        }
+        userBMIHealthy[msg.sender] = verified;
+        emit BMIRecorded(msg.sender, verified);
+        // recordUserHealthy(msg.sender, i_groth16VerifierP3.verifyProof(_pA, _pB, _pC, _pubSignals));
         // recordUserHealthy(msg.sender, true);
     }
 }
