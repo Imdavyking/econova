@@ -76,6 +76,10 @@ const getContract = async () => {
   return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 };
 
+export const adviceOnHealthService = async ({ isHealthy, advice }) => {
+  console.log({ isHealthy, advice });
+};
+
 export const saveHealthyBMIProofService = async ({
   weightInKg,
   heightInCm,

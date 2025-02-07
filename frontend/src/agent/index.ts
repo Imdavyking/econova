@@ -5,6 +5,7 @@ import {
   deployTokenService,
   donateToFoundationService,
   redeemPointsService,
+  adviceOnHealthService,
 } from "../services/blockchain.services";
 import { AiResponseType, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
@@ -18,6 +19,7 @@ export class AIAgent {
       donate: donateToFoundationService,
       redeemPoints: redeemPointsService,
       deployToken: deployTokenService,
+      adviceOnHealth: adviceOnHealthService,
     };
     this.toolsInfo = {
       donate: `Example: Donate 100 USD to a cause. e.g ${Object.keys(
