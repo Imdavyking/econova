@@ -9,7 +9,10 @@ import logoUrl from "@/assets/images/logo.png";
 import EVM_LOGO from "@/assets/images/creative_eth.png";
 import { APP_NAME, SERVER_URL_TWITTER_LOGIN } from "../../utils/constants";
 import ConnectWallet from "../../components/ConnectWallet";
-import { getUserTwitterInfo } from "../../services/user.twitter.services";
+import {
+  getUserTwitterInfo,
+  userLogout,
+} from "../../services/user.twitter.services";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaUserCircle, FaCrown, FaCoins } from "react-icons/fa";
 
@@ -21,6 +24,7 @@ const Home = () => {
     console.log("User logged out");
     setTwitterHandle("");
     setShowLogoutPopup(false);
+    userLogout();
   };
 
   useEffect(() => {
