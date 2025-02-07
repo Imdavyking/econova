@@ -6,7 +6,7 @@ import ChatBot from "@/components/chat-bot/Main";
 import { Link } from "react-router-dom";
 import Footer from "@/base-components/footer";
 import logoUrl from "@/assets/images/logo.png";
-import EVM_LOGO from "@/assets/images/creative_eth.png";
+import EVM_LOGO from "@/assets/images/sonic_s.svg";
 import { APP_NAME, SERVER_URL_TWITTER_LOGIN } from "../../utils/constants";
 import ConnectWallet from "../../components/ConnectWallet";
 import {
