@@ -28,13 +28,16 @@ chainId !== 31337
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
               const CharityDeployer = await hre.ethers.getContractFactory("Charity")
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
+              const Groth16Verifier = await hre.ethers.getContractFactory("Groth16Verifier")
               const charityDeployer = await CharityDeployer.deploy(charityCategories.Education)
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
+              const groth16Deployer = await Groth16Verifier.deploy()
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(
                   mockPythPriceFeedDeployer,
                   wallet,
-                  [charityDeployer]
+                  [charityDeployer],
+                  groth16Deployer
               )
               ecoNDeployer.addCharity(charityDeployer)
 
