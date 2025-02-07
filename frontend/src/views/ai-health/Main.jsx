@@ -62,7 +62,7 @@ const AIHealth = () => {
           />
         </div>
         <button
-          onClick={() => setIsLoading(true)}
+          onClick={checkHealthSummary}
           disabled={isLoading}
           className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 flex justify-center items-center"
         >
