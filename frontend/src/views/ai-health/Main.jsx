@@ -23,8 +23,6 @@ const AIHealth = () => {
 
       const results = await agent.solveTask(response);
 
-      console.log({ results });
-
       const info = results[0];
 
       if (info) {
