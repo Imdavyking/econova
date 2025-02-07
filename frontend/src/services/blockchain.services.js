@@ -103,11 +103,9 @@ export const saveHealthyBMIProofService = async ({
 
     const logs = manager.interface.parseLog(receipt.logs[0]);
 
-    console.log({ logs });
+    console.log(logs.args.at(1));
 
-    const signer = await getSigner();
-
-    const userHealthy = await manager.userBMIHealthy(await signer.getAddress());
+    const userHealthy = logs.args.at(1);
 
     if (!userHealthy) {
       throw new Error(BMI_UNHEALTHY);
@@ -182,9 +180,8 @@ export const deployTokenService = async ({ name, symbol, initialSupply }) => {
     );
     const receipt = await tx.wait(1);
 
-    const event = receipt.events[1]; //TODO: fix this to log
-    const args = event.args;
-    const [tokenAddress] = args;
+    const logs = manager.interface.parseLog(receipt.logs[1]);
+    const tokenAddress = logs.args.at(0);
     return `deployed ${name} token at ${tokenAddress}`;
   } catch (error) {
     return `${FAILED_KEY} to deploy ${name} token`;
