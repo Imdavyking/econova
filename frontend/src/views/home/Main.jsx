@@ -28,6 +28,10 @@ const Home = () => {
   };
 
   useEffect(() => {
+    dom("body").removeClass("error-page").removeClass("login").addClass("main");
+  }, []);
+
+  useEffect(() => {
     getUserTwitterInfo()
       .then((data) => {
         setTwitterHandle(data.screen_name);

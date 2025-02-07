@@ -11,7 +11,6 @@ import classnames from "classnames";
 import TopBar from "@/components/top-bar/Main";
 import MobileMenu from "@/components/mobile-menu/Main";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-import MainColorSwitcher from "@/components/main-color-switcher/Main";
 import SideMenuTooltip from "@/components/side-menu-tooltip/Main";
 import { APP_NAME } from "../../utils/constants";
 
