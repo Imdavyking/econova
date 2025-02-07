@@ -101,6 +101,10 @@ export const saveHealthyBMIProofService = async ({
     const tx = await manager.checkBMIHealthy(_pA, _pB, _pC, _pubSignals);
     const receipt = await tx.wait(1);
 
+    const logs = manager.interface.parseLog(receipt.logs[0]);
+
+    console.log({ logs });
+
     // const event = receipt.events[1];
     // const args = event.args;
     // const [user, isHealthy] = args;
