@@ -105,17 +105,9 @@ export const saveHealthyBMIProofService = async ({
 
     console.log({ logs });
 
-    // const event = receipt.events[1];
-    // const args = event.args;
-    // const [user, isHealthy] = args;
-
-    // console.log({ user, isHealthy });
-
     const signer = await getSigner();
 
     const userHealthy = await manager.userBMIHealthy(await signer.getAddress());
-
-    console.log({ userHealthy });
 
     if (!userHealthy) {
       throw new Error(BMI_UNHEALTHY);
@@ -190,7 +182,7 @@ export const deployTokenService = async ({ name, symbol, initialSupply }) => {
     );
     const receipt = await tx.wait(1);
 
-    const event = receipt.events[1];
+    const event = receipt.events[1]; //TODO: fix this to log
     const args = event.args;
     const [tokenAddress] = args;
     return `deployed ${name} token at ${tokenAddress}`;
