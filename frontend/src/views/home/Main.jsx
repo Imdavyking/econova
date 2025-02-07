@@ -163,7 +163,7 @@ const Home = () => {
           </div>
 
           {showLogoutPopup && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center text-black">
               <div className="bg-white p-6 rounded-lg shadow-lg text-center">
                 <h3 className="text-lg font-semibold">Logout</h3>
                 <p className="my-4">Are you sure you want to log out?</p>

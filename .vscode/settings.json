@@ -4,5 +4,6 @@
   },
   "files.exclude": {
     "node_modules": true
-  }
+  },
+  "wake.compiler.solc.remappings": []
 }
