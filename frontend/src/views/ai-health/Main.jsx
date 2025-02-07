@@ -9,11 +9,11 @@ import { toast } from "react-toastify";
 const AIHealth = () => {
   const checkHealthSummary = async () => {
     try {
-      setIsLoading(true);
       if (!weight || !height) {
         toast.info("Please fill in weight and height");
         return;
       }
+      setIsLoading(true);
       const response = await saveHealthyBMIProofService({
         weightInKg: weight,
         heightInCm: height,
@@ -62,14 +62,14 @@ const AIHealth = () => {
           />
         </div>
         <button
-          onClick={checkHealthSummary}
+          onClick={() => setIsLoading(true)}
           disabled={isLoading}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 flex justify-center items-center"
         >
           {isLoading ? (
-            <FaSpinner className="w-5 h-5 animate-spin snap-center" />
+            <FaSpinner className="w-5 h-5 animate-spin" />
           ) : (
-            "  AI Summary"
+            "AI Summary"
           )}
         </button>
         {suggestion && (
