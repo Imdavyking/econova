@@ -18,6 +18,7 @@ export const APP_NAME = import.meta.env.VITE_APP_NAME;
 export const FIAT_DECIMALS = 2;
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 export const FAILED_KEY = "failed";
+export const BMI_ADVICE = "give advice on how to improve BMI, user unhealthy";
 export const GRAPH_QL_ENDPOINT = import.meta.env.VITE_GRAPH_QL_ENDPOINT;
 export const WALLET_CONNECT_PROJECT_ID = import.meta.env
   .VITE_WALLET_CONNECT_PROJECT_ID;

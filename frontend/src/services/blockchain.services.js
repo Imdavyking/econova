@@ -2,6 +2,7 @@
 import abi from "@/assets/json/abi.json";
 import { BrowserProvider, ethers } from "ethers";
 import {
+  BMI_ADVICE,
   CHAIN_BLOCKEXPLORER_URL,
   CHAIN_CURRENCY_NAME,
   CHAIN_ID,
@@ -77,7 +78,7 @@ const getContract = async () => {
 };
 
 export const adviceOnHealthService = async ({ isHealthy, advice }) => {
-  return { isHealthy, advice };
+  return advice;
 };
 
 export const saveHealthyBMIProofService = async ({
@@ -113,7 +114,7 @@ export const saveHealthyBMIProofService = async ({
 
     return `BMI is healthy, keep up the good work`;
   } catch (error) {
-    return `${FAILED_KEY} : Unhealthy BMI`;
+    return `${FAILED_KEY} : ${BMI_ADVICE}`;
   }
 };
 

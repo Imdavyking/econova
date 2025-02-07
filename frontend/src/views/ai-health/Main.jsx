@@ -23,10 +23,12 @@ const AIHealth = () => {
 
       const results = await agent.solveTask(response);
 
-      const info = results.find((result) => result.isHealthy && result.advice);
+      console.log({ results });
+
+      const info = results[0];
 
       if (info) {
-        setSuggestion(info.advice);
+        setSuggestion(info);
       }
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
