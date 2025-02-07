@@ -88,18 +88,16 @@ export const saveHealthyBMIProofService = async ({
       heightInCm,
     });
 
-    const _pA = proof.pi_a;
-    const _pB = proof.pi_b;
-    const _pC = proof.pi_c;
     const _pubSignals = publicSignals;
 
+    const _pA = [proof.pi_a[0], proof.pi_a[1]];
+    const _pB = [
+      [proof.pi_b[0][1], proof.pi_b[0][0]],
+      [proof.pi_b[1][1], proof.pi_b[1][0]],
+    ];
+    const _pC = [proof.pi_c[0], proof.pi_c[1]];
     const manager = await getContract();
-    const tx = await manager.checkBMIHealthy(
-      [_pA[0], _pA[1]],
-      [_pB[0], _pB[1]],
-      [_pC[0], _pC[1]],
-      _pubSignals
-    );
+    const tx = await manager.checkBMIHealthy(_pA, _pB, _pC, _pubSignals);
     const receipt = await tx.wait(1);
 
     // const event = receipt.events[1];
