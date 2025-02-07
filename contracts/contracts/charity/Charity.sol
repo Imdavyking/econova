@@ -33,14 +33,26 @@ contract Charity is Ownable, ReentrancyGuard {
         charityCategory = _category;
     }
 
+    /**
+     * @dev Check if the contract can withdraw funds.
+     */
     function canWithdraw() public view returns (bool) {
         return canWithdrawFunds;
     }
+
+    /**
+     * @dev Set the status of the contract to withdraw funds.
+     * @param status The status to set.
+     */
 
     function setCanWithdraw(bool status) public onlyOwner {
         canWithdrawFunds = status;
     }
 
+    /**
+     * @dev Check the balance of the contract.
+     * @param token The address of the token to check the balance of.
+     */
     function balanceOf(address token) public view returns (uint256) {
         if (token == ETH_ADDRESS) {
             return address(this).balance;
@@ -81,5 +93,8 @@ contract Charity is Ownable, ReentrancyGuard {
         emit DonationWithdrawn(organization, token, amount);
     }
 
+    /**
+     * @dev Fallback function to receive ETH donations.
+     */
     receive() external payable {}
 }
