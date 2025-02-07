@@ -55,7 +55,7 @@ const AIHealth = () => {
             type="number"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            className="w-full p-2 border rounded mt-1"
+            className="w-full p-2 border border-blue-700 rounded mt-1 text-black"
             placeholder="Enter weight in kg"
           />
         </div>
@@ -65,7 +65,7 @@ const AIHealth = () => {
             type="number"
             value={height}
             onChange={(e) => setHeight(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded mt-1"
+            className="w-full p-2 border  border-blue-700 rounded mt-1 text-black"
             placeholder="Enter height in cm"
           />
         </div>
