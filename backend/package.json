@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "dist/app.js",
   "scripts": {
     "dev": "nodemon src/app.ts",
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
@@ -51,5 +50,11 @@
     "winston-daily-rotate-file": "^5.0.0",
     "nodemon": "^3.1.4",
     "zod": "^3.24.1"
+  },
+  "_moduleDirectories": [
+    "node_modules_custom"
+  ],
+  "_moduleAliases": {
+    "@src": "./build"
   }
 }
