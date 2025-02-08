@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "nodemon src/app.ts",
-    "start": "ts-node -r tsconfig-paths/register src/app.ts",
-    "build": "tsc",
+    "start": "node build/app.js",
+    "build": "yarn && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
