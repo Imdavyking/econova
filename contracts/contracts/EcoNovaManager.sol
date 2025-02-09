@@ -151,11 +151,11 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         (bool success, bytes memory data) = token.staticcall(
             abi.encodeWithSignature("decimals()")
         );
-        return success ? abi.decode(data, (uint8)) : 18; // Default to 18 if `decimals()` is unavailable.
+        return success ? abi.decode(data, (uint8)) : 18;
     }
 
     /**
-     * @dev Token price will use 18 decimal for all token
+     * @dev Get price from Pyth network
      * @return price
      * @return decimals
      */
