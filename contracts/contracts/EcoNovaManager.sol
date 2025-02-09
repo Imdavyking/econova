@@ -224,7 +224,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
 
     /**
      * @dev Donate ETH or ERC20 tokens to the foundation.
-     * @param charityCategory The name of the charity organization.
+     * @param charityCategory The category of the charity organization.
      * @param token The address of the token to donate.
      * @param amountInUsd The amount in USD (assumed to have 2 decimals).
      */
@@ -315,6 +315,8 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     /**
      * @dev Adds points signed by twitter bot to the user
      * @param pointToAdd points to add
+     * @param userTwitterId the twitter id of the user
+     * @param tweetId the tweet id to claim points for
      * @param signature signature of the message
      */
     function addPointsFromTwitterBot(
@@ -327,8 +329,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
             abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId, block.chainid)
         );
         bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(messageHash);
-
-        // bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
 
         if (userAddedTweets[userTwitterId][tweetId]) {
             revert EcoNovaManager__TweetIdAlreadyRecorderForUser();
