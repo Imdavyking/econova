@@ -231,7 +231,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param charityAddress The address of the charity organization.
      */
     function validateCharity(address charityAddress) public view returns (bool) {
-        uint256 size;
         bool isValidContract = isContract(charityAddress);
 
         if (!isValidContract) {
