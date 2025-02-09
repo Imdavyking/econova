@@ -9,7 +9,7 @@ import { z } from "zod";
 import dotenv from "dotenv";
 import { charityCategories } from "../utils/charity.categories";
 dotenv.config();
-const openAIApiKey = process.env.OPENAI_API_KEY || "your-api-key";
+const openAIApiKey = process.env.OPENAI_API_KEY!;
 const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 const assets = [
