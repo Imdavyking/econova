@@ -67,6 +67,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     error EcoNovaManager__CharityAlreadyExists();
     error EcoNovaManager__CharityNotFound();
     error EcoNovaManager__IncorrectBalance();
+    error EcoNovaManager__InvalidContractAddress();
 
     /**
      * events
@@ -148,6 +149,10 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param token The address of the token.
      */
     function getTokenDecimals(address token) internal view returns (uint8) {
+        if (!isContract(token)) {
+            return 18;
+        }
+
         (bool success, bytes memory data) = token.staticcall(
             abi.encodeWithSignature("decimals()")
         );
@@ -210,16 +215,27 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     }
 
     /**
+     * @dev Checks if the address is a contract.
+     * @param _addr The address to check if it is a contract.
+     */
+    function isContract(address _addr) private view returns (bool) {
+        uint32 size;
+        assembly {
+            size := extcodesize(_addr)
+        }
+        return (size > 0);
+    }
+
+    /**
      * @dev Validates the charity organization.
      * @param charityAddress The address of the charity organization.
      */
     function validateCharity(address charityAddress) public view returns (bool) {
         uint256 size;
-        assembly {
-            size := extcodesize(charityAddress)
-        }
-        if (size == 0) {
-            revert EcoNovaManager__InvalidCharityAddress();
+        bool isValidContract = isContract(charityAddress);
+
+        if (!isValidContract) {
+            revert EcoNovaManager__InvalidContractAddress();
         }
 
         (bool canWithdraw, bytes memory data) = charityAddress.staticcall(
