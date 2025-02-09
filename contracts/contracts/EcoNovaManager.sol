@@ -129,7 +129,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         if (token == ETH_ADDRESS) {
             (uint256 priceOfTokenInUsd, uint8 priceDecimals) = getPricePyth();
 
-            uint8 tokenDecimals = 18;
+            uint8 tokenDecimals = getTokenDecimals(token);
 
             uint256 amountToSendNumerator = amountInUsd *
                 (10 ** tokenDecimals) *
@@ -141,6 +141,17 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
             return amountToSend / FIAT_DECIMALS;
         }
         revert EcoNovaManager__ConversionNotAvailable();
+    }
+
+    /**
+     * @dev Get token decimals
+     * @param token The address of the token.
+     */
+    function getTokenDecimals(address token) internal view returns (uint8) {
+        (bool success, bytes memory data) = token.staticcall(
+            abi.encodeWithSignature("decimals()")
+        );
+        return success ? abi.decode(data, (uint8)) : 18; // Default to 18 if `decimals()` is unavailable.
     }
 
     /**
