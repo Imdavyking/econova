@@ -36,7 +36,7 @@ const Footer = () => {
             <Link to="/ai-health">AI Health Advisor</Link>
           </li>
           <li>
-            <Link to="/ai-tutor">AI Sonic Tutor</Link>
+            <Link to="/ai-tutor">AI Tutor</Link>
           </li>
         </ul>
 
