@@ -8,6 +8,7 @@ import Donate from "../views/donate/Main";
 import DonationCategories from "../views/donate/Categories";
 import LeaderBoard from "../views/leaderboard/Main";
 import AIHealth from "../views/ai-health/Main";
+import AITutor from "../views/ai-tutor/Main";
 
 function Router() {
   const routes = [
@@ -38,6 +39,10 @@ function Router() {
     {
       path: "/ai-health",
       element: <AIHealth />,
+    },
+    {
+      path: "/ai-tutor",
+      element: <AITutor />,
     },
   ];
 
