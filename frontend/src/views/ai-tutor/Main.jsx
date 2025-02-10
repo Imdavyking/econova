@@ -5,10 +5,12 @@ import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import data from "@/assets/json/ai_tutor.json";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const levels = ["Beginner", "Intermediate", "Advanced"];
 
 const SonicBlockchainTutor = () => {
+  const navigate = useNavigate();
   const [level, setLevel] = useState(
     localStorage.getItem("level") || "Beginner"
   );
@@ -33,6 +35,10 @@ const SonicBlockchainTutor = () => {
     if (currentTopicIndex > 0) {
       setCurrentTopicIndex(currentTopicIndex - 1);
     }
+  };
+
+  const handleTakeQuiz = () => {
+    navigate(`./quiz?level=${level}`);
   };
 
   const handleLevelChange = (e) => {
@@ -119,15 +125,26 @@ const SonicBlockchainTutor = () => {
             Previous
           </motion.button>
 
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handleNext}
-            disabled={currentTopicIndex === topics.length - 1}
-            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-          >
-            Next
-          </motion.button>
+          {currentTopicIndex === topics.length - 1 ? (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleTakeQuiz}
+              className="px-4 py-2 bg-green-600 text-white rounded"
+            >
+              Take Quiz
+            </motion.button>
+          ) : (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleNext}
+              disabled={currentTopicIndex === topics.length - 1}
+              className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+            >
+              Next
+            </motion.button>
+          )}
         </div>
       </motion.div>
     </div>
