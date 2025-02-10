@@ -21,18 +21,6 @@ const Footer = () => {
           <li>
             <Link to="/">Terms & Condition</Link>
           </li>
-          {/* <li>
-            <Link to="/">Privacy Policy</Link>
-          </li>
-          <li>
-            <Link to="/">Company Policy</Link>
-          </li>
-          <li>
-            <Link to="/">CopyRight & Trademark</Link>
-          </li>
-          <li>
-            <Link to="/">Terms of Use</Link>
-          </li> */}
         </ul>
 
         <ul className="space-y-2">
@@ -40,31 +28,16 @@ const Footer = () => {
           <li>
             <Link to="/donate">Donate</Link>
           </li>
-          {/* <li>
-            <Link to="/">Privacy Policy</Link>
-          </li>
-          <li>
-            <Link to="/">Giving Back</Link>
-          </li>
-          <li>
-            <Link to="/">Career</Link>
-          </li> */}
-          {/* <li>
-            <Link to="/">Our Story</Link>
-          </li> */}
         </ul>
 
         <ul className="space-y-2">
-          <li className="font-semibold">Advice</li>
+          <li className="font-semibold">Advice & Learning</li>
           <li>
             <Link to="/ai-health">AI Health Advisor</Link>
           </li>
-          {/* <li>
-            <Link to="/">Careers</Link>
-          </li>
           <li>
-            <Link to="/">Offers</Link>
-          </li> */}
+            <Link to="/ai-tutor">AI Sonic Tutor</Link>
+          </li>
         </ul>
 
         <ul className="space-y-2">
@@ -75,18 +48,6 @@ const Footer = () => {
               Twitter
             </Link>
           </li>
-          {/* <li>
-            <Link to="/">Facebook</Link>
-          </li>
-          <li>
-            <Link to="/">Instagram</Link>
-          </li>
-          <li>
-            <Link to="/">Pinterest</Link>
-          </li>
-          <li>
-            <Link to="/">LinkedIn</Link>
-          </li> */}
         </ul>
       </div>
 
