@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const SonicBlockchainTutor = () => {
   const data = {
@@ -208,7 +209,14 @@ const SonicBlockchainTutor = () => {
     },
   };
 
-  const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
+  const [currentTopicIndex, setCurrentTopicIndex] = useState(
+    parseInt(localStorage.getItem("topicIndex")) || 0
+  );
+
+  useEffect(() => {
+    localStorage.setItem("topicIndex", currentTopicIndex);
+  }, [currentTopicIndex]);
+
   const topics = data.Beginner.Topics;
 
   const handleNext = () => {
@@ -228,43 +236,50 @@ const SonicBlockchainTutor = () => {
       <h1 className="text-3xl font-bold text-center text-blue-600">
         Sonic Blockchain Tutor
       </h1>
-      <div className="p-4 bg-white rounded-lg shadow">
-        <h2 className="text-2xl font-semibold text-gray-800">Beginner Level</h2>
-        <p className="text-gray-600">{data.Beginner.Objective}</p>
-        <div className="mt-4 p-3 border rounded">
-          <h3 className="text-xl font-medium text-gray-700">
-            {topics[currentTopicIndex].title}
-          </h3>
-          {topics[currentTopicIndex].subtopics.map((subtopic) => (
-            <div key={subtopic.question} className="mt-2">
-              <h4 className="font-semibold text-gray-800">
-                {subtopic.question}
-              </h4>
-              <p className="text-gray-600">{subtopic.answer}</p>
-              {subtopic.demoCode && (
-                <pre className="mt-2 p-2 bg-gray-900 text-white rounded-md overflow-auto">
-                  <code>{subtopic.demoCode}</code>
-                </pre>
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between mt-4">
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
-            onClick={handlePrev}
-            disabled={currentTopicIndex === 0}
-          >
-            Previous
-          </button>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
-            onClick={handleNext}
-            disabled={currentTopicIndex === topics.length - 1}
-          >
-            Next
-          </button>
-        </div>
+
+      <motion.div
+        key={currentTopicIndex}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -50 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gray-100 p-4 rounded-lg shadow"
+      >
+        <h2 className="text-xl font-semibold mb-2">
+          {topics[currentTopicIndex].title}
+        </h2>
+        <p>{topics[currentTopicIndex].subtopics[0].question}</p>
+        <p className="text-gray-600">
+          {topics[currentTopicIndex].subtopics[0].answer}
+        </p>
+        {topics[currentTopicIndex].subtopics[0].demoCode && (
+          <pre className="mt-2 p-2 bg-gray-900 text-white rounded-md overflow-auto">
+            <code>{topics[currentTopicIndex].subtopics[0].demoCode}</code>
+          </pre>
+        )}
+      </motion.div>
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between mt-4">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handlePrev}
+          disabled={currentTopicIndex === 0}
+          className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+        >
+          Previous
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleNext}
+          disabled={currentTopicIndex === topics.length - 1}
+          className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        >
+          Next
+        </motion.button>
       </div>
     </div>
   );
