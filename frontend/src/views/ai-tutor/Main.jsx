@@ -187,19 +187,84 @@ const SonicBlockchainTutor = () => {
         "Master advanced Sonic blockchain concepts, security, and scaling strategies for enterprise-grade applications.",
       Topics: [
         {
+          title: "Advanced Smart Contract Optimization",
+          subtopics: [
+            {
+              question: "What are gas-efficient contract coding techniques?",
+              answer:
+                "Techniques such as using memory over storage, minimizing state changes, and leveraging opcode optimizations help reduce gas costs.",
+            },
+            {
+              question:
+                "How can developers debug and optimize smart contract execution?",
+              answer:
+                "Using tools like Hardhat, Foundry, and Sonic’s built-in debugging tools allows developers to analyze contract execution and optimize performance.",
+            },
+          ],
+        },
+        {
+          title: "Cross-Chain & Interoperability Solutions",
+          subtopics: [
+            {
+              question: "How does Sonic interact with other blockchains?",
+              answer:
+                "Sonic supports cross-chain interoperability using bridges, wrapped assets, and standardized messaging protocols.",
+            },
+            {
+              question: "What are the key cross-chain protocols and bridges?",
+              answer:
+                "Developers can use protocols like IBC, LayerZero, and custom Sonic bridges to facilitate asset transfers and data exchange between networks.",
+            },
+          ],
+        },
+        {
+          title: "Sonic Validator & Node Operations",
+          subtopics: [
+            {
+              question: "How can someone run a Sonic validator node?",
+              answer:
+                "Running a validator involves setting up a secure server, syncing with the Sonic blockchain, and participating in block validation and consensus.",
+            },
+            {
+              question:
+                "What are the staking mechanisms and governance models in Sonic?",
+              answer:
+                "Validators and delegators stake tokens to secure the network and participate in governance decisions, influencing protocol upgrades and network policies.",
+            },
+          ],
+        },
+        {
           title: "Advanced Security & Attack Prevention",
           subtopics: [
             {
-              question: "Preventing re-entrancy and flash loan attacks.",
+              question:
+                "How can developers prevent re-entrancy and flash loan attacks?",
               answer:
-                "Implementing proper re-entrancy guards and validating external calls can prevent these attacks.",
+                "Implementing re-entrancy guards, validating input data, and using secure contract design patterns help prevent attacks.",
               demoCode:
                 "// Solidity Re-Entrancy Guard\npragma solidity ^0.8.0;\ncontract SecureContract {\n    bool private locked;\n    modifier noReentrant() {\n        require(!locked, 'No re-entrancy');\n        locked = true;\n        _;\n        locked = false;\n    }\n}",
             },
             {
-              question: "Best practices for securing dApps and user funds.",
+              question:
+                "What are the best practices for securing dApps and user funds?",
               answer:
-                "Regular security audits, multi-signature wallets, and secure coding practices help safeguard dApps.",
+                "Regular security audits, multi-signature wallets, and secure coding practices are essential for protecting funds and preventing exploits.",
+            },
+          ],
+        },
+        {
+          title: "Real-World Use Cases & Applications",
+          subtopics: [
+            {
+              question:
+                "How is Sonic being adopted in DeFi, gaming, and enterprise solutions?",
+              answer:
+                "Sonic’s high-speed and low-cost transactions make it ideal for DeFi platforms, gaming economies, and enterprise blockchain solutions.",
+            },
+            {
+              question: "What are some successful Sonic-based projects?",
+              answer:
+                "Several projects leverage Sonic for decentralized exchanges, NFT marketplaces, and supply chain solutions, showcasing real-world adoption.",
             },
           ],
         },
