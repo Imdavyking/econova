@@ -5,6 +5,8 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { useSearchParams } from "react-router-dom";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
+import { useNavigate } from "react-router-dom";
+
 const quizQuestions = [
   {
     question: "What is Sonic Blockchain known for?",
@@ -33,18 +35,23 @@ const quizQuestions = [
   },
 ];
 
-const QuizPage = ({ onComplete }) => {
+const QuizPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizFinished, setQuizFinished] = useState(false);
   const [score, setScore] = useState(0);
   const [searchParams, _] = useSearchParams();
+  const navigate = useNavigate();
   const level = searchParams.get("level") || "Beginner";
 
   console.log("Level:", level);
 
   const handleAnswerSelect = (option) => {
     setSelectedAnswers({ ...selectedAnswers, [currentIndex]: option });
+  };
+
+  const onComplete = () => {
+    navigate("/ai-tutor");
   };
 
   const handleNext = () => {
