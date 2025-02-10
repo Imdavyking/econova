@@ -334,7 +334,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         );
 
         bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(messageHash);
-        // bytes32 ethSignedMessageHash = EthSign.getEthSignedMessageHash(messageHash);
         return ethSignedMessageHash;
     }
 
