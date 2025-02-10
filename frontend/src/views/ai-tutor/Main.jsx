@@ -4,6 +4,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import data from "@/assets/json/ai_tutor.json";
+import { toast } from "react-toastify";
 
 const levels = ["Beginner", "Intermediate", "Advanced"];
 
@@ -87,10 +88,22 @@ const SonicBlockchainTutor = () => {
           <div key={subtopic.question} className="mt-2">
             <h4 className="font-semibold text-gray-800">{subtopic.question}</h4>
             <p className="text-gray-600">{subtopic.answer}</p>
+
             {subtopic.demoCode && (
-              <pre className="mt-2 p-2 bg-gray-900 text-white rounded-md overflow-auto">
-                <code>{subtopic.demoCode}</code>
-              </pre>
+              <div className="relative mt-2 p-2 bg-gray-900 text-white rounded-md overflow-auto">
+                <button
+                  className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white text-sm px-2 py-1 rounded"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(subtopic.demoCode);
+                    toast.info("Code copied to clipboard");
+                  }}
+                >
+                  Copy
+                </button>
+                <pre className="p-2">
+                  <code>{subtopic.demoCode}</code>
+                </pre>
+              </div>
             )}
           </div>
         ))}
