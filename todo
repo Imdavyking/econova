@@ -75,7 +75,7 @@ Since **Sonic Blockchain (S)** is designed for **fast, scalable, and efficient t
 
 ✅ **Smart Contract Development on Sonic**
 
-- Introduction to Sonic’s smart contract language (e.g., Rust, Move, or Solidity).
+- Introduction to Sonic’s smart contract language (Solidity).
 - Writing and deploying a simple smart contract.
 
 ✅ **Interacting with Sonic dApps**

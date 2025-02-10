@@ -93,26 +93,90 @@ const SonicBlockchainTutor = () => {
         },
       ],
     },
-
     Intermediate: {
       Objective:
         "Gain hands-on experience with developing, deploying, and interacting with smart contracts on Sonic.",
       Topics: [
         {
+          title: "Sonic Blockchain Architecture",
+          subtopics: [
+            {
+              question: "How does Sonic’s consensus and execution model work?",
+              answer:
+                "Sonic uses a high-speed consensus algorithm that ensures rapid transaction finality and efficient execution, minimizing network congestion.",
+            },
+            {
+              question:
+                "How does Sonic achieve high efficiency and low gas fees?",
+              answer:
+                "By optimizing block processing, resource allocation, and state management, Sonic reduces computation costs and enhances scalability.",
+            },
+          ],
+        },
+        {
           title: "Smart Contract Development on Sonic",
           subtopics: [
             {
               question:
-                "Introduction to Sonic’s smart contract language (e.g., Rust, Move, or Solidity).",
+                "Introduction to Sonic’s smart contract language (Solidity).",
               answer:
-                "Sonic supports multiple programming languages, including Rust and Solidity, enabling developers to create efficient smart contracts.",
+                "Sonic supports Solidity for writing smart contracts, allowing developers to create decentralized applications with familiar tools.",
             },
             {
               question: "Writing and deploying a simple smart contract.",
               answer:
-                "A simple contract can be deployed using Solidity by defining contract logic, compiling it, and deploying through Sonic’s blockchain network.",
+                "A simple contract can be deployed by defining contract logic in Solidity, compiling it, and deploying it using Sonic’s blockchain network.",
               demoCode:
                 "// Solidity smart contract example\npragma solidity ^0.8.0;\ncontract HelloSonic {\n    string public message;\n    constructor() {\n        message = 'Hello, Sonic!';\n    }\n    function setMessage(string memory newMessage) public {\n        message = newMessage;\n    }\n}",
+            },
+          ],
+        },
+        {
+          title: "Interacting with Sonic dApps",
+          subtopics: [
+            {
+              question:
+                "How can developers use SDKs and APIs to build dApps on Sonic?",
+              answer:
+                "Sonic provides SDKs and APIs that allow developers to interact with smart contracts, query blockchain data, and execute transactions efficiently.",
+            },
+            {
+              question: "How does Sonic enable seamless interoperability?",
+              answer:
+                "Sonic supports cross-chain communication protocols, enabling assets and data to flow between different blockchain networks.",
+            },
+          ],
+        },
+        {
+          title: "Gas Fees & Transaction Optimization",
+          subtopics: [
+            {
+              question: "How are fees structured in Sonic?",
+              answer:
+                "Sonic employs a dynamic fee model, where transaction costs vary based on network congestion and computational complexity.",
+            },
+            {
+              question:
+                "What are the best practices for reducing transaction costs?",
+              answer:
+                "Developers can optimize contracts by reducing storage usage, batching transactions, and leveraging layer-2 scaling solutions.",
+            },
+          ],
+        },
+        {
+          title: "Security Considerations in Smart Contracts",
+          subtopics: [
+            {
+              question:
+                "What are the common vulnerabilities in Sonic contracts?",
+              answer:
+                "Re-entrancy attacks, integer overflows, and unchecked external calls are common risks in Sonic contracts.",
+            },
+            {
+              question:
+                "What tools can be used for auditing and testing contracts?",
+              answer:
+                "Developers can use static analysis tools, formal verification, and test suites like Hardhat and Foundry to ensure contract security.",
             },
           ],
         },
