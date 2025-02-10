@@ -43,7 +43,7 @@
           },
           {
             "question": "How to send and receive tokens on Sonic?",
-            "answer": "Users can send tokens by specifying the recipient’s address and transaction amount while ensuring they have enough funds to cover gas fees."
+            "answer": "Users can send tokens by specifying the recipient's address and transaction amount while ensuring they have enough funds to cover gas fees."
           }
         ]
       },
@@ -56,7 +56,7 @@
           },
           {
             "question": "Basics of deploying contracts on Sonic.",
-            "answer": "Developers can deploy smart contracts using Sonic’s blockchain infrastructure, following the required steps of writing, compiling, and deploying the contract."
+            "answer": "Developers can deploy smart contracts using Sonic's blockchain infrastructure, following the required steps of writing, compiling, and deploying the contract."
           }
         ]
       },
@@ -82,7 +82,7 @@
         "title": "Sonic Blockchain Architecture",
         "subtopics": [
           {
-            "question": "How does Sonic’s consensus and execution model work?",
+            "question": "How does Sonic's consensus and execution model work?",
             "answer": "Sonic uses a high-speed consensus algorithm that ensures rapid transaction finality and efficient execution, minimizing network congestion."
           },
           {
@@ -95,12 +95,12 @@
         "title": "Smart Contract Development on Sonic",
         "subtopics": [
           {
-            "question": "Introduction to Sonic’s smart contract language (Solidity).",
+            "question": "Introduction to Sonic's smart contract language (Solidity).",
             "answer": "Sonic supports Solidity for writing smart contracts, allowing developers to create decentralized applications with familiar tools."
           },
           {
             "question": "Writing and deploying a simple smart contract.",
-            "answer": "A simple contract can be deployed by defining contract logic in Solidity, compiling it, and deploying it using Sonic’s blockchain network.",
+            "answer": "A simple contract can be deployed by defining contract logic in Solidity, compiling it, and deploying it using Sonic's blockchain network.",
             "demoCode": "// Solidity smart contract example\npragma solidity ^0.8.0;\ncontract HelloSonic {\n    string public message;\n    constructor() {\n        message = 'Hello, Sonic!';\n    }\n    function setMessage(string memory newMessage) public {\n        message = newMessage;\n    }\n}"
           }
         ]
