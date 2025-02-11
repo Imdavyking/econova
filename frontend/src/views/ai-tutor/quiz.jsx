@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { APP_NAME, SERVER_URL } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { signCourseLevel } from "../../services/blockchain.merkle.proof.level";
@@ -23,12 +23,13 @@ const QuizPage = () => {
   const [quizFinished, setQuizFinished] = useState(false);
   const [isClaimingNFT, setIsClaimingNFT] = useState(false);
   const [score, setScore] = useState(0);
-  const [searchParams, _] = useSearchParams();
+  const { levelStr } = useParams(); // Get level from URL params
+
   const [nftImage, setNftImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quizQuestions, setQuizQuestions] = useState([]);
 
-  const levelStr = searchParams.get("level") || "Beginner";
+  // const levelStr = searchParams.get("level") || "Beginner";
   const Levels = {
     Beginner: 0,
     Intermediate: 1,

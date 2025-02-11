@@ -38,7 +38,7 @@ const SonicBlockchainTutor = () => {
   };
 
   const handleTakeQuiz = () => {
-    navigate(`./quiz?level=${level}`);
+    navigate(`./quiz/${level}`);
   };
 
   const handleLevelChange = (e) => {

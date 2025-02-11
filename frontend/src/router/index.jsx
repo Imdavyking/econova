@@ -46,7 +46,7 @@ function Router() {
       element: <AITutor />,
     },
     {
-      path: "/ai-tutor/quiz",
+      path: "/ai-tutor/quiz/:levelStr",
       element: <AITutorQuiz />,
     },
   ];
