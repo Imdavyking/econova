@@ -149,14 +149,11 @@ chainId !== 31337
                       expect(address).to.equal(otherAccount.address)
                       expect(botAddress).to.equal(owner.address)
 
-                      //   const tx = await ecoNovaCourseNFTDeployer.updateRoot(
-                      //       level,
-                      //       root,
-                      //       timestamp,
-                      //       botSignature
-                      //   )
+                      const tx = await ecoNovaCourseNFTDeployer
+                          .connect(otherAccount)
+                          .updateRoot(level, root, timestamp, botSignature)
 
-                      //   await tx.wait(1)
+                      await tx.wait(1)
 
                       //   const { level, root, timestamp, signature, tokenURI, proof } =
                       //   await response.json();
