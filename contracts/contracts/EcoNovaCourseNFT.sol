@@ -38,6 +38,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     event NFTClaimed(address indexed user, Level level, uint256 tokenId);
     event BatchNFTClaimed(address indexed user, Level[] levels, uint256[] tokenIds);
     event BotAddressUpdated(address oldBotAddress, address newBotAddress);
+    event RootUpdated(Level level, bytes32 root);
 
     /**
      * errors
@@ -140,7 +141,9 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
         }
 
         merkleRoots[level] = root;
-        usedSignatures[ethSignedMessageHash] = true; // Mark this signature as used
+        usedSignatures[ethSignedMessageHash] = true;
+
+        emit RootUpdated(level, root);
     }
 
     /**
