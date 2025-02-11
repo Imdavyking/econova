@@ -94,13 +94,22 @@ chainId !== 31337
 
                       const level = 0
 
-                      const messageHash = ethers.solidityPackedKeccak256(["uint8"], [level])
+                      const coursemessageHash = ethers.solidityPackedKeccak256(["uint8"], [level])
 
-                      const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
+                      const courseSignedMessageHash = ethers.hashMessage(
+                          ethers.getBytes(coursemessageHash)
+                      )
 
                       const courseSignature = await otherAccount.signMessage(
-                          ethers.getBytes(messageHash)
+                          ethers.getBytes(coursemessageHash)
                       )
+
+                      const address = ethers.recoverAddress(
+                          courseSignedMessageHash,
+                          courseSignature
+                      )
+
+                      expect(address).to.equal(otherAccount.address)
 
                       const allValues = [
                           [owner.address, level],
@@ -121,8 +130,6 @@ chainId !== 31337
 
                       const timestamp = Math.floor(Date.now() / 1000)
 
-                      const address = ethers.recoverAddress(ethSignedMessageHash, courseSignature)
-
                       const ethSignedMessageproofHash = ethers.solidityPackedKeccak256(
                           ["address", "uint8", "bytes32", "uint256", "uint256"],
                           [address, level, root, chainId, timestamp]
@@ -137,12 +144,12 @@ chainId !== 31337
 
                       console.log(signature)
 
-                      //   const tx = await ecoNovaCourseNFTDeployer.updateRoot(
-                      //       level,
-                      //       root,
-                      //       timestamp,
-                      //       signature
-                      //   )
+                      const tx = await ecoNovaCourseNFTDeployer.updateRoot(
+                          level,
+                          root,
+                          timestamp,
+                          signature
+                      )
 
                       //   await tx.wait(1)
 
