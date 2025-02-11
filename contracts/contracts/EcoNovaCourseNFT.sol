@@ -29,7 +29,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
      * mappings
      */
     mapping(address => mapping(Level => bool)) public hasClaimedNFT;
-    mapping(Level => bytes32) private merkleRoots;
+    mapping(Level => bytes32) public merkleRoots;
     mapping(bytes32 => bool) private usedSignatures;
 
     /**

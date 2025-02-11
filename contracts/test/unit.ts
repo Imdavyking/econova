@@ -155,6 +155,20 @@ chainId !== 31337
 
                       await tx.wait(1)
 
+                      const getRoot = await ecoNovaCourseNFTDeployer.merkleRoots(level)
+
+                      console.log({ getRoot, root })
+
+                      expect(getRoot).to.equal(root)
+
+                      const claimUserNFT = await ecoNovaCourseNFTDeployer.claimNFT(
+                          level,
+                          proof,
+                          tokenURL
+                      )
+
+                      await claimUserNFT.wait(1)
+
                       //   const { level, root, timestamp, signature, tokenURI, proof } =
                       //   await response.json();
 
