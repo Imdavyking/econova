@@ -42,18 +42,7 @@ export async function saveMerkleRoot(newValue: [string, number]) {
   };
 }
 
-async function fetchMerkleProof(address: string, level: number) {
-  const merkleTree = await MerkleTreeModel.findOne();
-  if (!merkleTree) return null;
 
-  const tree = StandardMerkleTree.load(merkleTree.treeData);
-  for (const [i, v] of tree.entries()) {
-    if (v[0] === address && v[1] === level) {
-      return tree.getProof(i);
-    }
-  }
-  return null;
-}
 export const signUserLevelWithRoot = async (
   senderAddress: string,
   level: number,
