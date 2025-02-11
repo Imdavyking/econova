@@ -569,6 +569,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "enum EcoNovaCourseNFT.Level",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "name": "merkleRoots",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "name",
     "outputs": [
