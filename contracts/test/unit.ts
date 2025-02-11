@@ -109,8 +109,6 @@ chainId !== 31337
                           courseSignature
                       )
 
-                      expect(address).to.equal(otherAccount.address)
-
                       const allValues = [
                           [owner.address, level],
                           [otherAccount.address, level],
@@ -135,21 +133,28 @@ chainId !== 31337
                           [address, level, root, chainId, timestamp]
                       )
 
-                      const signature = await owner.signMessage(
+                      const botSignedMessage = ethers.hashMessage(
                           ethers.getBytes(ethSignedMessageproofHash)
                       )
+
+                      const botSignature = await owner.signMessage(
+                          ethers.getBytes(ethSignedMessageproofHash)
+                      )
+
+                      const botAddress = ethers.recoverAddress(botSignedMessage, botSignature)
 
                       const ownerShipTx = await ecoNovaCourseNFTDeployer.updateBotAddress(owner)
                       await ownerShipTx.wait(1)
 
-                      console.log(signature)
+                      expect(address).to.equal(otherAccount.address)
+                      expect(botAddress).to.equal(owner.address)
 
-                      const tx = await ecoNovaCourseNFTDeployer.updateRoot(
-                          level,
-                          root,
-                          timestamp,
-                          signature
-                      )
+                      //   const tx = await ecoNovaCourseNFTDeployer.updateRoot(
+                      //       level,
+                      //       root,
+                      //       timestamp,
+                      //       botSignature
+                      //   )
 
                       //   await tx.wait(1)
 

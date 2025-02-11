@@ -144,6 +144,8 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
 
         address signer = ECDSA.recover(ethSignedMessageHash, signature);
 
+        console.log("Signer: %s", signer);
+
         if (signer != botAddress) {
             revert EcoNovaCourseNFT__InvalidSignerForProof();
         }
