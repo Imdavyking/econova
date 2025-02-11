@@ -9,7 +9,7 @@ const darkMode = selector({
   key: "darkMode",
   get: ({ get }) => {
     if (localStorage.getItem("darkMode") === null) {
-      localStorage.setItem("darkMode", false);
+      localStorage.setItem("darkMode", true);
     }
 
     return get(darkModeValue);
