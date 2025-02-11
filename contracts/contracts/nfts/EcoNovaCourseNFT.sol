@@ -37,6 +37,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage {
     error EcoNovaCourseNFT__LevelAlreadyCompleted();
     error EcoNovaCourseNFT__NFTAlreadyClaimed();
     error EcoNovaCourseNFT__LevelNotCompleted();
+    error EcoNovaCourseNFT__InvalidProof();
 
     constructor(bytes32 merkleroot) ERC721("EcoNovaCourseNFT", "ECNFT") {
         tokenCounter = 1;
@@ -50,7 +51,10 @@ contract EcoNovaCourseNFT is ERC721URIStorage {
      * @param proof - the Merkle proof for the user and level
      */
     function markCourseCompletion(address user, Level level, bytes32[] memory proof) external {
-        MerkleProof.verify(proof, root, _leaf(user, level));
+        bool isProofValid = MerkleProof.verify(proof, root, _leaf(user, level));
+        if (!isProofValid) {
+            revert EcoNovaCourseNFT__InvalidProof();
+        }
         if (hasCompletedLevel[user][level]) {
             revert EcoNovaCourseNFT__LevelAlreadyCompleted();
         }
