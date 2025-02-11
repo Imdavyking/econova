@@ -100,7 +100,7 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
 
     const [tokenURI, { root, proof }] = await Promise.all([
       uploadToIPFS(jsonBuffer),
-      saveMerkleRoot([address, +level]),
+      saveMerkleRoot(address, +level),
     ]);
 
     const { signature, timestamp } = await signUserLevelWithRoot(

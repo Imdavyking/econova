@@ -7,6 +7,8 @@ import path from "path"
 import dotenv from "dotenv"
 import { ETH_ADDRESS } from "../hardhat.config"
 import { charityCategories } from "../utils/charity.categories"
+import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
+
 dotenv.config()
 
 const chainId = network.config.chainId
@@ -26,6 +28,9 @@ chainId !== 31337
               const wallet = new ethers.Wallet(botPrivateKey)
 
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
+              const EcoNovaCourseNFTDeployer = await hre.ethers.getContractFactory(
+                  "EcoNovaCourseNFT"
+              )
               const CharityDeployer = await hre.ethers.getContractFactory("Charity")
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
               const Groth16Verifier = await hre.ethers.getContractFactory("Groth16Verifier")
@@ -39,6 +44,8 @@ chainId !== 31337
                   [charityDeployer],
                   groth16Deployer
               )
+
+              const ecoNovaCourseNFTDeployer = await EcoNovaCourseNFTDeployer.deploy(wallet)
 
               ecoNDeployer.addCharity(charityDeployer)
 
@@ -63,6 +70,7 @@ chainId !== 31337
                   mockPythPriceFeedDeployer,
                   ecoNDeployerAddress,
                   charityDeployer,
+                  ecoNovaCourseNFTDeployer,
               }
           }
 
@@ -73,6 +81,69 @@ chainId !== 31337
                   expect(await ecoNovaToken.name()).to.equal("EcoNovaToken")
                   expect(await ecoNovaToken.symbol()).to.equal("ENT")
                   expect(await ecoNovaToken.decimals()).to.equal(18)
+              })
+          })
+
+          describe("NFTCourse", function () {
+              describe("Validations", function () {
+                  it("Can update root with correct signature.", async function () {
+                      const { ecoNovaCourseNFTDeployer, ecoNDeployer, otherAccount, owner } =
+                          await loadFixture(deployEcoNovaDeployerFixture)
+
+                      const level = 0
+
+                      const messageHash = ethers.solidityPackedKeccak256(["uint8"], [level])
+
+                      const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
+
+                      const courseSignature = await otherAccount.signMessage(
+                          ethers.getBytes(messageHash)
+                      )
+
+                      const allValues = [
+                          [owner.address, level],
+                          [otherAccount.address, level],
+                      ]
+
+                      const tree = StandardMerkleTree.of(allValues, ["address", "uint8"])
+
+                      let proof = []
+
+                      for (const [i, v] of tree.entries()) {
+                          if (v[0] === otherAccount.address && v[1] === level) {
+                              proof = tree.getProof(i)
+                              break
+                          }
+                      }
+
+                      //   const { level, root, timestamp, signature, tokenURI, proof } =
+                      //   await response.json();
+
+                      //   await ecoNDeployer.updateBotAddress(owner)
+                      //   const tweetId = "1883184787340349875"
+                      //   const userTwitterId = "1881029537191919616"
+                      //   const points = 100
+
+                      //   const messageHash = ethers.solidityPackedKeccak256(
+                      //       ["address", "uint256", "uint256", "uint256", "uint256"],
+                      //       [otherAccount.address, points, userTwitterId, tweetId, chainId]
+                      //   )
+
+                      //   const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
+
+                      //   const signature = await owner.signMessage(ethers.getBytes(messageHash))
+
+                      //   const addressThatSign = ethers.recoverAddress(
+                      //       ethSignedMessageHash,
+                      //       signature
+                      //   )
+
+                      //   const botAddress = await ecoNDeployer.botAddress()
+
+                      //   const hash = await ecoNDeployer
+                      //       .connect(otherAccount)
+                      //       .testHash(points, userTwitterId, tweetId, signature)
+                  })
               })
           })
 

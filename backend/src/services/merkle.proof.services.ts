@@ -5,9 +5,9 @@ import dotenv from "dotenv";
 import { CHAIN_ID } from "../utils/constants";
 dotenv.config();
 
-export async function saveMerkleRoot(newValue: [string, number]) {
+export async function saveMerkleRoot(address: string, level: number) {
   const existingMerkleTree = await MerkleTreeModel.findOne();
-  let allValues: [string, number][] = [newValue];
+  let allValues: [string, number][] = [[address, level]];
   let proof = null;
 
   if (existingMerkleTree) {
@@ -17,14 +17,14 @@ export async function saveMerkleRoot(newValue: [string, number]) {
     );
 
     const uniqueValues = new Set(existingValues.map((v) => JSON.stringify(v)));
-    uniqueValues.add(JSON.stringify(newValue));
+    uniqueValues.add(JSON.stringify([address, level]));
 
     allValues = Array.from(uniqueValues).map((v) => JSON.parse(v));
   }
 
   const tree = StandardMerkleTree.of(allValues, ["address", "uint8"]);
   for (const [i, v] of tree.entries()) {
-    if (v[0] === newValue[0] && v[1] === newValue[1]) {
+    if (v[0] === address && v[1] === level) {
       proof = tree.getProof(i);
       break;
     }
@@ -41,7 +41,6 @@ export async function saveMerkleRoot(newValue: [string, number]) {
     proof,
   };
 }
-
 
 export const signUserLevelWithRoot = async (
   senderAddress: string,
