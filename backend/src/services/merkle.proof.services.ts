@@ -1,8 +1,7 @@
-import mongoose from "mongoose";
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import { MerkleTreeModel } from "../models/merkle.tree";
 
-async function storeMerkleRoot(newValue: [string, number]) {
+export async function saveMerkleRoot(newValue: [string, number]) {
   const existingMerkleTree = await MerkleTreeModel.findOne();
   let allValues: [string, number][] = [newValue];
 
@@ -30,7 +29,7 @@ async function storeMerkleRoot(newValue: [string, number]) {
   return tree.root;
 }
 
-async function getMerkleProof(address: string, level: number) {
+export async function fetchMerkleProof(address: string, level: number) {
   const merkleTree = await MerkleTreeModel.findOne();
   if (!merkleTree) return null;
 
@@ -42,21 +41,3 @@ async function getMerkleProof(address: string, level: number) {
   }
   return null;
 }
-
-(async () => {
-  const newValue: [string, number] = [
-    "0x4444444444444444444444444444444444444444",
-    3,
-  ];
-
-  const root = await storeMerkleRoot(newValue);
-  console.log("Updated Merkle Root:", root);
-
-  const proof = await getMerkleProof(
-    "0x4444444444444444444444444444444444444444",
-    3
-  );
-  console.log("Proof for Master Level:", proof);
-
-  mongoose.connection.close();
-})();
