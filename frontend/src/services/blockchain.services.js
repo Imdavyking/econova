@@ -212,6 +212,21 @@ export const getPointsService = async () => {
   }
 };
 
+export const getPythPriceFeed = async () => {
+  try {
+    const signer = await getSigner();
+    const manager = await getContract();
+
+    const userAddress = await signer.getAddress();
+
+    const [price, exp] = await manager.getPricePyth();
+    return [price, exp];
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getUserClaimedNFT = async ({ level }) => {
   try {
     const manager = await getNFTCourseContract();

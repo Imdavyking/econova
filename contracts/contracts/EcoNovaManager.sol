@@ -174,7 +174,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @return decimals
      */
     function getPricePyth() public view returns (uint256, uint8) {
-        bytes32 priceFeedId = 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d; // S/USD
+        bytes32 priceFeedId = 0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace; // S/USD
         PythStructs.Price memory price = i_pyth.getPriceNoOlderThan(priceFeedId, ONE_DAY);
 
         return (

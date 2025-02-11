@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { redeemPointsService } from "@/services/blockchain.services";
 import {
   getPointsService,
+  getPythPriceFeed,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
@@ -21,6 +22,12 @@ function Main() {
     getPointsService()
       .then((accPoints) => {
         setAccumulatedPoints(accPoints);
+      })
+      .catch((err) => toast.error(err));
+
+    getPythPriceFeed()
+      .then(([price, exp]) => {
+        console.log(price, exp);
       })
       .catch((err) => toast.error(err));
   }, []);
