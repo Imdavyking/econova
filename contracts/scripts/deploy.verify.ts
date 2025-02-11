@@ -2,6 +2,7 @@ import hre, { ethers } from "hardhat"
 import path from "path"
 
 import EcoNovaDeployer from "../ignition/modules/EcoNovaDeployer"
+import EcoNovaCourseNFTDeployer from "../ignition/modules/EcoNovaCourseNFTDeployer"
 import { verify } from "../utils/verify"
 import dotenv from "dotenv"
 import { network } from "hardhat"
@@ -16,14 +17,17 @@ async function main() {
 
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
+    const { ecoNovaNFTDeployer } = await hre.ignition.deploy(EcoNovaCourseNFTDeployer)
 
     const ecoAddress = await ecoNovaDeployer.getAddress()
+    const ecoCourseNFTAddress = await ecoNovaNFTDeployer.getAddress()
     const botPrivateKey = process.env.PRIVATE_KEY!
     const wallet = new ethers.Wallet(botPrivateKey)
     const chainName = process.env.CHAIN_NAME!
     const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
     const chainSymbol = process.env.CHAIN_SYMBOL!
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
+    console.log(`EcoNovaCourseNFTDeployer deployed to: ${ecoCourseNFTAddress}`)
 
     const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
 
@@ -47,6 +51,7 @@ async function main() {
         process.env.ORACLE_ADDRESS!
 
     await verify(ecoAddress, [oracle, wallet.address, [...charities], verifier])
+    await verify(ecoCourseNFTAddress, [wallet.address])
 
     const blockNumber = await ethers.provider.getBlockNumber()
     const rpcUrl = (network.config as any).url

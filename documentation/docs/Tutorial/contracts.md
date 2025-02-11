@@ -71,5 +71,5 @@ Head over to faucet and get some testnet **ETH** tokens. You should see the **ET
 ### 3. Deploy
 
 ```bash
-yarn deploy:staging
+yarn deploy
 ```

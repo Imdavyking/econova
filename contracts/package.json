@@ -8,8 +8,7 @@
         "coverage": "hardhat coverage",
         "test": "yarn hardhat test",
         "test-staging": "yarn hardhat test --network testNetwork",
-        "deploy": "yarn hardhat clean && npx hardhat run scripts/deploy.verify.ts",
-        "deploy:staging": "yarn hardhat clean && npx hardhat run scripts/deploy.verify.ts --network testNetwork"
+        "deploy": "yarn hardhat clean && npx hardhat run scripts/deploy.verify.ts --network testNetwork"
     },
     "devDependencies": {
         "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
