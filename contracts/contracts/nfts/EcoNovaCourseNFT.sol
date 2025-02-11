@@ -63,7 +63,8 @@ contract EcoNovaCourseNFT is ERC721URIStorage {
      * @param level - the level of the course
      */
     function _leaf(address user, Level level) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(user, level));
+        // prevent second preimage attack
+        return keccak256(bytes.concat(keccak256(abi.encodePacked(user, level))));
     }
 
     /**
