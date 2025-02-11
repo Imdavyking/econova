@@ -12,8 +12,7 @@ import {
   getUserNFT,
   updateRoot,
 } from "../../services/blockchain.services";
-import { FaSpinner } from "react-icons/fa";
-import { use } from "react";
+import { FaSpinner } from "react-icons/fa"
 
 const quizQuestions = [
   {
