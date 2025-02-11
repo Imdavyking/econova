@@ -66,7 +66,7 @@ const QuizPage = () => {
             (attr) => attr.trait_type === "Score"
           );
           if (scoreAttr) {
-            let percentScore = scoreAttr.value.replace("%", "");
+            let percentScore = scoreAttr.value.replace("%", "").trim();
             setScore((parseInt(percentScore) / 100) * totalQuestions);
           }
         }
