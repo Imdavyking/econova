@@ -1,5 +1,8 @@
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import { MerkleTreeModel } from "../models/merkle.tree";
+import { ethers } from "ethers";
+import dotenv from "dotenv";
+dotenv.config();
 
 export async function saveMerkleRoot(newValue: [string, number]) {
   const existingMerkleTree = await MerkleTreeModel.findOne();
@@ -41,3 +44,34 @@ export async function fetchMerkleProof(address: string, level: number) {
   }
   return null;
 }
+
+// export const signTwitterPoints = async (
+//   senderAddress: string,
+//   pointToAdd: string | number,
+//   userTwitterId: string | number,
+//   tweetId: string | number
+// ) => {
+//   const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
+
+//   const wallet = new ethers.Wallet(botPrivateKey);
+
+//   const messageHash = ethers.solidityPackedKeccak256(
+//     ["address", "uint256", "uint256", "uint256", "uint256"],
+//     [senderAddress, pointToAdd, userTwitterId, tweetId, CHAIN_ID]
+//   );
+
+//   const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));
+
+//   const signature = await wallet.signMessage(ethers.getBytes(messageHash));
+
+//   const addressThatSign = ethers.recoverAddress(
+//     ethSignedMessageHash,
+//     signature
+//   );
+
+//   if (addressThatSign !== wallet.address) {
+//     throw new Error("Invalid signature");
+//   }
+
+//   return { signature, chainId: CHAIN_ID, pointToAdd };
+// };

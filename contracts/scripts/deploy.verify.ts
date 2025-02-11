@@ -54,6 +54,7 @@ async function main() {
     /** contract address */
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
+    updateEnv(ecoAddress, "backend", "CONTRACT_ADDRESS")
     /** block number */
     updateEnv(blockNumber.toString(), "indexer", "BLOCK_NUMBER")
     /** chainid */
@@ -63,6 +64,7 @@ async function main() {
     /** rpc url */
     updateEnv(rpcUrl, "frontend", "VITE_RPC_URL")
     updateEnv(rpcUrl, "indexer", "RPC_URL")
+    updateEnv(rpcUrl, "backend", "RPC_URL")
     /** block explorer url (3091) */
     updateEnv(blockExplorerUrl, "frontend", "VITE_CHAIN_BLOCKEXPLORER_URL")
     /** update chain name */
