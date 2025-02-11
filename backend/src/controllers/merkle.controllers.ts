@@ -7,6 +7,7 @@ import {
 import { ethers } from "ethers";
 import { uploadToIPFS } from "../services/lighthouse.services";
 import fs from "fs";
+import path from "path";
 
 enum Level {
   Beginner,
@@ -47,10 +48,25 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
 
     const levelName = Level[level];
 
-    const imageSrc = `./public/images/${levelName}-certificate.webp`;
+    if (!levelName) {
+      res.status(400).json({ error: "Invalid level" });
+      return;
+    }
+
+    const imageSrc = path.join(
+      __dirname,
+      "public",
+      "images",
+      `${levelName}-certificate.webp`
+    );
 
     const imageBuffer = fs.readFileSync(imageSrc);
     const imageHash = await uploadToIPFS(imageBuffer);
+
+    if (!imageHash) {
+      res.status(500).json({ error: "Failed to upload image to IPFS" });
+      return;
+    }
 
     const userNFTMetaData = {
       name: `EcoNova ${levelName} Course NFT`,
@@ -73,18 +89,15 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
           trait_type: "Score",
           value: `${scoreInPercentage}%`,
         },
-        {
-          trait_type: "Certificate ID",
-          value: "ECNFT-1001",
-        },
       ],
     };
 
     const jsonBuffer = Buffer.from(JSON.stringify(userNFTMetaData, null, 2));
 
-    const tokenURI = await uploadToIPFS(jsonBuffer);
-
-    const root = await saveMerkleRoot([address, +level]);
+    const [tokenURI, root] = await Promise.all([
+      uploadToIPFS(jsonBuffer),
+      saveMerkleRoot([address, +level]),
+    ]);
 
     const { signature, timestamp } = await signUserLevelWithRoot(
       address,
