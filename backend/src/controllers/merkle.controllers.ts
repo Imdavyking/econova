@@ -56,9 +56,6 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
       .join(__dirname, "../public", "images", `${levelName}-certificate.webp`)
       .replace("build/", "src/");
 
-    // /opt/render/project/src/backend/build/public/images/Beginner-certificate.webp
-    // /opt/render/project/src/backend/src/public/images/Beginner-certificate.webp
-
     if (!fs.existsSync(imageSrc)) {
       res
         .status(500)
