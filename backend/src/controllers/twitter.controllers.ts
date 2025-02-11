@@ -18,7 +18,7 @@ export const twitterLogin = new LoginWithTwitter({
   callbackUrl: "http://localhost:3100/twitter/callback",
 });
 
-const getUrlCallback = (req: Request) =>
+export const getUrlCallback = (req: Request) =>
   `${req.protocol}://${req.get("host")}/twitter/callback`;
 
 export const loginTwitter = async (req: Request, res: Response) => {

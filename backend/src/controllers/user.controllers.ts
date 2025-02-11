@@ -2,6 +2,7 @@
 
 import { Request, Response } from "express";
 import { LoginWithTwitter } from "../services/login.twitter.services";
+import { getUrlCallback } from "./twitter.controllers";
 export const twitterLogin = new LoginWithTwitter({
   callbackUrl: "http://localhost:3100/twitter/callback",
 });
@@ -22,6 +23,8 @@ export const getUserTwitterInfo = async (req: Request, res: Response) => {
     }
 
     const userInfo = JSON.parse(user);
+
+    twitterLogin.callbackUrl = getUrlCallback(req);
 
     const userTokenData = await twitterLogin.validateUserToken(
       userInfo.userToken,

@@ -1,13 +1,6 @@
 import mongoose from "mongoose";
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
-
-const MerkleTreeSchema = new mongoose.Schema({
-  root: String,
-  treeData: Object,
-  createdAt: { type: Date, default: Date.now },
-});
-
-const MerkleTreeModel = mongoose.model("MerkleTree", MerkleTreeSchema);
+import { MerkleTreeModel } from "../models/merkle.tree";
 
 async function storeMerkleRoot(newValue: [string, number]) {
   const existingMerkleTree = await MerkleTreeModel.findOne();
@@ -19,19 +12,15 @@ async function storeMerkleRoot(newValue: [string, number]) {
       ([_, v]) => v
     );
 
-    // Append new value while avoiding duplicates
     const uniqueValues = new Set(existingValues.map((v) => JSON.stringify(v)));
     uniqueValues.add(JSON.stringify(newValue));
 
-    // Convert back to an array
     allValues = Array.from(uniqueValues).map((v) => JSON.parse(v));
   }
 
-  // Create new Merkle tree
   const tree = StandardMerkleTree.of(allValues, ["address", "uint8"]); // Level as uint8
 
-  // Save updated tree to the database
-  await MerkleTreeModel.deleteMany(); // Clear old data
+  await MerkleTreeModel.deleteMany();
   const merkleTree = new MerkleTreeModel({
     root: tree.root,
     treeData: tree.dump(),
@@ -54,12 +43,11 @@ async function getMerkleProof(address: string, level: number) {
   return null;
 }
 
-// Example Usage
 (async () => {
   const newValue: [string, number] = [
     "0x4444444444444444444444444444444444444444",
     3,
-  ]; // Master Level
+  ];
 
   const root = await storeMerkleRoot(newValue);
   console.log("Updated Merkle Root:", root);
