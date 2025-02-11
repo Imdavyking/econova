@@ -3,12 +3,15 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract EcoNovaCourseNFT is ERC721URIStorage {
     /**
      * variables
      */
     uint256 public tokenCounter;
+    address public botAddress;
 
     /**
      * enums
@@ -38,11 +41,14 @@ contract EcoNovaCourseNFT is ERC721URIStorage {
      */
     error EcoNovaCourseNFT__NFTAlreadyClaimed();
     error EcoNovaCourseNFT__InvalidProof();
+    error EcoNovaCourseNFT__InvalidSignerForProof();
 
     constructor(
+        address _botAddress,
         bytes32[3] memory roots,
         string[3] memory uris
     ) ERC721("EcoNovaCourseNFT", "ECNFT") {
+        botAddress = _botAddress;
         tokenCounter = 1;
         merkleRoots[Level.Beginner] = roots[0];
         merkleRoots[Level.Intermediate] = roots[1];
@@ -69,7 +75,11 @@ contract EcoNovaCourseNFT is ERC721URIStorage {
      */
     function _leaf(address user, Level level) internal pure returns (bytes32) {
         // prevent second preimage attack
-        return keccak256(bytes.concat(keccak256(abi.encodePacked(user, level))));
+        return keccak256(bytes.concat(_getMessageHash(user, level)));
+    }
+
+    function _getMessageHash(address user, Level level) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(user, level));
     }
 
     /**
@@ -78,7 +88,22 @@ contract EcoNovaCourseNFT is ERC721URIStorage {
      * @param proof - the Merkle proof
      * @param metadata - additional metadata for the NFT
      */
-    function claimNFT(Level level, bytes32[] memory proof, string memory metadata) external {
+    function claimNFT(
+        Level level,
+        bytes32[] memory proof,
+        bytes memory signature,
+        string memory metadata
+    ) external {
+        bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(
+            _getMessageHash(msg.sender, level)
+        );
+
+        address signer = ECDSA.recover(ethSignedMessageHash, signature);
+
+        if (signer != botAddress) {
+            revert EcoNovaCourseNFT__InvalidSignerForProof();
+        }
+
         if (hasClaimedNFT[msg.sender][level]) {
             revert EcoNovaCourseNFT__NFTAlreadyClaimed();
         }

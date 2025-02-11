@@ -32,16 +32,19 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     uint256 public constant DONATION_POINT_PER_USD = POINT_BASIS * 2;
     uint256 public constant FIAT_DECIMALS = 10 ** 2;
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
-    address public botAddress;
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
     uint256 public constant ONE_DAY = 60 * 60 * 24;
+
+    /**
+     * variables
+     */
     uint256 public charityLength;
+    address public botAddress;
 
     /**
      * immutable variables
      */
     EcoNovaToken public immutable i_ecoNovaToken;
-
     IPyth public immutable i_pyth;
     IGroth16VerifierP3 public immutable i_groth16VerifierP3;
 
@@ -113,6 +116,12 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         emit SetOracle(oracleAddress, oracleAddress);
     }
 
+    /**
+     * @dev Deploys a new token
+     * @param name - name of the token
+     * @param symbol - symbol of the token
+     * @param initialSupply - initial supply of the token
+     */
     function deployToken(string memory name, string memory symbol, uint256 initialSupply) public {
         if (initialSupply <= 0) {
             revert EcoNovaManager__CanNotBeZero();
@@ -323,6 +332,12 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         emit Donated(caller, token, amountToSend, charityOrgIndex);
     }
 
+    /**
+     * @dev Test the hash based on the parameters
+     * @param pointToAdd points to add
+     * @param userTwitterId the twitter id of the user
+     * @param tweetId the tweet id to claim points for
+     */
     function testHash(
         uint256 pointToAdd,
         uint256 userTwitterId,

@@ -76,6 +76,7 @@ async function main() {
 
     copyABI("EcoNovaManager", "frontend/src/assets/json")
     copyABI("EcoNovaManager", "indexer/abis")
+    copyABI("EcoNovaCourseNFT", "backend/src/abis")
 }
 
 main().catch(console.error)
