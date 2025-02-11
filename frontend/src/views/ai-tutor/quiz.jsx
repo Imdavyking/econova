@@ -15,34 +15,7 @@ import {
 import { FaSpinner } from "react-icons/fa";
 import { AIAgent } from "../../agent";
 import tutorData from "@/assets/json/ai_tutor.json";
-
-const quizQuestions = [
-  {
-    question: "What is Sonic Blockchain known for?",
-    options: [
-      "High Gas Fees",
-      "Fast Transactions",
-      "Bitcoin Fork",
-      "Proof of Work",
-    ],
-    correctAnswer: "Fast Transactions",
-  },
-  {
-    question: "Which language is used for writing smart contracts on Sonic?",
-    options: ["Rust", "Solidity", "Move", "Python"],
-    correctAnswer: "Solidity",
-  },
-  {
-    question: "How does Sonic achieve low gas fees?",
-    options: [
-      "Layer 2 Scaling",
-      "Sharding",
-      "Proof of Stake",
-      "Optimized Consensus",
-    ],
-    correctAnswer: "Optimized Consensus",
-  },
-];
+import { callLLMApi } from "../../services/openai.services";
 
 const QuizPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -53,6 +26,7 @@ const QuizPage = () => {
   const [searchParams, _] = useSearchParams();
   const [nftImage, setNftImage] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [quizQuestions, setQuizQuestions] = useState([]);
 
   const levelStr = searchParams.get("level") || "Beginner";
   const Levels = {
@@ -60,29 +34,43 @@ const QuizPage = () => {
     Intermediate: 1,
     Advanced: 2,
   };
+  const totalQuestions = 5;
   useEffect(() => {
     const fetchNFTImage = async () => {
       try {
         setLoading(true);
-        const agent = new AIAgent();
         const level = Levels[levelStr];
         const topics = tutorData[levelStr]?.Topics || [];
-        const agentResponse = await agent.solveTask(
-          `Create a quiz for ${JSON.stringify(topics)}`
-        );
 
-        console.log(agentResponse);
-        const hasClaimed = await getUserClaimedNFT({ level: level });
-        if (!hasClaimed) return;
-        const tokenURI = await getUserNFT({ level: level });
+        const [, hasClaimed, tokenURI] = await Promise.all([
+          getUserClaimedNFT({ level: level }),
+          getUserNFT({ level: level }),
+        ]);
+
+        if (!hasClaimed) {
+          const agentResponse = callLLMApi({
+            task: `Create a quiz for ${JSON.stringify(topics)}`,
+          });
+          const argsArray = agentResponse["tool_calls"].map(
+            (call) => call.args
+          );
+          setQuizQuestions(argsArray);
+          return;
+        }
+
         const response = await fetch(tokenURI);
         const data = await response.json();
-        data?.attributes.forEach((attr) => {
-          if (attr.trait_type === "Score") {
-            let percentScore = attr.value.replace("%", "");
-            setScore((parseInt(percentScore) / 100) * quizQuestions.length);
+
+        if (data?.attributes) {
+          const scoreAttr = data.attributes.find(
+            (attr) => attr.trait_type === "Score"
+          );
+          if (scoreAttr) {
+            let percentScore = scoreAttr.value.replace("%", "");
+            setScore((parseInt(percentScore) / 100) * totalQuestions);
           }
-        });
+        }
+
         setNftImage(data?.image);
       } catch (error) {
         console.log(error);
@@ -90,8 +78,9 @@ const QuizPage = () => {
         setLoading(false);
       }
     };
+
     fetchNFTImage();
-  }, []);
+  }, [levelStr]);
 
   const handleAnswerSelect = (option) => {
     setSelectedAnswers({ ...selectedAnswers, [currentIndex]: option });
