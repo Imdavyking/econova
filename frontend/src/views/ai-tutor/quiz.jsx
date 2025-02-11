@@ -23,13 +23,12 @@ const QuizPage = () => {
   const [quizFinished, setQuizFinished] = useState(false);
   const [isClaimingNFT, setIsClaimingNFT] = useState(false);
   const [score, setScore] = useState(0);
-  const { levelStr } = useParams(); // Get level from URL params
+  const { levelStr } = useParams();
 
   const [nftImage, setNftImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quizQuestions, setQuizQuestions] = useState([]);
 
-  // const levelStr = searchParams.get("level") || "Beginner";
   const Levels = {
     Beginner: 0,
     Intermediate: 1,
