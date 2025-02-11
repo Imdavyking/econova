@@ -27,14 +27,13 @@ const QuizPage = () => {
 
   const [nftImage, setNftImage] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [quizQuestions, setQuizQuestions] = useState(Array(5));
 
   const Levels = {
     Beginner: 0,
     Intermediate: 1,
     Advanced: 2,
   };
-  const totalQuestions = 5;
   useEffect(() => {
     const fetchNFTImage = async () => {
       try {
@@ -49,7 +48,9 @@ const QuizPage = () => {
 
         if (!hasClaimed) {
           const agentResponse = callLLMApi({
-            task: `Create a quiz for ${JSON.stringify(topics)}`,
+            task: `Create a ${
+              quizQuestions.length
+            } questions quiz for ${JSON.stringify(topics)}`,
           });
           const argsArray = agentResponse["tool_calls"].map(
             (call) => call.args
@@ -67,7 +68,7 @@ const QuizPage = () => {
           );
           if (scoreAttr) {
             let percentScore = scoreAttr.value.replace("%", "").trim();
-            setScore((parseInt(percentScore) / 100) * totalQuestions);
+            setScore((parseInt(percentScore) / 100) * quizQuestions.length);
           }
         }
 
@@ -217,7 +218,7 @@ const QuizPage = () => {
               <h3 className="text-xl font-bold">Quiz Completed!</h3>
               <p className="mt-2">
                 Your Score: <span className="font-bold">{score}</span> /{" "}
-                {totalQuestions}
+                {quizQuestions.length}
               </p>
               {!nftImage ? (
                 <button

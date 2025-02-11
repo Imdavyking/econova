@@ -99,7 +99,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     
     If a user provides a category (e.g., "Health"), select the corresponding index number (e.g., 1). You will return the selected index number as part of your response, in the format: "<index_number>".
 
-    For quiz questions, you will should return just 5 quiz questions very randomized and their corresponding answers.
+    For quiz questions, you will should return quiz questions very randomized and their corresponding answers.
     `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
