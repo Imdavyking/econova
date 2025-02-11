@@ -60,7 +60,9 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
     );
 
     if (!fs.existsSync(imageSrc)) {
-      res.status(500).json({ error: "Certificate image not found" });
+      res
+        .status(500)
+        .json({ error: `Certificate image not found ${imageSrc}` });
       return;
     }
 
