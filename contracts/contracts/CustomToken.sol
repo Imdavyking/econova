@@ -37,6 +37,10 @@ contract CustomToken is ERC20 {
         _mint(to, amount);
     }
 
+    /**
+     * @dev Burn tokens
+     * @param amount - the amount of tokens to burn
+     */
     function burn(uint256 amount) external {
         _burn(msg.sender, amount);
     }
