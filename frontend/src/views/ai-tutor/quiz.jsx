@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
+import { signCourseLevel } from "../../services/blockchain.merkle.proof.level";
 
 const quizQuestions = [
   {
@@ -41,7 +42,6 @@ const QuizPage = () => {
   const [quizFinished, setQuizFinished] = useState(false);
   const [score, setScore] = useState(0);
   const [searchParams, _] = useSearchParams();
-  const navigate = useNavigate();
   const level = searchParams.get("level") || "Beginner";
 
   console.log("Level:", level);
@@ -50,8 +50,21 @@ const QuizPage = () => {
     setSelectedAnswers({ ...selectedAnswers, [currentIndex]: option });
   };
 
-  const onComplete = () => {
-    navigate("/ai-tutor");
+  const onComplete = async () => {
+    const courseSignature = await signCourseLevel(level);
+    const response = await fetch(`${SERVER_URL}/api/user/merkle/store`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        courseSignature,
+        level,
+        scoreInPercentage: (score / quizQuestions.length) * 100,
+      }),
+    });
+    const data = await response.json();
+    // navigate("/ai-tutor");
   };
 
   const handleNext = () => {
@@ -146,7 +159,7 @@ const QuizPage = () => {
               onClick={onComplete}
               className="mt-4 px-4 py-2 bg-green-600 rounded-md"
             >
-              Back to Topics
+              Claim NFT Certificate
             </button>
           </div>
         )}

@@ -10,6 +10,6 @@ const router = express.Router();
 router.post("/merkle/store", storeMerkleRoot);
 
 // Route to get a Merkle proof for an address and level
-router.get("/merkle/proof/:address/:level", getMerkleProof);
+// router.get("/merkle/proof/:address/:level", getMerkleProof);
 
 export default router;
