@@ -125,6 +125,10 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
             revert EcoNovaCourseNFT__ExpiredSignature();
         }
 
+        if (hasClaimedNFT[msg.sender][level]) {
+            revert EcoNovaCourseNFT__NFTAlreadyClaimed();
+        }
+
         bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(
             _getMessageHashRoot(msg.sender, level, root, timestamp)
         );
