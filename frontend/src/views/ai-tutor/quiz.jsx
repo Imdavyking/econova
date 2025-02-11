@@ -47,7 +47,7 @@ const QuizPage = () => {
         ]);
 
         if (!hasClaimed) {
-          const agentResponse = callLLMApi({
+          const agentResponse = await callLLMApi({
             task: `Create a ${
               quizQuestions.length
             } questions quiz for ${JSON.stringify(topics)}`,
@@ -143,6 +143,8 @@ const QuizPage = () => {
       toast.success("Quiz completed!");
     }
   };
+
+  console.log(quizQuestions);
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
