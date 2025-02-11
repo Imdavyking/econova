@@ -12,7 +12,9 @@ import {
   getUserNFT,
   updateRoot,
 } from "../../services/blockchain.services";
-import { FaSpinner } from "react-icons/fa"
+import { FaSpinner } from "react-icons/fa";
+import { AIAgent } from "../../agent";
+import tutorData from "@/assets/json/ai_tutor.json";
 
 const quizQuestions = [
   {
@@ -62,9 +64,17 @@ const QuizPage = () => {
     const fetchNFTImage = async () => {
       try {
         setLoading(true);
-        const hasClaimed = await getUserClaimedNFT({ level: Levels[levelStr] });
+        const agent = new AIAgent();
+        const level = Levels[levelStr];
+        const topics = tutorData[levelStr]?.Topics || [];
+        const agentResponse = await agent.solveTask(
+          `Create a quiz for ${JSON.stringify(topics)}`
+        );
+
+        console.log(agentResponse);
+        const hasClaimed = await getUserClaimedNFT({ level: level });
         if (!hasClaimed) return;
-        const tokenURI = await getUserNFT({ level: Levels[levelStr] });
+        const tokenURI = await getUserNFT({ level: level });
         const response = await fetch(tokenURI);
         const data = await response.json();
         data?.attributes.forEach((attr) => {

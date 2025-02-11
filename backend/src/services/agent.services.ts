@@ -27,7 +27,17 @@ const categorySchema = Object.values(charityCategories).map(
 
 const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
+
 const tools = {
+  quizQuestions: tool(() => undefined, {
+    name: "quizQuestions",
+    description: "Answer quiz questions.",
+    schema: z.object({
+      question: z.string().describe("The quiz question"),
+      options: z.array(z.string()).describe("The quiz options"),
+      correctAnswer: z.string().describe("The correct answer"),
+    }),
+  }),
   donate: tool(() => undefined, {
     name: "donate",
     description: "Donate funds to a specific foundation based on category.",
@@ -88,6 +98,8 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
       .join("\n")}
     
     If a user provides a category (e.g., "Health"), select the corresponding index number (e.g., 1). You will return the selected index number as part of your response, in the format: "<index_number>".
+
+    For quiz questions, you will should return just 5 quiz questions very randomized and their corresponding answers.
     `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
