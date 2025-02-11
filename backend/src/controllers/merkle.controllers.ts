@@ -49,7 +49,6 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
 
     const imageSrc = `./public/images/${levelName}-certificate.webp`;
 
-    // get image buffer
     const imageBuffer = fs.readFileSync(imageSrc);
     const imageHash = await uploadToIPFS(imageBuffer);
 
