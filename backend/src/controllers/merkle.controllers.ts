@@ -116,6 +116,7 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
       timestamp,
       signature,
       tokenURI,
+      imageHash,
     });
   } catch (error: any) {
     console.log(error);

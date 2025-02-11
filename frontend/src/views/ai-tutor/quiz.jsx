@@ -70,7 +70,7 @@ const QuizPage = () => {
           scoreInPercentage: (score / quizQuestions.length) * 100,
         }),
       });
-      const { level, root, timestamp, signature, tokenURI, proof } =
+      const { level, root, timestamp, signature, tokenURI, proof, imageHash } =
         await response.json();
 
       await updateRoot({ level, root, timestamp, signature });
