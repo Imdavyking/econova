@@ -133,6 +133,13 @@ chainId !== 31337
                           [address, level, root, chainId, timestamp]
                       )
 
+                      const verified = StandardMerkleTree.verify(
+                          root,
+                          ["address", "uint8"],
+                          [otherAccount.address, level],
+                          proof
+                      )
+
                       const botSignedMessage = ethers.hashMessage(
                           ethers.getBytes(ethSignedMessageproofHash)
                       )
@@ -146,9 +153,6 @@ chainId !== 31337
                       const ownerShipTx = await ecoNovaCourseNFTDeployer.updateBotAddress(owner)
                       await ownerShipTx.wait(1)
 
-                      expect(address).to.equal(otherAccount.address)
-                      expect(botAddress).to.equal(owner.address)
-
                       const tx = await ecoNovaCourseNFTDeployer
                           .connect(otherAccount)
                           .updateRoot(level, root, timestamp, botSignature)
@@ -157,45 +161,28 @@ chainId !== 31337
 
                       const getRoot = await ecoNovaCourseNFTDeployer.merkleRoots(level)
 
-                      console.log({ getRoot, root })
-
-                      expect(getRoot).to.equal(root)
-
-                      const claimUserNFT = await ecoNovaCourseNFTDeployer.claimNFT(
-                          level,
-                          proof,
-                          tokenURL
+                      const hasClaimedBefore = await ecoNovaCourseNFTDeployer.hasClaimedNFT(
+                          otherAccount.address,
+                          level
                       )
+
+                      const claimUserNFT = await ecoNovaCourseNFTDeployer
+                          .connect(otherAccount)
+                          .claimNFT(level, proof, tokenURL)
 
                       await claimUserNFT.wait(1)
 
-                      //   const { level, root, timestamp, signature, tokenURI, proof } =
-                      //   await response.json();
+                      const hasClaimedAfter = await ecoNovaCourseNFTDeployer.hasClaimedNFT(
+                          otherAccount.address,
+                          level
+                      )
 
-                      //   await ecoNDeployer.updateBotAddress(owner)
-                      //   const tweetId = "1883184787340349875"
-                      //   const userTwitterId = "1881029537191919616"
-                      //   const points = 100
-
-                      //   const messageHash = ethers.solidityPackedKeccak256(
-                      //       ["address", "uint256", "uint256", "uint256", "uint256"],
-                      //       [otherAccount.address, points, userTwitterId, tweetId, chainId]
-                      //   )
-
-                      //   const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash))
-
-                      //   const signature = await owner.signMessage(ethers.getBytes(messageHash))
-
-                      //   const addressThatSign = ethers.recoverAddress(
-                      //       ethSignedMessageHash,
-                      //       signature
-                      //   )
-
-                      //   const botAddress = await ecoNDeployer.botAddress()
-
-                      //   const hash = await ecoNDeployer
-                      //       .connect(otherAccount)
-                      //       .testHash(points, userTwitterId, tweetId, signature)
+                      expect(getRoot).to.equal(root)
+                      expect(address).to.equal(otherAccount.address)
+                      expect(botAddress).to.equal(owner.address)
+                      expect(verified).to.equal(true)
+                      expect(hasClaimedBefore).to.equal(false)
+                      expect(hasClaimedAfter).to.equal(true)
                   })
               })
           })
