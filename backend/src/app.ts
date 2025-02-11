@@ -46,9 +46,12 @@ app.use(
 // Database connection
 connectDB();
 
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello World!");
+});
+
 // Routes
 app.use("/api/tweets", tweetRoutes);
-// app.use("/api/llm", auth, llmRoutes);
 app.use("/api/llm", llmRoutes);
 app.use("/twitter", twitterRoutes);
 app.use("/api/user", userRoutes);
