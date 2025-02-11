@@ -51,6 +51,8 @@ const QuizPage = () => {
   const [score, setScore] = useState(0);
   const [searchParams, _] = useSearchParams();
   const [nftImage, setNftImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const levelStr = searchParams.get("level") || "Beginner";
   const Levels = {
     Beginner: 0,
@@ -60,6 +62,7 @@ const QuizPage = () => {
   useEffect(() => {
     const fetchNFTImage = async () => {
       try {
+        setLoading(true);
         const hasClaimed = await getUserClaimedNFT({ level: Levels[levelStr] });
         if (!hasClaimed) return;
         const tokenURI = await getUserNFT({ level: Levels[levelStr] });
@@ -74,6 +77,8 @@ const QuizPage = () => {
         setNftImage(data?.image);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchNFTImage();
@@ -150,103 +155,100 @@ const QuizPage = () => {
         </a>
       </h2>
 
-      <div className="max-w-xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg mt-10">
-        {!quizFinished && !nftImage ? (
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.5 }}
-            className="mt-6"
-          >
-            {/* Progress Bar */}
-            <progress
-              className="w-full h-2 rounded-full bg-gray-700 [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-blue-600"
-              value={((currentIndex + 1) / quizQuestions.length) * 100}
-              max="100"
-            ></progress>
-
-            {/* Question */}
-            <h3 className="text-lg font-semibold mt-4">
-              {quizQuestions[currentIndex].question}
-            </h3>
-
-            {/* Options */}
-            <div className="mt-4 space-y-2">
-              {quizQuestions[currentIndex].options.map((option, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleAnswerSelect(option)}
-                  className={`w-full py-2 px-4 rounded-md text-left ${
-                    selectedAnswers[currentIndex] === option
-                      ? "bg-blue-600"
-                      : "bg-gray-700 hover:bg-gray-600"
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-
-            {/* Next Button */}
-            <div className="flex justify-end mt-4">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleNext}
-                className="px-4 py-2 bg-blue-600 rounded-md"
-              >
-                {currentIndex === quizQuestions.length - 1
-                  ? "Finish Quiz"
-                  : "Next"}
-              </motion.button>
-            </div>
-          </motion.div>
-        ) : (
-          // Quiz Finished: Show Results
-          <div className="text-center mt-6">
-            <h3 className="text-xl font-bold">Quiz Completed!</h3>
-            <p className="mt-2">
-              Your Score: <span className="font-bold">{score}</span> /{" "}
-              {quizQuestions.length}
-            </p>
-            {!nftImage ? (
-              <button
-                onClick={onComplete}
-                className="mt-4 px-4 py-2 bg-green-600 rounded-md"
-                disabled={isClaimingNFT}
-              >
-                {isClaimingNFT ? (
-                  <FaSpinner className="w-5 h-5 animate-spin" />
-                ) : (
-                  "Claim NFT Certificate"
-                )}
-              </button>
-            ) : (
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold">Your NFT Certificate</h3>
-                <img
-                  src={nftImage}
-                  alt="NFT Certificate"
-                  className="mt-2 max-w-full rounded-lg shadow-lg"
-                />
-              </div>
-            )}
-            {/* <button
-              onClick={onComplete}
-              className="mt-4 px-4 py-2 bg-green-600 rounded-md"
-              disabled={isClaimingNFT}
+      {loading ? (
+        <div className="flex justify-center items-center h-screen">
+          <FaSpinner className="w-10 h-10 animate-spin text-blue-600" />
+        </div>
+      ) : (
+        <div className="max-w-xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg mt-10">
+          {!quizFinished && !nftImage ? (
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.5 }}
+              className="mt-6"
             >
-              {isClaimingNFT ? (
-                <FaSpinner className="w-5 h-5 animate-spin" />
+              {/* Progress Bar */}
+              <progress
+                className="w-full h-2 rounded-full bg-gray-700 [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-blue-600"
+                value={((currentIndex + 1) / quizQuestions.length) * 100}
+                max="100"
+              ></progress>
+
+              {/* Question */}
+              <h3 className="text-lg font-semibold mt-4">
+                {quizQuestions[currentIndex].question}
+              </h3>
+
+              {/* Options */}
+              <div className="mt-4 space-y-2">
+                {quizQuestions[currentIndex].options.map((option, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleAnswerSelect(option)}
+                    className={`w-full py-2 px-4 rounded-md text-left ${
+                      selectedAnswers[currentIndex] === option
+                        ? "bg-blue-600"
+                        : "bg-gray-700 hover:bg-gray-600"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+
+              {/* Next Button */}
+              <div className="flex justify-end mt-4">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleNext}
+                  className="px-4 py-2 bg-blue-600 rounded-md"
+                >
+                  {currentIndex === quizQuestions.length - 1
+                    ? "Finish Quiz"
+                    : "Next"}
+                </motion.button>
+              </div>
+            </motion.div>
+          ) : (
+            // Quiz Finished: Show Results
+            <div className="text-center mt-6">
+              <h3 className="text-xl font-bold">Quiz Completed!</h3>
+              <p className="mt-2">
+                Your Score: <span className="font-bold">{score}</span> /{" "}
+                {quizQuestions.length}
+              </p>
+              {!nftImage ? (
+                <button
+                  onClick={onComplete}
+                  className="mt-4 px-4 py-2 bg-green-600 rounded-md"
+                  disabled={isClaimingNFT}
+                >
+                  {isClaimingNFT ? (
+                    <FaSpinner className="w-5 h-5 animate-spin" />
+                  ) : (
+                    "Claim NFT Certificate"
+                  )}
+                </button>
               ) : (
-                "Claim NFT Certificate"
+                <div className="mt-4">
+                  <h3 className="text-lg font-semibold">
+                    Your NFT Certificate
+                  </h3>
+                  <img
+                    src={nftImage}
+                    alt="NFT Certificate"
+                    className="mt-2 max-w-full rounded-lg shadow-lg"
+                  />
+                </div>
               )}
-            </button> */}
-          </div>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
