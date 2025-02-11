@@ -5,7 +5,6 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { useSearchParams } from "react-router-dom";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
-import { useNavigate } from "react-router-dom";
 import { signCourseLevel } from "../../services/blockchain.merkle.proof.level";
 
 const quizQuestions = [
@@ -44,14 +43,17 @@ const QuizPage = () => {
   const [searchParams, _] = useSearchParams();
   const level = searchParams.get("level") || "Beginner";
 
-  console.log("Level:", level);
-
   const handleAnswerSelect = (option) => {
     setSelectedAnswers({ ...selectedAnswers, [currentIndex]: option });
   };
 
   const onComplete = async () => {
-    const courseSignature = await signCourseLevel(level);
+    const Levels = {
+      Beginner: 0,
+      Intermediate: 1,
+      Advanced: 2,
+    };
+    const courseSignature = await signCourseLevel(Levels[level]);
     const response = await fetch(`${SERVER_URL}/api/user/merkle/store`, {
       method: "POST",
       headers: {
@@ -59,7 +61,7 @@ const QuizPage = () => {
       },
       body: JSON.stringify({
         courseSignature,
-        level,
+        level: Levels[level],
         scoreInPercentage: (score / quizQuestions.length) * 100,
       }),
     });
