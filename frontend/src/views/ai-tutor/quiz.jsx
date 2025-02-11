@@ -7,6 +7,7 @@ import { APP_NAME, SERVER_URL } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { signCourseLevel } from "../../services/blockchain.merkle.proof.level";
 import { claimNFT, updateRoot } from "../../services/blockchain.services";
+import { FaSpinner } from "react-icons/fa";
 
 const quizQuestions = [
   {
@@ -40,6 +41,7 @@ const QuizPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizFinished, setQuizFinished] = useState(false);
+  const [isClaimingNFT, setIsClaimingNFT] = useState(false);
   const [score, setScore] = useState(0);
   const [searchParams, _] = useSearchParams();
   const levelStr = searchParams.get("level") || "Beginner";
@@ -50,6 +52,7 @@ const QuizPage = () => {
 
   const onComplete = async () => {
     try {
+      setIsClaimingNFT(true);
       const Levels = {
         Beginner: 0,
         Intermediate: 1,
@@ -75,6 +78,8 @@ const QuizPage = () => {
       await claimNFT({ level, proof, tokenURI });
     } catch (error) {
       toast.error(`Failed to claim NFT certificate - ${error.message}`);
+    } finally {
+      setIsClaimingNFT(false);
     }
   };
 
@@ -169,8 +174,13 @@ const QuizPage = () => {
             <button
               onClick={onComplete}
               className="mt-4 px-4 py-2 bg-green-600 rounded-md"
+              disabled={isClaimingNFT}
             >
-              Claim NFT Certificate
+              {isClaimingNFT ? (
+                <FaSpinner className="w-5 h-5 animate-spin" />
+              ) : (
+                "Claim NFT Certificate"
+              )}
             </button>
           </div>
         )}
