@@ -8,6 +8,7 @@ import dotenv from "dotenv"
 import { ETH_ADDRESS } from "../hardhat.config"
 import { charityCategories } from "../utils/charity.categories"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
+import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 
 dotenv.config()
 
@@ -87,8 +88,9 @@ chainId !== 31337
           describe("NFTCourse", function () {
               describe("Validations", function () {
                   it("Can update root with correct signature.", async function () {
-                      const { ecoNovaCourseNFTDeployer, ecoNDeployer, otherAccount, owner } =
-                          await loadFixture(deployEcoNovaDeployerFixture)
+                      const { ecoNovaCourseNFTDeployer, otherAccount, owner } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
 
                       const level = 0
 
@@ -106,8 +108,9 @@ chainId !== 31337
                       ]
 
                       const tree = StandardMerkleTree.of(allValues, ["address", "uint8"])
-
-                      let proof = []
+                      const root = tree.root
+                      const tokenURL = "ipfs://"
+                      let proof: HexString[] = []
 
                       for (const [i, v] of tree.entries()) {
                           if (v[0] === otherAccount.address && v[1] === level) {
@@ -115,6 +118,33 @@ chainId !== 31337
                               break
                           }
                       }
+
+                      const timestamp = Math.floor(Date.now() / 1000)
+
+                      const address = ethers.recoverAddress(ethSignedMessageHash, courseSignature)
+
+                      const ethSignedMessageproofHash = ethers.solidityPackedKeccak256(
+                          ["address", "uint8", "bytes32", "uint256", "uint256"],
+                          [address, level, root, chainId, timestamp]
+                      )
+
+                      const signature = await owner.signMessage(
+                          ethers.getBytes(ethSignedMessageproofHash)
+                      )
+
+                      const ownerShipTx = await ecoNovaCourseNFTDeployer.updateBotAddress(owner)
+                      await ownerShipTx.wait(1)
+
+                      console.log(signature)
+
+                      //   const tx = await ecoNovaCourseNFTDeployer.updateRoot(
+                      //       level,
+                      //       root,
+                      //       timestamp,
+                      //       signature
+                      //   )
+
+                      //   await tx.wait(1)
 
                       //   const { level, root, timestamp, signature, tokenURI, proof } =
                       //   await response.json();

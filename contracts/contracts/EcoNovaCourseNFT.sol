@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 
 contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     /**
@@ -142,6 +143,8 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
         }
 
         address signer = ECDSA.recover(ethSignedMessageHash, signature);
+
+        console.log("Signer: %s", signer);
 
         if (signer != botAddress) {
             revert EcoNovaCourseNFT__InvalidSignerForProof();
