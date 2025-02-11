@@ -41,7 +41,7 @@ const QuizPage = () => {
   const [quizFinished, setQuizFinished] = useState(false);
   const [score, setScore] = useState(0);
   const [searchParams, _] = useSearchParams();
-  const level = searchParams.get("level") || "Beginner";
+  const levelStr = searchParams.get("level") || "Beginner";
 
   const handleAnswerSelect = (option) => {
     setSelectedAnswers({ ...selectedAnswers, [currentIndex]: option });
@@ -53,7 +53,7 @@ const QuizPage = () => {
       Intermediate: 1,
       Advanced: 2,
     };
-    const courseSignature = await signCourseLevel(Levels[level]);
+    const courseSignature = await signCourseLevel(Levels[levelStr]);
     const response = await fetch(`${SERVER_URL}/api/merkle/store`, {
       method: "POST",
       headers: {
@@ -61,13 +61,13 @@ const QuizPage = () => {
       },
       body: JSON.stringify({
         courseSignature,
-        level: Levels[level],
+        level: Levels[levelStr],
         scoreInPercentage: (score / quizQuestions.length) * 100,
       }),
     });
-    const data = await response.json();
+    const { level, root, timestamp, signature, tokenURI } =
+      await response.json();
 
-    console.log(data);
     // navigate("/ai-tutor");
   };
 
