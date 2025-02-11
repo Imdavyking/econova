@@ -55,10 +55,15 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
 
     const imageSrc = path.join(
       __dirname,
-      "public",
+      "../public",
       "images",
       `${levelName}-certificate.webp`
     );
+
+    if (!fs.existsSync(imageSrc)) {
+      res.status(500).json({ error: "Certificate image not found" });
+      return;
+    }
 
     const imageBuffer = fs.readFileSync(imageSrc);
     const imageHash = await uploadToIPFS(imageBuffer);
@@ -112,8 +117,11 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
       signature,
       tokenURI,
     });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error", details: error });
+  } catch (error: any) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "Internal server error", details: error?.message });
   }
 };
 
