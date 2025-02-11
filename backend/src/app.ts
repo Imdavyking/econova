@@ -11,6 +11,7 @@ import twitterRoutes from "./routes/twitter.routes";
 import userRoutes from "./routes/user.routes";
 import cookieParser from "cookie-parser";
 import { FRONTEND_URL } from "./utils/constants";
+import merkleRoutes from "./routes/merkle.routes";
 
 dotenv.config();
 const app = express();
@@ -51,6 +52,7 @@ app.use("/api/tweets", tweetRoutes);
 app.use("/api/llm", llmRoutes);
 app.use("/twitter", twitterRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/merkle", merkleRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

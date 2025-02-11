@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { useSearchParams } from "react-router-dom";
-import { APP_NAME } from "../../utils/constants";
+import { APP_NAME, SERVER_URL } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { signCourseLevel } from "../../services/blockchain.merkle.proof.level";
 
@@ -54,7 +54,7 @@ const QuizPage = () => {
       Advanced: 2,
     };
     const courseSignature = await signCourseLevel(Levels[level]);
-    const response = await fetch(`${SERVER_URL}/api/user/merkle/store`, {
+    const response = await fetch(`${SERVER_URL}/api/merkle/store`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,6 +66,8 @@ const QuizPage = () => {
       }),
     });
     const data = await response.json();
+
+    console.log(data);
     // navigate("/ai-tutor");
   };
 
