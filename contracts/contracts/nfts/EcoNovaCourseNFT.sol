@@ -9,7 +9,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage {
      * variables
      */
     uint256 public tokenCounter;
-    bytes32 public immutable root;
+    bytes32 private root;
 
     /**
      * enums
