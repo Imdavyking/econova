@@ -22,7 +22,8 @@ export const BMI_ADVICE = "give advice on how to improve BMI, user unhealthy";
 export const GRAPH_QL_ENDPOINT = import.meta.env.VITE_GRAPH_QL_ENDPOINT;
 export const WALLET_CONNECT_PROJECT_ID = import.meta.env
   .VITE_WALLET_CONNECT_PROJECT_ID;
-
+export const NFT_COURSE_CONTRACT_ADDRESS = import.meta.env
+  .VITE_NFT_COURSE_CONTRACT_ADDRESS;
 export const TWITTER_PROFILE_URL = `https://x.com/${
   import.meta.env.VITE_TWITTER_NAME
 }`;

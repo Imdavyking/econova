@@ -58,6 +58,7 @@ async function main() {
     const blockExplorerUrl = network.config.ignition.explorerUrl!
     /** contract address */
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
+    updateEnv(ecoCourseNFTAddress, "frontend", "VITE_NFT_COURSE_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "backend", "CONTRACT_ADDRESS")
     /** block number */
