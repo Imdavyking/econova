@@ -32,6 +32,10 @@ async function main() {
     const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
 
     const verifier = await contract.i_groth16VerifierP3()
+    await verify(verifier, [])
+
+    const tokenAddress = await contract.i_ecoNovaToken()
+    await verify(tokenAddress, [])
 
     console.log(`Verifier deployed to: ${verifier}`)
 
@@ -42,6 +46,7 @@ async function main() {
     for (let i = 0; i < Number(charityLength); i++) {
         const charity = await contract.charityOrganizations(i)
         console.log(`Charity(${i}):deployed to: ${charity}`)
+        await verify(charity, [i])
         charities.push(charity)
     }
 
