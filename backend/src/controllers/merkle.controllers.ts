@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import {
   saveMerkleRoot,
-  fetchMerkleProof,
   signUserLevelWithRoot,
 } from "../services/merkle.proof.services";
 import { ethers } from "ethers";
@@ -99,7 +98,7 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
 
     const jsonBuffer = Buffer.from(JSON.stringify(userNFTMetaData, null, 2));
 
-    const [tokenURI, root] = await Promise.all([
+    const [tokenURI, { root, proof }] = await Promise.all([
       uploadToIPFS(jsonBuffer),
       saveMerkleRoot([address, +level]),
     ]);
@@ -113,6 +112,7 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
     res.json({
       level,
       root,
+      proof,
       timestamp,
       signature,
       tokenURI,
@@ -122,33 +122,5 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ error: "Internal server error", details: error?.message });
-  }
-};
-
-/**
- * Retrieves a Merkle proof for a given address and level.
- */
-export const getMerkleProof = async (req: Request, res: Response) => {
-  try {
-    const { address, level } = req.params;
-
-    if (!address || isNaN(Number(level))) {
-      res.status(400).json({ error: "Invalid input data" });
-      return;
-    }
-
-    const proof = await fetchMerkleProof(address, +level);
-
-    if (proof) {
-      res.json({ proof });
-      return;
-    }
-
-    res
-      .status(404)
-      .json({ error: "Proof not found for this address and level" });
-    return;
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error", details: error });
   }
 };

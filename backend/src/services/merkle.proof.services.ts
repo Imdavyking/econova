@@ -8,6 +8,7 @@ dotenv.config();
 export async function saveMerkleRoot(newValue: [string, number]) {
   const existingMerkleTree = await MerkleTreeModel.findOne();
   let allValues: [string, number][] = [newValue];
+  let proof = null;
 
   if (existingMerkleTree) {
     const existingTree = StandardMerkleTree.load(existingMerkleTree.treeData);
@@ -22,7 +23,12 @@ export async function saveMerkleRoot(newValue: [string, number]) {
   }
 
   const tree = StandardMerkleTree.of(allValues, ["address", "uint8"]); // Level as uint8
-
+  for (const [i, v] of tree.entries()) {
+    if (v[0] === newValue[0] && v[1] === newValue[1]) {
+      proof = tree.getProof(i);
+      break;
+    }
+  }
   await MerkleTreeModel.deleteMany();
   const merkleTree = new MerkleTreeModel({
     root: tree.root,
@@ -30,10 +36,13 @@ export async function saveMerkleRoot(newValue: [string, number]) {
   });
   await merkleTree.save();
 
-  return tree.root;
+  return {
+    root: tree.root,
+    proof,
+  };
 }
 
-export async function fetchMerkleProof(address: string, level: number) {
+async function fetchMerkleProof(address: string, level: number) {
   const merkleTree = await MerkleTreeModel.findOne();
   if (!merkleTree) return null;
 

@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { APP_NAME, SERVER_URL } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { signCourseLevel } from "../../services/blockchain.merkle.proof.level";
+import { claimNFT, updateRoot } from "../../services/blockchain.services";
 
 const quizQuestions = [
   {
@@ -48,29 +49,33 @@ const QuizPage = () => {
   };
 
   const onComplete = async () => {
-    const Levels = {
-      Beginner: 0,
-      Intermediate: 1,
-      Advanced: 2,
-    };
-    const courseSignature = await signCourseLevel(Levels[levelStr]);
-    const response = await fetch(`${SERVER_URL}/api/merkle/store`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        courseSignature,
-        level: Levels[levelStr],
-        scoreInPercentage: (score / quizQuestions.length) * 100,
-      }),
-    });
-    const { level, root, timestamp, signature, tokenURI } =
-      await response.json();
+    try {
+      const Levels = {
+        Beginner: 0,
+        Intermediate: 1,
+        Advanced: 2,
+      };
+      const courseSignature = await signCourseLevel(Levels[levelStr]);
+      const response = await fetch(`${SERVER_URL}/api/merkle/store`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          courseSignature,
+          level: Levels[levelStr],
+          scoreInPercentage: (score / quizQuestions.length) * 100,
+        }),
+      });
+      const { level, root, timestamp, signature, tokenURI, proof } =
+        await response.json();
 
-      
+      await updateRoot({ level, root, timestamp, signature });
 
-    // navigate("/ai-tutor");
+      await claimNFT({ level, proof, tokenURI });
+    } catch (error) {
+      toast.error(`Failed to claim NFT certificate - ${error.message}`);
+    }
   };
 
   const handleNext = () => {

@@ -1,5 +1,6 @@
 /** @format */
 import abi from "@/assets/json/abi.json";
+import nftCourseAbi from "@/assets/json/course-nft.json";
 import { BrowserProvider, ethers } from "ethers";
 import {
   BMI_ADVICE,
@@ -60,7 +61,6 @@ async function switchOrAddChain(ethProvider) {
 
 export const getSigner = async () => {
   const provider = new BrowserProvider(window.ethereum);
-  let objectNetwork = await provider.getNetwork();
   await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
 };
@@ -87,10 +87,10 @@ const getNFTCourseContract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider);
-  return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, abi, signer);
+  return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, nftCourseAbi, signer);
 };
 
-export const adviceOnHealthService = async ({ isHealthy, advice }) => {
+export const adviceOnHealthService = async ({ advice }) => {
   return advice;
 };
 
@@ -211,15 +211,28 @@ export const getPointsService = async () => {
     throw error;
   }
 };
-export const updateRoot = async () => {
+export const updateRoot = async ({ level, root, timestamp, signature }) => {
   try {
-    const signer = await getSigner();
-    const manager = await getContract();
+    const manager = await getNFTCourseContract();
 
-    const userAddress = await signer.getAddress();
+    const tx = await manager.updateRoot(level, root, timestamp, signature, {
+      gasLimit: 500000,
+    });
+    await tx.wait(1);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
-    const points = await manager.userPoints(userAddress);
-    return Number(points[0]);
+export const claimNFT = async ({ level, proof, tokenURI }) => {
+  try {
+    const manager = await getNFTCourseContract();
+
+    const tx = await manager.claimNFT(level, proof, tokenURI, {
+      gasLimit: 500000,
+    });
+    await tx.wait(1);
   } catch (error) {
     console.log(error);
     throw error;
