@@ -22,7 +22,7 @@ export async function saveMerkleRoot(newValue: [string, number]) {
     allValues = Array.from(uniqueValues).map((v) => JSON.parse(v));
   }
 
-  const tree = StandardMerkleTree.of(allValues, ["address", "uint8"]); // Level as uint8
+  const tree = StandardMerkleTree.of(allValues, ["address", "uint8"]);
   for (const [i, v] of tree.entries()) {
     if (v[0] === newValue[0] && v[1] === newValue[1]) {
       proof = tree.getProof(i);

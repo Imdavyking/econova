@@ -73,9 +73,9 @@ const QuizPage = () => {
       const { level, root, timestamp, signature, tokenURI, proof } =
         await response.json();
 
-      await updateRoot({ level, root, timestamp, signature });
+      // await updateRoot({ level, root, timestamp, signature });
 
-      await claimNFT({ level, proof, tokenURI });
+      // await claimNFT({ level, proof, tokenURI });
     } catch (error) {
       toast.error(`Failed to claim NFT certificate - ${error.message}`);
     } finally {
