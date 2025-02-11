@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract EcoNovaToken is ERC20 {
     address public immutable OWNER;
-    uint256 public constant MAX_SUPPLY = 21_000_000 * 10 ** 18; // 1 million tokens with 18 decimals
+    uint256 public immutable MAX_SUPPLY = 21_000_000 * 10 ** decimals();
 
     error EcoNovaToken__NotOwner();
     error EcoNovaToken__MaxSupplyExceeded();
