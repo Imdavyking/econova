@@ -92,15 +92,6 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     }
 
     /**
-     * @notice Get the message hash for a user and level
-     * @param user - the user to mark the completion for
-     * @param level - the level of the course
-     */
-    function _getMessageHash(address user, Level level) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(user, level));
-    }
-
-    /**
      * @notice Get the message hash root for a user, level, and root
      * @param user - the user to mark the completion for
      * @param level - the level of the course
