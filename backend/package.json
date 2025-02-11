@@ -30,6 +30,7 @@
     "@langchain/core": "^0.3.27",
     "@langchain/google-genai": "^0.1.6",
     "@langchain/openai": "^0.3.16",
+    "@openzeppelin/merkle-tree": "^1.0.7",
     "axios": "^1.7.9",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -43,12 +44,12 @@
     "langchain": "^0.3.10",
     "login-with-twitter": "^1.2.4",
     "mongoose": "^8.9.5",
+    "nodemon": "^3.1.4",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.80.1",
     "simple-get": "^4.0.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "nodemon": "^3.1.4",
     "zod": "^3.24.1"
   },
   "_moduleDirectories": [
