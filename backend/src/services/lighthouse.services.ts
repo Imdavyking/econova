@@ -2,12 +2,10 @@ import lighthouse from "@lighthouse-web3/sdk";
 import dotenv from "dotenv";
 dotenv.config();
 
-const lightHouseApiKey = process.env.LIGHTHOUSE_API_KEY!;
-export const uploadJSONMetaData = async (jsonMetaData: string) => {
-  const uploadResponse = await lighthouse.upload(
+export const uploadJSONMetaData = async (jsonMetaData: Buffer) => {
+  const uploadResponse = await lighthouse.uploadBuffer(
     jsonMetaData,
-    lightHouseApiKey,
-    undefined
+    process.env.LIGHTHOUSE_API_KEY!
   );
   return `https://gateway.lighthouse.storage/ipfs/${uploadResponse.data.Hash}`;
 };

@@ -14,9 +14,15 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
     const {
       courseSignature,
       level,
-    }: { courseSignature: string; level: number } = req.body;
+      scoreInPercentage,
+    }: { courseSignature: string; level: number; scoreInPercentage: number } =
+      req.body;
 
-    if (!courseSignature || level === undefined) {
+    if (
+      !courseSignature ||
+      level === undefined ||
+      scoreInPercentage === undefined
+    ) {
       res.status(400).json({ error: "Invalid input data" });
       return;
     }
@@ -31,8 +37,6 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
       ethSignedMessageHash,
       courseSignature
     );
-
-    const treeRoot = await saveMerkleRoot([address, +level]);
 
     const userNFTMetaData = {
       name: "EcoNova Beginner Course NFT",
@@ -54,7 +58,7 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
         },
         {
           trait_type: "Score",
-          value: "95%",
+          value: `${scoreInPercentage}%`,
         },
         {
           trait_type: "Certificate ID",
@@ -65,8 +69,21 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
 
     const jsonBuffer = Buffer.from(JSON.stringify(userNFTMetaData, null, 2));
 
-    uploadJSONMetaData(JSON.stringify(userNFT));
+    const tokenURI = await uploadJSONMetaData(jsonBuffer);
 
+    const treeRoot = await saveMerkleRoot([address, +level]);
+
+    //   function updateRoot(Level level, bytes32 root, bytes memory signature) external {
+    //     bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(
+    //         _getMessageHash(msg.sender, level)
+    //     );
+    //     address signer = ECDSA.recover(ethSignedMessageHash, signature);
+
+    //     if (signer != botAddress) {
+    //         revert EcoNovaCourseNFT__InvalidSignerForProof();
+    //     }
+    //     merkleRoots[level] = root;
+    // }
     res.json({ root: treeRoot, message: "Merkle root updated successfully" });
   } catch (error) {
     res.status(500).json({ error: "Internal server error", details: error });

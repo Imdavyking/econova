@@ -2,6 +2,7 @@ import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import { MerkleTreeModel } from "../models/merkle.tree";
 import { ethers } from "ethers";
 import dotenv from "dotenv";
+import { CHAIN_ID } from "../utils/constants";
 dotenv.config();
 
 export async function saveMerkleRoot(newValue: [string, number]) {
@@ -44,34 +45,32 @@ export async function fetchMerkleProof(address: string, level: number) {
   }
   return null;
 }
+export const signUserLevelWithRoot = async (
+  senderAddress: string,
+  level: number,
+  root: string
+) => {
+  const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
+  const wallet = new ethers.Wallet(botPrivateKey);
 
-// export const signTwitterPoints = async (
-//   senderAddress: string,
-//   pointToAdd: string | number,
-//   userTwitterId: string | number,
-//   tweetId: string | number
-// ) => {
-//   const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
+  const timestamp = Math.floor(Date.now() / 1000);
 
-//   const wallet = new ethers.Wallet(botPrivateKey);
+  const messageHash = ethers.solidityPackedKeccak256(
+    ["address", "uint8", "bytes32", "uint256", "uint256"],
+    [senderAddress, level, root, CHAIN_ID, timestamp]
+  );
 
-//   const messageHash = ethers.solidityPackedKeccak256(
-//     ["address", "uint256", "uint256", "uint256", "uint256"],
-//     [senderAddress, pointToAdd, userTwitterId, tweetId, CHAIN_ID]
-//   );
+  const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));
+  const signature = await wallet.signMessage(ethers.getBytes(messageHash));
 
-//   const ethSignedMessageHash = ethers.hashMessage(ethers.getBytes(messageHash));
+  const addressThatSign = ethers.recoverAddress(
+    ethSignedMessageHash,
+    signature
+  );
 
-//   const signature = await wallet.signMessage(ethers.getBytes(messageHash));
+  if (addressThatSign !== wallet.address) {
+    throw new Error("Invalid signature");
+  }
 
-//   const addressThatSign = ethers.recoverAddress(
-//     ethSignedMessageHash,
-//     signature
-//   );
-
-//   if (addressThatSign !== wallet.address) {
-//     throw new Error("Invalid signature");
-//   }
-
-//   return { signature, chainId: CHAIN_ID, pointToAdd };
-// };
+  return { signature, chainId: CHAIN_ID, timestamp };
+};

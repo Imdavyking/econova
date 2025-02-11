@@ -13,6 +13,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
      */
     uint256 public tokenCounter;
     address public botAddress;
+    uint256 public TIMESTAMP_EXPIRY = 120;
 
     /**
      * enums
@@ -27,9 +28,8 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
      * mappings
      */
     mapping(address => mapping(Level => bool)) public hasClaimedNFT;
-    mapping(Level => string) public levelTokenURIs;
-    mapping(Level => bytes32) private merkleRoots; // Separate Merkle roots per level
-    mapping(uint256 => string) public tokenMetadata; // Store additional NFT metadata
+    mapping(Level => bytes32) private merkleRoots;
+    mapping(bytes32 => bool) private usedSignatures;
 
     /**
      * events
@@ -46,21 +46,12 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     error EcoNovaCourseNFT__InvalidSignerForProof();
     error EcoNovaManager__AddressCannotBeZero();
     error EcoNovaManager__MisMatchedArrayLength();
+    error EcoNovaCourseNFT__ExpiredSignature();
+    error EcoNovaCourseNFT__SignatureAlreadyUsed();
 
-    constructor(
-        address _botAddress,
-        bytes32[3] memory roots,
-        string[3] memory uris
-    ) ERC721("EcoNovaCourseNFT", "ECNFT") Ownable(msg.sender) {
+    constructor(address _botAddress) ERC721("EcoNovaCourseNFT", "ECNFT") Ownable(msg.sender) {
         botAddress = _botAddress;
         tokenCounter = 1;
-        merkleRoots[Level.Beginner] = roots[0];
-        merkleRoots[Level.Intermediate] = roots[1];
-        merkleRoots[Level.Advanced] = roots[2];
-
-        levelTokenURIs[Level.Beginner] = uris[0];
-        levelTokenURIs[Level.Intermediate] = uris[1];
-        levelTokenURIs[Level.Advanced] = uris[2];
     }
 
     /**
@@ -81,8 +72,12 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
      * @param level - the level of the course
      * @param proof - the Merkle proof
      */
-    function _verifyProof(Level level, bytes32[] memory proof) internal view returns (bool) {
-        return MerkleProof.verify(proof, merkleRoots[level], _leaf(msg.sender, level));
+    function _verifyProof(
+        address user,
+        Level level,
+        bytes32[] memory proof
+    ) internal view returns (bool) {
+        return MerkleProof.verify(proof, merkleRoots[level], _leaf(user, level));
     }
 
     /**
@@ -105,86 +100,112 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     }
 
     /**
+     * @notice Get the message hash root for a user, level, and root
+     * @param user - the user to mark the completion for
+     * @param level - the level of the course
+     * @param timestamp - the timestamp of the message
+     * @param root - the Merkle root
+     */
+
+    function _getMessageHashRoot(
+        address user,
+        Level level,
+        bytes32 root,
+        uint256 timestamp
+    ) internal view returns (bytes32) {
+        return keccak256(abi.encodePacked(user, level, root, block.chainid, timestamp));
+    }
+
+    /**
      * @notice Update the Merkle root for a level
      * @param level - the level of the course
      * @param root - the new Merkle root
+     * @param timestamp - the timestamp of the message
      * @param signature - the signature of the message hash
      */
-    function updateRoot(Level level, bytes32 root, bytes memory signature) external {
+    function updateRoot(
+        Level level,
+        bytes32 root,
+        uint256 timestamp,
+        bytes memory signature
+    ) external {
+        if (block.timestamp > timestamp + TIMESTAMP_EXPIRY) {
+            revert EcoNovaCourseNFT__ExpiredSignature();
+        }
+
         bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(
-            _getMessageHash(msg.sender, level)
+            _getMessageHashRoot(msg.sender, level, root, timestamp)
         );
+
+        if (usedSignatures[ethSignedMessageHash]) {
+            revert EcoNovaCourseNFT__SignatureAlreadyUsed();
+        }
+
         address signer = ECDSA.recover(ethSignedMessageHash, signature);
 
         if (signer != botAddress) {
             revert EcoNovaCourseNFT__InvalidSignerForProof();
         }
+
         merkleRoots[level] = root;
+        usedSignatures[ethSignedMessageHash] = true; // Mark this signature as used
     }
 
     /**
      * @notice Claim an NFT for completing a course
      * @param level - the level of the course
      * @param proof - the Merkle proof
-     * @param metadata - additional metadata for the NFT
+     * @param tokenURI  - the token URI for the NFT
      */
-    function claimNFT(Level level, bytes32[] memory proof, string memory metadata) external {
+    function claimNFT(Level level, bytes32[] memory proof, string memory tokenURI) external {
         if (hasClaimedNFT[msg.sender][level]) {
             revert EcoNovaCourseNFT__NFTAlreadyClaimed();
         }
 
-        if (!_verifyProof(level, proof)) {
+        if (!_verifyProof(msg.sender, level, proof)) {
             revert EcoNovaCourseNFT__InvalidProof();
         }
 
         uint256 newTokenId = tokenCounter;
         _mint(msg.sender, newTokenId);
-        _setTokenURI(newTokenId, levelTokenURIs[level]);
+        _setTokenURI(newTokenId, tokenURI);
 
         hasClaimedNFT[msg.sender][level] = true;
-        tokenMetadata[newTokenId] = metadata;
         tokenCounter++;
 
         emit NFTClaimed(msg.sender, level, newTokenId);
     }
 
     /**
-     * @notice Claim multiple NFTs for completing multiple courses in one transaction
-     * @param levels - the levels of the courses
-     * @param proofs - the Merkle proofs for each level
-     * @param metadataList - additional metadata for each NFT
+     * @notice Claim multiple NFTs for completing multiple courses
+     * @param levels - the levels of the course
+     * @param proofs - the Merkle proofs
+     * @param tokenURIs - the token URIs for the NFTs
      */
-    function batchClaimNFT(
+    function claimMultipleNFTs(
         Level[] memory levels,
         bytes32[][] memory proofs,
-        string[] memory metadataList
+        string[] memory tokenURIs
     ) external {
-        if (levels.length != proofs.length || levels.length != metadataList.length) {
+        if (levels.length != proofs.length || levels.length != tokenURIs.length) {
             revert EcoNovaManager__MisMatchedArrayLength();
         }
 
         uint256[] memory newTokenIds = new uint256[](levels.length);
-
         for (uint256 i = 0; i < levels.length; i++) {
-            Level level = levels[i];
-
-            if (hasClaimedNFT[msg.sender][level]) {
+            if (hasClaimedNFT[msg.sender][levels[i]]) {
                 revert EcoNovaCourseNFT__NFTAlreadyClaimed();
             }
-
-            if (!_verifyProof(level, proofs[i])) {
+            if (!_verifyProof(msg.sender, levels[i], proofs[i])) {
                 revert EcoNovaCourseNFT__InvalidProof();
             }
 
-            uint256 newTokenId = tokenCounter;
+            uint256 newTokenId = tokenCounter++;
             _mint(msg.sender, newTokenId);
-            _setTokenURI(newTokenId, levelTokenURIs[level]);
+            _setTokenURI(newTokenId, tokenURIs[i]);
 
-            hasClaimedNFT[msg.sender][level] = true;
-            tokenMetadata[newTokenId] = metadataList[i];
+            hasClaimedNFT[msg.sender][levels[i]] = true;
             newTokenIds[i] = newTokenId;
-
-            tokenCounter++;
         }
 
         emit BatchNFTClaimed(msg.sender, levels, newTokenIds);
