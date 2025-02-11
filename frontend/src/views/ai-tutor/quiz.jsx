@@ -42,7 +42,7 @@ const QuizPage = () => {
         const level = Levels[levelStr];
         const topics = tutorData[levelStr]?.Topics || [];
 
-        const [, hasClaimed, tokenURI] = await Promise.all([
+        const [hasClaimed, tokenURI] = await Promise.all([
           getUserClaimedNFT({ level: level }),
           getUserNFT({ level: level }),
         ]);
