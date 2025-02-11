@@ -9,14 +9,35 @@ const MerkleTreeSchema = new mongoose.Schema({
 
 const MerkleTreeModel = mongoose.model("MerkleTree", MerkleTreeSchema);
 
-async function storeMerkleRoot(values: (string | number)[][]) {
-  const tree = StandardMerkleTree.of(values, ["address", "uint8"]); // Level as uint8
+async function storeMerkleRoot(newValue: [string, number]) {
+  const existingMerkleTree = await MerkleTreeModel.findOne();
+  let allValues: [string, number][] = [newValue];
+
+  if (existingMerkleTree) {
+    const existingTree = StandardMerkleTree.load(existingMerkleTree.treeData);
+    const existingValues = Array.from(existingTree.entries()).map(
+      ([_, v]) => v
+    );
+
+    // Append new value while avoiding duplicates
+    const uniqueValues = new Set(existingValues.map((v) => JSON.stringify(v)));
+    uniqueValues.add(JSON.stringify(newValue));
+
+    // Convert back to an array
+    allValues = Array.from(uniqueValues).map((v) => JSON.parse(v));
+  }
+
+  // Create new Merkle tree
+  const tree = StandardMerkleTree.of(allValues, ["address", "uint8"]); // Level as uint8
+
+  // Save updated tree to the database
   await MerkleTreeModel.deleteMany(); // Clear old data
   const merkleTree = new MerkleTreeModel({
     root: tree.root,
     treeData: tree.dump(),
   });
   await merkleTree.save();
+
   return tree.root;
 }
 
@@ -34,20 +55,20 @@ async function getMerkleProof(address: string, level: number) {
 }
 
 // Example Usage
-// (async () => {
-//   const values = [
-//     ["0x1111111111111111111111111111111111111111", 0], // Beginner
-//     ["0x2222222222222222222222222222222222222222", 1], // Intermediate
-//   ];
+(async () => {
+  const newValue: [string, number] = [
+    "0x4444444444444444444444444444444444444444",
+    3,
+  ]; // Master Level
 
-//   const root = await storeMerkleRoot(values);
-//   console.log("Stored Merkle Root:", root);
+  const root = await storeMerkleRoot(newValue);
+  console.log("Updated Merkle Root:", root);
 
-//   const proof = await getMerkleProof(
-//     "0x1111111111111111111111111111111111111111",
-//     0
-//   );
-//   console.log("Proof for Beginner Level:", proof);
+  const proof = await getMerkleProof(
+    "0x4444444444444444444444444444444444444444",
+    3
+  );
+  console.log("Proof for Master Level:", proof);
 
-//   mongoose.connection.close();
-// })();
+  mongoose.connection.close();
+})();
