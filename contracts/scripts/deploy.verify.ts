@@ -80,8 +80,9 @@ async function main() {
     /** update chain currency name */
     updateEnv(chainSymbol, "frontend", "VITE_CHAIN_SYMBOL")
 
-    copyABI("EcoNovaManager", "frontend/src/assets/json")
-    copyABI("EcoNovaManager", "indexer/abis")
+    copyABI("EcoNovaManager", "frontend/src/assets/json", null)
+    copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
+    copyABI("EcoNovaManager", "indexer/abis", null)
 }
 
 main().catch(console.error)

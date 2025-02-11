@@ -68,6 +68,8 @@ const QuizPage = () => {
     const { level, root, timestamp, signature, tokenURI } =
       await response.json();
 
+      
+
     // navigate("/ai-tutor");
   };
 

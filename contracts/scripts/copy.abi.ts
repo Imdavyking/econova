@@ -1,13 +1,16 @@
 import fs from "fs"
 import path from "path"
 
-export function copyABI(contractName: string, destinationFolder: string) {
+export function copyABI(contractName: string, destinationFolder: string, abiName: string | null) {
     try {
         const abiPath = path.join(
             __dirname,
             `../artifacts/contracts/${contractName}.sol/${contractName}.json`
         )
-        const destPath = path.join(__dirname, `../../${destinationFolder}/abi.json`)
+        const destPath = path.join(
+            __dirname,
+            `../../${destinationFolder}/${abiName ?? "abi"}.json`
+        )
 
         if (!fs.existsSync(abiPath)) {
             console.error(`❌ ABI file not found: ${abiPath}`)

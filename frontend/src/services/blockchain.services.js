@@ -12,6 +12,7 @@ import {
   CONTRACT_ADDRESS,
   FAILED_KEY,
   FIAT_DECIMALS,
+  NFT_COURSE_CONTRACT_ADDRESS,
 } from "../utils/constants";
 import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
@@ -75,6 +76,18 @@ const getContract = async () => {
 
   await switchOrAddChain(signer.provider);
   return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+};
+const getNFTCourseContract = async () => {
+  if (!window.ethereum) {
+    toast.info(
+      "MetaMask is not installed. Please install it to use this feature."
+    );
+    return;
+  }
+  const signer = await getSigner();
+
+  await switchOrAddChain(signer.provider);
+  return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, abi, signer);
 };
 
 export const adviceOnHealthService = async ({ isHealthy, advice }) => {
@@ -185,6 +198,20 @@ export const deployTokenService = async ({ name, symbol, initialSupply }) => {
 };
 
 export const getPointsService = async () => {
+  try {
+    const signer = await getSigner();
+    const manager = await getContract();
+
+    const userAddress = await signer.getAddress();
+
+    const points = await manager.userPoints(userAddress);
+    return Number(points[0]);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+export const updateRoot = async () => {
   try {
     const signer = await getSigner();
     const manager = await getContract();
