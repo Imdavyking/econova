@@ -72,5 +72,5 @@ export const signUserLevelWithRoot = async (
     throw new Error("Invalid signature");
   }
 
-  return { signature, chainId: CHAIN_ID, timestamp };
+  return { signature, timestamp };
 };

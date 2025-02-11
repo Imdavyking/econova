@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   saveMerkleRoot,
   fetchMerkleProof,
+  signUserLevelWithRoot,
 } from "../services/merkle.proof.services";
 import { ethers } from "ethers";
 import { uploadJSONMetaData } from "../services/lighthouse.services";
@@ -71,20 +72,21 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
 
     const tokenURI = await uploadJSONMetaData(jsonBuffer);
 
-    const treeRoot = await saveMerkleRoot([address, +level]);
+    const root = await saveMerkleRoot([address, +level]);
 
-    //   function updateRoot(Level level, bytes32 root, bytes memory signature) external {
-    //     bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(
-    //         _getMessageHash(msg.sender, level)
-    //     );
-    //     address signer = ECDSA.recover(ethSignedMessageHash, signature);
+    const { signature, timestamp } = await signUserLevelWithRoot(
+      address,
+      +level,
+      root
+    );
 
-    //     if (signer != botAddress) {
-    //         revert EcoNovaCourseNFT__InvalidSignerForProof();
-    //     }
-    //     merkleRoots[level] = root;
-    // }
-    res.json({ root: treeRoot, message: "Merkle root updated successfully" });
+    res.json({
+      level,
+      root,
+      timestamp,
+      signature,
+      tokenURI,
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error", details: error });
   }
