@@ -5,8 +5,14 @@ import {
   signUserLevelWithRoot,
 } from "../services/merkle.proof.services";
 import { ethers } from "ethers";
-import { uploadJSONMetaData } from "../services/lighthouse.services";
+import { uploadToIPFS } from "../services/lighthouse.services";
+import fs from "fs";
 
+enum Level {
+  Beginner,
+  Intermediate,
+  Advanced,
+}
 /**
  * Stores a new value in the Merkle tree and updates the root.
  */
@@ -39,15 +45,22 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
       courseSignature
     );
 
+    const levelName = Level[level];
+
+    const imageSrc = `./public/images/${levelName}-certificate.webp`;
+
+    // get image buffer
+    const imageBuffer = fs.readFileSync(imageSrc);
+    const imageHash = await uploadToIPFS(imageBuffer);
+
     const userNFTMetaData = {
-      name: "EcoNova Beginner Course NFT",
-      description:
-        "This NFT certifies that the holder has successfully completed the EcoNova Beginner Course on blockchain and DeFAI.",
-      image: "ipfs://QmExampleHash123456789/image.png",
+      name: `EcoNova ${levelName} Course NFT`,
+      description: `This NFT certifies that the holder has successfully completed the EcoNova ${levelName} Course on blockchain and DeFAI.`,
+      image: imageHash,
       attributes: [
         {
           trait_type: "Course Level",
-          value: "Beginner",
+          value: levelName,
         },
         {
           trait_type: "Completion Date",
@@ -70,13 +83,13 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
 
     const jsonBuffer = Buffer.from(JSON.stringify(userNFTMetaData, null, 2));
 
-    const tokenURI = await uploadJSONMetaData(jsonBuffer);
+    const tokenURI = await uploadToIPFS(jsonBuffer);
 
     const root = await saveMerkleRoot([address, +level]);
 
     const { signature, timestamp } = await signUserLevelWithRoot(
       address,
-      +level,
+      level,
       root
     );
 
