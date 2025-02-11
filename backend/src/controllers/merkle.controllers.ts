@@ -34,7 +34,7 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
       return;
     }
 
-    const messageHash = ethers.solidityPackedKeccak256(["uint256"], [level]);
+    const messageHash = ethers.solidityPackedKeccak256(["uint8"], [level]);
 
     const ethSignedMessageHash = ethers.hashMessage(
       ethers.getBytes(messageHash)
