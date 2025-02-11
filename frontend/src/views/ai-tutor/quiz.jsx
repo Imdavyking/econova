@@ -65,13 +65,13 @@ const QuizPage = () => {
         const tokenURI = await getUserNFT({ level: Levels[levelStr] });
         const response = await fetch(tokenURI);
         const data = await response.json();
-        data.attributes.forEach((attr) => {
+        data?.attributes.forEach((attr) => {
           if (attr.trait_type === "Score") {
             let percentScore = attr.value.replace("%", "");
             setScore((parseInt(percentScore) / 100) * quizQuestions.length);
           }
         });
-        setNftImage(data.image);
+        setNftImage(data?.image);
       } catch (error) {
         console.log(error);
       }
