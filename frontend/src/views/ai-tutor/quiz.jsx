@@ -217,7 +217,7 @@ const QuizPage = () => {
               <h3 className="text-xl font-bold">Quiz Completed!</h3>
               <p className="mt-2">
                 Your Score: <span className="font-bold">{score}</span> /{" "}
-                {quizQuestions.length}
+                {totalQuestions}
               </p>
               {!nftImage ? (
                 <button
