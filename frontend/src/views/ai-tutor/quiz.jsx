@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
@@ -6,8 +6,14 @@ import { useSearchParams } from "react-router-dom";
 import { APP_NAME, SERVER_URL } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { signCourseLevel } from "../../services/blockchain.merkle.proof.level";
-import { claimNFT, updateRoot } from "../../services/blockchain.services";
+import {
+  claimNFT,
+  getUserClaimedNFT,
+  getUserNFT,
+  updateRoot,
+} from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
+import { use } from "react";
 
 const quizQuestions = [
   {
@@ -44,7 +50,34 @@ const QuizPage = () => {
   const [isClaimingNFT, setIsClaimingNFT] = useState(false);
   const [score, setScore] = useState(0);
   const [searchParams, _] = useSearchParams();
+  const [nftImage, setNftImage] = useState(null);
   const levelStr = searchParams.get("level") || "Beginner";
+  const Levels = {
+    Beginner: 0,
+    Intermediate: 1,
+    Advanced: 2,
+  };
+  useEffect(() => {
+    const fetchNFTImage = async () => {
+      try {
+        const hasClaimed = await getUserClaimedNFT({ level: Levels[levelStr] });
+        if (!hasClaimed) return;
+        const tokenURI = await getUserNFT({ level: Levels[levelStr] });
+        const response = await fetch(tokenURI);
+        const data = await response.json();
+        data.attributes.forEach((attr) => {
+          if (attr.trait_type === "Score") {
+            let percentScore = attr.value.replace("%", "");
+            setScore((parseInt(percentScore) / 100) * quizQuestions.length);
+          }
+        });
+        setNftImage(data.image);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchNFTImage();
+  }, []);
 
   const handleAnswerSelect = (option) => {
     setSelectedAnswers({ ...selectedAnswers, [currentIndex]: option });
@@ -53,11 +86,7 @@ const QuizPage = () => {
   const onComplete = async () => {
     try {
       setIsClaimingNFT(true);
-      const Levels = {
-        Beginner: 0,
-        Intermediate: 1,
-        Advanced: 2,
-      };
+
       const courseSignature = await signCourseLevel(Levels[levelStr]);
       const response = await fetch(`${SERVER_URL}/api/merkle/store`, {
         method: "POST",
@@ -83,6 +112,8 @@ const QuizPage = () => {
       await updateRoot({ level, root, timestamp, signature });
 
       await claimNFT({ level, proof, tokenURI });
+
+      setNftImage(ImageUrl);
 
       toast.success("NFT certificate claimed successfully!");
     } catch (error) {
@@ -120,7 +151,7 @@ const QuizPage = () => {
       </h2>
 
       <div className="max-w-xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg mt-10">
-        {!quizFinished ? (
+        {!quizFinished && !nftImage ? (
           <motion.div
             key={currentIndex}
             initial={{ opacity: 0, x: 50 }}
@@ -180,7 +211,29 @@ const QuizPage = () => {
               Your Score: <span className="font-bold">{score}</span> /{" "}
               {quizQuestions.length}
             </p>
-            <button
+            {!nftImage ? (
+              <button
+                onClick={onComplete}
+                className="mt-4 px-4 py-2 bg-green-600 rounded-md"
+                disabled={isClaimingNFT}
+              >
+                {isClaimingNFT ? (
+                  <FaSpinner className="w-5 h-5 animate-spin" />
+                ) : (
+                  "Claim NFT Certificate"
+                )}
+              </button>
+            ) : (
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold">Your NFT Certificate</h3>
+                <img
+                  src={nftImage}
+                  alt="NFT Certificate"
+                  className="mt-2 max-w-full rounded-lg shadow-lg"
+                />
+              </div>
+            )}
+            {/* <button
               onClick={onComplete}
               className="mt-4 px-4 py-2 bg-green-600 rounded-md"
               disabled={isClaimingNFT}
@@ -190,7 +243,7 @@ const QuizPage = () => {
               ) : (
                 "Claim NFT Certificate"
               )}
-            </button>
+            </button> */}
           </div>
         )}
       </div>

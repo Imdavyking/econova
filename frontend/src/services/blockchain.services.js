@@ -211,6 +211,36 @@ export const getPointsService = async () => {
     throw error;
   }
 };
+
+export const getUserClaimedNFT = async ({ level }) => {
+  try {
+    const manager = await getNFTCourseContract();
+    const signer = await getSigner();
+
+    const userAddress = await signer.getAddress();
+
+    const hasClaimed = await manager.hasClaimedNFT(userAddress, level);
+    return hasClaimed;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getUserNFT = async ({ level }) => {
+  try {
+    const manager = await getNFTCourseContract();
+    const signer = await getSigner();
+
+    const userAddress = await signer.getAddress();
+
+    const tokenURIs = await manager.userTokenURIs(userAddress, level);
+    return tokenURIs;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 export const updateRoot = async ({ level, root, timestamp, signature }) => {
   try {
     const manager = await getNFTCourseContract();

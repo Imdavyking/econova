@@ -31,6 +31,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     mapping(address => mapping(Level => bool)) public hasClaimedNFT;
     mapping(Level => bytes32) public merkleRoots;
     mapping(bytes32 => bool) private usedSignatures;
+    mapping(address => mapping(Level => string)) public userTokenURIs;
 
     /**
      * events
@@ -166,6 +167,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
         _setTokenURI(newTokenId, tokenURI);
 
         hasClaimedNFT[msg.sender][level] = true;
+        userTokenURIs[msg.sender][level] = tokenURI;
         tokenCounter++;
 
         emit NFTClaimed(msg.sender, level, newTokenId);
