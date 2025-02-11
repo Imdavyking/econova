@@ -42,7 +42,7 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
     const userNFTMetaData = {
       name: "EcoNova Beginner Course NFT",
       description:
-        "This NFT certifies that the holder has successfully completed the EcoNova Beginner Course on sustainable living and green energy.",
+        "This NFT certifies that the holder has successfully completed the EcoNova Beginner Course on blockchain and DeFAI.",
       image: "ipfs://QmExampleHash123456789/image.png",
       attributes: [
         {
