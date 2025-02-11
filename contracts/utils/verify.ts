@@ -1,7 +1,6 @@
 import { run } from "hardhat"
 
 export const verify = async (contractAddress: any, args: any) => {
-    console.log("Verifying contract...")
     try {
         await run("verify:verify", {
             address: contractAddress,
