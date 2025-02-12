@@ -13,7 +13,7 @@ export const deleteTwitterCookie = async (req: Request, res: Response) => {
 };
 export const getUserTwitterInfo = async (req: Request, res: Response) => {
   try {
-    const user = req.session.user;
+    const user = req.cookies.user;
 
     if (!user) {
       res.status(401).json({
@@ -22,11 +22,13 @@ export const getUserTwitterInfo = async (req: Request, res: Response) => {
       return;
     }
 
+    const userInfo = JSON.parse(user);
+
     twitterLogin.callbackUrl = getUrlCallback(req);
 
     const userTokenData = await twitterLogin.validateUserToken(
-      user.userToken,
-      user.userTokenSecret
+      userInfo.userToken,
+      userInfo.userTokenSecret
     );
 
     if (!userTokenData) {
