@@ -12,6 +12,7 @@ import userRoutes from "./routes/user.routes";
 import cookieParser from "cookie-parser";
 import { FRONTEND_URL } from "./utils/constants";
 import merkleRoutes from "./routes/merkle.routes";
+import { isLocalhost } from "./utils/islocalhost";
 
 dotenv.config();
 const app = express();
@@ -30,14 +31,14 @@ if (app.get("env") === "production") {
 //   })
 // );
 
-app.use(
+app.use((req, res, next) => {
   session({
     secret: JWT_SECRET_KEY, // Change this to a strong secret
     resave: false, // Don't save session if nothing is modified
     saveUninitialized: true, // Save new sessions
-    cookie: { secure: true }, // Set to true if using HTTPS
-  })
-);
+    cookie: { secure: isLocalhost(req) ? false : true }, // Set to true if using HTTPS
+  })(req, res, next);
+});
 
 // 🏷️ Test Route to Set Session
 app.get("/set-session", (req, res) => {

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { LoginWithTwitter } from "../services/login.twitter.services";
 import { FRONTEND_URL } from "../utils/constants";
 import logger from "../config/logger";
+import { isLocalhost } from "../utils/islocalhost";
 
 declare module "express-session" {
   interface SessionData {
@@ -19,8 +20,7 @@ export const twitterLogin = new LoginWithTwitter({
   callbackUrl: "http://localhost:3100/twitter/callback",
 });
 
-const isLocalhost = (req: Request) =>
-  ["localhost", "127.0.0.1", "::1", "10.0.0.2"].includes(req.hostname);
+
 export const getUrlCallback = (req: Request) => {
   const protocol = isLocalhost(req) ? "http" : "https";
   return `${protocol}://${req.get("host")}/twitter/callback`;
