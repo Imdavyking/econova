@@ -313,7 +313,7 @@ class TwitterGuestAuth:
         cookies = [f"{cookie.name}={cookie.value}" for cookie in self.cookie_jar]
         return "; ".join(cookies)
         
-    def update_cookie_jar(cookie_jar: http.cookiejar.CookieJar, headers: Dict[str, str] = {}) -> http.cookiejar.CookieJar:
+    def update_cookie_jar(self,cookie_jar: http.cookiejar.CookieJar, headers: Dict[str, str] = {}) -> http.cookiejar.CookieJar:
         """
         Updates a cookie jar with the Set-Cookie headers from the provided headers dictionary.
 
@@ -323,6 +323,8 @@ class TwitterGuestAuth:
         set_cookie_header = headers.get("Set-Cookie")
         
         if set_cookie_header:
+            for c in self.cookie_jar:
+                print(c)
             cookies = requests.utils.dict_from_cookiejar(cookie_jar)
             for cookie in set_cookie_header.split(";"):
                 cookie_parts = cookie.strip().split("=")
@@ -605,7 +607,6 @@ class TwitterUserAuth(TwitterGuestAuth):
             # not implemented yet
             # self.login_with_v2(app_key, app_secret, access_token, access_secret)
             pass
-
         if "err" in next:
             raise next["err"]
 
@@ -693,8 +694,6 @@ class TwitterUserAuth(TwitterGuestAuth):
         })
 
         
-
-
 
 
 
