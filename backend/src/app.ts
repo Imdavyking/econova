@@ -40,6 +40,8 @@ app.use(
   cors({
     credentials: true,
     origin: new URL(FRONTEND_URL!).origin,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
