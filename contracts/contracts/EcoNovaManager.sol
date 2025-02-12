@@ -345,7 +345,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         uint256 userTwitterId,
         uint256 tweetId,
         bytes memory
-    ) public view returns (bytes32 message) {
+    ) external view returns (bytes32 message) {
         bytes32 messageHash = keccak256(
             abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId, block.chainid)
         );
