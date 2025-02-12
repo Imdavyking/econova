@@ -23,17 +23,16 @@ export const getUrlCallback = (req: Request) =>
   `${req.protocol}://${req.get("host")}/twitter/callback`;
 
 export const loginTwitter = async (req: Request, res: Response) => {
+  twitterLogin.callbackUrl = getUrlCallback(req);
   try {
-    twitterLogin.callbackUrl = getUrlCallback(req);
     const { tokenSecret, url } = await twitterLogin.login();
-
     req.session.tokenSecret = tokenSecret;
 
     res.redirect(url);
   } catch (error: any) {
     logger.error(error);
     res.status(500).json({
-      error: `An error occurred while logging in with Twitter: ${error.message}`,
+      error: `An error occurred while logging in with Twitter: ${error.message} ${twitterLogin.callbackUrl}`,
     });
   }
 };
