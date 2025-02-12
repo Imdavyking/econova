@@ -10,6 +10,7 @@ from requests.utils import cookiejar_from_dict
 from typing import Union, Dict, TypedDict, Optional,Any
 import pyotp
 import time
+import asyncio
 load_dotenv()
 
 class TwitterUserAuthSubtask(TypedDict):
@@ -282,6 +283,7 @@ class Scraper:
 class TwitterGuestAuth:
     def __init__(self, bearer_token, options=None):
         self.bearer_token = bearer_token
+        self.guest_token = ''
         self.options = options or {}
         self.cookie_jar = CookieJar()
         self.is_browser_env = False
@@ -291,7 +293,7 @@ class TwitterGuestAuth:
             "Content-Type": "application/json",
             "Referrer-Policy": 'no-referrer',
         }
-        self.guest_token = self.update_guest_token()
+        self.update_guest_token()
 
     def update_guest_token(self):
         """
@@ -300,10 +302,12 @@ class TwitterGuestAuth:
         url = "https://api.twitter.com/1.1/guest/activate.json"
         response = requests.post(url, headers=self.headers, cookies=self.cookie_jar)
 
-        self.update_cookie_jar(response.headers)
+        self.update_cookie_jar(self.cookie_jar,response.headers)
 
         if response.status_code == 200:
+        
             guest_token = response.json().get("guest_token")
+            self.guest_token = guest_token
             return guest_token
         else:
             raise Exception(f"Failed to get guest token: {response.text}")
@@ -313,7 +317,7 @@ class TwitterGuestAuth:
         cookies = [f"{cookie.name}={cookie.value}" for cookie in self.cookie_jar]
         return "; ".join(cookies)
         
-    def update_cookie_jar(self,cookie_jar: http.cookiejar.CookieJar, headers: Dict[str, str] = {}) -> http.cookiejar.CookieJar:
+    def update_cookie_jar(self,request_jar: http.cookiejar.CookieJar, headers: Dict[str, str] = {}) -> http.cookiejar.CookieJar:
         """
         Updates a cookie jar with the Set-Cookie headers from the provided headers dictionary.
 
@@ -321,20 +325,19 @@ class TwitterGuestAuth:
         :param headers: The response headers containing Set-Cookie values.
         """
         set_cookie_header = headers.get("Set-Cookie")
+
+        
         
         if set_cookie_header:
-            for c in self.cookie_jar:
-                print(c)
-            cookies = requests.utils.dict_from_cookiejar(cookie_jar)
+            cookies = requests.utils.dict_from_cookiejar(request_jar)
             for cookie in set_cookie_header.split(";"):
                 cookie_parts = cookie.strip().split("=")
                 if len(cookie_parts) == 2:
                     key, value = cookie_parts
                     cookies[key] = value
-            
-            cookie_jar = cookiejar_from_dict(cookies)
-        
-        return cookie_jar
+
+            self.cookie_jar = cookiejar_from_dict(cookies)
+        return self.cookie_jar
 
 
     def send_tweet(self, text, reply_to_tweet_id=None, hide_link_preview=False):
@@ -571,11 +574,13 @@ class TwitterUserAuth(TwitterGuestAuth):
 
     async def process_subtask(self, next_task, username=None, email=None, password=None, two_factor_secret=None):
         """Processes Twitter authentication subtasks."""
+    
         while "subtask" in next_task and next_task["subtask"]:
             subtask_id = next_task["subtask"]["subtask_id"]
 
             if subtask_id == "LoginJsInstrumentationSubtask":
                 next_task = self.handle_js_instrumentation_subtask(next_task)
+                
             elif subtask_id == "LoginEnterUserIdentifierSSO":
                 next_task = self.handle_enter_user_identifier_sso(next_task, username)
             elif subtask_id == "LoginEnterAlternateIdentifierSubtask":
@@ -602,11 +607,14 @@ class TwitterUserAuth(TwitterGuestAuth):
     def login(self, username, password, email=None, twoFactorSecret=None, app_key=None, app_secret=None, access_token=None, access_secret=None):    
         self.update_guest_token()
         next = self.init_login()
-        next = self.process_subtask(next, username, email, password, twoFactorSecret)
+        
+        next = asyncio.run(self.process_subtask(next, username, email, password, twoFactorSecret))
         if app_key and app_secret and access_token and access_secret:
             # not implemented yet
             # self.login_with_v2(app_key, app_secret, access_token, access_secret)
             pass
+
+    
         if "err" in next:
             raise next["err"]
 
@@ -615,7 +623,6 @@ class TwitterUserAuth(TwitterGuestAuth):
         """Add CSRF token to headers if available in cookies."""
         cookies = self.get_cookies()
         x_csrf_token = next((c["value"] for c in cookies if c["key"] == "ct0"), None)
-
         if x_csrf_token:
             headers["x-csrf-token"] = x_csrf_token
 
@@ -624,6 +631,7 @@ class TwitterUserAuth(TwitterGuestAuth):
 
         if self.guest_token is None:
             raise ValueError("Authentication token is null or undefined.")
+        
 
         headers = {
             "authorization": f"Bearer {self.bearer_token}",
@@ -645,7 +653,7 @@ class TwitterUserAuth(TwitterGuestAuth):
             onboarding_task_url, headers=headers, json=data
         )
 
-        self.update_cookie_jar(response.cookies, response.headers)
+        self.update_cookie_jar(self.cookie_jar, response.headers)
 
         if not response.ok:
             return {"status": "error", "err": response.text}
@@ -681,7 +689,7 @@ class TwitterUserAuth(TwitterGuestAuth):
         self.remove_cookie('external_referer=')
         self.remove_cookie('ct0=')
         self.remove_cookie('aa_u=')
-        self.execute_flow_task({
+        return self.execute_flow_task({
             "flow_name": "login",
             "input_flow_data": {
                 "flow_context": {
@@ -694,7 +702,3 @@ class TwitterUserAuth(TwitterGuestAuth):
         })
 
         
-
-
-
-
