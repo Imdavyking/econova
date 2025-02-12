@@ -17,9 +17,10 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * mappings
      */
     mapping(address => PointData) public userPoints;
-    mapping(address => uint256) public donations;
-    mapping(address => uint256) public userDonations;
-    mapping(address => mapping(uint8 => uint256)) public userDonationsOrgs;
+    mapping(address tokenAddress => uint256 amount) public donations;
+    mapping(address sender => mapping(address token => uint256 amount)) public userDonations;
+    mapping(address sender => mapping(uint8 charity => mapping(address token => uint256 amount)))
+        public userDonationsOrgs;
     mapping(bytes32 => bool) public usedHashes;
     mapping(uint256 => mapping(uint256 => bool)) public userAddedTweets;
     mapping(uint8 => address) public charityOrganizations;
@@ -299,13 +300,14 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
             userPoints[caller] = PointData(pointsEarned, block.timestamp, block.timestamp, caller);
         }
 
+        donations[token] += amountToSend;
+        userDonations[caller][token] += amountToSend;
+        userDonationsOrgs[caller][charityOrgIndex][token] += amountToSend;
+
         if (token == ETH_ADDRESS) {
             if (msg.value < minTokenAmount || msg.value > maxTokenAmount) {
                 revert EcoNovaManager__IncorrectETHAmount();
             }
-            donations[ETH_ADDRESS] += msg.value;
-            userDonations[caller] += msg.value;
-            userDonationsOrgs[caller][charityOrgIndex] += msg.value;
 
             (bool success, ) = charityAddress.call{value: amountToSend}("");
             if (!success) {
