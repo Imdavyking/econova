@@ -7,7 +7,7 @@ npx snarkjs groth16 setup build/*.r1cs pot12_final.ptau bmi_checker.zkey
 npx snarkjs zkey export verificationkey *.zkey verification_key.json
 npx snarkjs zkey export solidityverifier *.zkey Groth16Verifier.sol
 npx snarkjs wtns calculate build/bmi_checker_js/bmi_checker.wasm input.json witness.wtns
-cp build/bmi_checker_js/bmi_checker.wasm ../frontend/bmi_checker.wasm
+cp build/bmi_checker_js/bmi_checker.wasm ../frontend/public/bmi_checker.wasm
 cp verification_key.json ../frontend/src/assets/json/verification_key.json
 cp Groth16Verifier.sol ../contracts/contracts/zk-verifiers/Groth16Verifier.sol
-cp bmi_checker.zkey ../frontend/bmi_checker.zkey
+cp bmi_checker.zkey ../frontend/public/bmi_checker.zkey
