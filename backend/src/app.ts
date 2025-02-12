@@ -43,7 +43,7 @@ app.use(
   cors({
     credentials: true,
     origin: new URL(FRONTEND_URL!).origin,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 
