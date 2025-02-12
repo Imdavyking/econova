@@ -142,6 +142,11 @@
   },
   {
     "inputs": [],
+    "name": "EcoNovaCourseNFT__AddressCannotBeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "EcoNovaCourseNFT__ExpiredSignature",
     "type": "error"
   },
@@ -157,22 +162,17 @@
   },
   {
     "inputs": [],
+    "name": "EcoNovaCourseNFT__MisMatchedArrayLength",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "EcoNovaCourseNFT__NFTAlreadyClaimed",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "EcoNovaCourseNFT__SignatureAlreadyUsed",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "EcoNovaManager__AddressCannotBeZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "EcoNovaManager__MisMatchedArrayLength",
     "type": "error"
   },
   {

@@ -629,7 +629,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "tokenAddress",
         "type": "address"
       }
     ],
@@ -637,7 +637,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "amount",
         "type": "uint256"
       }
     ],
@@ -903,7 +903,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token",
         "type": "address"
       }
     ],
@@ -911,7 +916,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "amount",
         "type": "uint256"
       }
     ],
@@ -922,20 +927,25 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "sender",
         "type": "address"
       },
       {
         "internalType": "uint8",
-        "name": "",
+        "name": "charity",
         "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
       }
     ],
     "name": "userDonationsOrgs",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "amount",
         "type": "uint256"
       }
     ],
