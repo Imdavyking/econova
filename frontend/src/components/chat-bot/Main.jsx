@@ -68,7 +68,7 @@ const ChatWithAdminBot = () => {
       </div>
 
       {/* Help Button (Floating) */}
-      <div className="fixed bottom-40 right-4">
+      <div className="fixed bottom-40 right-4 mb-4 mr-10">
         <button
           onClick={toggleHelp}
           className="bg-gray-600 text-white p-3 rounded-full hover:bg-gray-700 transition duration-300"
@@ -79,7 +79,7 @@ const ChatWithAdminBot = () => {
 
       {/* Help Popover */}
       {isHelpOpen && (
-        <div className="fixed bottom-52 right-4 bg-white shadow-lg rounded-lg p-4 w-80 z-50">
+        <div className="fixed bottom-52 right-4 bg-white shadow-lg rounded-lg p-4 w-80 z-50 mb-4 mr-10">
           <h3 className="text-lg font-semibold text-gray-700">Commands</h3>
           <ul className="list-disc ml-5 mt-2 text-gray-600 break-words">
             {Object.keys(agent.toolsInfo).map((key, index) => (
