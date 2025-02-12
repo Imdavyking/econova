@@ -3,6 +3,7 @@
 import { Request, Response } from "express";
 import { LoginWithTwitter } from "../services/login.twitter.services";
 import { getUrlCallback } from "./twitter.controllers";
+import { isLocalhost } from "../utils/islocalhost";
 export const twitterLogin = new LoginWithTwitter({
   callbackUrl: "http://localhost:3100/twitter/callback",
 });
@@ -14,6 +15,14 @@ export const deleteTwitterCookie = async (req: Request, res: Response) => {
 export const getUserTwitterInfo = async (req: Request, res: Response) => {
   try {
     const user = req.cookies.user;
+
+    res.cookie("cool", "kekeeke", {
+      httpOnly: true,
+      secure: isLocalhost(req) ? false : true,
+      maxAge: 1000 * 60 * 60 * 24,
+      sameSite: "none",
+      path: "/",
+    });
 
     if (!user) {
       res.status(401).json({
