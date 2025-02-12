@@ -1,4 +1,4 @@
-import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers"
+import { loadFixture, time } from "@nomicfoundation/hardhat-toolbox/network-helpers"
 import { expect } from "chai"
 import hre from "hardhat"
 import { ethers, network } from "hardhat"
@@ -183,6 +183,86 @@ chainId !== 31337
                       expect(verified).to.equal(true)
                       expect(hasClaimedBefore).to.equal(false)
                       expect(hasClaimedAfter).to.equal(true)
+                  })
+
+                  it("Can not update root with expired signature.", async function () {
+                      const { ecoNovaCourseNFTDeployer, otherAccount, owner } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
+
+                      const level = 0
+
+                      const coursemessageHash = ethers.solidityPackedKeccak256(["uint8"], [level])
+
+                      const courseSignedMessageHash = ethers.hashMessage(
+                          ethers.getBytes(coursemessageHash)
+                      )
+
+                      const courseSignature = await otherAccount.signMessage(
+                          ethers.getBytes(coursemessageHash)
+                      )
+
+                      const address = ethers.recoverAddress(
+                          courseSignedMessageHash,
+                          courseSignature
+                      )
+
+                      const allValues = [
+                          [owner.address, level],
+                          [otherAccount.address, level],
+                      ]
+
+                      const tree = StandardMerkleTree.of(allValues, ["address", "uint8"])
+                      const root = tree.root
+                      const tokenURL = "ipfs://"
+                      let proof: HexString[] = []
+
+                      for (const [i, v] of tree.entries()) {
+                          if (v[0] === otherAccount.address && v[1] === level) {
+                              proof = tree.getProof(i)
+                              break
+                          }
+                      }
+
+                      const timestamp = Math.floor(Date.now() / 1000)
+
+                      const ethSignedMessageproofHash = ethers.solidityPackedKeccak256(
+                          ["address", "uint8", "bytes32", "uint256", "uint256"],
+                          [address, level, root, chainId, timestamp]
+                      )
+
+                      const verified = StandardMerkleTree.verify(
+                          root,
+                          ["address", "uint8"],
+                          [otherAccount.address, level],
+                          proof
+                      )
+
+                      const botSignedMessage = ethers.hashMessage(
+                          ethers.getBytes(ethSignedMessageproofHash)
+                      )
+
+                      const botSignature = await owner.signMessage(
+                          ethers.getBytes(ethSignedMessageproofHash)
+                      )
+
+                      const botAddress = ethers.recoverAddress(botSignedMessage, botSignature)
+
+                      const ownerShipTx = await ecoNovaCourseNFTDeployer.updateBotAddress(owner)
+                      await ownerShipTx.wait(1)
+
+                      const expiryTime = await ecoNovaCourseNFTDeployer.TIMESTAMP_EXPIRY()
+
+                      time.increaseTo(timestamp + Number(expiryTime) + 1)
+
+                      expect(
+                          ecoNovaCourseNFTDeployer
+                              .connect(otherAccount)
+                              .updateRoot(level, root, timestamp, botSignature)
+                      ).to.be.revertedWithCustomError(
+                          ecoNovaCourseNFTDeployer,
+                          "EcoNovaCourseNFT__ExpiredSignature"
+                      )
                   })
               })
 
