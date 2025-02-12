@@ -74,7 +74,13 @@ export const verifyCallBack = async (req: Request, res: Response) => {
 
     delete req.session.tokenSecret;
 
-    const token = jwt.sign(user, JWT_SECRET_KEY);
+    const token = jwt.sign(
+      {
+        userToken: user.userToken,
+        userTokenSecret: user.userTokenSecret,
+      },
+      JWT_SECRET_KEY
+    );
 
     res.redirect(`${FRONTEND_URL}#${token}`);
   } catch (error: any) {
