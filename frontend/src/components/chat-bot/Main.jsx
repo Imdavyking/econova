@@ -65,11 +65,11 @@ const ChatWithAdminBot = () => {
         <div className="fixed bottom-24 right-4 w-96 z-50">
           <div className="bg-white shadow-md rounded-lg max-w-lg w-full relative">
             {messages.length === 0 && (
-              <div className="bg-gray-100 rounded-lg p-4 absolute top-20 left-1/2 transform -translate-x-1/2 w-10/12 max-h-40 overflow-y-auto">
+              <div className="bg-gray-100 rounded-lg p-4 absolute top-20 left-1/2 transform -translate-x-1/2 w-10/12 max-h-48 overflow-y-auto">
                 <h3 className="text-lg font-semibold text-gray-700">
                   Commands
                 </h3>
-                <ul className="list-disc ml-5 mt-2 text-gray-600">
+                <ul className="list-disc ml-5 mt-2 text-gray-600 break-words">
                   {Object.keys(agent.toolsInfo).map((key, _) => (
                     <li key={_}>
                       <strong>{key}:</strong> {agent.toolsInfo[key]}.
