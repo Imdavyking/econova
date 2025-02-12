@@ -47,8 +47,8 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     error EcoNovaCourseNFT__NFTAlreadyClaimed();
     error EcoNovaCourseNFT__InvalidProof();
     error EcoNovaCourseNFT__InvalidSignerForProof();
-    error EcoNovaManager__AddressCannotBeZero();
-    error EcoNovaManager__MisMatchedArrayLength();
+    error EcoNovaCourseNFT__AddressCannotBeZero();
+    error EcoNovaCourseNFT__MisMatchedArrayLength();
     error EcoNovaCourseNFT__ExpiredSignature();
     error EcoNovaCourseNFT__SignatureAlreadyUsed();
 
@@ -63,7 +63,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
      */
     function updateBotAddress(address _newBotAddress) public onlyOwner {
         if (_newBotAddress == address(0)) {
-            revert EcoNovaManager__AddressCannotBeZero();
+            revert EcoNovaCourseNFT__AddressCannotBeZero();
         }
         address oldBotAddress = botAddress;
         botAddress = _newBotAddress;
@@ -185,7 +185,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
         string[] memory tokenURIs
     ) external {
         if (levels.length != proofs.length || levels.length != tokenURIs.length) {
-            revert EcoNovaManager__MisMatchedArrayLength();
+            revert EcoNovaCourseNFT__MisMatchedArrayLength();
         }
 
         uint256[] memory newTokenIds = new uint256[](levels.length);
