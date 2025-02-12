@@ -20,7 +20,6 @@ export const twitterLogin = new LoginWithTwitter({
   callbackUrl: "http://localhost:3100/twitter/callback",
 });
 
-
 export const getUrlCallback = (req: Request) => {
   const protocol = isLocalhost(req) ? "http" : "https";
   return `${protocol}://${req.get("host")}/twitter/callback`;
@@ -81,6 +80,7 @@ export const verifyCallBack = async (req: Request, res: Response) => {
       maxAge: 1000 * 60 * 60 * 24,
       sameSite: "none",
       path: "/",
+      domain: "econova.vercel.app",
     });
 
     logger.info(req.sessionID);
