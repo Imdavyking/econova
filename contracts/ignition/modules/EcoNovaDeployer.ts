@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import { ethers, network } from "hardhat"
 import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
 import { charityCategories } from "../../utils/charity.categories"
+import { localHardhat } from "../../scripts/deploy.verify"
 
 dotenv.config()
 
@@ -14,7 +15,7 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
     const botPrivateKey = process.env.PRIVATE_KEY!
     const wallet = new ethers.Wallet(botPrivateKey)
 
-    if (chainId === 31337) {
+    if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) {
         oracle = m.contract("MockPythPriceFeed", [])
     }
 

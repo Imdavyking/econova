@@ -1,7 +1,11 @@
-import { run } from "hardhat"
+import { run, network } from "hardhat"
+import { localHardhat } from "../scripts/deploy.verify"
 
 export const verify = async (contractAddress: any, args: any) => {
     try {
+        const chainId = network.config.chainId
+
+        if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
         await run("verify:verify", {
             address: contractAddress,
             constructorArguments: args,

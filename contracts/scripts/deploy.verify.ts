@@ -12,6 +12,7 @@ import { updateEnv } from "./update.env"
 import { copyABI } from "./copy.abi"
 dotenv.config()
 
+export const localHardhat = [31337, 1337]
 async function main() {
     const chainId = network.config.chainId
 
@@ -50,7 +51,7 @@ async function main() {
         charities.push(charity)
     }
 
-    if (chainId === 31337) return
+    if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
 
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
         process.env.ORACLE_ADDRESS!

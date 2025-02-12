@@ -9,12 +9,13 @@ import { ETH_ADDRESS } from "../hardhat.config"
 import { charityCategories } from "../utils/charity.categories"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
+import { localHardhat } from "../scripts/deploy.verify"
 
 dotenv.config()
 
 const chainId = network.config.chainId
 
-chainId !== 31337
+typeof chainId !== "undefined" && !localHardhat.includes(chainId)
     ? describe.skip
     : describe("EcoNovaDeployer", function () {
           // We define a fixture to reuse the same setup in every test.
