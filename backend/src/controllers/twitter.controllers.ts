@@ -84,17 +84,7 @@ export const verifyCallBack = async (req: Request, res: Response) => {
     });
 
     logger.info(req.sessionID);
-    res.redirect(
-      `${FRONTEND_URL!}?ss=${encodeURIComponent(
-        JSON.stringify({
-          httpOnly: true,
-          secure: isLocalhost(req) ? false : true,
-          maxAge: 1000 * 60 * 60 * 24,
-          sameSite: "none",
-          path: "/",
-        })
-      )}`
-    );
+    res.redirect(FRONTEND_URL!);
   } catch (error: any) {
     logger.error(error);
     res.status(500).json({
