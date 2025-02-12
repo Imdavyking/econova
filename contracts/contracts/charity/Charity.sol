@@ -36,7 +36,7 @@ contract Charity is Ownable, ReentrancyGuard {
     /**
      * @dev Check if the contract can withdraw funds.
      */
-    function canWithdraw() public view returns (bool) {
+    function canWithdraw() external view returns (bool) {
         return canWithdrawFunds;
     }
 
@@ -45,7 +45,7 @@ contract Charity is Ownable, ReentrancyGuard {
      * @param status The status to set.
      */
 
-    function setCanWithdraw(bool status) public onlyOwner {
+    function setCanWithdraw(bool status) external onlyOwner {
         canWithdrawFunds = status;
     }
 
@@ -53,7 +53,7 @@ contract Charity is Ownable, ReentrancyGuard {
      * @dev Check the balance of the contract.
      * @param token The address of the token to check the balance of.
      */
-    function balanceOf(address token) public view returns (uint256) {
+    function balanceOf(address token) external view returns (uint256) {
         if (token == ETH_ADDRESS) {
             return address(this).balance;
         } else {
@@ -71,7 +71,7 @@ contract Charity is Ownable, ReentrancyGuard {
         address token,
         uint256 amount,
         address organization
-    ) public onlyOwner nonReentrant {
+    ) external onlyOwner nonReentrant {
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
         }

@@ -61,7 +61,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
      * @dev Update the bot address (only callable by the bot)
      * @param _newBotAddress The new bot address
      */
-    function updateBotAddress(address _newBotAddress) public onlyOwner {
+    function updateBotAddress(address _newBotAddress) external onlyOwner {
         if (_newBotAddress == address(0)) {
             revert EcoNovaCourseNFT__AddressCannotBeZero();
         }

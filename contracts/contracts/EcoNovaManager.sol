@@ -123,7 +123,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param symbol - symbol of the token
      * @param initialSupply - initial supply of the token
      */
-    function deployToken(string memory name, string memory symbol, uint256 initialSupply) public {
+    function deployToken(string memory name, string memory symbol, uint256 initialSupply) external {
         if (initialSupply <= 0) {
             revert EcoNovaManager__CanNotBeZero();
         }
@@ -207,7 +207,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * Removes a charity organization from the contract.
      * @param charity The charity organization to remove.
      */
-    function removeCharity(Charity charity) public onlyOwner {
+    function removeCharity(Charity charity) external onlyOwner {
         Charity.Category charityCategory = charity.charityCategory();
         address charityAddress = address(charity);
 
@@ -268,7 +268,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         Charity.Category charityCategory,
         address token,
         uint256 amountInUsd
-    ) public payable nonReentrant {
+    ) external payable nonReentrant {
         uint8 charityOrgIndex = uint8(charityCategory);
         if (charityOrganizations[charityOrgIndex] == address(0)) {
             revert EcoNovaManager__CharityNameNotFound();
@@ -366,7 +366,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         uint256 userTwitterId,
         uint256 tweetId,
         bytes memory signature
-    ) public {
+    ) external {
         bytes32 messageHash = keccak256(
             abi.encodePacked(msg.sender, pointToAdd, userTwitterId, tweetId, block.chainid)
         );
@@ -406,7 +406,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param point points to redeem
      * @return success true if the point is redeemed successfully
      */
-    function redeemPoints(uint256 point) public returns (bool success) {
+    function redeemPoints(uint256 point) external returns (bool success) {
         if (userPoints[msg.sender].points == 0) {
             revert EcoNovaManager__InsufficientPoints();
         }
@@ -425,7 +425,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @dev Update the bot address (only callable by the bot)
      * @param _newBotAddress The new bot address
      */
-    function updateBotAddress(address _newBotAddress) public onlyOwner {
+    function updateBotAddress(address _newBotAddress) external onlyOwner {
         if (_newBotAddress == address(0)) {
             revert EcoNovaManager__AddressCannotBeZero();
         }
@@ -447,7 +447,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         uint256[2][2] calldata _pB,
         uint256[2] calldata _pC,
         uint256[2] calldata _pubSignals
-    ) public {
+    ) external {
         bool verified = i_groth16VerifierP3.verifyProof(_pA, _pB, _pC, _pubSignals);
         if (!verified) {
             revert EcoNovaManager__InvalidSignature();
