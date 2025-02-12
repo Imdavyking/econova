@@ -36,6 +36,7 @@ const Home = () => {
 
     if (hash) {
       localStorage.setItem("authToken", hash);
+      window.history.replaceState(null, "", window.location.pathname);
     }
   }, [location, navigate]);
 
