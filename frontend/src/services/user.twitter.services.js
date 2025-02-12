@@ -1,4 +1,5 @@
 import { SERVER_URL } from "../utils/constants";
+import { getTwitterAuth } from "./twitter.auth.services";
 
 export const getUserTwitterInfo = async () => {
   try {
@@ -6,6 +7,10 @@ export const getUserTwitterInfo = async () => {
       credentials: "include",
       method: "GET",
       mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getTwitterAuth()}`,
+      },
     });
     return await response.json();
   } catch (error) {
@@ -19,6 +24,10 @@ export const userLogout = async () => {
       credentials: "include",
       method: "GET",
       mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getTwitterAuth()}`,
+      },
     });
     return await response.json();
   } catch (error) {

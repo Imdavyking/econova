@@ -16,6 +16,7 @@ import {
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaUserCircle, FaCrown, FaCoins } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import { saveTwitterAuth } from "../../services/twitter.auth.services";
 
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
@@ -32,10 +33,10 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hash = location.hash.replace("#", "");
+    const authToken = location.hash.replace("#", "");
 
-    if (hash) {
-      localStorage.setItem("authToken", hash);
+    if (authToken) {
+      saveTwitterAuth(authToken);
       window.history.replaceState(null, "", window.location.pathname);
     }
   }, [location, navigate]);
