@@ -80,7 +80,7 @@ export const verifyCallBack = async (req: Request, res: Response) => {
       secure: isLocalhost(req) ? false : true,
       maxAge: 1000 * 60 * 60 * 24,
       sameSite: "none",
-      path: "/api/user",
+      path: "/",
     });
 
     logger.info(req.sessionID);
