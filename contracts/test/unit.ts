@@ -214,7 +214,6 @@ chainId !== 31337
 
                       const tree = StandardMerkleTree.of(allValues, ["address", "uint8"])
                       const root = tree.root
-                      const tokenURL = "ipfs://"
                       let proof: HexString[] = []
 
                       for (const [i, v] of tree.entries()) {
@@ -231,13 +230,6 @@ chainId !== 31337
                           [address, level, root, chainId, timestamp]
                       )
 
-                      const verified = StandardMerkleTree.verify(
-                          root,
-                          ["address", "uint8"],
-                          [otherAccount.address, level],
-                          proof
-                      )
-
                       const botSignedMessage = ethers.hashMessage(
                           ethers.getBytes(ethSignedMessageproofHash)
                       )
@@ -245,8 +237,6 @@ chainId !== 31337
                       const botSignature = await owner.signMessage(
                           ethers.getBytes(ethSignedMessageproofHash)
                       )
-
-                      const botAddress = ethers.recoverAddress(botSignedMessage, botSignature)
 
                       const ownerShipTx = await ecoNovaCourseNFTDeployer.updateBotAddress(owner)
                       await ownerShipTx.wait(1)
