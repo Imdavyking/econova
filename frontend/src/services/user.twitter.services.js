@@ -4,9 +4,7 @@ import { getTwitterAuth, removeTwitterAuth } from "./twitter.auth.services";
 export const getUserTwitterInfo = async () => {
   try {
     const response = await fetch(`${SERVER_URL}/api/user`, {
-      credentials: "include",
       method: "GET",
-      mode: "cors",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getTwitterAuth()}`,
