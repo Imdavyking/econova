@@ -1,5 +1,6 @@
 /** @format */
 import abi from "@/assets/json/abi.json";
+import erc20 from "@/assets/json/abi.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
 import { BrowserProvider, ethers } from "ethers";
 import {
@@ -63,6 +64,19 @@ export const getSigner = async () => {
   const provider = new BrowserProvider(window.ethereum);
   await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
+};
+
+const getERC20Contract = async (address) => {
+  if (!window.ethereum) {
+    toast.info(
+      "MetaMask is not installed. Please install it to use this feature."
+    );
+    return;
+  }
+  const signer = await getSigner();
+
+  await switchOrAddChain(signer.provider);
+  return new ethers.Contract(address, erc20, signer);
 };
 
 const getContract = async () => {
@@ -177,6 +191,41 @@ export const getCharityCategoryAddressService = async ({ charityCatogory }) => {
     return `${charityAddress}`;
   } catch (error) {
     return `${FAILED_KEY} to get ${charityCatogory} address`;
+  }
+};
+
+export const sendSonicService = async ({ recipientAddress, amount }) => {
+  try {
+    const signer = await getSigner();
+    const tx = await signer.sendTransaction({
+      to: recipientAddress,
+      value: ethers.parseEther(amount),
+    });
+    await tx.wait(1);
+
+    return `sent ${amount} SONIC to ${recipientAddress}`;
+  } catch (error) {
+    return `${FAILED_KEY} to send ${amount} SONIC to ${recipientAddress}`;
+  }
+};
+
+export const sendERC20Token = async ({
+  tokenAddress,
+  recipientAddress,
+  amount,
+}) => {
+  try {
+    const contract = await getERC20Contract(tokenAddress);
+    const decimals = await contract.decimals();
+    const tx = await contract.transfer(
+      recipientAddress,
+      getWholeNumber(Number(amount) * 10 ** decimals).toString()
+    );
+    await tx.wait(1);
+
+    return `sent ${amount} ${tokenAddress} to ${recipientAddress}`;
+  } catch (error) {
+    return `${FAILED_KEY} to send ${amount} ${tokenAddress} to ${recipientAddress}`;
   }
 };
 

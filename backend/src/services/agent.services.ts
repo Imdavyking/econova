@@ -29,6 +29,25 @@ const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 
 const tools = {
+  sendERC20Token: tool(() => undefined, {
+    name: "sendERC20Token",
+    description: "Send ERC20 tokens to a specific address.",
+    schema: z.object({
+      tokenAddress: z.string().describe("The token to send"),
+      recipientAddress: z.string().describe("The address to send tokens to"),
+      amount: z.number().describe("The amount of tokens to send"),
+    }),
+  }),
+  sendSonic: tool(() => undefined, {
+    name: "sendSonic",
+    description: "Send SONIC (also called S) tokens to a specific address.",
+    schema: z.object({
+      recipientAddress: z
+        .string()
+        .describe("The address to send SONIC tokens to"),
+      amount: z.number().describe("The amount of SONIC tokens to send"),
+    }),
+  }),
   quizQuestions: tool(() => undefined, {
     name: "quizQuestions",
     description: "Answer quiz questions.",
