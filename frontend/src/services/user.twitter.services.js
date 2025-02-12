@@ -4,7 +4,7 @@ export const getUserTwitterInfo = async () => {
   try {
     const response = await fetch(`${SERVER_URL}/api/user`, {
       credentials: "include",
-      method: "GET",
+      method: "POST",
     });
     return await response.json();
   } catch (error) {
