@@ -80,7 +80,7 @@ export const verifyCallBack = async (req: Request, res: Response) => {
       path: "/",
     });
 
-    res.redirect(FRONTEND_URL!);
+    // res.redirect(FRONTEND_URL!);
   } catch (error: any) {
     logger.error(error);
     res.status(500).json({
