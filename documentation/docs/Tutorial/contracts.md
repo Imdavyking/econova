@@ -23,22 +23,24 @@ yarn
 ```
 
 ## Environment Variables
-   Create a `.env` file in the project root and add the following variables:
 
-   ```env
-    PRIVATE_KEY=
-    RPC_URL=
-    ORACLE_ADDRESS=
-    NODE_ENV=
-    CHAIN_ID=
-    CHAIN_BLOCKEXPLORER_URL=
-    API_URL=
-    BROWSER_URL=
-    CHAIN_NAME=
-    CHAIN_CURRENCY_NAME=
-    CHAIN_SYMBOL=
-    CHAIN_BLOCKEXPLORER_URL=
-   ```
+Create a `.env` file in the project root and add the following variables:
+
+```env
+ PRIVATE_KEY=
+ RPC_URL=
+ ORACLE_ADDRESS=
+ NODE_ENV=
+ CHAIN_ID=
+ CHAIN_BLOCKEXPLORER_URL=
+ API_URL=
+ BROWSER_URL=
+ CHAIN_NAME=
+ CHAIN_CURRENCY_NAME=
+ CHAIN_SYMBOL=
+ CHAIN_BLOCKEXPLORER_URL=
+ API_SCAN_VERIFIER_KEY=
+```
 
 ## Usage
 
