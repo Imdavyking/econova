@@ -18,6 +18,8 @@ export const getUserTwitterInfo = async (req: Request, res: Response) => {
       return;
     }
 
+    res.json({ user });
+
     const userInfo = JSON.parse(user);
 
     twitterLogin.callbackUrl = getUrlCallback(req);
