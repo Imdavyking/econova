@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 import { ethers, network } from "hardhat"
 import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
 import { charityCategories } from "../../utils/charity.categories"
-import { localHardhat } from "../../scripts/deploy.verify"
+import { localHardhat } from "../../utils/localhardhat.chainid"
 
 dotenv.config()
 

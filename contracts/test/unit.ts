@@ -9,7 +9,7 @@ import { ETH_ADDRESS } from "../hardhat.config"
 import { charityCategories } from "../utils/charity.categories"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
-import { localHardhat } from "../scripts/deploy.verify"
+import { localHardhat } from "../utils/localhardhat.chainid"
 
 dotenv.config()
 

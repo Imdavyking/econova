@@ -1,5 +1,5 @@
 import { run, network } from "hardhat"
-import { localHardhat } from "../scripts/deploy.verify"
+import { localHardhat } from "./localhardhat.chainid"
 
 export const verify = async (contractAddress: any, args: any) => {
     try {

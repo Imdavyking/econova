@@ -10,9 +10,9 @@ import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition
 import { cleanDeployments } from "../utils/clean"
 import { updateEnv } from "./update.env"
 import { copyABI } from "./copy.abi"
+import { localHardhat } from "../utils/localhardhat.chainid"
 dotenv.config()
 
-export const localHardhat = [31337, 1337]
 async function main() {
     const chainId = network.config.chainId
 
