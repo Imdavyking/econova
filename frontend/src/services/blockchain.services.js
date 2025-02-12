@@ -205,7 +205,7 @@ export const sendSonicService = async ({ recipientAddress, amount }) => {
 
     return `sent ${amount} SONIC to ${recipientAddress}`;
   } catch (error) {
-    return `${FAILED_KEY} to send ${amount} SONIC to ${recipientAddress}`;
+    return `${FAILED_KEY} to send ${amount} SONIC to ${recipientAddress} ${error.message}`;
   }
 };
 
