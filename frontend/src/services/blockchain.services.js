@@ -127,6 +127,7 @@ export const saveHealthyBMIProofService = async ({
 
     return `BMI is healthy, keep up the good work`;
   } catch (error) {
+    console.log(`Error: ${error.message}`);
     return `${FAILED_KEY} : ${BMI_ADVICE}`;
   }
 };
