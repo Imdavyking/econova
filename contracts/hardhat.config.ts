@@ -55,7 +55,15 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    solidity: "0.8.28",
+    solidity: {
+        version: "0.8.28",
+        settings: {
+            optimizer: {
+                enabled: true,
+                runs: 200,
+            },
+        },
+    },
     etherscan: {
         apiKey: {
             testNetwork: API_SCAN_VERIFIER_KEY,
