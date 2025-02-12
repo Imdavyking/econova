@@ -5,6 +5,7 @@ export const getUserTwitterInfo = async () => {
     const response = await fetch(`${SERVER_URL}/api/user`, {
       credentials: "include",
       method: "GET",
+      mode: "cors",
     });
     return await response.json();
   } catch (error) {
@@ -17,6 +18,7 @@ export const userLogout = async () => {
     const response = await fetch(`${SERVER_URL}/api/user/logout`, {
       credentials: "include",
       method: "GET",
+      mode: "cors",
     });
     return await response.json();
   } catch (error) {
