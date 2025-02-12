@@ -21,22 +21,10 @@ if (app.get("env") === "production") {
   app.set("trust proxy", 1);
 }
 
-// app.use(
-//   session({
-//     secret: JWT_SECRET_KEY,
-//     cookie: {
-//       httpOnly: true,
-//       secure: process.env.NODE_ENV === "production",
-//     },
-//   })
-// );
-
 app.use((req, res, next) => {
   session({
     secret: JWT_SECRET_KEY, // Change this to a strong secret
-    resave: false, // Don't save session if nothing is modified
-    saveUninitialized: true, // Save new sessions
-    cookie: { secure: isLocalhost(req) ? false : true }, // Set to true if using HTTPS
+    cookie: { secure: isLocalhost(req) ? false : true, httpOnly: true }, // Set to true if using HTTPS
   })(req, res, next);
 });
 
