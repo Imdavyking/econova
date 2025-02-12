@@ -75,7 +75,7 @@ export const verifyCallBack = async (req: Request, res: Response) => {
     req.session.user = user;
 
     res.cookie("user", JSON.stringify(user), {
-      httpOnly: true,
+      httpOnly: false,
       secure: isLocalhost(req) ? false : true,
       maxAge: 1000 * 60 * 60 * 24,
       sameSite: "none",
