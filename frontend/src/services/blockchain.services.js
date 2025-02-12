@@ -220,7 +220,7 @@ export const sendERC20TokenService = async ({
     const decimals = await contract.decimals();
     const tx = await contract.transfer(
       recipientAddress,
-      getWholeNumber(Number(amount) * 10 ** decimals).toString()
+      getWholeNumber(Number(amount) * 10 ** decimals)
     );
     await tx.wait(1);
 
