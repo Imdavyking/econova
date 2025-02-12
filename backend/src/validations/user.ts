@@ -1,5 +1,5 @@
 import Joi from "joi";
-import express, { Application, Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 export const createTweetsSchema = Joi.object({
   text: Joi.string().required(),
   id: Joi.string().required(),

@@ -41,7 +41,7 @@ async function switchOrAddChain(ethProvider) {
                 symbol: CHAIN_SYMBOL,
                 decimals: 18,
               },
-              rpcUrls: [CHAIN_RPC], // Replace with your RPC URL
+              rpcUrls: [CHAIN_RPC],
               blockExplorerUrls: [CHAIN_BLOCKEXPLORER_URL],
             },
           ]);

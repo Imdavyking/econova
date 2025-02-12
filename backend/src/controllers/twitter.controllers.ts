@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { LoginWithTwitter } from "../services/login.twitter.services";
 import { FRONTEND_URL } from "../utils/constants";
+import logger from "../config/logger";
 
 declare module "express-session" {
   interface SessionData {
@@ -71,6 +72,6 @@ export const verifyCallBack = async (req: Request, res: Response) => {
     path: "/",
   });
 
-  console.log(req.sessionID);
+  logger.info(req.sessionID);
   res.redirect(FRONTEND_URL!);
 };
