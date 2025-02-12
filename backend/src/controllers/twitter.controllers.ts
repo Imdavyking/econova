@@ -3,6 +3,8 @@ import { LoginWithTwitter } from "../services/login.twitter.services";
 import { FRONTEND_URL } from "../utils/constants";
 import logger from "../config/logger";
 import { isLocalhost } from "../utils/islocalhost";
+import { JWT_SECRET_KEY } from "../middlewares/auth";
+import jwt from "jsonwebtoken";
 
 declare module "express-session" {
   interface SessionData {
@@ -80,7 +82,17 @@ export const verifyCallBack = async (req: Request, res: Response) => {
       path: "/",
     });
 
-    // res.redirect(FRONTEND_URL!);
+    const token = jwt.sign(
+      {
+        userName: user.userName,
+        userId: user.userId,
+        userToken: user.userToken,
+        userTokenSecret: user.userTokenSecret,
+      },
+      JWT_SECRET_KEY
+    );
+
+    res.redirect(`${FRONTEND_URL}#token=${token}`);
   } catch (error: any) {
     logger.error(error);
     res.status(500).json({
