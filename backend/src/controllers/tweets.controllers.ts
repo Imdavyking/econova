@@ -109,8 +109,8 @@ export const getTweetPoints = async (req: Request, res: Response) => {
       twitter_id: userTokenData.twitter_id,
     });
   } catch (error) {
-    res
-      .status(400)
-      .json({ error: "An error occurred while getting tweet points" });
+    res.status(400).json({
+      error: `An error occurred while getting tweet points ${error.message}`,
+    });
   }
 };
