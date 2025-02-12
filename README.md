@@ -2,6 +2,11 @@
 
 EcoNova is a decentralized charity management system that enables transparent and secure donations using blockchain technology. It allows users to contribute to verified charitable organizations across different categories, ensuring trust, security, and efficiency in the donation process.
 
+## Docs
+
+- [docs](https://econovadocs.vercel.app/)
+  - Read the docs
+
 ## Requirements
 
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
@@ -22,24 +27,24 @@ cd econova/frontend
 yarn
 ```
 
-
 ## Environment Variables
-   Create a `.env` file in the project root and add the following variables:
 
-   ```env
-    VITE_SERVER_URL=
-    VITE_CONTRACT_ADDRESS=
-    VITE_CHAIN_ID=
-    VITE_CHAIN_NAME=
-    VITE_CHAIN_CURRENCY_NAME=
-    VITE_CHAIN_SYMBOL=
-    VITE_RPC_URL=
-    VITE_CHAIN_BLOCKEXPLORER_URL=
-    VITE_APP_NAME=
-    VITE_GRAPH_QL_ENDPOINT=
-    VITE_WALLET_CONNECT_PROJECT_ID=
-    VITE_TWITTER_NAME=
-   ```
+Create a `.env` file in the project root and add the following variables:
+
+```env
+ VITE_SERVER_URL=
+ VITE_CONTRACT_ADDRESS=
+ VITE_CHAIN_ID=
+ VITE_CHAIN_NAME=
+ VITE_CHAIN_CURRENCY_NAME=
+ VITE_CHAIN_SYMBOL=
+ VITE_RPC_URL=
+ VITE_CHAIN_BLOCKEXPLORER_URL=
+ VITE_APP_NAME=
+ VITE_GRAPH_QL_ENDPOINT=
+ VITE_WALLET_CONNECT_PROJECT_ID=
+ VITE_TWITTER_NAME=
+```
 
 # Usage
 
