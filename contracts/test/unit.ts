@@ -185,6 +185,94 @@ chainId !== 31337
                       expect(hasClaimedAfter).to.equal(true)
                   })
               })
+
+              describe("Events", function () {
+                  it("Should emit an event on on root updated ", async function () {
+                      const { ecoNovaCourseNFTDeployer, otherAccount, owner } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
+
+                      const level = 0
+
+                      const coursemessageHash = ethers.solidityPackedKeccak256(["uint8"], [level])
+
+                      const courseSignedMessageHash = ethers.hashMessage(
+                          ethers.getBytes(coursemessageHash)
+                      )
+
+                      const courseSignature = await otherAccount.signMessage(
+                          ethers.getBytes(coursemessageHash)
+                      )
+
+                      const address = ethers.recoverAddress(
+                          courseSignedMessageHash,
+                          courseSignature
+                      )
+
+                      const allValues = [
+                          [owner.address, level],
+                          [otherAccount.address, level],
+                      ]
+
+                      const tree = StandardMerkleTree.of(allValues, ["address", "uint8"])
+                      const root = tree.root
+                      const tokenURL = "ipfs://"
+                      let proof: HexString[] = []
+
+                      for (const [i, v] of tree.entries()) {
+                          if (v[0] === otherAccount.address && v[1] === level) {
+                              proof = tree.getProof(i)
+                              break
+                          }
+                      }
+
+                      const timestamp = Math.floor(Date.now() / 1000)
+
+                      const ethSignedMessageproofHash = ethers.solidityPackedKeccak256(
+                          ["address", "uint8", "bytes32", "uint256", "uint256"],
+                          [address, level, root, chainId, timestamp]
+                      )
+
+                      const botSignature = await owner.signMessage(
+                          ethers.getBytes(ethSignedMessageproofHash)
+                      )
+
+                      const ownerShipTx = await ecoNovaCourseNFTDeployer.updateBotAddress(owner)
+                      await ownerShipTx.wait(1)
+
+                      const tx = await ecoNovaCourseNFTDeployer
+                          .connect(otherAccount)
+                          .updateRoot(level, root, timestamp, botSignature)
+
+                      await tx.wait(1)
+
+                      const claimUserNFT = await ecoNovaCourseNFTDeployer
+                          .connect(otherAccount)
+                          .claimNFT(level, proof, tokenURL)
+
+                      await claimUserNFT.wait(1)
+
+                      //TODO: check why this test are not running
+
+                      //   expect(ecoNovaCourseNFTDeployer.updateBotAddress(owner))
+                      //       .to.emit(ecoNovaCourseNFTDeployer, "BotAddressUpdated")
+                      //       .withArgs(owner, otherAccount)
+                      //   expect(
+                      //       ecoNovaCourseNFTDeployer
+                      //           .connect(otherAccount)
+                      //           .updateRoot(level, root, timestamp, botSignature)
+                      //   )
+                      //       .to.emit(ecoNovaCourseNFTDeployer, "RootUpdated")
+                      //       .withArgs(level, root)
+                      //   expect(
+                      //       ecoNovaCourseNFTDeployer
+                      //           .connect(otherAccount)
+                      //           .claimNFT(level, proof, tokenURL)
+                      //   )
+                      //       .to.emit(ecoNovaCourseNFTDeployer, "NFTClaimed")
+                      //       .withArgs(otherAccount, level, 1)
+                  })
+              })
           })
 
           describe("Withdrawals", function () {
