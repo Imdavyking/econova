@@ -7,6 +7,7 @@ import {
   redeemPointsService,
   adviceOnHealthService,
   sendSonicService,
+  sendERC20TokenService,
 } from "../services/blockchain.services";
 import { AiResponseType, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
@@ -22,6 +23,7 @@ export class AIAgent {
       deployToken: deployTokenService,
       adviceOnHealth: adviceOnHealthService,
       sendSonic: sendSonicService,
+      sendERC20Token: sendERC20TokenService,
     };
     this.toolsInfo = {
       donate: `Example: Donate 100 USD to a cause. e.g ${Object.keys(
@@ -33,6 +35,8 @@ export class AIAgent {
       adviceOnHealth: "Example: Advice on how to improve my health",
       sendSonic:
         "Example: Send 10 SONIC to 0x1CE05Bf474802D49a77b3829c566a9AABbfb8C6d",
+      sendERC20Token:
+        "Example: Send 10 USDC to 0x1CE05Bf474802D49a77b3829c566a9AABbfb8C6d",
     };
   }
 

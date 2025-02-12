@@ -209,7 +209,7 @@ export const sendSonicService = async ({ recipientAddress, amount }) => {
   }
 };
 
-export const sendERC20Token = async ({
+export const sendERC20TokenService = async ({
   tokenAddress,
   recipientAddress,
   amount,
