@@ -80,7 +80,6 @@ export const verifyCallBack = async (req: Request, res: Response) => {
       maxAge: 1000 * 60 * 60 * 24,
       sameSite: "none",
       path: "/",
-      domain: "econova.vercel.app",
     });
 
     logger.info(req.sessionID);
