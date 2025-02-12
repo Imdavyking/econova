@@ -1,11 +1,13 @@
+const key = "authToken";
+
 export const saveTwitterAuth = (data) => {
-  localStorage.setItem("authToken", data.authToken);
+  localStorage.setItem(key, data.authToken);
 };
 
 export const getTwitterAuth = () => {
-  return localStorage.getItem("authToken");
+  return localStorage.getItem(key);
 };
 
 export const removeTwitterAuth = () => {
-  localStorage.removeItem("authToken");
+  localStorage.removeItem(key);
 };
