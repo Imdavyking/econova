@@ -20,6 +20,6 @@ export const getUserTwitterInfo = async () => {
   }
 };
 
-export const userLogout = async () => {
+export const userLogout = () => {
   removeTwitterAuth();
 };
