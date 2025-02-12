@@ -72,7 +72,18 @@ export const verifyCallBack = async (req: Request, res: Response) => {
 
     delete req.session.tokenSecret;
 
-    req.session.user = user;
+    await new Promise((resolve) => {
+      req.session.destroy((err) => {
+        if (err) {
+          logger.error(err);
+          res.status(500).json({
+            error: "An error occurred while destroying the session",
+          });
+          return;
+        }
+        resolve(null);
+      });
+    });
 
     res.cookie("user", JSON.stringify(user), {
       httpOnly: true,
