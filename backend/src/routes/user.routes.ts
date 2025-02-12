@@ -3,8 +3,9 @@ import {
   deleteTwitterCookie,
   getUserTwitterInfo,
 } from "../controllers/user.controllers";
+import { auth } from "../middlewares/auth";
 const userRoutes = express.Router();
-userRoutes.get("/", getUserTwitterInfo);
-userRoutes.get("/logout", deleteTwitterCookie);
+userRoutes.get("/", auth, getUserTwitterInfo);
+userRoutes.get("/logout", auth, deleteTwitterCookie);
 
 export default userRoutes;
