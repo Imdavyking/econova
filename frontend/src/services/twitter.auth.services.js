@@ -5,3 +5,7 @@ export const saveTwitterAuth = async (data) => {
 export const getTwitterAuth = async () => {
   return localStorage.getItem("authToken");
 };
+
+export const removeTwitterAuth = async () => {
+  localStorage.removeItem("authToken");
+};
