@@ -72,15 +72,15 @@ export const verifyCallBack = async (req: Request, res: Response) => {
 
     delete req.session.tokenSecret;
 
-    res.cookie("user", JSON.stringify(user), {
-      httpOnly: true,
-      secure: isLocalhost(req) ? false : true,
-      maxAge: 1000 * 60 * 60 * 24,
-      sameSite: "none",
-      path: "/",
-    });
+    // res.cookie("user", JSON.stringify(user), {
+    //   httpOnly: true,
+    //   secure: isLocalhost(req) ? false : true,
+    //   maxAge: 1000 * 60 * 60 * 24,
+    //   sameSite: "none",
+    //   path: "/",
+    // });
 
-    res.json(user);
+    req.session.user = user;
 
     res.redirect(FRONTEND_URL!);
   } catch (error: any) {
