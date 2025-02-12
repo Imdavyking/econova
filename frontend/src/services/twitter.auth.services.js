@@ -1,7 +1,7 @@
 const key = "authToken";
 
-export const saveTwitterAuth = (data) => {
-  localStorage.setItem(key, data.authToken);
+export const saveTwitterAuth = (authToken) => {
+  localStorage.setItem(key, authToken);
 };
 
 export const getTwitterAuth = () => {
