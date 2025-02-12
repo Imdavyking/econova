@@ -84,7 +84,7 @@ export const verifyCallBack = async (req: Request, res: Response) => {
 
     const token = jwt.sign(user, JWT_SECRET_KEY);
 
-    res.redirect(`${FRONTEND_URL}#token=${token}`);
+    res.redirect(`${FRONTEND_URL}#${token}`);
   } catch (error: any) {
     logger.error(error);
     res.status(500).json({
