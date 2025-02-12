@@ -18,15 +18,11 @@ export const getUserTwitterInfo = async (req: Request, res: Response) => {
       return;
     }
 
-    res.json({ user });
-
-    const userInfo = JSON.parse(user);
-
     twitterLogin.callbackUrl = getUrlCallback(req);
 
     const userTokenData = await twitterLogin.validateUserToken(
-      userInfo.userToken,
-      userInfo.userTokenSecret
+      user.userToken,
+      user.userTokenSecret
     );
 
     if (!userTokenData) {
