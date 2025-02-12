@@ -5,9 +5,10 @@ import {
   getTweetPoints,
 } from "../controllers/tweets.controllers";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
+import { auth } from "../middlewares/auth";
 const tweetRoutes = express.Router();
 tweetRoutes.get("/", getTweets);
-tweetRoutes.get("/points/:tweetId/:tweetSignature", getTweetPoints);
+tweetRoutes.get("/points/:tweetId/:tweetSignature", auth, getTweetPoints);
 tweetRoutes.get("/:id", getTweetByTweetID);
 
 /**

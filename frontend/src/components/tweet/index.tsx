@@ -14,6 +14,7 @@ import {
   getFromLocalStorage,
   saveToLocalStorage,
 } from "../../services/local.storage.db";
+import { getTwitterAuth } from "../../services/twitter.auth.services";
 
 interface Results {
   points: {
@@ -34,9 +35,18 @@ export const Tweet = ({ tweet }) => {
     try {
       setIsChecking(true);
       const signature = await signTweetId(tweetId);
+
+      const token = getTwitterAuth();
+      if (!token) {
+        throw new Error("No token found");
+      }
       const response = await fetch(
         `${SERVER_URL}/api/tweets/points/${tweetId}/${signature}`,
-        { credentials: "include" }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const data = await response.json();
 
