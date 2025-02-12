@@ -23,8 +23,8 @@ if (app.get("env") === "production") {
 
 app.use((req, res, next) => {
   session({
-    secret: JWT_SECRET_KEY, // Change this to a strong secret
-    cookie: { secure: isLocalhost(req) ? false : true, httpOnly: true }, // Set to true if using HTTPS
+    secret: JWT_SECRET_KEY,
+    cookie: { secure: isLocalhost(req) ? false : true, httpOnly: true },
   })(req, res, next);
 });
 
