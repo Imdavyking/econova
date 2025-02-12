@@ -15,6 +15,7 @@ import {
 } from "../../services/user.twitter.services";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaUserCircle, FaCrown, FaCoins } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
@@ -26,6 +27,17 @@ const Home = () => {
     setShowLogoutPopup(false);
     userLogout();
   };
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hash = location.hash.replace("#", "");
+
+    if (hash) {
+      localStorage.setItem("authToken", hash);
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     dom("body").removeClass("error-page").removeClass("login").addClass("main");
