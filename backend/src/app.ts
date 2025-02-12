@@ -21,28 +21,15 @@ if (app.get("env") === "production") {
   app.set("trust proxy", 1);
 }
 
-app.use((req, res, next) => {
+app.use(
   session({
     secret: JWT_SECRET_KEY,
-    cookie: { secure: isLocalhost(req) ? false : true, httpOnly: true },
-  })(req, res, next);
-});
-
-// 🏷️ Test Route to Set Session
-app.get("/set-session", (req, res) => {
-  req.session.user = {
-    userName: "DavyKing",
-    userToken: "admin",
-    userId: "1",
-    userTokenSecret: "admin",
-  };
-  res.send("Session has been set!");
-});
-
-// 🔍 Test Route to Get Session Data
-app.get("/get-session", (req, res) => {
-  res.send(req.session.user || "No session found");
-});
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    },
+  })
+);
 
 app.use(cookieParser());
 
