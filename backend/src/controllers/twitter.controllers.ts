@@ -23,55 +23,69 @@ export const getUrlCallback = (req: Request) =>
   `${req.protocol}://${req.get("host")}/twitter/callback`;
 
 export const loginTwitter = async (req: Request, res: Response) => {
-  twitterLogin.callbackUrl = getUrlCallback(req);
-  const { tokenSecret, url } = await twitterLogin.login();
+  try {
+    twitterLogin.callbackUrl = getUrlCallback(req);
+    const { tokenSecret, url } = await twitterLogin.login();
 
-  req.session.tokenSecret = tokenSecret;
+    req.session.tokenSecret = tokenSecret;
 
-  res.redirect(url);
+    res.redirect(url);
+  } catch (error: any) {
+    logger.error(error);
+    res.status(500).json({
+      error: `An error occurred while logging in with Twitter: ${error.message}`,
+    });
+  }
 };
 
 export const verifyCallBack = async (req: Request, res: Response) => {
-  twitterLogin.callbackUrl = getUrlCallback(req);
-  const { oauth_token, oauth_verifier } = req.query as {
-    oauth_token: string;
-    oauth_verifier: string;
-  };
+  try {
+    twitterLogin.callbackUrl = getUrlCallback(req);
+    const { oauth_token, oauth_verifier } = req.query as {
+      oauth_token: string;
+      oauth_verifier: string;
+    };
 
-  if (!oauth_token || !oauth_verifier) {
-    res.status(400).json({
-      error: "Invalid or missing OAuth parameters for login callback",
+    if (!oauth_token || !oauth_verifier) {
+      res.status(400).json({
+        error: "Invalid or missing OAuth parameters for login callback",
+      });
+      return;
+    }
+
+    if (!req.session.tokenSecret) {
+      res.status(400).json({
+        error: "Missing OAuth token secret in session",
+      });
+      return;
+    }
+
+    const user = await twitterLogin.callback(
+      {
+        oauth_token,
+        oauth_verifier,
+      },
+      req.session.tokenSecret!
+    );
+
+    delete req.session.tokenSecret;
+
+    req.session.user = user;
+
+    res.cookie("user", JSON.stringify(user), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24,
+      sameSite: "strict",
+      path: "/",
     });
-    return;
-  }
 
-  if (!req.session.tokenSecret) {
-    res.status(400).json({
-      error: "Missing OAuth token secret in session",
+    logger.info(req.sessionID);
+    res.redirect(FRONTEND_URL!);
+  } catch (error: any) {
+    logger.error(error);
+    res.status(500).json({
+      error: `An error occurred while logging in with Twitter: ${error.message}`,
     });
-    return;
   }
-
-  const user = await twitterLogin.callback(
-    {
-      oauth_token,
-      oauth_verifier,
-    },
-    req.session.tokenSecret!
-  );
-
-  delete req.session.tokenSecret;
-
-  req.session.user = user;
-
-  res.cookie("user", JSON.stringify(user), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 1000 * 60 * 60 * 24,
-    sameSite: "strict",
-    path: "/",
-  });
-
-  logger.info(req.sessionID);
-  res.redirect(FRONTEND_URL!);
 };
