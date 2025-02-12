@@ -17,9 +17,14 @@ const Footer = () => {
       {/* Footer Links */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center md:text-left">
         <ul className="space-y-2">
-          <li className="font-semibold">Terms of Operation</li>
+          <li className="font-semibold">Information</li>
           <li>
             <Link to="/">Terms & Condition</Link>
+          </li>
+          <li>
+            <Link to="https://econovadocs.vercel.app/" target="_blank">
+              Docs
+            </Link>
           </li>
         </ul>
 
