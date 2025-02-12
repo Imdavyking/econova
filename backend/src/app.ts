@@ -24,11 +24,9 @@ if (app.get("env") === "production") {
 app.use(
   session({
     secret: JWT_SECRET_KEY,
-
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
     },
   })
 );
