@@ -158,7 +158,7 @@
           },
           {
             "question": "How can developers debug and optimize smart contract execution?",
-            "answer": "Using tools like Hardhat, Foundry, and Sonic’s built-in debugging tools allows developers to analyze contract execution and optimize performance."
+            "answer": "Using tools like Hardhat, Foundry, and Sonic's built-in debugging tools allows developers to analyze contract execution and optimize performance."
           }
         ]
       },
@@ -207,7 +207,7 @@
         "subtopics": [
           {
             "question": "How is Sonic being adopted in DeFi, gaming, and enterprise solutions?",
-            "answer": "Sonic’s high-speed and low-cost transactions make it ideal for DeFi platforms, gaming economies, and enterprise blockchain solutions."
+            "answer": "Sonic's high-speed and low-cost transactions make it ideal for DeFi platforms, gaming economies, and enterprise blockchain solutions."
           },
           {
             "question": "What are some successful Sonic-based projects?",

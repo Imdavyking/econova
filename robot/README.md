@@ -3,7 +3,7 @@
 #### **1. User Interaction with Bot Tweets**
 
 - **Action**: Users like, retweet, or quote-tweet content from the bot's Twitter account.
-- **Backend Logic**: A system monitors Twitter for user interactions with the bot’s tweets.
+- **Backend Logic**: A system monitors Twitter for user interactions with the bot's tweets.
 
 #### **2. User Connects Twitter to Website**
 
@@ -17,7 +17,7 @@
 #### **3. Website Checks User Interaction with Bot**
 
 - **Backend Logic**:
-  - Use Twitter's API to fetch user activity related to the bot’s tweets:
+  - Use Twitter's API to fetch user activity related to the bot's tweets:
     - Check for likes, retweets, or quote-tweets.
     - Calculate interaction points for each action:
       - Like: 100 point
@@ -49,13 +49,13 @@
 
 - **Blockchain Integration**:
   - Deploy an ERC20 smart contract to represent the tokens.
-  - Use a function like `mint(address to, uint256 amount)` to mint tokens to the user’s wallet address.
+  - Use a function like `mint(address to, uint256 amount)` to mint tokens to the user's wallet address.
   - Notify the user via the frontend that the tokens have been sent to their wallet.
 
 #### **7. User Receives Tokens**
 
 - **Frontend Actions**:
-  - Show the token balance in the user’s connected wallet using a Web3 provider.
+  - Show the token balance in the user's connected wallet using a Web3 provider.
   - Include an option for the user to view their transaction history.
 
 ### **Components**
@@ -107,7 +107,7 @@
 2. Website retrieves their past interactions with the bot.
 3. Points are calculated and displayed on the user's dashboard.
 4. User redeems points to mint ERC20 tokens.
-5. Tokens are sent to the user’s wallet.
+5. Tokens are sent to the user's wallet.
 
 ## Installation
 
