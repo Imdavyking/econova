@@ -49,8 +49,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
               const ecoNovaCourseNFTDeployer = await EcoNovaCourseNFTDeployer.deploy(wallet)
 
-              ecoNDeployer.addCharity(charityDeployer)
-
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
 
               const ecoNovaTokenAddress = await ecoNDeployer.i_ecoNovaToken()
