@@ -18,7 +18,7 @@ contract Charity is Ownable, ReentrancyGuard {
     error Charity__WithdrawalDisabled();
     error Charity__TokenAlreadyWhitelisted();
     error Charity__TokenNotWhitelisted();
-    error Charity__MustBeAutomatedOrOwner();
+    error Charity__MustBeAutomatedOrOwner(address caller);
 
     /**
      * mappings
@@ -42,7 +42,7 @@ contract Charity is Ownable, ReentrancyGuard {
 
     modifier onlyAutomationOrOwner() {
         if (msg.sender != automationBot && msg.sender != owner()) {
-            revert Charity__MustBeAutomatedOrOwner();
+            revert Charity__MustBeAutomatedOrOwner(msg.sender);
         }
         _;
     }
