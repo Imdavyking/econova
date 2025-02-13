@@ -107,26 +107,7 @@ const Home = () => {
                       )}
                     </MenuItem>
                   )}
-                  {twitterHandle ? (
-                    <MenuItem>
-                      {({ isactive }) => (
-                        <a
-                          href="/leaderboard"
-                          className={`flex items-center px-4 py-2 text-gray-700 w-full text-left ${
-                            isactive ? "bg-gray-200" : ""
-                          }`}
-                        >
-                          Leaderboard
-                          <FaCrown
-                            className="ml-2 text-xl cursor-pointer"
-                            style={{ color: "gold" }}
-                          />
-                        </a>
-                      )}
-                    </MenuItem>
-                  ) : (
-                    <></>
-                  )}
+
                   {twitterHandle ? (
                     <MenuItem>
                       {({ isactive }) => (
@@ -147,6 +128,22 @@ const Home = () => {
                   ) : (
                     <></>
                   )}
+                  <MenuItem>
+                    {({ isactive }) => (
+                      <a
+                        href="/leaderboard"
+                        className={`flex items-center px-4 py-2 text-gray-700 w-full text-left ${
+                          isactive ? "bg-gray-200" : ""
+                        }`}
+                      >
+                        Leaderboard
+                        <FaCrown
+                          className="ml-2 text-xl cursor-pointer"
+                          style={{ color: "gold" }}
+                        />
+                      </a>
+                    )}
+                  </MenuItem>
                 </MenuItems>
               </Menu>
             </div>
