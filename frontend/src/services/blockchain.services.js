@@ -105,6 +105,7 @@ const getContract = async () => {
   await switchOrAddChain(signer.provider);
   return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 };
+
 const getNFTCourseContract = async () => {
   if (!window.ethereum) {
     toast.info(
@@ -120,6 +121,38 @@ const getNFTCourseContract = async () => {
 
 export const adviceOnHealthService = async ({ advice }) => {
   return advice;
+};
+
+export const wrapEthService = async ({ amount }) => {
+  try {
+    const contract = await getIWethContract(
+      "0x0Ae7fBf3fA4b3f7FfCfFfFfFfFfFfFfFfFfFfF"
+    );
+    const tx = await contract.deposit({
+      value: ethers.utils.parseEther(amount.toString()),
+    });
+    await tx.wait(1);
+
+    return `wrapped ${amount} ETH`;
+  } catch (error) {
+    return `${FAILED_KEY} to wrap ${amount} ETH`;
+  }
+};
+
+export const unwrapEthService = async ({ amount }) => {
+  try {
+    const contract = await getIWethContract(
+      "0x0Ae7fBf3fA4b3f7FfCfFfFfFfFfFfFfFfFfFfF"
+    );
+    const tx = await contract.withdraw(
+      ethers.utils.parseEther(amount.toString())
+    );
+    await tx.wait(1);
+
+    return `unwrapped ${amount} ETH`;
+  } catch (error) {
+    return `${FAILED_KEY} to unwrap ${amount} ETH`;
+  }
 };
 
 export const saveHealthyBMIProofService = async ({
