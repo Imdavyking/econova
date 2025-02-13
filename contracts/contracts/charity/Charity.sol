@@ -15,6 +15,18 @@ contract Charity is Ownable, ReentrancyGuard {
     error Charity__InsufficientBalance();
     error Charity__SendingFailed();
     error Charity__WithdrawalDisabled();
+    error Charity__TokenAlreadyWhitelisted();
+    error Charity__TokenNotWhitelisted();
+
+    /**
+     * mappings
+     */
+    mapping(address => bool) private whitelistedTokens;
+
+    /**
+     * arrays
+     */
+    address[] private tokenList;
 
     enum Category {
         Education,
@@ -28,6 +40,8 @@ contract Charity is Ownable, ReentrancyGuard {
 
     /** events */
     event DonationWithdrawn(address indexed organization, address indexed token, uint256 amount);
+    event TokenWhitelisted(address token);
+    event TokenRemoved(address token);
 
     constructor(Category _category) Ownable(msg.sender) {
         charityCategory = _category;
@@ -50,19 +64,82 @@ contract Charity is Ownable, ReentrancyGuard {
     }
 
     /**
+     * @dev Adds a token to the whitelist.
+     * @param token The address of the token to add.
+     */
+    function addWhitelistedToken(address token) external onlyOwner {
+        if (whitelistedTokens[token]) {
+            revert Charity__TokenAlreadyWhitelisted();
+        }
+
+        whitelistedTokens[token] = true;
+        tokenList.push(token);
+
+        emit TokenWhitelisted(token);
+    }
+
+    /**
+     * @dev Removes a token from the whitelist.
+     * @param token The address of the token to remove.
+     */
+    function removeWhitelistedToken(address token) external onlyOwner {
+        if (!whitelistedTokens[token]) {
+            revert Charity__TokenNotWhitelisted();
+        }
+
+        whitelistedTokens[token] = false;
+
+        for (uint256 i = 0; i < tokenList.length; i++) {
+            if (tokenList[i] == token) {
+                tokenList[i] = tokenList[tokenList.length - 1];
+                tokenList.pop();
+                break;
+            }
+        }
+
+        emit TokenRemoved(token);
+    }
+
+    /**
+     * @dev Returns the list of whitelisted ERC-20 tokens.
+     */
+    function getWhitelistedTokens() public view returns (address[] memory) {
+        return tokenList;
+    }
+
+    /**
      * Automates funds distribution to the organization.
      * @return canExec - whether the contract can execute the withdrawal
      * @return execPayload - the payload to execute the withdrawal
      */
     function checker() external view returns (bool canExec, bytes memory execPayload) {
+        address organization = owner();
         uint256 ethBalance = address(this).balance;
+        if (canWithdrawFunds && ethBalance > 0) {
+            return (
+                true,
+                abi.encodeCall(
+                    this.withdrawToOrganization,
+                    (ETH_ADDRESS, ethBalance, organization)
+                )
+            );
+        }
 
-        canExec = canWithdrawFunds && ethBalance > 0;
+        address[] memory tokens = getWhitelistedTokens();
+        for (uint256 i = 0; i < tokens.length; i++) {
+            uint256 tokenBalance = IERC20(tokens[i]).balanceOf(address(this));
+            if (tokenBalance > 0) {
+                return (
+                    true,
+                    abi.encodeCall(
+                        this.withdrawToOrganization,
+                        (tokens[i], tokenBalance, organization)
+                    )
+                );
+            }
+        }
 
-        execPayload = abi.encodeCall(
-            this.withdrawToOrganization,
-            (ETH_ADDRESS, ethBalance, owner())
-        );
+        return (false, bytes(""));
     }
 
     /**
