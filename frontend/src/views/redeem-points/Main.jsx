@@ -22,7 +22,7 @@ function Main() {
     dom("body").removeClass("main").removeClass("error-page").addClass("login");
     getProjectTokenDetails()
       .then((data) => {
-        console.log(data);
+        setTokenSymbol(data.symbol);
       })
       .catch((err) => toast.error(err));
     getPointsService()
@@ -41,6 +41,7 @@ function Main() {
   const navigate = useNavigate();
 
   const [points, setPoints] = useState("");
+  const [tokenSymbol, setTokenSymbol] = useState("");
 
   const [accumulatedPoints, setAccumulatedPoints] = useState("****");
 
@@ -108,7 +109,8 @@ function Main() {
               </a>
               <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
                 <h2 className="intro-x font-bold text-2xl xl:text-3xl text-center xl:text-left">
-                  Redeem your points to earn money. {accumulatedPoints} LFT
+                  Redeem your points to earn money. {accumulatedPoints}{" "}
+                  {tokenSymbol}
                 </h2>
                 <div className="intro-x mt-2 text-slate-400 dark:text-slate-400 xl:hidden text-center">
                   ...A blockchain-powered charitable impact
