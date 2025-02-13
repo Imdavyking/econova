@@ -16,7 +16,7 @@ import {
   FAILED_KEY,
   FIAT_DECIMALS,
   NFT_COURSE_CONTRACT_ADDRESS,
-  WRAPPED_SONIC_COURSE_CONTRACT_ADDRESS,
+  WRAPPED_SONIC_CONTRACT_ADDRESS,
 } from "../utils/constants";
 import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
@@ -78,11 +78,7 @@ const getIWethContract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider);
-  return new ethers.Contract(
-    WRAPPED_SONIC_COURSE_CONTRACT_ADDRESS,
-    iWethAbi,
-    signer
-  );
+  return new ethers.Contract(WRAPPED_SONIC_CONTRACT_ADDRESS, iWethAbi, signer);
 };
 
 const getERC20Contract = async (address) => {
