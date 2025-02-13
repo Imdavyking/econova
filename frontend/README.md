@@ -45,6 +45,7 @@ Create a `.env` file in the project root and add the following variables:
  VITE_WALLET_CONNECT_PROJECT_ID=
  VITE_TWITTER_NAME=
  VITE_NFT_COURSE_CONTRACT_ADDRESS=
+ VITE_WRAPPED_SONIC_COURSE_CONTRACT_ADDRESS=
 ```
 
 # Usage

@@ -16,6 +16,7 @@ import {
   FAILED_KEY,
   FIAT_DECIMALS,
   NFT_COURSE_CONTRACT_ADDRESS,
+  WRAPPED_SONIC_COURSE_CONTRACT_ADDRESS,
 } from "../utils/constants";
 import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
@@ -67,7 +68,7 @@ export const getSigner = async () => {
   return provider.getSigner();
 };
 
-const getIWethContract = async (address) => {
+const getIWethContract = async () => {
   if (!window.ethereum) {
     toast.info(
       "MetaMask is not installed. Please install it to use this feature."
@@ -77,7 +78,11 @@ const getIWethContract = async (address) => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider);
-  return new ethers.Contract(address, iWethAbi, signer);
+  return new ethers.Contract(
+    WRAPPED_SONIC_COURSE_CONTRACT_ADDRESS,
+    iWethAbi,
+    signer
+  );
 };
 
 const getERC20Contract = async (address) => {
@@ -125,33 +130,29 @@ export const adviceOnHealthService = async ({ advice }) => {
 
 export const wrapEthService = async ({ amount }) => {
   try {
-    const contract = await getIWethContract(
-      "0x0Ae7fBf3fA4b3f7FfCfFfFfFfFfFfFfFfFfFfF"
-    );
+    const contract = await getIWethContract();
     const tx = await contract.deposit({
       value: ethers.utils.parseEther(amount.toString()),
     });
     await tx.wait(1);
 
-    return `wrapped ${amount} ETH`;
+    return `wrapped ${amount} ${CHAIN_SYMBOL}`;
   } catch (error) {
-    return `${FAILED_KEY} to wrap ${amount} ETH`;
+    return `${FAILED_KEY} to wrap ${amount} ${CHAIN_SYMBOL}`;
   }
 };
 
 export const unwrapEthService = async ({ amount }) => {
   try {
-    const contract = await getIWethContract(
-      "0x0Ae7fBf3fA4b3f7FfCfFfFfFfFfFfFfFfFfFfF"
-    );
+    const contract = await getIWethContract();
     const tx = await contract.withdraw(
       ethers.utils.parseEther(amount.toString())
     );
     await tx.wait(1);
 
-    return `unwrapped ${amount} ETH`;
+    return `unwrapped ${amount} ${CHAIN_SYMBOL}`;
   } catch (error) {
-    return `${FAILED_KEY} to unwrap ${amount} ETH`;
+    return `${FAILED_KEY} to unwrap ${amount} ${CHAIN_SYMBOL}`;
   }
 };
 
