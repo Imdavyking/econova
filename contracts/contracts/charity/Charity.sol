@@ -50,6 +50,22 @@ contract Charity is Ownable, ReentrancyGuard {
     }
 
     /**
+     * Automates funds distribution to the organization.
+     * @return canExec - whether the contract can execute the withdrawal
+     * @return execPayload - the payload to execute the withdrawal
+     */
+    function checker() external view returns (bool canExec, bytes memory execPayload) {
+        uint256 ethBalance = address(this).balance;
+
+        canExec = canWithdrawFunds && ethBalance > 0;
+
+        execPayload = abi.encodeCall(
+            this.withdrawToOrganization,
+            (ETH_ADDRESS, ethBalance, owner())
+        );
+    }
+
+    /**
      * @dev Check the balance of the contract.
      * @param token The address of the token to check the balance of.
      */
