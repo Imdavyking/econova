@@ -78,7 +78,11 @@ const getIWSonicContract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider);
-  return new ethers.Contract(WRAPPED_SONIC_CONTRACT_ADDRESS, iWrappedSonicAbi, signer);
+  return new ethers.Contract(
+    WRAPPED_SONIC_CONTRACT_ADDRESS,
+    iWrappedSonicAbi,
+    signer
+  );
 };
 
 const getERC20Contract = async (address) => {
@@ -134,7 +138,7 @@ export const wrapSonicService = async ({ amount }) => {
 
     return `wrapped ${amount} ${CHAIN_SYMBOL}`;
   } catch (error) {
-    return `${FAILED_KEY} to wrap ${amount} ${CHAIN_SYMBOL}`;
+    return `${FAILED_KEY} to wrap ${amount} ${CHAIN_SYMBOL} ${error.message}`;
   }
 };
 
@@ -148,7 +152,7 @@ export const unwrapSonicService = async ({ amount }) => {
 
     return `unwrapped ${amount} ${CHAIN_SYMBOL}`;
   } catch (error) {
-    return `${FAILED_KEY} to unwrap ${amount} ${CHAIN_SYMBOL}`;
+    return `${FAILED_KEY} to unwrap ${amount} ${CHAIN_SYMBOL} ${error.message}`;
   }
 };
 
