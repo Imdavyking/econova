@@ -8,6 +8,7 @@ contract Charity is Ownable, ReentrancyGuard {
     /** state variables */
     bool public canWithdrawFunds = true;
     Category public charityCategory;
+    address public automationBot = address(0);
     /** constants */
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
@@ -17,6 +18,7 @@ contract Charity is Ownable, ReentrancyGuard {
     error Charity__WithdrawalDisabled();
     error Charity__TokenAlreadyWhitelisted();
     error Charity__TokenNotWhitelisted();
+    error Charity__MustBeAutomatedOrOwner();
 
     /**
      * mappings
@@ -38,6 +40,13 @@ contract Charity is Ownable, ReentrancyGuard {
         Other
     }
 
+    modifier onlyAutomationOrOwner() {
+        if (msg.sender != automationBot && msg.sender != owner()) {
+            revert Charity__MustBeAutomatedOrOwner();
+        }
+        _;
+    }
+
     /** events */
     event DonationWithdrawn(address indexed organization, address indexed token, uint256 amount);
     event TokenWhitelisted(address token);
@@ -45,6 +54,14 @@ contract Charity is Ownable, ReentrancyGuard {
 
     constructor(Category _category) Ownable(msg.sender) {
         charityCategory = _category;
+    }
+
+    /**
+     * @dev Set the automation bot address.
+     * @param _automation address of the automation bot
+     */
+    function setAutomationBot(address _automation) external onlyOwner {
+        automationBot = _automation;
     }
 
     /**
@@ -164,7 +181,7 @@ contract Charity is Ownable, ReentrancyGuard {
         address token,
         uint256 amount,
         address organization
-    ) external onlyOwner nonReentrant {
+    ) external onlyAutomationOrOwner nonReentrant {
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
         }
@@ -178,6 +195,9 @@ contract Charity is Ownable, ReentrancyGuard {
                 revert Charity__SendingFailed();
             }
         } else {
+            if (!whitelistedTokens[token]) {
+                revert Charity__TokenNotWhitelisted();
+            }
             bool sendSuccess = IERC20(token).transfer(organization, amount);
             if (!sendSuccess) {
                 revert Charity__SendingFailed();
