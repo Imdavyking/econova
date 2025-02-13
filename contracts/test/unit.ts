@@ -468,7 +468,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           ],
                           ["1", "1"]
                       )
-                      //   const receipt = await ecoD.wait(1)
 
                       await expect(ecoD).to.emit(ecoNDeployer, "BMIRecorded").withArgs(owner, true)
                   })
