@@ -2,7 +2,7 @@
 import abi from "@/assets/json/abi.json";
 import erc20 from "@/assets/json/erc20.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
-import iWethAbi from "@/assets/json/iweth.json";
+import iWrappedSonicAbi from "@/assets/json/iwrapped-sonic.json";
 import { BrowserProvider, ethers } from "ethers";
 import {
   BMI_ADVICE,
@@ -68,7 +68,7 @@ export const getSigner = async () => {
   return provider.getSigner();
 };
 
-const getIWethContract = async () => {
+const getIWSonicContract = async () => {
   if (!window.ethereum) {
     toast.info(
       "MetaMask is not installed. Please install it to use this feature."
@@ -78,7 +78,7 @@ const getIWethContract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider);
-  return new ethers.Contract(WRAPPED_SONIC_CONTRACT_ADDRESS, iWethAbi, signer);
+  return new ethers.Contract(WRAPPED_SONIC_CONTRACT_ADDRESS, iWrappedSonicAbi, signer);
 };
 
 const getERC20Contract = async (address) => {
@@ -126,7 +126,7 @@ export const adviceOnHealthService = async ({ advice }) => {
 
 export const wrapSonicService = async ({ amount }) => {
   try {
-    const contract = await getIWethContract();
+    const contract = await getIWSonicContract();
     const tx = await contract.deposit({
       value: ethers.utils.parseEther(amount.toString()),
     });
@@ -140,7 +140,7 @@ export const wrapSonicService = async ({ amount }) => {
 
 export const unwrapSonicService = async ({ amount }) => {
   try {
-    const contract = await getIWethContract();
+    const contract = await getIWSonicContract();
     const tx = await contract.withdraw(
       ethers.utils.parseEther(amount.toString())
     );
