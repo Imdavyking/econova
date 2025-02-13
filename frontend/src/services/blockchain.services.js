@@ -128,7 +128,7 @@ export const adviceOnHealthService = async ({ advice }) => {
   return advice;
 };
 
-export const wrapEthService = async ({ amount }) => {
+export const wrapSonicService = async ({ amount }) => {
   try {
     const contract = await getIWethContract();
     const tx = await contract.deposit({
@@ -142,7 +142,7 @@ export const wrapEthService = async ({ amount }) => {
   }
 };
 
-export const unwrapEthService = async ({ amount }) => {
+export const unwrapSonicService = async ({ amount }) => {
   try {
     const contract = await getIWethContract();
     const tx = await contract.withdraw(

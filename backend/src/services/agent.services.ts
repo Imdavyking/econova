@@ -29,6 +29,20 @@ const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 
 const tools = {
+  wrapSonic: tool(() => undefined, {
+    name: "wrapSonic",
+    description: "Wrap sonic to wS.",
+    schema: z.object({
+      amount: z.number().describe("The amount of sonic to wrap"),
+    }),
+  }),
+  unwrapSonic: tool(() => undefined, {
+    name: "unwrapsonic",
+    description: "Unwrap wS to Sonic.",
+    schema: z.object({
+      amount: z.number().describe("The amount of wS to unwrap"),
+    }),
+  }),
   sendERC20Token: tool(() => undefined, {
     name: "sendERC20Token",
     description: "Send ERC20 tokens to a specific address.",
