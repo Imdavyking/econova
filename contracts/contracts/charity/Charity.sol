@@ -3,8 +3,10 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IGelatoChecker} from "../interfaces/IGelatoChecker.sol";
+import {ICharity} from "../interfaces/ICharity.sol";
 
-contract Charity is Ownable, ReentrancyGuard {
+contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     /** state variables */
     bool public canWithdrawFunds = true;
     Category public charityCategory;
@@ -141,7 +143,7 @@ contract Charity is Ownable, ReentrancyGuard {
             return (
                 true,
                 abi.encodeCall(
-                    this.withdrawToOrganization,
+                    ICharity.withdrawToOrganization,
                     (ETH_ADDRESS, ethBalance, organization)
                 )
             );
@@ -154,7 +156,7 @@ contract Charity is Ownable, ReentrancyGuard {
                 return (
                     true,
                     abi.encodeCall(
-                        this.withdrawToOrganization,
+                        ICharity.withdrawToOrganization,
                         (tokens[i], tokenBalance, organization)
                     )
                 );
