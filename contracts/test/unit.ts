@@ -231,10 +231,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           [address, level, root, chainId, timestamp]
                       )
 
-                      const botSignedMessage = ethers.hashMessage(
-                          ethers.getBytes(ethSignedMessageproofHash)
-                      )
-
                       const botSignature = await owner.signMessage(
                           ethers.getBytes(ethSignedMessageproofHash)
                       )
@@ -244,9 +240,9 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
                       const expiryTime = await ecoNovaCourseNFTDeployer.TIMESTAMP_EXPIRY()
 
-                      time.increaseTo(timestamp + Number(expiryTime) + 1)
+                      await time.increaseTo(timestamp + Number(expiryTime) + 1)
 
-                      expect(
+                      await expect(
                           ecoNovaCourseNFTDeployer
                               .connect(otherAccount)
                               .updateRoot(level, root, timestamp, botSignature)
@@ -311,37 +307,43 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const ownerShipTx = await ecoNovaCourseNFTDeployer.updateBotAddress(owner)
                       await ownerShipTx.wait(1)
 
-                      const tx = await ecoNovaCourseNFTDeployer
-                          .connect(otherAccount)
-                          .updateRoot(level, root, timestamp, botSignature)
+                      await expect(
+                          ecoNovaCourseNFTDeployer
+                              .connect(otherAccount)
+                              .updateRoot(level, root, timestamp, botSignature)
+                      )
+                          .to.emit(ecoNovaCourseNFTDeployer, "RootUpdated")
+                          .withArgs(level, root)
 
-                      await tx.wait(1)
+                      await expect(
+                          ecoNovaCourseNFTDeployer
+                              .connect(otherAccount)
+                              .claimNFT(level, proof, tokenURL)
+                      )
+                          .to.emit(ecoNovaCourseNFTDeployer, "NFTClaimed")
+                          .withArgs(otherAccount, level, 1)
 
-                      const claimUserNFT = await ecoNovaCourseNFTDeployer
-                          .connect(otherAccount)
-                          .claimNFT(level, proof, tokenURL)
+                      await expect(ecoNovaCourseNFTDeployer.updateBotAddress(owner))
+                          .to.emit(ecoNovaCourseNFTDeployer, "BotAddressUpdated")
+                          .withArgs(owner, owner)
 
-                      await claimUserNFT.wait(1)
+                      await expect(
+                          ecoNovaCourseNFTDeployer
+                              .connect(otherAccount)
+                              .updateRoot(level, root, timestamp, botSignature)
+                      ).to.be.revertedWithCustomError(
+                          ecoNovaCourseNFTDeployer,
+                          "EcoNovaCourseNFT__SignatureAlreadyUsed"
+                      )
 
-                      //TODO: check why this test are not running
-
-                      //   expect(ecoNovaCourseNFTDeployer.updateBotAddress(owner))
-                      //       .to.emit(ecoNovaCourseNFTDeployer, "BotAddressUpdated")
-                      //       .withArgs(owner, otherAccount)
-                      //   expect(
-                      //       ecoNovaCourseNFTDeployer
-                      //           .connect(otherAccount)
-                      //           .updateRoot(level, root, timestamp, botSignature)
-                      //   )
-                      //       .to.emit(ecoNovaCourseNFTDeployer, "RootUpdated")
-                      //       .withArgs(level, root)
-                      //   expect(
-                      //       ecoNovaCourseNFTDeployer
-                      //           .connect(otherAccount)
-                      //           .claimNFT(level, proof, tokenURL)
-                      //   )
-                      //       .to.emit(ecoNovaCourseNFTDeployer, "NFTClaimed")
-                      //       .withArgs(otherAccount, level, 1)
+                      await expect(
+                          ecoNovaCourseNFTDeployer
+                              .connect(otherAccount)
+                              .claimNFT(level, proof, tokenURL)
+                      ).to.be.revertedWithCustomError(
+                          ecoNovaCourseNFTDeployer,
+                          "EcoNovaCourseNFT__NFTAlreadyClaimed"
+                      )
                   })
               })
           })
@@ -584,7 +586,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           .connect(otherAccount)
                           .testHash(points, userTwitterId, tweetId, signature)
 
-                      expect(
+                      await expect(
                           ecoNDeployer.addPointsFromTwitterBot(
                               points,
                               userTwitterId,
@@ -609,7 +611,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
                       expect(Number(userPoint[0])).to.equal(3500)
 
-                      expect(
+                      await expect(
                           ecoNDeployer.connect(otherAccount).addPointsFromTwitterBot(
                               points,
                               userTwitterId,
