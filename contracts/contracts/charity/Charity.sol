@@ -167,6 +167,7 @@ contract Charity is Ownable, ReentrancyGuard {
     /**
      * @dev Check the balance of the contract.
      * @param token The address of the token to check the balance of.
+     * @return The balance of the contract.
      */
     function balanceOf(address token) external view returns (uint256) {
         if (token == ETH_ADDRESS) {
