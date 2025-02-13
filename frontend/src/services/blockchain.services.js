@@ -1,6 +1,6 @@
 /** @format */
 import abi from "@/assets/json/abi.json";
-import erc20 from "@/assets/json/abi.json";
+import erc20 from "@/assets/json/erc20.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
 import { BrowserProvider, ethers } from "ethers";
 import {
@@ -248,6 +248,22 @@ export const deployTokenService = async ({ name, symbol, initialSupply }) => {
   }
 };
 
+export const getProjectTokenDetails = async () => {
+  try {
+    const manager = await getContract();
+
+    const tokenAddress = await manager.i_ecoNovaToken();
+
+    const token = await getERC20Contract(tokenAddress);
+
+    const [name, symbol] = await Promise.all([token.name(), token.symbol()]);
+    return { name, symbol, tokenAddress };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getPointsService = async () => {
   try {
     const signer = await getSigner();
@@ -267,8 +283,6 @@ export const getPythPriceFeed = async () => {
   try {
     const signer = await getSigner();
     const manager = await getContract();
-
-    const userAddress = await signer.getAddress();
 
     const [price, exp] = await manager.getPricePyth();
     return [price, exp];
@@ -343,16 +357,6 @@ export const redeemPointsService = async ({ points }) => {
     return `redeemed ${points} points`;
   } catch (error) {
     return `${FAILED_KEY} to redeem ${points} points`;
-  }
-};
-
-const errDecoder = async (e) => {
-  const manager = await getContract();
-  if (e.data && contract) {
-    const decodedError = manager.interface.parseError(e.data);
-    return `Transaction failed: ${decodedError?.name}`;
-  } else {
-    return e;
   }
 };
 

@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { redeemPointsService } from "@/services/blockchain.services";
 import {
   getPointsService,
+  getProjectTokenDetails,
   getPythPriceFeed,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
@@ -19,6 +20,11 @@ import { APP_NAME } from "../../utils/constants";
 function Main() {
   useEffect(() => {
     dom("body").removeClass("main").removeClass("error-page").addClass("login");
+    getProjectTokenDetails()
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => toast.error(err));
     getPointsService()
       .then((accPoints) => {
         setAccumulatedPoints(accPoints);
