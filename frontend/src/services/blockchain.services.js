@@ -2,6 +2,7 @@
 import abi from "@/assets/json/abi.json";
 import erc20 from "@/assets/json/erc20.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
+import iWethAbi from "@/assets/json/iweth.json";
 import { BrowserProvider, ethers } from "ethers";
 import {
   BMI_ADVICE,
@@ -64,6 +65,19 @@ export const getSigner = async () => {
   const provider = new BrowserProvider(window.ethereum);
   await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
+};
+
+const getIWethContract = async (address) => {
+  if (!window.ethereum) {
+    toast.info(
+      "MetaMask is not installed. Please install it to use this feature."
+    );
+    return;
+  }
+  const signer = await getSigner();
+
+  await switchOrAddChain(signer.provider);
+  return new ethers.Contract(address, iWethAbi, signer);
 };
 
 const getERC20Contract = async (address) => {
