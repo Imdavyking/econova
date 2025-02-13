@@ -133,36 +133,35 @@ contract Charity is Ownable, ReentrancyGuard {
         address organization = owner();
         uint256 ethBalance = address(this).balance;
 
-        canExec = false;
-        execPayload = bytes("");
-
         if (!canWithdrawFunds) {
-            return (canExec, execPayload);
+            return (false, abi.encode("Withdrawals Disabled"));
         }
 
         if (ethBalance > 0) {
-            canExec = true;
-            execPayload = abi.encodeCall(
-                this.withdrawToOrganization,
-                (ETH_ADDRESS, ethBalance, organization)
+            return (
+                true,
+                abi.encodeCall(
+                    this.withdrawToOrganization,
+                    (ETH_ADDRESS, ethBalance, organization)
+                )
             );
-            return (canExec, execPayload);
         }
 
         address[] memory tokens = getWhitelistedTokens();
         for (uint256 i = 0; i < tokens.length; i++) {
             uint256 tokenBalance = IERC20(tokens[i]).balanceOf(address(this));
             if (tokenBalance > 0) {
-                canExec = true;
-                execPayload = abi.encodeCall(
-                    this.withdrawToOrganization,
-                    (tokens[i], tokenBalance, organization)
+                return (
+                    true,
+                    abi.encodeCall(
+                        this.withdrawToOrganization,
+                        (tokens[i], tokenBalance, organization)
+                    )
                 );
-                return (canExec, execPayload);
             }
         }
 
-        return (canExec, execPayload);
+        return (false, abi.encode("No Funds Available"));
     }
 
     /**
