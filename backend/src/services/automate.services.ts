@@ -99,7 +99,7 @@ export async function automateCharityFundDistribution() {
   try {
     const charityLength = await ecoNovaManagerContract.charityLength();
 
-    const charityCalls = Array.from({ length: charityLength }, (_, i) =>
+    const charityCalls = Array.from({ length: Number(charityLength) }, (_, i) =>
       ecoNovaManagerContract.charityOrganizations(i)
     );
 
