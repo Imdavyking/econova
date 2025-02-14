@@ -34,9 +34,6 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    wrapSonicService({ amount: 0.5 });
-  }, []);
-  useEffect(() => {
     const authToken = location.hash.replace("#", "");
 
     if (authToken) {
