@@ -13,7 +13,7 @@ import cookieParser from "cookie-parser";
 import { FRONTEND_URL } from "./utils/constants";
 import merkleRoutes from "./routes/merkle.routes";
 import { isLocalhost } from "./utils/islocalhost";
-import { automateCharityFundDistrubtion } from "./services/automate.services";
+import { automateCharityFundDistribution } from "./services/automate.services";
 
 dotenv.config();
 const app = express();
@@ -52,7 +52,7 @@ app.use(
 connectDB();
 
 // Automation for funds distrubtion
-automateCharityFundDistrubtion();
+automateCharityFundDistribution();
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");

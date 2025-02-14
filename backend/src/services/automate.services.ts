@@ -12,26 +12,26 @@ const provider = new ethers.JsonRpcProvider(RPC_URL);
 const wallet = new ethers.Wallet(BOT_PRIVATE_KEY, provider);
 const AUTOMATION_INTERVAL = 60000;
 
-const charityAbi: string[] = [
-  "function checker() external view returns (bool canExec, bytes memory execPayload)",
-];
-
-const ecoNovaManagerAbi: string[] = [
+const ecoNovaManagerInterface = new ethers.Interface([
   "function charityLength() external view returns (uint256)",
   "function charityOrganizations(uint8) external view returns (address)",
-];
+]);
+
+const charityInterface = new ethers.Interface([
+  "function checker() external view returns (bool canExec, bytes memory execPayload)",
+]);
 
 const ecoNovaManagerContract = new ethers.Contract(
   CONTRACT_ADDRESS,
-  ecoNovaManagerAbi,
+  ecoNovaManagerInterface,
   wallet
 );
 
-const abiDecodeString = (data: string): string | null => {
+const decodeExecPayload = (data: string): string | null => {
   try {
     const abiCoder = new ethers.AbiCoder();
-    const decodedData = abiCoder.decode(["string"], data);
-    return decodedData[0];
+    const decodedData = abiCoder.decode(["bool", "string"], data);
+    return decodedData[1] || null;
   } catch (error) {
     return null;
   }
@@ -46,20 +46,21 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
 
     const charityInstance = new ethers.Contract(
       charityAddress,
-      charityAbi,
+      charityInterface,
       wallet
     );
+
     const [canExec, execPayload] = await charityInstance.checker();
 
     if (!canExec) {
-      const abiResult = abiDecodeString(execPayload);
-      if (abiResult) {
+      const message = decodeExecPayload(execPayload);
+      if (message) {
         logger.info(
-          `Charity ${index} (${charityAddress}) has a message: ${abiResult}`
+          `Charity ${index} (${charityAddress}) - Reason: ${message}`
         );
       } else {
         logger.info(
-          `Charity ${index} (${charityAddress}) execPayload: ${ethers.hexlify(
+          `Charity ${index} (${charityAddress}) execPayload (hex): ${ethers.hexlify(
             execPayload
           )}`
         );
@@ -67,42 +68,51 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       return;
     }
 
+    const gasEstimate = await provider.estimateGas({
+      from: wallet.address,
+      to: charityAddress,
+      data: execPayload,
+    });
+
     const tx = await wallet.sendTransaction({
       to: charityAddress,
       data: execPayload,
+      gasLimit: (gasEstimate * 12n) / 10n,
     });
 
     logger.info(
       `Transaction sent for Charity ${index} (${charityAddress}): ${tx.hash}`
     );
+
     await tx.wait();
     logger.info(
       `Withdrawal executed successfully for Charity ${index} (${charityAddress})`
     );
-  } catch (error) {
+  } catch (error: any) {
     logger.error(
-      `Automation failed for Charity ${index} (${charityAddress}):`,
-      error
+      `Automation failed for Charity ${index} (${charityAddress}): ${error.message}`
     );
   }
 }
 
-export async function automateCharityFundDistrubtion() {
+export async function automateCharityFundDistribution() {
   try {
     const charityLength = await ecoNovaManagerContract.charityLength();
-    const charityPromises: Promise<void>[] = [];
 
-    for (let i = 0; i < charityLength; i++) {
-      const charityAddress = await ecoNovaManagerContract.charityOrganizations(
-        i
-      );
-      charityPromises.push(handleCharityWithdrawal(i, charityAddress));
-    }
+    const charityCalls = Array.from({ length: charityLength }, (_, i) =>
+      ecoNovaManagerContract.charityOrganizations(i)
+    );
 
-    await Promise.all(charityPromises);
+    const charityAddresses = await Promise.all(charityCalls);
+
+    const charityPromises = charityAddresses.map((charityAddress, index) =>
+      handleCharityWithdrawal(index, charityAddress)
+    );
+
+    await Promise.allSettled(charityPromises);
   } catch (error) {
     logger.error("Automation script failed:", error);
   }
 
-  setTimeout(automateCharityFundDistrubtion, AUTOMATION_INTERVAL);
+  setTimeout(automateCharityFundDistribution, AUTOMATION_INTERVAL);
 }
