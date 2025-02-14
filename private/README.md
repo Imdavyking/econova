@@ -26,6 +26,12 @@ https://betterprogramming.pub/zero-knowledge-proofs-using-snarkjs-and-circom-fac
 
 You can get `snarkjs` and `circomlibjs` with `npm install`, and circom from the reference above
 
+### Quickstart
+
+`git clone https://github.com/Imdavyking/econova/`
+`cd econova/private`
+`yarn`
+
 ### Compiling a circuit (in the circuit's folder):
 
 `mkdir build` <br/>
