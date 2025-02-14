@@ -37,7 +37,7 @@ const tools = {
     }),
   }),
   unwrapSonic: tool(() => undefined, {
-    name: "unwrapsonic",
+    name: "unwrapSonic",
     description: "Unwrap wS to Sonic.",
     schema: z.object({
       amount: z.number().describe("The amount of wS to unwrap"),
