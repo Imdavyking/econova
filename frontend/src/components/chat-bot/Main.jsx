@@ -10,6 +10,7 @@ const ChatWithAdminBot = () => {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [lastUserInput, setLastUserInput] = useState("");
 
   const toggleChatbox = () => {
     setIsChatboxOpen((prev) => !prev);
@@ -21,15 +22,29 @@ const ChatWithAdminBot = () => {
 
   const handleSend = async () => {
     if (userInput.trim() !== "") {
+      const currentMessage = lastUserInput
+        ? `${lastUserInput} ${userInput}`
+        : userInput;
+
       setMessages((prevMessages) => [
         ...prevMessages,
         { text: userInput, sender: "user" },
       ]);
       setUserInput("");
+
       try {
         setIsProcessing(true);
-        const { results, needsMoreData } = await agent.solveTask(userInput);
-        respondToUser(results);
+        const { results, needsMoreData } = await agent.solveTask(
+          currentMessage
+        );
+
+        if (needsMoreData) {
+          setLastUserInput(currentMessage); // Store combined input
+          toast.info("Please provide more details.");
+        } else {
+          setLastUserInput(""); // Reset when data is sufficient
+          respondToUser(results);
+        }
       } catch (error) {
         toast.error(`Failed to perform action: ${error.message}`);
       } finally {
