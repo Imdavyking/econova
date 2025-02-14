@@ -21,7 +21,7 @@ const AIHealth = () => {
       });
       const agent = new AIAgent();
 
-      const results = await agent.solveTask(response);
+      const { results } = await agent.solveTask(response);
 
       const info = results[0];
 

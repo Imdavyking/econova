@@ -11,7 +11,7 @@ import {
   wrapSonicService,
   unwrapSonicService,
 } from "../services/blockchain.services";
-import { AiResponseType, ToolCall } from "../types";
+import { AiResponseType, SolveTaskResult, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
 
 export class AIAgent {
@@ -53,13 +53,14 @@ export class AIAgent {
     return tool.bind(this)(action.args ? action.args : {});
   }
 
-  public async solveTask(task: string): Promise<string[]> {
+  public async solveTask(task: string): Promise<SolveTaskResult> {
     const action = (await callLLMApi({
       task,
     })) as AiResponseType;
 
     const results: string[] = [];
 
+    // TODO: fix for multiple args (like user need more details)
     if (action.tool_calls.length === 0 && action.content.trim() !== "") {
       results.push(action.content);
     }
@@ -68,6 +69,9 @@ export class AIAgent {
       results.push(result);
     }
 
-    return results;
+    return {
+      results,
+      needsMoreData: action.content.trim() !== "",
+    };
   }
 }

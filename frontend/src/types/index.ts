@@ -14,3 +14,8 @@ export type AiResponseType = {
   content: string;
   tool_calls: ToolCall[];
 };
+
+export type SolveTaskResult = {
+  results: string[];
+  needsMoreData: boolean;
+};

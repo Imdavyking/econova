@@ -28,8 +28,8 @@ const ChatWithAdminBot = () => {
       setUserInput("");
       try {
         setIsProcessing(true);
-        const response = await agent.solveTask(userInput);
-        respondToUser(response);
+        const { results, needsMoreData } = await agent.solveTask(userInput);
+        respondToUser(results);
       } catch (error) {
         toast.error(`Failed to perform action: ${error.message}`);
       } finally {
