@@ -30,8 +30,8 @@ EcoNova integrates an **AI-powered tutor**, leveraging **Sonic and DeFiAI** to e
 EcoNova's **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
 
 - **Posts updates and charity milestones** 📢
-- **Tracks user engagement (likes, retweets, comments)** 🔍
-- **Rewards users with tokens/NFTs based on interactions** 🎁
+- **Tracks user engagement (likes, retweets)** 🔍
+- **Rewards users with tokens based on interactions** 🎁
 - **Encourages community-driven fundraising** 🤝
 
 ---
@@ -75,7 +75,7 @@ Want to help? Submit a PR or report issues via our **[GitHub](https://github.com
 
 ## 📬 Stay Connected
 
-- **Twitter:** [@EcoNovaOfficial](https://x.com/EcoNova_Bot)
+- **Twitter:** [@EcoNova_Bot](https://x.com/EcoNova_Bot)
 - **Docs:** [Read the Docs](https://econovadocs.vercel.app/)
 - **GitHub:** [EcoNova](https://github.com/Imdavyking/econova/)
 
