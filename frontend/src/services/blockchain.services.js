@@ -131,6 +131,8 @@ export const adviceOnHealthService = async ({ advice }) => {
 export const wrapSonicService = async ({ amount }) => {
   try {
     const contract = await getIWSonicContract();
+    console.log(contract);
+    console.log(contract.deposit);
     const tx = await contract.deposit({
       value: ethers.utils.parseEther(amount.toString()),
     });
