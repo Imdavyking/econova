@@ -122,6 +122,10 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const systemPrompt = new SystemMessage(
     `You are an assistant that converts user prompts into structured formats.
+    For sending:
+    WRAPPED_SONIC_CONTRACT_ADDRESS: ${
+      process.env.WRAPPED_SONIC_CONTRACT_ADDRESS
+    }
     The categories available are:
     ${JSON.stringify(charityCategories)}
     

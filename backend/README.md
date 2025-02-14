@@ -18,12 +18,12 @@ EcoNova is a decentralized charity management system that enables transparent an
    - Open the `.env` file and update the following values with your credentials:
      ```
         MONGO_URI=
-        TWITTER_CONSUMER_KEY=           
-        TWITTER_CONSUMER_SECRET=          
-        TWITTER_ACCESS_TOKEN=      
+        TWITTER_CONSUMER_KEY=
+        TWITTER_CONSUMER_SECRET=
+        TWITTER_ACCESS_TOKEN=
         TWITTER_ACCESS_TOKEN_SECRET=
         TWITTER_USER_ID=
-        TWITTER_BEARER_TOKEN= 
+        TWITTER_BEARER_TOKEN=
         REDIS_HOST=
         REDIS_PORT=
         REDIS_PASSWORD=
@@ -34,6 +34,7 @@ EcoNova is a decentralized charity management system that enables transparent an
         BOT_PRIVATE_KEY=
         FRONTEND_URL=
         CHAIN_ID=
+        WRAPPED_SONIC_CONTRACT_ADDRESS=
      ```
 4. **Start the application** with Docker:
 

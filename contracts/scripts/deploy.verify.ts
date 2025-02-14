@@ -62,6 +62,7 @@ async function main() {
     const blockNumber = await ethers.provider.getBlockNumber()
     const rpcUrl = (network.config as any).url
     const blockExplorerUrl = network.config.ignition.explorerUrl!
+    const WRAPPED_SONIC_CONTRACT_ADDRESS = "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38"
     /** contract address */
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoCourseNFTAddress, "frontend", "VITE_NFT_COURSE_CONTRACT_ADDRESS")
@@ -85,6 +86,9 @@ async function main() {
     updateEnv(chainCurrencyName, "frontend", "VITE_CHAIN_CURRENCY_NAME")
     /** update chain currency name */
     updateEnv(chainSymbol, "frontend", "VITE_CHAIN_SYMBOL")
+    /** wrapped sonic */
+    updateEnv(WRAPPED_SONIC_CONTRACT_ADDRESS, "backend", "WRAPPED_SONIC_CONTRACT_ADDRESS")
+    updateEnv(WRAPPED_SONIC_CONTRACT_ADDRESS, "frontend", "VITE_WRAPPED_SONIC_CONTRACT_ADDRESS")
 
     copyABI("EcoNovaManager", "frontend/src/assets/json", null)
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")

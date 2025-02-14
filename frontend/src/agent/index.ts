@@ -39,7 +39,7 @@ export class AIAgent {
       sendSonic:
         "Example: Send 10 SONIC to 0x1CE05Bf474802D49a77b3829c566a9AABbfb8C6d",
       sendERC20Token:
-        "Example: Send 10 USDC to 0x1CE05Bf474802D49a77b3829c566a9AABbfb8C6d",
+        "Example: Send 10 wSonic to 0x1CE05Bf474802D49a77b3829c566a9AABbfb8C6d",
       wrapSonic: "Example: Wrap 10 SONIC",
       unwrapSonic: "Example: Unwrap 10 wrappedSonic",
     };
