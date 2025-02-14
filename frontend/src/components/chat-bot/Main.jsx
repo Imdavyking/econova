@@ -39,12 +39,12 @@ const ChatWithAdminBot = () => {
         );
 
         if (needsMoreData) {
-          setLastUserInput(currentMessage); // Store combined input
+          setLastUserInput(currentMessage);
           toast.info("Please provide more details.");
         } else {
-          setLastUserInput(""); // Reset when data is sufficient
-          respondToUser(results);
+          setLastUserInput("");
         }
+        respondToUser(results);
       } catch (error) {
         toast.error(`Failed to perform action: ${error.message}`);
       } finally {
