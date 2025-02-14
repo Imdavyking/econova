@@ -74,6 +74,11 @@
   },
   {
     "inputs": [],
+    "name": "EcoNovaManager__CharityDoesNotSupportAutomation",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "EcoNovaManager__CharityNameCanNotBeNull",
     "type": "error"
   },
