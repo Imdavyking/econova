@@ -72,6 +72,31 @@
             "answer": "Private keys should be stored in hardware wallets, encrypted storage, or secure offline environments to prevent unauthorized access."
           }
         ]
+      },
+      {
+        "title": "DeFiAI: AI-Powered Decentralized Finance",
+        "subtopics": [
+          {
+            "question": "What is DeFiAI, and how does it work?",
+            "answer": "DeFiAI is an AI-powered financial assistant that helps users manage decentralized finance (DeFi) investments. It analyzes market trends, optimizes yield farming strategies, and provides risk assessments using machine learning."
+          },
+          {
+            "question": "How does DeFiAI optimize yield farming?",
+            "answer": "DeFiAI continuously monitors liquidity pools and interest rates across multiple DeFi protocols, suggesting the best opportunities based on real-time data."
+          },
+          {
+            "question": "Can DeFiAI detect rug pulls and scams?",
+            "answer": "Yes! DeFiAI uses AI-driven security audits and anomaly detection to identify suspicious smart contracts, hidden backdoors, and sudden liquidity withdrawals that may indicate scams."
+          },
+          {
+            "question": "How does DeFiAI assist in risk management?",
+            "answer": "DeFiAI evaluates a user's portfolio, predicts potential liquidation risks, and suggests diversification strategies to reduce exposure to high-risk assets."
+          },
+          {
+            "question": "What role does AI play in DeFi loan strategies?",
+            "answer": "AI models analyze borrowing and lending trends to recommend optimal loan conditions, including the best collateral-to-loan ratio and interest rate predictions, ensuring users maximize their capital efficiency."
+          }
+        ]
       }
     ]
   },
@@ -143,6 +168,31 @@
             "answer": "Developers can use static analysis tools, formal verification, and test suites like Hardhat and Foundry to ensure contract security."
           }
         ]
+      },
+      {
+        "title": "DeFi AI & Automation",
+        "subtopics": [
+          {
+            "question": "How can AI improve DeFi trading strategies?",
+            "answer": "AI can analyze large datasets, detect trends, and execute trades based on predictive models, improving accuracy and reducing risks."
+          },
+          {
+            "question": "What role does AI play in risk management for DeFi protocols?",
+            "answer": "AI-driven analytics can assess smart contract vulnerabilities, detect fraudulent activities, and optimize collateralization ratios for lending protocols."
+          },
+          {
+            "question": "How does AI-powered yield farming work?",
+            "answer": "AI algorithms optimize yield farming strategies by reallocating liquidity based on market conditions, minimizing impermanent loss, and maximizing returns."
+          },
+          {
+            "question": "What are the challenges of integrating AI with DeFi?",
+            "answer": "Challenges include ensuring data accuracy, mitigating AI bias, dealing with on-chain/off-chain data integration, and maintaining smart contract security."
+          },
+          {
+            "question": "How can AI detect and prevent DeFi hacks?",
+            "answer": "AI can monitor blockchain transactions in real-time, flag suspicious patterns, and use machine learning to predict potential security breaches before they occur."
+          }
+        ]
       }
     ]
   },
@@ -212,6 +262,31 @@
           {
             "question": "What are some successful Sonic-based projects?",
             "answer": "Several projects leverage Sonic for decentralized exchanges, NFT marketplaces, and supply chain solutions, showcasing real-world adoption."
+          }
+        ]
+      },
+      {
+        "title": "Advanced DeFi AI & Automation",
+        "subtopics": [
+          {
+            "question": "How can AI-driven algorithms optimize decentralized lending and borrowing?",
+            "answer": "AI models can assess borrower risk in real-time, dynamically adjust interest rates based on market conditions, and prevent liquidations through predictive analytics."
+          },
+          {
+            "question": "What AI techniques can enhance automated market-making (AMM) strategies?",
+            "answer": "Reinforcement learning and deep neural networks can analyze liquidity trends and optimize fee structures, reducing impermanent loss and improving capital efficiency."
+          },
+          {
+            "question": "How does AI improve fraud detection in DeFi protocols?",
+            "answer": "Machine learning models analyze on-chain behavior patterns to detect anomalies, flagging suspicious transactions before malicious actors exploit vulnerabilities."
+          },
+          {
+            "question": "What role does AI play in dynamic asset management?",
+            "answer": "AI-powered asset management systems can reallocate funds across DeFi protocols based on real-time risk assessments, yield optimization, and market sentiment analysis."
+          },
+          {
+            "question": "How can AI-powered oracles improve DeFi data accuracy?",
+            "answer": "AI-based oracles validate data from multiple sources, filtering out outliers and preventing price manipulation in smart contracts."
           }
         ]
       }
