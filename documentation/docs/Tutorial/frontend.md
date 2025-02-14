@@ -2,11 +2,6 @@
 
 EcoNova is a decentralized charity management system that enables transparent and secure donations using blockchain technology. It allows users to contribute to verified charitable organizations across different categories, ensuring trust, security, and efficiency in the donation process.
 
-## Docs
-
-- [docs](https://econovadocs.vercel.app/)
-  - Read the docs
-
 ## Requirements
 
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)

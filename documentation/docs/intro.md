@@ -1,6 +1,6 @@
 # EcoNova
 
-EcoNova is a decentralized charity management system that leverages blockchain, artificial intelligence, and zero-knowledge proofs to ensure **transparent, secure, and automated** donations. The platform integrates **ZK-BMI verification**, **AI-powered tutoring**, **autonomous donations**, and **social media engagement rewards** powered by **ElizaOs**.
+EcoNova is a decentralized charity management system that leverages blockchain, artificial intelligence, and zero-knowledge proofs to ensure **transparent, secure, and automated** donations. The platform integrates **ZK-BMI verification**, **AI-powered tutoring**, **autonomous donations**, and **social media engagement rewards** powered by **Zerepy**.
 
 ## 🌍 Features
 
@@ -25,13 +25,13 @@ EcoNova integrates an **AI-powered tutor**, leveraging **Sonic and DeFiAI** to e
 - **Decentralized Finance (DeFi)** 💱
 - **Smart contract security** 🔐
 
-### 🔹 Engagement Rewards via ElizaOs
+### 🔹 Engagement Rewards via Zerepy
 
-EcoNova's **Twitter bot, EcoNova_bot**, powered by **ElizaOs**, automatically:
+EcoNova's **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
 
 - **Posts updates and charity milestones** 📢
-- **Tracks user engagement (likes, retweets, comments)** 🔍
-- **Rewards users with tokens/NFTs based on interactions** 🎁
+- **Tracks user engagement (likes, retweets)** 🔍
+- **Rewards users with tokens based on interactions** 🎁
 - **Encourages community-driven fundraising** 🤝
 
 ---
@@ -52,7 +52,7 @@ EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
 
 ## 🤖 AI & Social Media Integration
 
-EcoNova leverages **AI** through **ElizaOs**, which:
+EcoNova leverages **AI** through **Zerepy**, which:
 
 - **Automates Twitter posts** via **EcoNova_bot** 🐦
 - **Engages with donors and supporters** 📢
@@ -75,7 +75,7 @@ Want to help? Submit a PR or report issues via our **[GitHub](https://github.com
 
 ## 📬 Stay Connected
 
-- **Twitter:** [@EcoNovaOfficial](https://x.com/EcoNova_Bot)
+- **Twitter:** [@EcoNova_Bot](https://x.com/EcoNova_Bot)
 - **Docs:** [Read the Docs](https://econovadocs.vercel.app/)
 - **GitHub:** [EcoNova](https://github.com/Imdavyking/econova/)
 
