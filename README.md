@@ -6,7 +6,7 @@ EcoNova is a decentralized charity management system that leverages blockchain, 
 
 ### 🔹 Zero-Knowledge BMI Checker
 
-EcoNova uses **Zero-Knowledge Proofs (ZKPs)** to verify a person's **Body Mass Index (BMI)** without revealing sensitive data. This feature is essential for **privacy-preserving health donations**, ensuring that only eligible beneficiaries receive support.
+EcoNova uses **Zero-Knowledge Proofs (ZKPs)** to verify a person's **Body Mass Index (BMI)** without revealing sensitive data. This feature is essential for **privacy-preserving health data**.
 
 ### 🔹 Autonomous Donations
 
@@ -29,7 +29,7 @@ EcoNova integrates an **AI-powered tutor**, leveraging **Sonic and DeFiAI** to e
 
 EcoNova's **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
 
-- **Posts updates and charity milestones** 📢
+- **Posts updates** 📢
 - **Tracks user engagement (likes, retweets)** 🔍
 - **Rewards users with tokens based on interactions** 🎁
 - **Encourages community-driven fundraising** 🤝
