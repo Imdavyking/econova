@@ -27,6 +27,16 @@ const ecoNovaManagerContract = new ethers.Contract(
   wallet
 );
 
+const abiDecodeString = (data: string) => {
+  try {
+    const abiCoder = new ethers.AbiCoder();
+    const decodedData = abiCoder.decode(["string"], data);
+    return decodedData[0];
+  } catch (error) {
+    return "";
+  }
+};
+
 async function handleCharityWithdrawal(index: number, charityAddress: string) {
   try {
     if (charityAddress === ethers.ZeroAddress) {
@@ -42,11 +52,18 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
     const [canExec, execPayload] = await charityInstance.checker();
 
     if (!canExec) {
-      logger.info(
-        `Charity ${index} (${charityAddress}) execPayload: ${ethers.hexlify(
-          execPayload
-        )}`
-      );
+      const abiResult = abiDecodeString(execPayload);
+      if (abiResult.trim() !== "") {
+        logger.info(
+          `Charity ${index} (${charityAddress}) has a message: ${abiResult}`
+        );
+      } else {
+        logger.info(
+          `Charity ${index} (${charityAddress}) execPayload: ${ethers.hexlify(
+            execPayload
+          )}`
+        );
+      }
       return;
     }
 
