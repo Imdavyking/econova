@@ -40,7 +40,6 @@ const ChatWithAdminBot = () => {
 
         if (needsMoreData) {
           setLastUserInput(currentMessage);
-          toast.info("Please provide more details.");
         } else {
           setLastUserInput("");
         }
