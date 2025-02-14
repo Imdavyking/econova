@@ -2,6 +2,7 @@
 pragma solidity ^0.8.7;
 import "./EcoNovaToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -72,6 +73,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     error EcoNovaManager__CharityNotFound();
     error EcoNovaManager__IncorrectBalance();
     error EcoNovaManager__InvalidContractAddress();
+    error EcoNovaManager__CharityDoesNotSupportAutomation();
 
     /**
      * events
@@ -123,7 +125,11 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param symbol - symbol of the token
      * @param initialSupply - initial supply of the token
      */
-    function deployToken(string memory name, string memory symbol, uint256 initialSupply) external {
+    function deployToken(
+        string memory name,
+        string memory symbol,
+        uint256 initialSupply
+    ) external {
         if (initialSupply <= 0) {
             revert EcoNovaManager__CanNotBeZero();
         }
@@ -193,6 +199,10 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         Charity.Category charityCategory = charity.charityCategory();
         address charityAddress = address(charity);
 
+        if (!validateCharity(charityAddress)) {
+            revert EcoNovaManager__InvalidCharityAddress();
+        }
+
         uint8 categoryIndex = uint8(charityCategory);
         if (charityOrganizations[categoryIndex] != address(0)) {
             revert EcoNovaManager__CharityAlreadyExists();
@@ -241,18 +251,28 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param charityAddress The address of the charity organization.
      */
     function validateCharity(address charityAddress) public view returns (bool) {
-        bool isValidContract = isContract(charityAddress);
-
-        if (!isValidContract) {
+        if (!isContract(charityAddress)) {
             revert EcoNovaManager__InvalidContractAddress();
         }
 
-        (bool canWithdraw, bytes memory data) = charityAddress.staticcall(
+        (bool hasWithdraw, bytes memory data) = charityAddress.staticcall(
             abi.encodeWithSignature("canWithdraw()")
         );
 
-        if (!canWithdraw || (data.length > 0 && abi.decode(data, (bool)) == false)) {
+        if (!hasWithdraw || (data.length > 0 && abi.decode(data, (bool)) == false)) {
             revert EcoNovaManager__CharityCannotWithdraw();
+        }
+
+        (bool hasChecker, bytes memory checkerData) = charityAddress.staticcall(
+            abi.encodeWithSignature("checker()")
+        );
+
+        if (!hasChecker) {
+            revert EcoNovaManager__CharityDoesNotSupportAutomation();
+        }
+
+        if (checkerData.length > 0) {
+            abi.decode(checkerData, (bool, bytes));
         }
 
         return true;
@@ -278,10 +298,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
 
         if (amountInUsd == 0) {
             revert EcoNovaManager__CanNotBeZero();
-        }
-
-        if (!validateCharity(charityAddress)) {
-            revert EcoNovaManager__InvalidCharityAddress();
         }
 
         address caller = msg.sender;

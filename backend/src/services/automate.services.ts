@@ -70,7 +70,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
   }
 }
 
-export async function automateWithdraw() {
+export async function automateCharityFundDistrubtion() {
   try {
     const charityLength = await ecoNovaManagerContract.charityLength();
     const charityPromises: Promise<void>[] = [];
@@ -87,5 +87,5 @@ export async function automateWithdraw() {
     logger.error("Automation script failed:", error);
   }
 
-  setTimeout(automateWithdraw, AUTOMATION_INTERVAL);
+  setTimeout(automateCharityFundDistrubtion, AUTOMATION_INTERVAL);
 }
