@@ -149,7 +149,7 @@ export const unwrapSonicService = async ({ amount }) => {
     const tx = await contract.withdraw(ethers.parseEther(amount.toString()));
     await tx.wait(1);
 
-    return `unwrapped ${amount} ${CHAIN_SYMBOL}`;
+    return `unwrapped ${amount} wrapped ${CHAIN_SYMBOL}`;
   } catch (error) {
     return `${FAILED_KEY} to unwrap ${amount} ${CHAIN_SYMBOL} ${error.message}`;
   }
