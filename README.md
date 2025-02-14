@@ -1,57 +1,82 @@
-# Frontend
+# EcoNova
 
-EcoNova is a decentralized charity management system that enables transparent and secure donations using blockchain technology. It allows users to contribute to verified charitable organizations across different categories, ensuring trust, security, and efficiency in the donation process.
+EcoNova is a decentralized charity management system that leverages blockchain, artificial intelligence, and zero-knowledge proofs to ensure **transparent, secure, and automated** donations. The platform integrates **ZK-BMI verification**, **AI-powered tutoring**, **autonomous donations**, and **social media engagement rewards** powered by **ElizaOs**.
 
-## Docs
+## 🌍 Features
 
-- [docs](https://econovadocs.vercel.app/)
-  - Read the docs
+### 🔹 Zero-Knowledge BMI Checker
 
-## Requirements
+EcoNova uses **Zero-Knowledge Proofs (ZKPs)** to verify a person's **Body Mass Index (BMI)** without revealing sensitive data. This feature is essential for **privacy-preserving health donations**, ensuring that only eligible beneficiaries receive support.
 
-- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-  - You'll know you did it right if you can run `git --version` and you see a response like `git version x.x.x`
-- [Nodejs](https://nodejs.org/en/)
-  - You'll know you've installed nodejs right if you can run:
-    - `node --version` and get an ouput like: `vx.x.x`
-- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/) instead of `npm`
-  - You'll know you've installed yarn right if you can run:
-    - `yarn --version` and get an output like: `x.x.x`
-    - You might need to install it with `npm`
+### 🔹 Autonomous Donations
 
-## Quickstart
+EcoNova automates the **distribution of funds to charitable organizations** based on preset conditions. Using smart contracts, it ensures:
 
-```
-git clone https://github.com/Imdavyking/econova/
-cd econova/frontend
-yarn
-```
+- **Transparent transactions** ✅
+- **No intermediaries** ⚡
+- **Efficient fund allocation** 💰
+- **Donor tracking & impact reports** 📊
 
-## Environment Variables
+### 🔹 AI Tutor (Sonic & DeFiAI)
 
-Create a `.env` file in the project root and add the following variables:
+EcoNova integrates an **AI-powered tutor**, leveraging **Sonic and DeFiAI** to educate users on:
 
-```env
- VITE_SERVER_URL=
- VITE_CONTRACT_ADDRESS=
- VITE_CHAIN_ID=
- VITE_CHAIN_NAME=
- VITE_CHAIN_CURRENCY_NAME=
- VITE_CHAIN_SYMBOL=
- VITE_RPC_URL=
- VITE_CHAIN_BLOCKEXPLORER_URL=
- VITE_APP_NAME=
- VITE_GRAPH_QL_ENDPOINT=
- VITE_WALLET_CONNECT_PROJECT_ID=
- VITE_TWITTER_NAME=
- VITE_NFT_COURSE_CONTRACT_ADDRESS=
- VITE_WRAPPED_SONIC_CONTRACT_ADDRESS=
-```
+- **Blockchain fundamentals** 🏗️
+- **Decentralized Finance (DeFi)** 💱
+- **Smart contract security** 🔐
 
-# Usage
+### 🔹 Engagement Rewards via ElizaOs
 
-Run:
+EcoNova's **Twitter bot, EcoNova_bot**, powered by **ElizaOs**, automatically:
 
-```
-yarn dev
-```
+- **Posts updates and charity milestones** 📢
+- **Tracks user engagement (likes, retweets, comments)** 🔍
+- **Rewards users with tokens/NFTs based on interactions** 🎁
+- **Encourages community-driven fundraising** 🤝
+
+---
+
+## 📜 Documentation
+
+For detailed guides, visit our **[documentation](https://econovadocs.vercel.app/)**.
+
+## 📡 Smart Contract Infrastructure
+
+EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
+
+- **Solidity-based smart contracts**
+- **Interoperable ERC-20/ERC-721 tokens**
+- **Pyth price oracles for fair value conversions**
+
+---
+
+## 🤖 AI & Social Media Integration
+
+EcoNova leverages **AI** through **ElizaOs**, which:
+
+- **Automates Twitter posts** via **EcoNova_bot** 🐦
+- **Engages with donors and supporters** 📢
+- **Distributes rewards based on engagement metrics** 🎖️
+
+---
+
+## 🔐 Security & Compliance
+
+- **Zero-Knowledge Proofs (ZKPs)** for private health verification
+- **Decentralized fund allocation** with no single point of failure
+
+---
+
+## 🤝 Contribute
+
+Want to help? Submit a PR or report issues via our **[GitHub](https://github.com/Imdavyking/econova/)**.
+
+---
+
+## 📬 Stay Connected
+
+- **Twitter:** [@EcoNovaOfficial](https://x.com/EcoNova_Bot)
+- **Docs:** [Read the Docs](https://econovadocs.vercel.app/)
+- **GitHub:** [EcoNova](https://github.com/Imdavyking/econova/)
+
+🚀 **Join us in revolutionizing decentralized charity!**

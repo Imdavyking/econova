@@ -16,8 +16,8 @@ async function copyFile(source, destination) {
   }
 }
 
-copyFile("frontend/README.md", "documentation/docs/intro.md");
-copyFile("frontend/README.md", "README.md");
+copyFile("README.md", "documentation/docs/intro.md");
+copyFile("frontend/README.md", "documentation/docs/Tutorial/frontend.md");
 copyFile("backend/README.md", "documentation/docs/Tutorial/backend.md");
 copyFile("indexer/README.md", "documentation/docs/Tutorial/indexer.md");
 copyFile("contracts/README.md", "documentation/docs/Tutorial/contracts.md");
