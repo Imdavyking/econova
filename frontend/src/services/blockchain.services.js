@@ -129,19 +129,19 @@ export const adviceOnHealthService = async ({ advice }) => {
 };
 
 export const wrapSonicService = async ({ amount }) => {
-  try {
-    const contract = await getIWSonicContract();
-    console.log(contract);
-    console.log(contract.deposit);
-    const tx = await contract.deposit({
-      value: ethers.utils.parseEther(amount.toString()),
-    });
-    await tx.wait(1);
+  // try {
+  const contract = await getIWSonicContract();
+  console.log(contract);
+  console.log(contract.deposit);
+  const tx = await contract.deposit({
+    value: ethers.utils.parseEther(amount.toString()),
+  });
+  await tx.wait(1);
 
-    return `wrapped ${amount} ${CHAIN_SYMBOL}`;
-  } catch (error) {
-    return `${FAILED_KEY} to wrap ${amount} ${CHAIN_SYMBOL} ${error.message}`;
-  }
+  return `wrapped ${amount} ${CHAIN_SYMBOL}`;
+  // } catch (error) {
+  //   return `${FAILED_KEY} to wrap ${amount} ${CHAIN_SYMBOL} ${error.message}`;
+  // }
 };
 
 export const unwrapSonicService = async ({ amount }) => {

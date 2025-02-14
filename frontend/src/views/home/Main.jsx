@@ -17,6 +17,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaUserCircle, FaCrown, FaCoins } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveTwitterAuth } from "../../services/twitter.auth.services";
+import { wrapSonicService } from "../../services/blockchain.services";
 
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
@@ -33,19 +34,15 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    wrapSonicService({ amount: 0.5 });
+  }, []);
+  useEffect(() => {
     const authToken = location.hash.replace("#", "");
 
     if (authToken) {
       saveTwitterAuth(authToken);
       window.history.replaceState(null, "", window.location.pathname);
     }
-  }, [location, navigate]);
-
-  useEffect(() => {
-    dom("body").removeClass("error-page").removeClass("login").addClass("main");
-  }, []);
-
-  useEffect(() => {
     getUserTwitterInfo()
       .then((data) => {
         setTwitterHandle(data.screen_name);
@@ -53,6 +50,10 @@ const Home = () => {
       .catch((error) => {
         console.log(error);
       });
+  }, [location, navigate]);
+
+  useEffect(() => {
+    dom("body").removeClass("error-page").removeClass("login").addClass("main");
   }, []);
 
   return (
