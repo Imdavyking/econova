@@ -30,6 +30,11 @@ async function main() {
 
     console.log(`EcoNovaToken deployed at: ${deploymentAddress}`)
 
+    const endPointId = 1
+    const peerAddress = "0x..."
+
+    console.log(`Setting peer for Endpoint ID: ${endPointId}`)
+    await ecoNovaToken.setPeer(endPointId, ethers.zeroPadBytes(peerAddress, 32))
     await verify(deploymentAddress, [lzEndpoint])
 
     console.log("✅ Deployment complete!")
