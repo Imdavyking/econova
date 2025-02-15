@@ -35,16 +35,19 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               )
               const CharityDeployer = await hre.ethers.getContractFactory("Charity")
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
+              const EndpointV2Mock = await hre.ethers.getContractFactory("EndpointV2Mock")
               const Groth16Verifier = await hre.ethers.getContractFactory("Groth16Verifier")
               const charityDeployer = await CharityDeployer.deploy(charityCategories.Education)
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
+              const endpointV2Mock = await EndpointV2Mock.deploy(1)
               const groth16Deployer = await Groth16Verifier.deploy()
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(
                   mockPythPriceFeedDeployer,
                   wallet,
                   [charityDeployer],
-                  groth16Deployer
+                  groth16Deployer,
+                  endpointV2Mock
               )
 
               const ecoNovaCourseNFTDeployer = await EcoNovaCourseNFTDeployer.deploy(wallet)

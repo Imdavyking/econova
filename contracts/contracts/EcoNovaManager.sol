@@ -36,28 +36,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     uint256 public constant FIAT_DECIMALS = 10 ** 2;
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
     uint256 public constant ONE_DAY = 60 * 60 * 60 * 24;
-    /** chain ids */
-    uint256 public constant HARDHAT_CHAIN_ID = 31337;
-    uint256 public constant ETHEREUM_MAINNET_CHAIN_ID = 1;
-    uint256 public constant ETHEREUM_SEPOLIA_CHAIN_ID = 11155111;
-    uint256 public constant SONIC_BLAZE_CHAIN_ID = 57054;
-    uint256 public constant SONIC_MAINNET_CHAIN_ID = 146;
-    /** eids for layerzero */
-    uint256 public constant ETHEREUM_MAINNET_EID_V2 = 30101;
-    uint256 public constant ETHEREUM_SEPOLIA_EID_V2 = 40161;
-    uint256 public constant SONIC_MAINNET_EID_V2 = 30332;
-    uint256 public constant SONIC_BLAZE_EID_V2 = 40349;
-    /** eth token identifier */
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
-    /** layerzero endpoints */
-    address public constant SONIC_BLAZE_ENDPOINT_V2 =
-        address(0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff);
-    address public constant SONIC_MAINNET_ENDPOINT_V2 =
-        address(0x6F475642a6e85809B1c36Fa62763669b1b48DD5B);
-    address public constant ETHEREUM_MAINNET_ENDPOINT_V2 =
-        address(0x1a44076050125825900e736c501f859c50fE728c);
-    address public constant ETHEREUM_SEPOLIA_ENDPOINT_V2 =
-        address(0x6EDCE65403992e310A62460808c4b910D972f10f);
 
     /**
      * variables
@@ -129,21 +108,9 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         address oracleAddress,
         address _botAddress,
         Charity[] memory _charity,
-        IGroth16VerifierP3 _groth16VerifierP3
+        IGroth16VerifierP3 _groth16VerifierP3,
+        address _lzEndpoint
     ) Ownable(msg.sender) {
-        address _lzEndpoint = address(0);
-        if (block.chainid == HARDHAT_CHAIN_ID) {
-            EndpointV2Mock mockV2Endpoint = new EndpointV2Mock(1);
-            _lzEndpoint = address(mockV2Endpoint);
-        } else if (block.chainid == ETHEREUM_SEPOLIA_CHAIN_ID) {
-            _lzEndpoint = ETHEREUM_SEPOLIA_ENDPOINT_V2;
-        } else if (block.chainid == ETHEREUM_MAINNET_CHAIN_ID) {
-            _lzEndpoint = ETHEREUM_MAINNET_ENDPOINT_V2;
-        } else if (block.chainid == SONIC_BLAZE_CHAIN_ID) {
-            _lzEndpoint = SONIC_BLAZE_ENDPOINT_V2;
-        } else if (block.chainid == SONIC_MAINNET_CHAIN_ID) {
-            _lzEndpoint = SONIC_MAINNET_ENDPOINT_V2;
-        }
         i_ecoNovaToken = new EcoNovaToken(_lzEndpoint);
         botAddress = _botAddress;
         i_pyth = IPyth(oracleAddress);
