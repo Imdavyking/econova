@@ -9,9 +9,10 @@ contract EcoNovaToken is OFT {
 
     error EcoNovaToken__NotOwner();
     error EcoNovaToken__MaxSupplyExceeded();
-    address lzEndpoint = address(0);
 
-    constructor() OFT("EcoNovaToken", "ENT", lzEndpoint, msg.sender) Ownable(msg.sender) {
+    constructor(
+        address lzEndpoint
+    ) OFT("EcoNovaToken", "ENT", lzEndpoint, msg.sender) Ownable(msg.sender) {
         OWNER = msg.sender;
     }
 

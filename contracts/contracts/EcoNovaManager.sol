@@ -109,7 +109,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         Charity[] memory _charity,
         IGroth16VerifierP3 _groth16VerifierP3
     ) Ownable(msg.sender) {
-        i_ecoNovaToken = new EcoNovaToken();
+        i_ecoNovaToken = new EcoNovaToken(address(0));
         botAddress = _botAddress;
         i_pyth = IPyth(oracleAddress);
         i_groth16VerifierP3 = _groth16VerifierP3;
