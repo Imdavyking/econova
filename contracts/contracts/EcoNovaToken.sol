@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@layerzerolabs/solidity-examples/contracts/token/oft/v2/OFTV2.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {OFT} from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 
-contract EcoNovaToken is ERC20 {
+contract EcoNovaToken is OFT {
     address public immutable OWNER;
     uint256 public immutable MAX_SUPPLY = 21_000_000 * 10 ** decimals();
 
     error EcoNovaToken__NotOwner();
     error EcoNovaToken__MaxSupplyExceeded();
+    address lzEndpoint = address(0);
 
-    constructor() ERC20("EcoNovaToken", "ENT") {
+    constructor() OFT("EcoNovaToken", "ENT", lzEndpoint, msg.sender) Ownable(msg.sender) {
         OWNER = msg.sender;
     }
 
