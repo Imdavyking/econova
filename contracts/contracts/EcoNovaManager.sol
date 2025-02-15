@@ -12,6 +12,7 @@ import "./charity/Charity.sol";
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
 import "./interfaces/IGroth16VerifierP3.sol";
+import "./mocks/EndpointV2Mock.sol";
 
 contract EcoNovaManager is Ownable, ReentrancyGuard {
     /**
@@ -109,7 +110,12 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         Charity[] memory _charity,
         IGroth16VerifierP3 _groth16VerifierP3
     ) Ownable(msg.sender) {
-        i_ecoNovaToken = new EcoNovaToken(address(0));
+        address _lzEndpoint = address(0);
+        if (block.chainid == 31337) {
+            EndpointV2Mock mockV2Endpoint = new EndpointV2Mock(1);
+            _lzEndpoint = address(mockV2Endpoint);
+        }
+        i_ecoNovaToken = new EcoNovaToken(_lzEndpoint);
         botAddress = _botAddress;
         i_pyth = IPyth(oracleAddress);
         i_groth16VerifierP3 = _groth16VerifierP3;
