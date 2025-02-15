@@ -37,6 +37,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
     uint256 public constant ONE_DAY = 60 * 60 * 60 * 24;
+    uint256 public constant HARDHAT_CHAIN_ID = 31337;
 
     /**
      * variables
@@ -111,7 +112,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         IGroth16VerifierP3 _groth16VerifierP3
     ) Ownable(msg.sender) {
         address _lzEndpoint = address(0);
-        if (block.chainid == 31337) {
+        if (block.chainid == HARDHAT_CHAIN_ID) {
             EndpointV2Mock mockV2Endpoint = new EndpointV2Mock(1);
             _lzEndpoint = address(mockV2Endpoint);
         }
