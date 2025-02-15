@@ -22,7 +22,7 @@ async function main() {
 
     const EcoNovaToken = await ethers.getContractFactory("EcoNovaToken")
     const signers = await ethers.getSigners()
-    const ecoNovaToken = await EcoNovaToken.deploy(lzEndpoint, signers[0])
+    const ecoNovaToken = await EcoNovaToken.deploy(lzEndpoint, signers[0].address)
 
     await ecoNovaToken.waitForDeployment()
 
