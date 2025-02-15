@@ -31,13 +31,26 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     /**
      * constants
      */
+
     uint256 public constant POINT_BASIS = 35;
     uint256 public constant DONATION_POINT_PER_USD = POINT_BASIS * 2;
     uint256 public constant FIAT_DECIMALS = 10 ** 2;
-    address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
     uint256 public constant ONE_DAY = 60 * 60 * 60 * 24;
     uint256 public constant HARDHAT_CHAIN_ID = 31337;
+    uint256 public constant ETHEREUM_MAINNET_EID_V2 = 30101;
+    uint256 public constant ETHEREUM_SEPOLIA_EID_V2 = 40161;
+    uint256 public constant SONIC_MAINNET_EID_V2 = 30332;
+    uint256 public constant SONIC_BLAZE_EID_V2 = 40349;
+    address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
+    address public constant SONIC_BLAZE_ENDPOINT_V2 =
+        address(0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff);
+    address public constant SONIC_MAINNET_ENDPOINT_V2 =
+        address(0x6F475642a6e85809B1c36Fa62763669b1b48DD5B);
+    address public constant ETHEREUM_MAINNET_ENDPOINT_V2 =
+        address(0x1a44076050125825900e736c501f859c50fE728c);
+    address public constant ETHEREUM_SEPOLIA_ENDPOINT_V2 =
+        address(0x6EDCE65403992e310A62460808c4b910D972f10f);
 
     /**
      * variables
