@@ -19,7 +19,6 @@ async function main() {
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
     const { ecoNovaNFTDeployer } = await hre.ignition.deploy(EcoNovaCourseNFTDeployer)
-
     const ecoAddress = await ecoNovaDeployer.getAddress()
     const ecoCourseNFTAddress = await ecoNovaNFTDeployer.getAddress()
     const botPrivateKey = process.env.PRIVATE_KEY!
