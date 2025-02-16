@@ -6,15 +6,17 @@ import EcoNovaCourseNFTDeployer from "../ignition/modules/EcoNovaCourseNFTDeploy
 import { verify } from "../utils/verify"
 import dotenv from "dotenv"
 import { network } from "hardhat"
-import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
+import { deploy, NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
 import { cleanDeployments } from "../utils/clean"
 import { updateEnv } from "./update.env"
 import { copyABI } from "./copy.abi"
 import { localHardhat } from "../utils/localhardhat.chainid"
+import { deployCrossChainOFT } from "./econova.token.cross.chain"
+import { LZ_CHAINS } from "../utils/lzendpoints.help"
 dotenv.config()
 
 async function main() {
-    const chainId = network.config.chainId
+    const chainId = network.config.chainId!
 
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
@@ -92,6 +94,13 @@ async function main() {
     copyABI("EcoNovaManager", "frontend/src/assets/json", null)
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
     copyABI("EcoNovaManager", "indexer/abis", null)
+
+    if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true") {
+        const { crossChainLzInfo, crossChainTokenAddress } = await deployCrossChainOFT({
+            remoteTokenAddr: tokenAddress,
+            remoteLzInfo: LZ_CHAINS[+chainId],
+        })
+    }
 }
 
 main().catch(console.error)
