@@ -24,8 +24,9 @@ export async function deployCrossChainOFT({
 
         const provider = new ethers.JsonRpcProvider(remoteLzInfo.rpcUrl)
         const deployer = new ethers.Wallet(PRIVATE_KEY, provider)
+        const networkInfo = await provider.getNetwork()
 
-        const chainId = Number((await provider.getNetwork()).chainId)
+        const chainId = Number(networkInfo.chainId)
         if (!chainId) {
             throw new Error("❌ Chain ID is undefined. Ensure Hardhat is configured correctly.")
         }
@@ -39,6 +40,11 @@ export async function deployCrossChainOFT({
         console.log(`🔗 Using LZ Endpoint: ${lzEndpoint.endpointV2}\n`)
 
         const EcoNovaToken = await ethers.getContractFactory("EcoNovaToken", deployer)
+        const EndpointV2 = await ethers.getContractAt(
+            "EndpointV2",
+            lzEndpoint.endpointV2,
+            deployer
+        )
         const ecoNovaToken = await EcoNovaToken.deploy(lzEndpoint.endpointV2, deployer.address)
         await ecoNovaToken.waitForDeployment()
 
@@ -49,6 +55,9 @@ export async function deployCrossChainOFT({
             console.log("⚠️ Missing or invalid remoteTokenAddr. Skipping peer setup.")
             throw new Error("❌ Missing or invalid remoteTokenAddr")
         }
+
+        console.log(`🔄 Setting remote token address: ${remoteTokenAddr}`)
+        await EndpointV2.setDestLzEndpoint(remoteTokenAddr, remoteLzInfo.endpointV2)
 
         console.log(`🔄 Setting peer for cross-chain Endpoint: ${remoteLzInfo.endpointV2}`)
         await ecoNovaToken.setPeer(
