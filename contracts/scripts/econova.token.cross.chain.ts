@@ -1,7 +1,7 @@
 import hre, { ethers } from "hardhat"
 import dotenv from "dotenv"
 import { verify } from "../utils/verify"
-import { getMatchingChainId, LZ_CHAINS } from "../utils/lzendpoints.help"
+import { getMatchingChainId, LayerZeroChainInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
 
 dotenv.config()
 
@@ -10,20 +10,19 @@ export async function deployCrossChainOFT({
     remoteLzInfo,
 }: {
     remoteTokenAddr: string
-    remoteLzInfo: { endpointV2: string; endpointIdV2: number; name: string }
+    remoteLzInfo: LayerZeroChainInfo
 }): Promise<{
-    crossChainLzInfo: { endpointV2: string; endpointIdV2: number; name: string }
+    crossChainLzInfo: LayerZeroChainInfo
     crossChainTokenAddress: string
 }> {
     try {
         const PRIVATE_KEY = process.env.PRIVATE_KEY
-        const RPC_URL = process.env.RPC_URL
 
-        if (!PRIVATE_KEY || !RPC_URL) {
+        if (!PRIVATE_KEY) {
             throw new Error("❌ Missing PRIVATE_KEY or RPC_URL in .env file")
         }
 
-        const provider = new ethers.JsonRpcProvider(RPC_URL)
+        const provider = new ethers.JsonRpcProvider(remoteLzInfo.rpcUrl)
         const deployer = new ethers.Wallet(PRIVATE_KEY, provider)
 
         const chainId = Number((await provider.getNetwork()).chainId)
