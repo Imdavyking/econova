@@ -1,6 +1,7 @@
 /** @format */
 import abi from "@/assets/json/abi.json";
 import erc20 from "@/assets/json/erc20.json";
+import oftAbi from "@/assets/json/oft.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
 import iWrappedSonicAbi from "@/assets/json/iwrapped-sonic.json";
 import { BrowserProvider, ethers } from "ethers";
@@ -21,6 +22,7 @@ import {
 import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
 
 async function switchOrAddChain(ethProvider) {
   try {
@@ -85,6 +87,19 @@ const getIWSonicContract = async () => {
   );
 };
 
+const getOFTContract = async (tokenAddress) => {
+  if (!window.ethereum) {
+    toast.info(
+      "MetaMask is not installed. Please install it to use this feature."
+    );
+    return;
+  }
+  const signer = await getSigner();
+
+  await switchOrAddChain(signer.provider);
+  return new ethers.Contract(tokenAddress, oftAbi, signer);
+};
+
 const getERC20Contract = async (address) => {
   if (!window.ethereum) {
     toast.info(
@@ -123,6 +138,68 @@ const getNFTCourseContract = async () => {
   await switchOrAddChain(signer.provider);
   return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, nftCourseAbi, signer);
 };
+
+export async function getOFTSendFee({
+  oftTokenAddress,
+  recipientAddress,
+  eidB,
+  tokensToSend,
+}) {
+  try {
+    const contract = await getOFTContract(oftTokenAddress);
+    const options = Options.newOptions()
+      .addExecutorLzReceiveOption(200000, 0)
+      .toHex()
+      .toString();
+
+    const sendParam = [
+      eidB,
+      ethers.zeroPadBytes(recipientAddress, 32),
+      tokensToSend,
+      tokensToSend,
+      options,
+      "0x",
+      "0x",
+    ];
+
+    const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
+
+    return { nativeFee, sendParam, lzTokenFee, contract };
+  } catch (error) {
+    console.error("❌ Error calculating send fee:", error);
+    throw error;
+  }
+}
+
+export async function sendOFTTokens({
+  oftTokenAddress,
+  refundAddress,
+  recipientAddress,
+  eidB,
+  tokensToSend,
+}) {
+  try {
+    const { nativeFee, lzTokenFee, sendParam, contract } = await getOFTSendFee({
+      oftTokenAddress,
+      recipientAddress,
+      eidB,
+      tokensToSend,
+    });
+
+    const tx = await contract.send(
+      sendParam,
+      [nativeFee, lzTokenFee],
+      refundAddress,
+      {
+        value: nativeFee,
+      }
+    );
+    await tx.wait();
+  } catch (error) {
+    console.error("❌ Error during token transfer:", error);
+    throw error;
+  }
+}
 
 export const adviceOnHealthService = async ({ advice }) => {
   return advice;
