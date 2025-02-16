@@ -16,12 +16,13 @@ export async function deployCrossChainOFT({
 }> {
     try {
         const PRIVATE_KEY = process.env.PRIVATE_KEY
+        const CROSS_CHAIN_RPC_URL = process.env.DEPLOY_CROSS_CHAIN_RPC_URL
 
-        if (!PRIVATE_KEY) {
-            throw new Error("❌ Missing PRIVATE_KEY or RPC_URL in .env file")
+        if (!PRIVATE_KEY || !CROSS_CHAIN_RPC_URL) {
+            throw new Error("❌ Missing PRIVATE_KEY or CROSS_CHAIN_RPC_URL in .env file")
         }
 
-        const provider = new ethers.JsonRpcProvider(remoteLzInfo.rpcUrl)
+        const provider = new ethers.JsonRpcProvider(CROSS_CHAIN_RPC_URL)
         const deployer = new ethers.Wallet(PRIVATE_KEY, provider)
         const networkInfo = await provider.getNetwork()
 
