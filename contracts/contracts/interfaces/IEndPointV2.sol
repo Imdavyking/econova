@@ -17,7 +17,7 @@ interface IEndpointV2Mock {
     ) external;
 
     function send(
-        uint16 /* _dstEid */,
+        uint16,
         bytes calldata,
         bytes calldata,
         address payable,
