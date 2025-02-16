@@ -35,21 +35,3 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
         rpcUrl: "https://rpc.testnet.sepolia.io",
     },
 }
-
-// Define bidirectional cross-chain connections
-export const LZ_CONNECTIONS: { from: number; to: number }[] = [
-    { from: 11155111, to: 57054 }, // Sepolia → Sonic Blaze
-    { from: 57054, to: 11155111 }, // Sonic Blaze → Sepolia
-    { from: 1, to: 146 }, // Ethereum Mainnet → Sonic Mainnet
-    { from: 146, to: 1 }, // Sonic Mainnet → Ethereum Mainnet
-]
-
-/**
- * Get the matching cross-chain ID.
- * @param chainId Source chain ID.
- * @returns The matching chain ID or null if no pair exists.
- */
-export function getMatchingChainId(chainId: number): number | null {
-    const match = LZ_CONNECTIONS.find((pair) => pair.from === chainId)
-    return match ? match.to : null
-}

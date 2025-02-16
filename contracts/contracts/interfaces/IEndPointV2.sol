@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-interface IEndpointV2Mock {
+interface IEndpointV2 {
     function setDestLzEndpoint(address _contract, address _endpoint) external;
 
     function setDelegate(address _delegate) external;

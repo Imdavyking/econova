@@ -96,10 +96,18 @@ async function main() {
     copyABI("EcoNovaManager", "indexer/abis", null)
 
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true") {
+        const layerZeroChainInfo = LZ_CHAINS[+chainId]
         const { crossChainLzInfo, crossChainTokenAddress } = await deployCrossChainOFT({
             remoteTokenAddr: tokenAddress,
-            remoteLzInfo: LZ_CHAINS[+chainId],
+            remoteLzInfo: layerZeroChainInfo,
         })
+        const EndpointV2 = await ethers.getContractAt("IEndpointV2", layerZeroChainInfo.endpointV2)
+        const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)
+        await EndpointV2.setDestLzEndpoint(crossChainTokenAddress, crossChainLzInfo.endpointV2)
+        await ecoNovaToken.setPeer(
+            crossChainLzInfo.endpointIdV2,
+            ethers.zeroPadBytes(crossChainTokenAddress, 32)
+        )
     }
 }
 

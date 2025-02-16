@@ -1,7 +1,6 @@
-import hre, { ethers } from "hardhat"
+import { ethers } from "hardhat"
 import dotenv from "dotenv"
-import { verify } from "../utils/verify"
-import { getMatchingChainId, LayerZeroChainInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
+import { LayerZeroChainInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
 
 dotenv.config()
 
@@ -41,7 +40,7 @@ export async function deployCrossChainOFT({
 
         const EcoNovaToken = await ethers.getContractFactory("EcoNovaToken", deployer)
         const EndpointV2 = await ethers.getContractAt(
-            "EndpointV2",
+            "IEndpointV2",
             lzEndpoint.endpointV2,
             deployer
         )
