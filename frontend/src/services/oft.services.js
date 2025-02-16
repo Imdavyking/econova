@@ -1,7 +1,12 @@
 import { ethers } from "ethers";
 
 import { Options } from "@layerzerolabs/lz-v2-utilities";
-export async function getOFTSendFee({ myOFTA, recipient, eidB, tokensToSend }) {
+export async function getOFTSendFee({
+  myOFTA,
+  recipientAddress,
+  eidB,
+  tokensToSend,
+}) {
   try {
     const options = Options.newOptions()
       .addExecutorLzReceiveOption(200000, 0)
@@ -10,7 +15,7 @@ export async function getOFTSendFee({ myOFTA, recipient, eidB, tokensToSend }) {
 
     const sendParam = [
       eidB,
-      ethers.zeroPadBytes(recipient, 32),
+      ethers.zeroPadBytes(recipientAddress, 32),
       tokensToSend,
       tokensToSend,
       options,
@@ -29,21 +34,21 @@ export async function getOFTSendFee({ myOFTA, recipient, eidB, tokensToSend }) {
 
 export async function sendOFTTokens({
   myOFTA,
-  ownerA,
-  recipient,
+  refundAddress,
+  recipientAddress,
   eidB,
   tokensToSend,
 }) {
   try {
     const { nativeFee, sendParam } = await getOFTSendFee({
       myOFTA,
-      recipient,
+      recipientAddress,
       eidB,
       tokensToSend,
     });
 
     // Execute the token transfer
-    const tx = await myOFTA.send(sendParam, [nativeFee, 0], ownerA.address, {
+    const tx = await myOFTA.send(sendParam, [nativeFee, 0], refundAddress, {
       value: nativeFee,
     });
     await tx.wait();
