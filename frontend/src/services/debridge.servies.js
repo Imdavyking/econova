@@ -4,7 +4,7 @@ import { getSigner } from "./blockchain.services";
 import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
 import { Flags } from "@debridge-finance/desdk/lib/evm";
 
-async function getCrossChainTransferDetails(transactionHash, providerUrl) {
+async function getCrossChainTransferDetails({ transactionHash, providerUrl }) {
   try {
     const evmOriginContext = { provider: providerUrl };
 
@@ -46,7 +46,11 @@ async function getCrossChainTransferDetails(transactionHash, providerUrl) {
   }
 }
 
-async function sendEVMCrossChain(receiverAddress, amountInEther, chainIdTo) {
+async function sendEVMCrossChain({
+  receiverAddress,
+  amountInEther,
+  chainIdTo,
+}) {
   try {
     const signer = await getSigner();
 
