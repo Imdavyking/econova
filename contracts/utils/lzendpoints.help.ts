@@ -1,5 +1,7 @@
 import { ethers } from "hardhat"
 import { EndpointId } from "@layerzerolabs/lz-definitions"
+import dotenv from "dotenv"
+dotenv.config()
 
 export type LayerZeroChainInfo = {
     endpointV2: string
@@ -35,3 +37,10 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
         rpcUrl: "https://rpc.soniclabs.com",
     },
 }
+
+export const crossChainId: string | undefined = process.env.CROSS_CHAIN_ID
+export const crossChainLzInfo: LayerZeroChainInfo | null = crossChainId
+    ? LZ_CHAINS[+crossChainId] ?? null
+    : null
+export const CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY =
+    process.env.CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY

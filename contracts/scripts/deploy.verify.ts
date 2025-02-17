@@ -12,7 +12,8 @@ import { updateEnv } from "./update.env"
 import { copyABI } from "./copy.abi"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { deployCrossChainOFT } from "./econova.token.cross.chain"
-import { LZ_CHAINS } from "../utils/lzendpoints.help"
+import { crossChainId, crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
+import "hardhat-change-network"
 dotenv.config()
 
 async function main() {
@@ -100,9 +101,7 @@ async function main() {
     if (localHardhat.includes(chainId)) return
 
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true" && process.env.CROSS_CHAIN_ID) {
-        const crossChainId = +process.env.CROSS_CHAIN_ID
-        const crossChainLzInfo = LZ_CHAINS[+crossChainId]
-        if (crossChainId === +chainId) {
+        if (+crossChainId! === +chainId) {
             console.log("Cross chain deployment is not needed for the same chain")
             return
         }
@@ -127,9 +126,12 @@ async function main() {
         )
         console.log("✅ Peer setup complete!\n")
 
+        hre.changeNetwork(crossChainLzInfo.name)
+        await verify(crossChainTokenAddress, [crossChainLzInfo.endpointV2, owner.address])
+
         updateEnv(crossChainTokenAddress, "frontend", "VITE_CROSS_CHAIN_TOKEN_ADDRESS")
         updateEnv(crossChainLzInfo.rpcUrl!, "frontend", "VITE_CROSS_CHAIN_RPC_URL")
-        updateEnv(crossChainId.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
+        updateEnv(crossChainId!.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
         updateEnv(
             crossChainLzInfo.endpointIdV2.toString(),
             "frontend",

@@ -2,6 +2,7 @@ import { HardhatUserConfig } from "hardhat/config"
 import "@nomicfoundation/hardhat-toolbox"
 import "@nomicfoundation/hardhat-verify"
 import dotenv from "dotenv"
+import { CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY, LZ_CHAINS } from "./utils/lzendpoints.help"
 dotenv.config()
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
@@ -36,6 +37,7 @@ if (!API_SCAN_VERIFIER_KEY) {
 }
 
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+const crossChainNetwork = LZ_CHAINS[+CHAIN_ID!]
 
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
@@ -54,6 +56,11 @@ const config: HardhatUserConfig = {
                 explorerUrl: process.env.CHAIN_BLOCKEXPLORER_URL,
             },
         },
+        [crossChainNetwork.name]: {
+            url: crossChainNetwork.rpcUrl,
+            chainId: +CHAIN_ID!,
+            accounts: [PRIVATE_KEY],
+        },
     },
     solidity: {
         version: "0.8.28",
@@ -67,6 +74,7 @@ const config: HardhatUserConfig = {
     etherscan: {
         apiKey: {
             testNetwork: API_SCAN_VERIFIER_KEY,
+            [crossChainNetwork.name]: CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY ?? "",
         },
         customChains: [
             {
