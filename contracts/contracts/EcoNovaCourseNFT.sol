@@ -8,10 +8,9 @@ import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
-
-// import "@debridge-finance/debridge-protocol-evm-interfaces/contracts/interfaces/ICallProxy.sol";
-// import "@debridge-finance/debridge-protocol-evm-interfaces/contracts/interfaces/IDeBridgeGateExtended.sol";
-// import "@debridge-finance/debridge-protocol-evm-interfaces/contracts/libraries/Flags.sol";
+import "./debridge/interfaces/ICallProxy.sol";
+import "./debridge/interfaces/IDeBridgeGateExtended.sol";
+import "./debridge/library/Flags.sol";
 
 contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
     /**
