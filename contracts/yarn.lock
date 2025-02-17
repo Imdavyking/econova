@@ -28,11 +28,6 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@debridge-finance/debridge-protocol-evm-interfaces@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@debridge-finance/debridge-protocol-evm-interfaces/-/debridge-protocol-evm-interfaces-1.0.4.tgz#ddebd9f19b6c3d1a28dc4cab630c3fca3d64f905"
-  integrity sha512-unIXZYLHpZiGxWWHr+DBgYZt2a6y/7+OOAVGHIsvQQ7JGELJI19apmiZGJn9W7qb4eDW7meId8gdyy/7NowVqA==
-
 "@ethereumjs/common@2.6.5", "@ethereumjs/common@^2.6.4":
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/@ethereumjs/common/-/common-2.6.5.tgz#0a75a22a046272579d91919cb12d84f2756e8d30"
