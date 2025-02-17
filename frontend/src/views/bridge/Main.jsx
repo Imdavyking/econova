@@ -16,7 +16,6 @@ export const LZ_CHAINS = {
     rpcUrl: "https://sepolia.base.org",
     chainId: 84532,
   },
-
   57054: {
     endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
     endpointIdV2: EndpointId.SONIC_V2_TESTNET,
@@ -36,45 +35,58 @@ export default function Bridge() {
 
   const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
   const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[84532]); // Default to baseSepolia
+
+  const [selectedToken, setSelectedToken] = useState({
+    name: "",
+    symbol: "",
+    tokenAddress: "",
+    decimals: 18,
+  });
+
   const filteredTokens = availableTokens.filter(
     (token) => token.chainId === sourceChain.chainId
   );
-  const [selectedToken, setSelectedToken] = useState(
-    availableTokens[0]?.address
-  );
+
   useEffect(() => {
     getProjectTokenDetails()
       .then((token) => {
         const newTokensSet = new Set(
-          availableTokens.map((token) => `${token.address}-${token.chainId}`)
+          availableTokens.map(
+            (token) => `${token.tokenAddress}-${token.chainId}`
+          )
         );
 
         const newToken = {
           name: token.name,
-          address: token.tokenAddress,
+          symbol: token.symbol,
+          tokenAddress: token.tokenAddress,
+          decimals: token.decimals,
           chainId: 57054,
         };
 
-        if (!newTokensSet.has(`${newToken.address}-${newToken.chainId}`)) {
+        if (!newTokensSet.has(`${newToken.tokenAddress}-${newToken.chainId}`)) {
           setAvailableTokens([newToken, ...availableTokens]);
-          selectedToken || setSelectedToken(newToken.address);
+          if (!selectedToken.tokenAddress) {
+            setSelectedToken(newToken);
+          }
         }
       })
       .catch((error) => {
         console.error("Error fetching tokens:", error);
       });
   }, [sourceChain]);
+
   const estimateFee = async () => {
     try {
       setLoading(true);
-      console.log({ selectedToken });
 
       const { nativeFee, lzTokenFee } = await getOFTSendFee({
-        oftTokenAddress: selectedToken,
+        oftTokenAddress: selectedToken.tokenAddress,
         recipientAddress: recipient,
-        tokensToSend: amount,
+        tokensToSend: amount * 10 ** selectedToken.decimals,
         eidB: destinationChain.endpointIdV2,
       });
+
       setNativeFee(ethers.formatEther(nativeFee));
       setLzTokenFee(ethers.formatEther(lzTokenFee));
     } catch (error) {
@@ -87,12 +99,14 @@ export default function Bridge() {
   const sendTokens = async () => {
     try {
       setLoading(true);
+
       await sendOFTTokens({
-        oftTokenAddress: selectedToken,
+        oftTokenAddress: selectedToken.tokenAddress,
         recipientAddress: recipient,
-        tokensToSend: amount,
+        tokensToSend: amount * 10 ** selectedToken.decimals,
         eidB: destinationChain.endpointIdV2,
       });
+
       alert("✅ Tokens sent successfully!");
     } catch (error) {
       console.error("Error sending tokens:", error);
@@ -112,12 +126,17 @@ export default function Bridge() {
         <label className="block text-gray-700 font-medium">Select Token:</label>
         <select
           className="w-full p-3 border rounded-lg text-black"
-          value={selectedToken}
-          onChange={(e) => setSelectedToken(e.target.value)}
+          value={selectedToken.tokenAddress}
+          onChange={(e) => {
+            const selected = availableTokens.find(
+              (token) => token.tokenAddress === e.target.value
+            );
+            setSelectedToken(selected);
+          }}
         >
           {filteredTokens.map((token) => (
-            <option key={token.address} value={token.address}>
-              {token.name}
+            <option key={token.tokenAddress} value={token.tokenAddress}>
+              {token.name} ({token.symbol})
             </option>
           ))}
         </select>
