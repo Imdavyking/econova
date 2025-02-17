@@ -97,9 +97,16 @@ async function main() {
 
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true") {
         const layerZeroChainInfo = LZ_CHAINS[+chainId]
-        const { crossChainLzInfo, crossChainTokenAddress } = await deployCrossChainOFT({
+        const crossChainId = 146
+        if (crossChainId === +chainId) {
+            console.log("Cross chain deployment is not needed for the same chain")
+            return
+        }
+        const crossChainLzInfo = LZ_CHAINS[crossChainId]
+        const { crossChainTokenAddress } = await deployCrossChainOFT({
             remoteTokenAddr: tokenAddress,
             remoteLzInfo: layerZeroChainInfo,
+            crossChainLzInfo: LZ_CHAINS[146],
         })
         const EndpointV2 = await ethers.getContractAt("IEndpointV2", layerZeroChainInfo.endpointV2)
         const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)

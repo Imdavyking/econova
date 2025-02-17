@@ -7,16 +7,17 @@ dotenv.config()
 export async function deployCrossChainOFT({
     remoteTokenAddr,
     remoteLzInfo,
+    crossChainLzInfo,
 }: {
     remoteTokenAddr: string
     remoteLzInfo: LayerZeroChainInfo
-}): Promise<{
     crossChainLzInfo: LayerZeroChainInfo
+}): Promise<{
     crossChainTokenAddress: string
 }> {
     try {
         const PRIVATE_KEY = process.env.PRIVATE_KEY
-        const CROSS_CHAIN_RPC_URL = process.env.DEPLOY_CROSS_CHAIN_RPC_URL
+        const CROSS_CHAIN_RPC_URL = crossChainLzInfo.rpcUrl
 
         if (!PRIVATE_KEY || !CROSS_CHAIN_RPC_URL) {
             throw new Error("❌ Missing PRIVATE_KEY or CROSS_CHAIN_RPC_URL in .env file")
@@ -48,8 +49,8 @@ export async function deployCrossChainOFT({
         const ecoNovaToken = await EcoNovaToken.deploy(lzEndpoint.endpointV2, deployer.address)
         await ecoNovaToken.waitForDeployment()
 
-        const deploymentAddress = await ecoNovaToken.getAddress()
-        console.log(`✅ EcoNovaToken successfully deployed at: ${deploymentAddress}\n`)
+        const crossTokenAddress = await ecoNovaToken.getAddress()
+        console.log(`✅ EcoNovaToken successfully deployed at: ${crossTokenAddress}\n`)
 
         if (!remoteTokenAddr || !ethers.isAddress(remoteTokenAddr)) {
             console.log("⚠️ Missing or invalid remoteTokenAddr. Skipping peer setup.")
@@ -68,8 +69,7 @@ export async function deployCrossChainOFT({
         console.log("✅ Peer setup complete!\n")
 
         return {
-            crossChainLzInfo: lzEndpoint,
-            crossChainTokenAddress: deploymentAddress,
+            crossChainTokenAddress: crossTokenAddress,
         }
     } catch (error) {
         console.error("❌ Error during deployment:", error)
