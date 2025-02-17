@@ -208,6 +208,7 @@ export async function sendOFTTokens({
       }
     );
     await tx.wait(1);
+    return `sent ${tokensToSend} ${oftTokenAddress} to ${recipientAddress}`;
   } catch (error) {
     console.error("❌ Error during token transfer:", error);
     throw error;
