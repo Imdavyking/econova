@@ -130,6 +130,12 @@ async function main() {
         updateEnv(crossChainTokenAddress, "frontend", "VITE_CROSS_CHAIN_TOKEN_ADDRESS")
         updateEnv(crossChainLzInfo.rpcUrl!, "frontend", "VITE_CROSS_CHAIN_RPC_URL")
         updateEnv(crossChainId.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
+        updateEnv(
+            crossChainLzInfo.endpointIdV2.toString(),
+            "frontend",
+            "VITE_CROSS_CHAIN_ENDPOINT_V2_ID"
+        )
+        updateEnv(crossChainLzInfo.endpointV2, "frontend", "VITE_CROSS_CHAIN_ENDPOINT_V2_ADDRESS")
     }
 }
 
