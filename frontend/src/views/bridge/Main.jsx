@@ -8,7 +8,7 @@ import {
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
-import { CHAIN_ID } from "../../utils/constants";
+import { APP_NAME, CHAIN_ID } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 export const LZ_CHAINS = {
   84532: {
@@ -17,6 +17,7 @@ export const LZ_CHAINS = {
     name: "Base Sepolia",
     rpcUrl: "https://sepolia.base.org",
     chainId: 84532,
+    image: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png",
   },
   57054: {
     endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
@@ -24,6 +25,7 @@ export const LZ_CHAINS = {
     name: "Sonic Blaze",
     rpcUrl: "https://rpc.blaze.soniclabs.com",
     chainId: 57054,
+    image: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png",
   },
 };
 
@@ -123,7 +125,7 @@ export default function Bridge() {
     <div className="container sm:px-10">
       <a href="/" className="-intro-x flex items-center pt-5">
         <img alt="EcoNova" className="w-10" src={logoUrl} />
-        <span className=" text-lg ml-3"> EcoNova Bridge</span>
+        <span className=" text-lg ml-3"> {APP_NAME} Bridge</span>
       </a>
 
       <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">

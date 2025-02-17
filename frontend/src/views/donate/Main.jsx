@@ -11,7 +11,7 @@ import {
   donateToFoundationService,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
-import { ETH_ADDRESS } from "../../utils/constants";
+import { APP_NAME, ETH_ADDRESS } from "../../utils/constants";
 import { charityCategories } from "../../utils/charity.categories";
 
 function Main() {
@@ -67,7 +67,7 @@ function Main() {
             <div className="hidden xl:flex flex-col min-h-screen">
               <a href="/" className="-intro-x flex items-center pt-5">
                 <img alt="EcoNova" className="w-10" src={logoUrl} />
-                <span className="text-white text-lg ml-3"> EcoNova </span>
+                <span className="text-white text-lg ml-3"> {APP_NAME} </span>
               </a>
               <div className="my-auto">
                 <img
