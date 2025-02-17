@@ -39,7 +39,7 @@ const AIHealth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [suggestion, setSuggestion] = useState("");
   return (
-    <div className="min-h-screen flex flex-col items-center  p-4">
+    <div className="">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <a href="/" className="flex items-center space-x-3">
@@ -48,7 +48,7 @@ const AIHealth = () => {
         </a>
       </h2>
 
-      <div className="bg-white shadow-lg rounded-lg p-6 max-w-md w-full">
+      <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
         <div className="mb-4">
           <input
             type="number"
