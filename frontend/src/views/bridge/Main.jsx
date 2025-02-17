@@ -5,6 +5,7 @@ import {
   sendOFTTokens,
 } from "../../services/blockchain.services";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import { EndpointId } from "@layerzerolabs/lz-definitions";
 
 const availableTokens = [
   { name: "Token A", address: "0xTokenAAddress", chainId: 84532 },
@@ -14,31 +15,18 @@ const availableTokens = [
 export const LZ_CHAINS = {
   84532: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
-    endpointIdV2: 1, // Assuming EndpointId.BASE_V2_TESTNET is 1
-    name: "baseSepolia",
+    endpointIdV2: EndpointId.BASE_V2_TESTNET,
+    name: "Base Sepolia",
     rpcUrl: "https://sepolia.base.org",
     chainId: 84532,
   },
-  8453: {
-    endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
-    endpointIdV2: 2, // Assuming EndpointId.BASE_V2_MAINNET is 2
-    name: "baseMainnet",
-    rpcUrl: "https://mainnet.base.org",
-    chainId: 8453,
-  },
+
   57054: {
     endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
-    endpointIdV2: 3, // Assuming EndpointId.SONIC_V2_TESTNET is 3
-    name: "sonicBlaze",
+    endpointIdV2: EndpointId.SONIC_V2_TESTNET,
+    name: "Sonic Blaze",
     rpcUrl: "https://rpc.blaze.soniclabs.com",
     chainId: 57054,
-  },
-  146: {
-    endpointV2: "0x6F475642a6e85809B1c36Fa62763669b1b48DD5B",
-    endpointIdV2: 4, // Assuming EndpointId.SONIC_V2_MAINNET is 4
-    name: "sonicMainnet",
-    rpcUrl: "https://rpc.soniclabs.com",
-    chainId: 146,
   },
 };
 

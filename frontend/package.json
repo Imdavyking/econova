@@ -25,6 +25,7 @@
     "@googlemaps/markerclustererplus": "^1.1.0",
     "@headlessui/react": "^2.2.0",
     "@hookform/resolvers": "^2.8.8",
+    "@layerzerolabs/lz-definitions": "^3.0.68",
     "@layerzerolabs/lz-v2-utilities": "^3.0.68",
     "@left4code/tw-starter": "^3.1.35",
     "@popperjs/core": "^2.7.0",
