@@ -4,7 +4,7 @@ import {
   getOFTSendFee,
   sendOFTTokens,
 } from "../../services/blockchain.services";
-
+import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 const availableTokens = [
   { name: "Token A", address: "0xTokenAAddress" },
   { name: "Token B", address: "0xTokenBAddress" },
@@ -68,6 +68,7 @@ export default function Bridge() {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-xl mt-10">
+      <DarkModeSwitcher />
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
         Send OFT Tokens
       </h2>
