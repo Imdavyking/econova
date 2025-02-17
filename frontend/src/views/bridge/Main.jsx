@@ -136,7 +136,7 @@ export default function Bridge() {
 
   return (
     <div className="container sm:px-10">
-      <a href="/" className="-intro-x flex items-center pt-5">
+      <a href="/" className="-intro-x flex items-center pt-5 justify-center">
         <img alt="EcoNova" className="w-10" src={logoUrl} />
         <span className=" text-lg ml-3"> {APP_NAME} Bridge</span>
       </a>
@@ -218,7 +218,7 @@ export default function Bridge() {
           )}
 
           <button
-            className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
+            className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 flex justify-center"
             onClick={estimateFee}
             disabled={loading}
           >
@@ -230,7 +230,7 @@ export default function Bridge() {
           </button>
 
           <button
-            className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400"
+            className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 flex justify-center"
             onClick={sendTokens}
             disabled={loading || !nativeFee}
           >
