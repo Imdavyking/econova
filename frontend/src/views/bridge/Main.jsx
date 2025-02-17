@@ -2,15 +2,11 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import {
   getOFTSendFee,
+  getProjectTokenDetails,
   sendOFTTokens,
 } from "../../services/blockchain.services";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
-
-const availableTokens = [
-  { name: "Token A", address: "0xTokenAAddress", chainId: 84532 },
-  { name: "Token B", address: "0xTokenBAddress", chainId: 57054 },
-];
 
 export const LZ_CHAINS = {
   84532: {
@@ -31,20 +27,37 @@ export const LZ_CHAINS = {
 };
 
 export default function Bridge() {
-  const [selectedToken, setSelectedToken] = useState(
-    availableTokens[0].address
-  );
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [nativeFee, setNativeFee] = useState(null);
   const [lzTokenFee, setLzTokenFee] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [availableTokens, setAvailableTokens] = useState([]);
 
   const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
   const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[84532]); // Default to baseSepolia
   const filteredTokens = availableTokens.filter(
     (token) => token.chainId === sourceChain.chainId
   );
+  const [selectedToken, setSelectedToken] = useState(
+    availableTokens[0]?.address
+  );
+  useEffect(() => {
+    getProjectTokenDetails()
+      .then((token) => {
+        setAvailableTokens([
+          {
+            name: token.name,
+            address: token.tokenAddress,
+            chainId: 57054,
+          },
+          ...availableTokens,
+        ]);
+      })
+      .catch((error) => {
+        console.error("Error fetching tokens:", error);
+      });
+  }, [sourceChain]);
   const estimateFee = async () => {
     try {
       setLoading(true);
@@ -90,7 +103,7 @@ export default function Bridge() {
       <div className="space-y-4">
         <label className="block text-gray-700 font-medium">Select Token:</label>
         <select
-          className="w-full p-3 border rounded-lg"
+          className="w-full p-3 border rounded-lg text-black"
           value={selectedToken}
           onChange={(e) => setSelectedToken(e.target.value)}
         >
@@ -105,7 +118,7 @@ export default function Bridge() {
           Select Source Blockchain:
         </label>
         <select
-          className="w-full p-3 border rounded-lg"
+          className="w-full p-3 border rounded-lg text-black"
           value={sourceChain.chainId}
           onChange={(e) => setSourceChain(LZ_CHAINS[e.target.value])}
         >
@@ -120,7 +133,7 @@ export default function Bridge() {
           Select Destination Blockchain:
         </label>
         <select
-          className="w-full p-3 border rounded-lg"
+          className="w-full p-3 border rounded-lg text-black"
           value={destinationChain.chainId}
           onChange={(e) => setDestinationChain(LZ_CHAINS[e.target.value])}
         >

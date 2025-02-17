@@ -391,8 +391,12 @@ export const getProjectTokenDetails = async () => {
 
     const token = await getERC20Contract(tokenAddress);
 
-    const [name, symbol] = await Promise.all([token.name(), token.symbol()]);
-    return { name, symbol, tokenAddress };
+    const [name, symbol, decimals] = await Promise.all([
+      token.name(),
+      token.symbol(),
+      token.decimals(),
+    ]);
+    return { name, symbol, tokenAddress, decimals };
   } catch (error) {
     console.log(error);
     throw error;
