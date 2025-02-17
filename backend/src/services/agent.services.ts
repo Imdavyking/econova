@@ -29,6 +29,14 @@ const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 
 const tools = {
+  bridge: tool(() => undefined, {
+    name: "bridgeService",
+    description: "Bridge tokens to another chain.",
+    schema: z.object({
+      bridgeAmount: z.number().describe("The amount in Ether"),
+      chainIdTo: z.number().describe("The chain ID to bridge to"),
+    }),
+  }),
   wrapSonic: tool(() => undefined, {
     name: "wrapSonic",
     description: "Wrap sonic to wS.",

@@ -75,7 +75,7 @@ export const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
-async function bridge({ amountInEther, chainIdTo }) {
+async function bridgeService({ bridgeAmount, chainIdTo }) {
   try {
     const signer = await getSigner();
 
@@ -99,7 +99,7 @@ async function bridge({ amountInEther, chainIdTo }) {
 
     const message = new evm.Message({
       tokenAddress: "0x0000000000000000000000000000000000000000",
-      amount: ethers.utils.parseEther(amountInEther).toString(),
+      amount: ethers.utils.parseEther(bridgeAmount).toString(),
       chainIdTo,
       receiver: receiver,
       autoParams: new evm.SendAutoParams({
@@ -113,7 +113,7 @@ async function bridge({ amountInEther, chainIdTo }) {
     const argsForSend = message.getEncodedArgs();
 
     const fee = await deBridgeGate.globalFixedNativeFee();
-    const etherToSend = fee.add(ethers.utils.parseEther(amountInEther));
+    const etherToSend = fee.add(ethers.utils.parseEther(bridgeAmount));
 
     const tx = await deBridgeGate.send(...argsForSend, { value: etherToSend });
     const receipt = await tx.wait();
@@ -195,4 +195,4 @@ export const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
-export { getTxStatus, bridge, claim };
+export { getTxStatus, bridgeService, claim };
