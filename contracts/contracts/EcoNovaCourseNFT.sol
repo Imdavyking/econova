@@ -51,6 +51,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
     event NFTReceived(uint256 tokenId, address recipient, string tokenURI);
     event NFTBridged(uint256 tokenId, address recipient, uint256 targetChainId);
     event SupportedChainAdded(uint256 chainId, bytes crossChainIncrementorAddress);
+    event SupportedChainRemoved(uint256 chainId);
 
     /**
      * errors
@@ -64,10 +65,36 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
     error EcoNovaCourseNFT__SignatureAlreadyUsed();
     error EcoNovaCourseNFT__AdminBadRole();
     error EcoNovaCourseNFT__FeeNotCoveredByMsgValue();
+    error EcoNovaCourseNFT__CallProxyBadRole();
+    error EcoNovaCourseNFT__NativeSenderBadRole(bytes nativeSender, uint256 chainIdFrom);
+    error EcoNovaCourseNFT__ChainNotSupported(uint256 chainId);
 
     /** modifiers */
     modifier onlyAdmin() {
         if (!hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) revert EcoNovaCourseNFT__AdminBadRole();
+        _;
+    }
+
+    modifier onlyCrossChainIncrementor() {
+        ICallProxy callProxy = ICallProxy(deBridgeGate.callProxy());
+
+        // caller is CallProxy?
+        if (address(callProxy) != msg.sender) {
+            revert EcoNovaCourseNFT__CallProxyBadRole();
+        }
+
+        uint256 chainIdFrom = callProxy.submissionChainIdFrom();
+
+        if (supportedChains[chainIdFrom].callerAddress.length == 0) {
+            revert EcoNovaCourseNFT__ChainNotSupported(chainIdFrom);
+        }
+
+        // has the transaction being initiated by the whitelisted CrossChainIncrementor on the origin chain?
+        bytes memory nativeSender = callProxy.submissionNativeSender();
+        if (keccak256(supportedChains[chainIdFrom].callerAddress) != keccak256(nativeSender)) {
+            revert EcoNovaCourseNFT__NativeSenderBadRole(nativeSender, chainIdFrom);
+        }
+
         _;
     }
 
@@ -104,6 +131,36 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         supportedChains[_chainId].isSupported = true;
 
         emit SupportedChainAdded(_chainId, _crossChainAddress);
+    }
+
+    function removeChainSupport(uint256 _chainId) external onlyAdmin {
+        supportedChains[_chainId].isSupported = false;
+        emit SupportedChainRemoved(_chainId);
+    }
+
+    function incrementWithIncludedGas(uint8 _amount, uint256 _executionFee) external payable {
+        bytes memory dstTxCall = _encodeReceiveCommand(_amount, msg.sender);
+
+        _send(dstTxCall, _executionFee);
+    }
+
+    /* ========== INTERNAL METHODS ========== */
+
+    function _encodeReceiveCommand(
+        uint8 _amount,
+        address _initiator
+    ) internal pure returns (bytes memory) {
+        return abi.encodeWithSelector(this.receiveIncrementCommand.selector, _amount, _initiator);
+    }
+
+    function receiveIncrementCommand(
+        uint8 _amount,
+        address _initiator
+    ) external onlyCrossChainIncrementor {
+        // counter += _amount;
+
+        uint256 chainIdFrom = ICallProxy(deBridgeGate.callProxy()).submissionChainIdFrom();
+        // emit CounterIncremented(counter, _amount, chainIdFrom, _initiator);
     }
 
     function _send(bytes memory _dstTransactionCall, uint256 _executionFee) internal {
