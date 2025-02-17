@@ -178,7 +178,6 @@ export async function getOFTSendFee({
       signer: oftInfo.signer,
     };
   } catch (error) {
-    console.log(error.message);
     console.error("❌ Error calculating send fee:", error);
     throw error;
   }
