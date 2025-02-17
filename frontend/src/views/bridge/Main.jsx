@@ -38,7 +38,7 @@ export default function Bridge() {
   const [lzTokenFee, setLzTokenFee] = useState(null);
   const [loading, setLoading] = useState(false);
   const [availableTokens, setAvailableTokens] = useState([]);
-  const [userBalance, setUserBalance] = useState("0.00");
+  const [userBalance, setUserBalance] = useState("---");
   const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
   const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[97]); // Default to baseSepolia
   const [otherTokenAddress, setOtherTokenAddress] = useState("");
@@ -235,25 +235,10 @@ export default function Bridge() {
             className="intro-x login__input form-control py-3 px-4 block"
           />
 
-          {/* {otherTokenAddress && (
-            <div className="text-sm text-gray-500 mt-2">
-              Destination Token Address:{" "}
-              <span className="font-mono break-all">{otherTokenAddress}</span>
-            </div>
-          )}
-
           <div className="mb-3">
             <p className="text-sm">
               Balance:{" "}
-              <span className="font-semibold">{userBalance || "0.00"}</span>{" "}
-              {selectedToken.symbol}
-            </p>
-          </div> */}
-
-          <div className="mb-3">
-            <p className="text-sm">
-              Balance:{" "}
-              <span className="font-semibold">{userBalance || "0.00"}</span>{" "}
+              <span className="font-semibold">{userBalance || "---"}</span>{" "}
               {selectedToken.symbol}
             </p>
             {otherTokenAddress && (
