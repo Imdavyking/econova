@@ -83,9 +83,8 @@ export default function Bridge() {
   const estimateFee = async () => {
     try {
       setLoading(true);
-
-      console.log({ destinationChain });
-      console.log({ sourceChain });
+      setNativeFee(null);
+      setLzTokenFee(null);
 
       if (recipient.trim() === "") {
         toast.error("❌ Recipient address is required!");
@@ -131,6 +130,8 @@ export default function Bridge() {
       });
 
       toast.success("✅ Tokens sent successfully!");
+      setNativeFee(null);
+      setLzTokenFee(null);
     } catch (error) {
       console.error("Error sending tokens:", error);
       toast.error("❌ Error sending tokens!");
