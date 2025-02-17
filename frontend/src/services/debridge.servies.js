@@ -11,7 +11,7 @@ const debridgeAbi = [
 ];
 
 const rpcNodes = {
-  137: "https://polygon-rpc.com/",
+  56: "https://rpc.ankr.com/bsc",
   146: "https://rpc.soniclabs.com",
 };
 
