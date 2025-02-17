@@ -13,6 +13,7 @@ import {
 } from "../services/blockchain.services";
 import { AiResponseType, SolveTaskResult, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
+import { bridge } from "../services/debridge.servies";
 
 export class AIAgent {
   tools: { [key: string]: Function };
@@ -28,6 +29,7 @@ export class AIAgent {
       sendERC20Token: sendERC20TokenService,
       wrapSonic: wrapSonicService,
       unwrapSonic: unwrapSonicService,
+      bridgeService: bridge,
     };
     this.toolsInfo = {
       donate: `Example: Donate 100 USD to a cause. e.g ${Object.keys(
@@ -42,6 +44,7 @@ export class AIAgent {
         "Example: Send 10 wSonic to 0x1CE05Bf474802D49a77b3829c566a9AABbfb8C6d",
       wrapSonic: "Example: Wrap 10 SONIC",
       unwrapSonic: "Example: Unwrap 10 wrappedSonic",
+      bridgeService: "Example: Bridge 10 SONIC to BSC",
     };
   }
 

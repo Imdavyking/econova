@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { getSigner } from "./blockchain.services";
 import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
 import { Flags } from "@debridge-finance/desdk/lib/evm";
+import { FAILED_KEY } from "../utils/constants";
 
 const debridgeAbi = [
   "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
@@ -120,73 +121,78 @@ async function bridge({ amountInEther, chainIdTo }) {
     storeTxInfo(receipt.transactionHash, chainIdFrom, chainIdTo);
 
     console.log(`Transaction sent: ${tx.hash}`);
-    return tx.hash;
+    return `Transaction sent: ${tx.hash}`;
   } catch (error) {
     console.error("Error sending cross-chain Ether:", error);
-    return null;
+    return `${FAILED_KEY} to send cross-chain Ether: ${error.message}`;
   }
 }
 
 export const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
-  if (!isSupported(chainIdFrom)) {
-    throw Error(`chain Id: ${chainIdFrom} is not supported`);
+  try {
+    if (!isSupported(chainIdFrom)) {
+      throw Error(`chain Id: ${chainIdFrom} is not supported`);
+    }
+
+    if (!isSupported(chainIdTo)) {
+      throw Error(`chain Id: ${chainIdTo} is not supported`);
+    }
+
+    const evmOriginContext = {
+      provider: rpcNodes[chainIdFrom],
+    };
+
+    const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
+
+    if (submissions.length === 0 || submissions.length > 1) {
+      throw Error();
+    }
+
+    const [submission] = submissions;
+    const isConfirmed = await submission.hasRequiredBlockConfirmations();
+
+    if (!isConfirmed) {
+      throw Error("Not yet confirmed!");
+    }
+
+    const evmDestinationContext = {
+      provider: rpcNodes[chainIdTo],
+    };
+
+    const claim = await submission.toEVMClaim(evmDestinationContext);
+
+    const isSigned = await claim.isSigned();
+    const isExecuted = await claim.isExecuted();
+
+    if (!isSigned) {
+      throw Error("Not yet signed!");
+    }
+    if (isExecuted) {
+      storeTxInfo(null, null, null);
+      throw Error("Already excuted!");
+    }
+
+    const signer = await getSigner();
+
+    const claimArgs = await claim.getEncodedArgs();
+
+    const deBridgeGate = new ethers.Contract(
+      DEFAULT_DEBRIDGE_GATE_ADDRESS,
+      debridgeAbi,
+      signer
+    );
+
+    const tx = await deBridgeGate.claim(...claimArgs);
+    const receipt = await tx.wait();
+
+    if (receipt.status === 1) {
+      storeTxInfo(null, null, null);
+    }
+    return `successfully claimed cross-chain Ether: ${tx.hash}`;
+  } catch (error) {
+    console.error("Error claiming cross-chain Ether:", error);
+    return `${FAILED_KEY} to claim cross-chain Ether: ${error.message}`;
   }
-
-  if (!isSupported(chainIdTo)) {
-    throw Error(`chain Id: ${chainIdTo} is not supported`);
-  }
-
-  const evmOriginContext = {
-    provider: rpcNodes[chainIdFrom],
-  };
-
-  const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
-
-  if (submissions.length === 0 || submissions.length > 1) {
-    throw Error();
-  }
-
-  const [submission] = submissions;
-  const isConfirmed = await submission.hasRequiredBlockConfirmations();
-
-  if (!isConfirmed) {
-    throw Error("Not yet confirmed!");
-  }
-
-  const evmDestinationContext = {
-    provider: rpcNodes[chainIdTo],
-  };
-
-  const claim = await submission.toEVMClaim(evmDestinationContext);
-
-  const isSigned = await claim.isSigned();
-  const isExecuted = await claim.isExecuted();
-
-  if (!isSigned) {
-    throw Error("Not yet signed!");
-  }
-  if (isExecuted) {
-    storeTxInfo(null, null, null);
-    throw Error("Already excuted!");
-  }
-
-  const signer = await getSigner();
-
-  const claimArgs = await claim.getEncodedArgs();
-
-  const deBridgeGate = new ethers.Contract(
-    DEFAULT_DEBRIDGE_GATE_ADDRESS,
-    debridgeAbi,
-    signer
-  );
-
-  const tx = await deBridgeGate.claim(...claimArgs);
-  const receipt = await tx.wait();
-
-  if (receipt.status === 1) {
-    storeTxInfo(null, null, null);
-  }
-  return receipt;
 };
 
 export { getTxStatus, bridge, claim };
