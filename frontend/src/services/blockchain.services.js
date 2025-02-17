@@ -169,8 +169,6 @@ export async function getOFTSendFee({
       "0x",
     ];
 
-    console.log({ sendParam });
-
     const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
 
     return {
@@ -345,7 +343,6 @@ export const sendSonicService = async ({ recipientAddress, amount }) => {
 
     return `sent ${amount} SONIC to ${recipientAddress}`;
   } catch (error) {
-    console.log();
     return `${FAILED_KEY} to send ${amount} SONIC to ${recipientAddress}`;
   }
 };
