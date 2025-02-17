@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import {
   getOFTSendFee,
   getProjectTokenDetails,
+  getTokenBalance,
   sendOFTTokens,
 } from "../../services/blockchain.services";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
@@ -36,7 +37,7 @@ export default function Bridge() {
   const [lzTokenFee, setLzTokenFee] = useState(null);
   const [loading, setLoading] = useState(false);
   const [availableTokens, setAvailableTokens] = useState([]);
-
+  const [userBalance, setUserBalance] = useState("0.00");
   const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
   const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[97]); // Default to baseSepolia
 
@@ -50,6 +51,14 @@ export default function Bridge() {
   const filteredTokens = availableTokens.filter(
     (token) => token.chainId === sourceChain.chainId
   );
+
+  useEffect(() => {
+    getTokenBalance(selectedToken.tokenAddress).then(
+      ({ balance, decimals }) => {
+        setUserBalance(Number(balance) / 10 ** Number(decimals));
+      }
+    );
+  }, [selectedToken]);
 
   useEffect(() => {
     getProjectTokenDetails()
@@ -207,6 +216,14 @@ export default function Bridge() {
             onChange={(e) => setAmount(e.target.value)}
             className="intro-x login__input form-control py-3 px-4 block"
           />
+
+          <div className="mb-3">
+            <p className="text-sm">
+              Balance:{" "}
+              <span className="font-semibold">{userBalance || "0.00"}</span>{" "}
+              {selectedToken.symbol}
+            </p>
+          </div>
 
           {nativeFee && (
             <div className="">

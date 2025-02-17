@@ -405,6 +405,25 @@ export const getProjectTokenDetails = async () => {
   }
 };
 
+export const getTokenBalance = async (tokenAddress) => {
+  try {
+    const signer = await getSigner();
+
+    const address = await signer.getAddress();
+
+    const token = await getERC20Contract(tokenAddress);
+
+    const [balance, decimals] = await Promise.all([
+      token.balanceOf(address),
+      token.decimals(),
+    ]);
+    return { balance, decimals };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getPointsService = async () => {
   try {
     const signer = await getSigner();
