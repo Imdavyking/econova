@@ -66,6 +66,8 @@ export default function Bridge() {
   const estimateFee = async () => {
     try {
       setLoading(true);
+      console.log({ selectedToken });
+      return;
       const { nativeFee, lzTokenFee } = await getOFTSendFee({
         oftTokenAddress: selectedToken,
         recipientAddress: recipient,
