@@ -5,11 +5,42 @@ import {
   sendOFTTokens,
 } from "../../services/blockchain.services";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 const availableTokens = [
-  { name: "Token A", address: "0xTokenAAddress" },
-  { name: "Token B", address: "0xTokenBAddress" },
-  { name: "Token C", address: "0xTokenCAddress" },
+  { name: "Token A", address: "0xTokenAAddress", chainId: 84532 },
+  { name: "Token B", address: "0xTokenBAddress", chainId: 57054 },
 ];
+
+export const LZ_CHAINS = {
+  84532: {
+    endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
+    endpointIdV2: 1, // Assuming EndpointId.BASE_V2_TESTNET is 1
+    name: "baseSepolia",
+    rpcUrl: "https://sepolia.base.org",
+    chainId: 84532,
+  },
+  8453: {
+    endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
+    endpointIdV2: 2, // Assuming EndpointId.BASE_V2_MAINNET is 2
+    name: "baseMainnet",
+    rpcUrl: "https://mainnet.base.org",
+    chainId: 8453,
+  },
+  57054: {
+    endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
+    endpointIdV2: 3, // Assuming EndpointId.SONIC_V2_TESTNET is 3
+    name: "sonicBlaze",
+    rpcUrl: "https://rpc.blaze.soniclabs.com",
+    chainId: 57054,
+  },
+  146: {
+    endpointV2: "0x6F475642a6e85809B1c36Fa62763669b1b48DD5B",
+    endpointIdV2: 4, // Assuming EndpointId.SONIC_V2_MAINNET is 4
+    name: "sonicMainnet",
+    rpcUrl: "https://rpc.soniclabs.com",
+    chainId: 146,
+  },
+};
 
 export default function Bridge() {
   const [selectedToken, setSelectedToken] = useState(
@@ -21,25 +52,20 @@ export default function Bridge() {
   const [lzTokenFee, setLzTokenFee] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const eidB = "";
-
-  useEffect(() => {
-    if (!eidB) {
-      console.error(
-        "❌ Missing Destination Chain ID (eidB) in environment variables."
-      );
-    }
-  }, [eidB]);
-
+  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
+  const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[84532]); // Default to baseSepolia
+  const filteredTokens = availableTokens.filter(
+    (token) => token.chainId === sourceChain.chainId
+  );
   const estimateFee = async () => {
     try {
       setLoading(true);
       const { nativeFee, lzTokenFee } = await getOFTSendFee({
-        oftTokenAddress: "",
+        oftTokenAddress: selectedToken,
         recipientAddress: recipient,
-        tokensToSend: "",
+        tokensToSend: amount,
+        eidB: destinationChain.endpointIdV2,
       });
-      const data = await response.json();
       setNativeFee(ethers.formatEther(nativeFee));
       setLzTokenFee(ethers.formatEther(lzTokenFee));
     } catch (error) {
@@ -52,11 +78,11 @@ export default function Bridge() {
   const sendTokens = async () => {
     try {
       setLoading(true);
-      sendOFTTokens({
+      await sendOFTTokens({
         oftTokenAddress: selectedToken,
         recipientAddress: recipient,
         tokensToSend: amount,
-        eidB,
+        eidB: destinationChain.endpointIdV2,
       });
       alert("✅ Tokens sent successfully!");
     } catch (error) {
@@ -80,9 +106,39 @@ export default function Bridge() {
           value={selectedToken}
           onChange={(e) => setSelectedToken(e.target.value)}
         >
-          {availableTokens.map((token) => (
+          {filteredTokens.map((token) => (
             <option key={token.address} value={token.address}>
               {token.name}
+            </option>
+          ))}
+        </select>
+
+        <label className="block text-gray-700 font-medium">
+          Select Source Blockchain:
+        </label>
+        <select
+          className="w-full p-3 border rounded-lg"
+          value={sourceChain.chainId}
+          onChange={(e) => setSourceChain(LZ_CHAINS[e.target.value])}
+        >
+          {Object.values(LZ_CHAINS).map((chain) => (
+            <option key={chain.chainId} value={chain.chainId}>
+              {chain.name}
+            </option>
+          ))}
+        </select>
+
+        <label className="block text-gray-700 font-medium">
+          Select Destination Blockchain:
+        </label>
+        <select
+          className="w-full p-3 border rounded-lg"
+          value={destinationChain.chainId}
+          onChange={(e) => setDestinationChain(LZ_CHAINS[e.target.value])}
+        >
+          {Object.values(LZ_CHAINS).map((chain) => (
+            <option key={chain.chainId} value={chain.chainId}>
+              {chain.name}
             </option>
           ))}
         </select>
