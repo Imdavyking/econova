@@ -95,9 +95,11 @@ async function main() {
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
     copyABI("EcoNovaManager", "indexer/abis", null)
 
+    if (localHardhat.includes(chainId)) return
+
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true") {
         const layerZeroChainInfo = LZ_CHAINS[+chainId]
-        const crossChainId = 146
+        const crossChainId = 1115511
         if (crossChainId === +chainId) {
             console.log("Cross chain deployment is not needed for the same chain")
             return
@@ -106,7 +108,7 @@ async function main() {
         const { crossChainTokenAddress } = await deployCrossChainOFT({
             remoteTokenAddr: tokenAddress,
             remoteLzInfo: layerZeroChainInfo,
-            crossChainLzInfo: LZ_CHAINS[146],
+            crossChainLzInfo,
         })
         const EndpointV2 = await ethers.getContractAt("IEndpointV2", layerZeroChainInfo.endpointV2)
         const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)
@@ -115,6 +117,9 @@ async function main() {
             crossChainLzInfo.endpointIdV2,
             ethers.zeroPadBytes(crossChainTokenAddress, 32)
         )
+        updateEnv(crossChainTokenAddress, "frontend", "VITE_CROSS_CHAIN_TOKEN_ADDRESS")
+        updateEnv(crossChainLzInfo.rpcUrl!, "frontend", "VITE_CROSS_CHAIN_RPC_URL")
+        updateEnv(crossChainId.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
     }
 }
 
