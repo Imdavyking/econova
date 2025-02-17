@@ -15,6 +15,7 @@
     "@ckeditor/ckeditor5-build-classic": "^29.1.0",
     "@ckeditor/ckeditor5-build-decoupled-document": "^29.1.0",
     "@ckeditor/ckeditor5-build-inline": "^29.1.0",
+    "@debridge-finance/desdk": "^1.0.2",
     "@emotion/react": "^11.14.0",
     "@fullcalendar/core": "^5.5.1",
     "@fullcalendar/daygrid": "^5.5.0",
