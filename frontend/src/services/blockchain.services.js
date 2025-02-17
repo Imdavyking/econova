@@ -179,7 +179,6 @@ export async function getOFTSendFee({
       signer: oftInfo.signer,
     };
   } catch (error) {
-    // 0x6c1ccdb5. error.data LZ_DefaultSendLibUnavailable().
     console.error("❌ Error calculating send fee:", error);
     throw error;
   }
@@ -422,7 +421,6 @@ export const getPointsService = async () => {
 
 export const getPythPriceFeed = async () => {
   try {
-    const signer = await getSigner();
     const manager = await getContract();
 
     const [price, exp] = await manager.getPricePyth();
