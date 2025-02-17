@@ -7,6 +7,7 @@ import {
 } from "../../services/blockchain.services";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
+import { toast } from "react-toastify";
 
 export const LZ_CHAINS = {
   84532: {
@@ -91,6 +92,7 @@ export default function Bridge() {
       setLzTokenFee(ethers.formatEther(lzTokenFee));
     } catch (error) {
       console.error("Error estimating fee:", error);
+      toast.error("❌ Error estimating fee!");
     } finally {
       setLoading(false);
     }
@@ -107,9 +109,10 @@ export default function Bridge() {
         eidB: destinationChain.endpointIdV2,
       });
 
-      alert("✅ Tokens sent successfully!");
+      toast.success("✅ Tokens sent successfully!");
     } catch (error) {
       console.error("Error sending tokens:", error);
+      toast.error("❌ Error sending tokens!");
     } finally {
       setLoading(false);
     }
