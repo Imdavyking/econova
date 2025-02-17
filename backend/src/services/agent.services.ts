@@ -30,10 +30,10 @@ const tokenSchema = z.enum(availableTokens);
 
 const tools = {
   bridge: tool(() => undefined, {
-    name: "bridgeService",
+    name: "bridge",
     description: "Bridge tokens to another chain.",
     schema: z.object({
-      bridgeAmount: z.number().describe("The amount in Ether"),
+      bridgeAmount: z.number().describe("The amount to bridge"),
       chainIdTo: z.number().describe("The chain ID to bridge to"),
     }),
   }),
