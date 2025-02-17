@@ -96,14 +96,16 @@ async function bridge({ amountInEther, chainIdTo }) {
       signer
     );
 
+    const receiver = await signer.getAddress();
+
     const message = new evm.Message({
       tokenAddress: "0x0000000000000000000000000000000000000000",
       amount: ethers.utils.parseEther(amountInEther).toString(),
       chainIdTo,
-      receiver: receiverAddress,
+      receiver: receiver,
       autoParams: new evm.SendAutoParams({
         executionFee: "0",
-        fallbackAddress: await signer.getAddress(),
+        fallbackAddress: receiver,
         flags: new Flags(),
         data: "0x",
       }),
