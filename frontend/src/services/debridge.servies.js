@@ -12,7 +12,7 @@ const debridgeAbi = [
 
 const rpcNodes = {
   137: "https://polygon-rpc.com/",
-  42161: "https://arb1.arbitrum.io/rpc",
+  146: "https://rpc.soniclabs.com",
 };
 
 const isSupported = (chainId) => {
@@ -76,11 +76,7 @@ export const getTxStatus = async (txHash, chainIdFrom, chainIdTo) => {
   }
 };
 
-async function sendEVMCrossChain({
-  receiverAddress,
-  amountInEther,
-  chainIdTo,
-}) {
+async function bridge({ amountInEther, chainIdTo }) {
   try {
     const signer = await getSigner();
 
@@ -107,7 +103,7 @@ async function sendEVMCrossChain({
       receiver: receiverAddress,
       autoParams: new evm.SendAutoParams({
         executionFee: "0",
-        fallbackAddress: receiverAddress,
+        fallbackAddress: await signer.getAddress(),
         flags: new Flags(),
         data: "0x",
       }),
