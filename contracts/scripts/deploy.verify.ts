@@ -4,6 +4,7 @@ import path from "path"
 import EcoNovaDeployer from "../ignition/modules/EcoNovaDeployer"
 import EcoNovaCourseNFTDeployer from "../ignition/modules/EcoNovaCourseNFTDeployer"
 import { verify } from "../utils/verify"
+import { run } from "hardhat"
 import dotenv from "dotenv"
 import { network } from "hardhat"
 import { deploy, NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
@@ -13,7 +14,7 @@ import { updateEnv } from "./update.env"
 import { copyABI } from "./copy.abi"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { deployCrossChainOFT } from "./econova.token.cross.chain"
-import { crossChainId, crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
+import { crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
 dotenv.config()
 
 async function main() {
@@ -107,13 +108,13 @@ async function main() {
     if (localHardhat.includes(chainId)) return
 
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true" && process.env.CROSS_CHAIN_ID) {
-        if (+crossChainId! === +chainId) {
-            console.log("Cross chain deployment is not needed for the same chain")
+        if (!crossChainLzInfo) {
+            console.error("Cross chain info not found")
             return
         }
 
-        if (!crossChainLzInfo) {
-            console.error("Cross chain info not found")
+        if (crossChainLzInfo.chainId === +chainId) {
+            console.log("Cross chain deployment is not needed for the same chain")
             return
         }
 
@@ -139,7 +140,7 @@ async function main() {
 
         updateEnv(crossChainTokenAddress, "frontend", "VITE_CROSS_CHAIN_TOKEN_ADDRESS")
         updateEnv(crossChainLzInfo.rpcUrl!, "frontend", "VITE_CROSS_CHAIN_RPC_URL")
-        updateEnv(crossChainId!.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
+        updateEnv(crossChainLzInfo.chainId.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
         updateEnv(
             crossChainLzInfo.endpointIdV2.toString(),
             "frontend",

@@ -71,7 +71,7 @@ export const crossChainConfig = crossChainLzInfo
     ? {
           [crossChainLzInfo.name]: {
               url: crossChainLzInfo.rpcUrl,
-              chainId: Number(CHAIN_ID), // Ensure CHAIN_ID is a number
+              chainId: Number(crossChainLzInfo.chainId), // Ensure CHAIN_ID is a number
               accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
           },
       }
