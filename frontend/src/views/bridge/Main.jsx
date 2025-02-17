@@ -57,6 +57,7 @@ export default function Bridge() {
 
         if (!newTokensSet.has(`${newToken.address}-${newToken.chainId}`)) {
           setAvailableTokens([newToken, ...availableTokens]);
+          selectedToken || setSelectedToken(newToken.address);
         }
       })
       .catch((error) => {
@@ -67,7 +68,7 @@ export default function Bridge() {
     try {
       setLoading(true);
       console.log({ selectedToken });
-      return;
+
       const { nativeFee, lzTokenFee } = await getOFTSendFee({
         oftTokenAddress: selectedToken,
         recipientAddress: recipient,

@@ -97,6 +97,8 @@ const getOFTContract = async (tokenAddress) => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider);
+
+  console.log(oftAbi);
   return {
     contract: new ethers.Contract(tokenAddress, oftAbi, signer),
     signer: signer,
