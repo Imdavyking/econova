@@ -36,12 +36,15 @@ const Footer = () => {
         </ul>
 
         <ul className="space-y-2">
-          <li className="font-semibold">Advice & Learning</li>
+          <li className="font-semibold">Tools</li>
           <li>
             <Link to="/ai-health">AI Health Advisor</Link>
           </li>
           <li>
             <Link to="/ai-tutor">AI Tutor</Link>
+          </li>
+          <li>
+            <Link to="/bridge">Bridge</Link>
           </li>
         </ul>
 
