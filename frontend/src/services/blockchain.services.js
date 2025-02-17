@@ -97,7 +97,10 @@ const getOFTContract = async (tokenAddress) => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider);
-  return new ethers.Contract(tokenAddress, oftAbi, signer);
+  return {
+    contract: new ethers.Contract(tokenAddress, oftAbi, signer),
+    signer: signer,
+  };
 };
 
 const getERC20Contract = async (address) => {
@@ -146,7 +149,9 @@ export async function getOFTSendFee({
   tokensToSend,
 }) {
   try {
-    const contract = await getOFTContract(oftTokenAddress);
+    const oftInfo = await getOFTContract(oftTokenAddress);
+    const contract = oftInfo.contract;
+
     const options = Options.newOptions()
       .addExecutorLzReceiveOption(200000, 0)
       .toHex()
@@ -164,7 +169,13 @@ export async function getOFTSendFee({
 
     const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
 
-    return { nativeFee, sendParam, lzTokenFee, contract };
+    return {
+      nativeFee,
+      sendParam,
+      lzTokenFee,
+      contract,
+      signer: oftInfo.signer,
+    };
   } catch (error) {
     console.error("❌ Error calculating send fee:", error);
     throw error;
@@ -173,28 +184,28 @@ export async function getOFTSendFee({
 
 export async function sendOFTTokens({
   oftTokenAddress,
-  refundAddress,
   recipientAddress,
   eidB,
   tokensToSend,
 }) {
   try {
-    const { nativeFee, lzTokenFee, sendParam, contract } = await getOFTSendFee({
-      oftTokenAddress,
-      recipientAddress,
-      eidB,
-      tokensToSend,
-    });
+    const { nativeFee, lzTokenFee, sendParam, contract, signer } =
+      await getOFTSendFee({
+        oftTokenAddress,
+        recipientAddress,
+        eidB,
+        tokensToSend,
+      });
 
     const tx = await contract.send(
       sendParam,
       [nativeFee, lzTokenFee],
-      refundAddress,
+      await signer.getAddress(),
       {
         value: nativeFee,
       }
     );
-    await tx.wait();
+    await tx.wait(1);
   } catch (error) {
     console.error("❌ Error during token transfer:", error);
     throw error;
