@@ -8,6 +8,7 @@ import dotenv from "dotenv"
 import { network } from "hardhat"
 import { deploy, NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
 import { cleanDeployments } from "../utils/clean"
+import { createProvider } from "hardhat/internal/core/providers/construction"
 import { updateEnv } from "./update.env"
 import { copyABI } from "./copy.abi"
 import { localHardhat } from "../utils/localhardhat.chainid"
@@ -127,6 +128,7 @@ async function main() {
         console.log("✅ Peer setup complete!\n")
 
         hre.changeNetwork(crossChainLzInfo.name)
+
         await verify(crossChainTokenAddress, [crossChainLzInfo.endpointV2, owner.address])
 
         updateEnv(crossChainTokenAddress, "frontend", "VITE_CROSS_CHAIN_TOKEN_ADDRESS")

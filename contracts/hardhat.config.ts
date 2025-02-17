@@ -1,8 +1,11 @@
-import { HardhatUserConfig } from "hardhat/config"
+import { HardhatUserConfig, extendEnvironment } from "hardhat/config"
+import { createProvider } from "hardhat/internal/core/providers/construction"
 import "@nomicfoundation/hardhat-toolbox"
 import "@nomicfoundation/hardhat-verify"
+import { HardhatEthersProvider } from "@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider"
 import dotenv from "dotenv"
 import { CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY, LZ_CHAINS } from "./utils/lzendpoints.help"
+import { EthereumProvider } from "hardhat/types"
 dotenv.config()
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
@@ -38,6 +41,25 @@ if (!API_SCAN_VERIFIER_KEY) {
 
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
 const crossChainNetwork = LZ_CHAINS[+CHAIN_ID!]
+
+declare module "hardhat/types/runtime" {
+    export interface HardhatRuntimeEnvironment {
+        changeNetwork: Function
+    }
+}
+
+extendEnvironment(async (hre) => {
+    hre.changeNetwork = async function changeNetwork(newNetwork: string) {
+        hre.network.name = newNetwork
+        hre.network.config = hre.config.networks[newNetwork]
+        hre.network.provider = await createProvider(hre.config, newNetwork)
+        const ethProvider = new hre.ethers.JsonRpcProvider(
+            (hre.network.config as any).url
+        ) as unknown as EthereumProvider
+
+        hre.ethers.provider = new HardhatEthersProvider(ethProvider, newNetwork)
+    }
+})
 
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
