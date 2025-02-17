@@ -8,6 +8,7 @@ import {
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
+import { CHAIN_ID } from "../../utils/constants";
 
 export const LZ_CHAINS = {
   84532: {
@@ -62,7 +63,7 @@ export default function Bridge() {
           symbol: token.symbol,
           tokenAddress: token.tokenAddress,
           decimals: token.decimals,
-          chainId: 57054,
+          chainId: Number(CHAIN_ID),
         };
 
         if (!newTokensSet.has(`${newToken.tokenAddress}-${newToken.chainId}`)) {
@@ -84,7 +85,7 @@ export default function Bridge() {
       const { nativeFee, lzTokenFee } = await getOFTSendFee({
         oftTokenAddress: selectedToken.tokenAddress,
         recipientAddress: recipient,
-        tokensToSend: amount * 10 ** Number(selectedToken.decimals),
+        tokensToSend: `${amount * 10 ** Number(selectedToken.decimals)}`,
         eidB: destinationChain.endpointIdV2,
       });
 
@@ -105,7 +106,7 @@ export default function Bridge() {
       await sendOFTTokens({
         oftTokenAddress: selectedToken.tokenAddress,
         recipientAddress: recipient,
-        tokensToSend: amount * 10 ** Number(selectedToken.decimals),
+        tokensToSend: `${amount * 10 ** Number(selectedToken.decimals)}`,
         eidB: destinationChain.endpointIdV2,
       });
 
