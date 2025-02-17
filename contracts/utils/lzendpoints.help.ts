@@ -19,19 +19,19 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
         rpcUrl: "",
         chainId: 31337,
     },
-    11155111: {
+    97: {
         endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
-        endpointIdV2: EndpointId.SEPOLIA_V2_TESTNET,
-        name: "sepolia",
-        rpcUrl: "https://eth-sepolia.api.onfinality.io/public",
-        chainId: 11155111,
+        endpointIdV2: EndpointId.BSC_V2_TESTNET,
+        name: "bscTestnet",
+        rpcUrl: "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
+        chainId: 97,
     },
-    1: {
+    56: {
         endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
-        endpointIdV2: EndpointId.ETHEREUM_V2_MAINNET,
-        name: "ethereum",
-        rpcUrl: "https://rpc.ankr.com/eth",
-        chainId: 1,
+        endpointIdV2: EndpointId.BSC_V2_MAINNET,
+        name: "bscMainnet",
+        rpcUrl: "https://rpc.ankr.com/bsc",
+        chainId: 56,
     },
     57054: {
         endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",

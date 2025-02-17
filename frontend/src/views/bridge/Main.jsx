@@ -11,12 +11,12 @@ import { toast } from "react-toastify";
 import { APP_NAME, CHAIN_ID } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 export const LZ_CHAINS = {
-  11155111: {
+  97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
-    endpointIdV2: EndpointId.SEPOLIA_V2_TESTNET,
-    name: "sepoliaEth",
-    rpcUrl: "https://eth-sepolia.api.onfinality.io/public",
-    chainId: 11155111,
+    endpointIdV2: EndpointId.BSC_V2_TESTNET,
+    name: "bnbTestnet",
+    rpcUrl: "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
+    chainId: 97,
   },
   57054: {
     endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
