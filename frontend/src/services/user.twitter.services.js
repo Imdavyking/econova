@@ -5,7 +5,7 @@ export const getUserTwitterInfo = async () => {
   try {
     const token = getTwitterAuth();
     if (!token) {
-      throw new Error("No token found");
+      throw new Error("Please login to twitter on the home page");
     }
     const response = await fetch(`${SERVER_URL}/api/user`, {
       method: "GET",

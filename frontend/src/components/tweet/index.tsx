@@ -38,7 +38,7 @@ export const Tweet = ({ tweet }) => {
 
       const token = getTwitterAuth();
       if (!token) {
-        throw new Error("No token found");
+        throw new Error("Please login to twitter on the home page");
       }
       const response = await fetch(
         `${SERVER_URL}/api/tweets/points/${tweetId}/${signature}`,
