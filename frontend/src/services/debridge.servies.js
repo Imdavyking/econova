@@ -10,47 +10,71 @@ const debridgeAbi = [
   "function globalFixedNativeFee() view returns (uint256)",
 ];
 
-async function getCrossChainTransferDetails({ transactionHash, providerUrl }) {
-  try {
-    const evmOriginContext = { provider: providerUrl };
+const rpcNodes = {
+  137: "https://polygon-rpc.com/",
+  42161: "https://arb1.arbitrum.io/rpc",
+};
 
-    const submissions = await evm.Submission.findAll(
-      transactionHash,
-      evmOriginContext
+const isSupported = (chainId) => {
+  return (
+    Object.keys(rpcNodes).filter(
+      (availableChainId) => availableChainId.toString() === chainId.toString()
+    ).length > 0
+  );
+};
+
+const TX_HASH_LOCAL_STORAGE_KEY = "debridge_tx_info";
+const storeTxInfo = (txHash, chainIdFrom, chainIdTo) => {
+  if (txHash) {
+    localStorage.setItem(
+      TX_HASH_LOCAL_STORAGE_KEY,
+      JSON.stringify({ txHash, chainIdFrom, chainIdTo })
     );
+  } else {
+    localStorage.removeItem(TX_HASH_LOCAL_STORAGE_KEY);
+  }
+};
 
-    if (!submissions.length) {
-      console.log("No submissions found for the given transaction hash.");
-      return null;
-    }
+export const getTxInfo = () => {
+  const content = localStorage.getItem(TX_HASH_LOCAL_STORAGE_KEY);
+  if (content) {
+    return JSON.parse(localStorage.getItem(TX_HASH_LOCAL_STORAGE_KEY));
+  } else {
+    return { txHash: null, chainIdFrom: null, chainIdTo: null };
+  }
+};
+export const getTxStatus = async (txHash, chainIdFrom, chainIdTo) => {
+  console.log(txHash, chainIdFrom, chainIdTo);
+
+  try {
+    const evmOriginContext = {
+      provider: rpcNodes[chainIdFrom],
+    };
+
+    const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
+
+    const evmDestinationContext = {
+      provider: rpcNodes[chainIdTo],
+    };
 
     const [submission] = submissions;
     const isConfirmed = await submission.hasRequiredBlockConfirmations();
+    if (!isConfirmed) {
+      return [0, 0];
+    }
+    const claim = await submission.toEVMClaim(evmDestinationContext);
+    const minRequiredSignatures = await claim.getRequiredSignaturesCount();
 
     if (!isConfirmed) {
-      console.log("Transaction is not yet confirmed.");
-      return null;
+      return [0, minRequiredSignatures];
     }
 
-    console.log("Cross-chain asset ID transferred:", submission.debridgeId);
-    console.log(
-      "Amount transferred to",
-      submission.receiver,
-      ":",
-      submission.amount
-    );
-
-    return {
-      debridgeId: submission.debridgeId,
-      receiver: submission.receiver,
-      amount: submission.amount,
-      isConfirmed,
-    };
-  } catch (error) {
-    console.error("Error fetching cross-chain transfer details:", error);
-    return null;
+    const signatures = await claim.getSignatures();
+    return [signatures.length, minRequiredSignatures];
+  } catch {
+    return [0, 0];
   }
-}
+};
 
 async function sendEVMCrossChain({
   receiverAddress,
@@ -59,6 +83,16 @@ async function sendEVMCrossChain({
 }) {
   try {
     const signer = await getSigner();
+
+    const chainIdFrom = await signer.getChainId();
+
+    if (!isSupported(chainIdFrom)) {
+      throw Error(`chain Id: ${chainIdFrom} is not supported`);
+    }
+
+    if (!isSupported(chainIdTo)) {
+      throw Error(`chain Id: ${chainIdTo} is not supported`);
+    }
 
     const deBridgeGate = new ethers.Contract(
       DEFAULT_DEBRIDGE_GATE_ADDRESS,
@@ -85,7 +119,9 @@ async function sendEVMCrossChain({
     const etherToSend = fee.add(ethers.utils.parseEther(amountInEther));
 
     const tx = await deBridgeGate.send(...argsForSend, { value: etherToSend });
-    await tx.wait();
+    const receipt = await tx.wait();
+
+    storeTxInfo(receipt.transactionHash, chainIdFrom, chainIdTo);
 
     console.log(`Transaction sent: ${tx.hash}`);
     return tx.hash;
@@ -94,6 +130,68 @@ async function sendEVMCrossChain({
     return null;
   }
 }
+
+export const claim = async (txHash, chainIdFrom, chainIdTo) => {
+  if (!isSupported(chainIdFrom)) {
+    throw Error(`chain Id: ${chainIdFrom} is not supported`);
+  }
+
+  if (!isSupported(chainIdTo)) {
+    throw Error(`chain Id: ${chainIdTo} is not supported`);
+  }
+
+  const evmOriginContext = {
+    provider: rpcNodes[chainIdFrom],
+  };
+
+  const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
+
+  if (submissions.length === 0 || submissions.length > 1) {
+    throw Error();
+  }
+
+  const [submission] = submissions;
+  const isConfirmed = await submission.hasRequiredBlockConfirmations();
+
+  if (!isConfirmed) {
+    throw Error("Not yet confirmed!");
+  }
+
+  const evmDestinationContext = {
+    provider: rpcNodes[chainIdTo],
+  };
+
+  const claim = await submission.toEVMClaim(evmDestinationContext);
+
+  const isSigned = await claim.isSigned();
+  const isExecuted = await claim.isExecuted();
+
+  if (!isSigned) {
+    throw Error("Not yet signed!");
+  }
+  if (isExecuted) {
+    storeTxInfo(null, null, null);
+    throw Error("Already excuted!");
+  }
+
+  const signer = await getSigner();
+
+  const claimArgs = await claim.getEncodedArgs();
+
+  const deBridgeGate = new ethers.Contract(
+    DEFAULT_DEBRIDGE_GATE_ADDRESS,
+    debridgeAbi,
+    signer
+  );
+
+  const tx = await deBridgeGate.claim(...claimArgs);
+  const receipt = await tx.wait();
+
+  if (receipt.status === 1) {
+    storeTxInfo(null, null, null);
+  }
+  return receipt;
+};
 
 export {
   getCrossChainTransferDetails,
