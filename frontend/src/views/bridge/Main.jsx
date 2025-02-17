@@ -45,14 +45,19 @@ export default function Bridge() {
   useEffect(() => {
     getProjectTokenDetails()
       .then((token) => {
-        setAvailableTokens([
-          {
-            name: token.name,
-            address: token.tokenAddress,
-            chainId: 57054,
-          },
-          ...availableTokens,
-        ]);
+        const newTokensSet = new Set(
+          availableTokens.map((token) => `${token.address}-${token.chainId}`)
+        );
+
+        const newToken = {
+          name: token.name,
+          address: token.tokenAddress,
+          chainId: 57054,
+        };
+
+        if (!newTokensSet.has(`${newToken.address}-${newToken.chainId}`)) {
+          setAvailableTokens([newToken, ...availableTokens]);
+        }
       })
       .catch((error) => {
         console.error("Error fetching tokens:", error);
