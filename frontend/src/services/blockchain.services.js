@@ -154,14 +154,6 @@ export async function getOFTSendFee({
 
     const contract = oftInfo.contract;
 
-    // const erc20TokenContract = await getERC20Contract(oftTokenAddress);
-
-    // const approveTx = await erc20TokenContract.approve(
-    //   oftTokenAddress,
-    //   tokensToSend
-    // );
-    // await approveTx.wait(1);
-
     const options = Options.newOptions()
       .addExecutorLzReceiveOption(200000, 0)
       .toHex()
@@ -179,10 +171,8 @@ export async function getOFTSendFee({
 
     console.log({ sendParam });
 
-    console.log(sendParam);
-
     const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
-    // 0x6c1ccdb5. error LZ_DefaultSendLibUnavailable().
+
     return {
       nativeFee,
       sendParam,
@@ -191,6 +181,7 @@ export async function getOFTSendFee({
       signer: oftInfo.signer,
     };
   } catch (error) {
+    // 0x6c1ccdb5. error.data LZ_DefaultSendLibUnavailable().
     console.error("❌ Error calculating send fee:", error);
     throw error;
   }
