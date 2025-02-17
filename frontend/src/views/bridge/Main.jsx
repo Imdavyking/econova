@@ -10,6 +10,7 @@ import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
 import { APP_NAME, CHAIN_ID } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
+import { FaSpinner } from "react-icons/fa";
 export const LZ_CHAINS = {
   97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
@@ -221,7 +222,11 @@ export default function Bridge() {
             onClick={estimateFee}
             disabled={loading}
           >
-            {loading ? "Estimating..." : "Estimate Fee"}
+            {loading ? (
+              <FaSpinner className="w-5 h-5 animate-spin" />
+            ) : (
+              "Estimate Fee"
+            )}
           </button>
 
           <button
@@ -229,7 +234,11 @@ export default function Bridge() {
             onClick={sendTokens}
             disabled={loading || !nativeFee}
           >
-            {loading ? "Sending..." : "Send Tokens"}
+            {loading ? (
+              <FaSpinner className="w-5 h-5 animate-spin" />
+            ) : (
+              "Send Tokens"
+            )}
           </button>
         </div>
       </div>
