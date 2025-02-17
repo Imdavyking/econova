@@ -168,8 +168,6 @@ export async function getOFTSendFee({
       "0x",
     ];
 
-    console.log({ sendParam });
-
     const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
 
     return {
@@ -180,6 +178,7 @@ export async function getOFTSendFee({
       signer: oftInfo.signer,
     };
   } catch (error) {
+    console.log(error.message);
     console.error("❌ Error calculating send fee:", error);
     throw error;
   }
