@@ -130,7 +130,7 @@ async function main() {
         console.log(`🔄 Setting peer for cross-chain Endpoint: ${crossChainLzInfo.endpointV2}`)
         await ecoNovaToken.setPeer(
             crossChainLzInfo.endpointIdV2,
-            ethers.zeroPadBytes(crossChainTokenAddress, 32)
+            ethers.zeroPadValue(crossChainTokenAddress, 32)
         )
         console.log("✅ Peer setup complete!\n")
 

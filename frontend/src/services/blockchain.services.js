@@ -161,7 +161,7 @@ export async function getOFTSendFee({
 
     const sendParam = [
       eidB,
-      ethers.zeroPadBytes(recipientAddress, 32),
+      ethers.zeroPadValue(recipientAddress, 32),
       tokensToSend,
       tokensToSend,
       options,
