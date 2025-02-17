@@ -182,7 +182,7 @@ export async function getOFTSendFee({
     console.log(sendParam);
 
     const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
-
+    // 0x6c1ccdb5. error LZ_DefaultSendLibUnavailable().
     return {
       nativeFee,
       sendParam,
