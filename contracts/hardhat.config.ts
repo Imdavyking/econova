@@ -53,8 +53,6 @@ declare module "hardhat/types/runtime" {
 
 extendEnvironment(async (hre) => {
     hre.changeNetwork = async function changeNetwork(newNetwork: string) {
-        console.log(newNetwork)
-        console.log(hre.config.networks)
         hre.network.name = newNetwork
         hre.network.config = hre.config.networks[newNetwork]
 
