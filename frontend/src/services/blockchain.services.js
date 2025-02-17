@@ -517,10 +517,13 @@ export const addPointsFromTwitterService = async ({
   tweetId,
   signature,
 }) => {
+  let POINT_BASIS = 0;
   try {
     const manager = await getContract();
 
-    const POINT_BASIS = await manager.POINT_BASIS();
+    const pointMultiplier = await manager.POINT_BASIS();
+
+    POINT_BASIS = Number(pointMultiplier);
 
     const tx = await manager.addPointsFromTwitterBot(
       getWholeNumber(points).toString(),
@@ -533,7 +536,10 @@ export const addPointsFromTwitterService = async ({
     await tx.wait(1);
     return `claims ${points * POINT_BASIS} points for tweet ${tweetId}`;
   } catch (error) {
-    return `${FAILED_KEY} to claim ${points} points for tweet ${tweetId}`;
+    console.log(error.message);
+    return `${FAILED_KEY} to claim ${
+      points * POINT_BASIS
+    } points for tweet ${tweetId}`;
   }
 };
 
