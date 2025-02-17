@@ -49,9 +49,8 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
     },
 }
 
-const crossChainId: string | undefined = process.env.CROSS_CHAIN_ID
-export const crossChainLzInfo: LayerZeroChainInfo | null = crossChainId
-    ? LZ_CHAINS[+crossChainId] ?? null
+export const crossChainLzInfo: LayerZeroChainInfo | null = process.env.CROSS_CHAIN_ID
+    ? LZ_CHAINS[+process.env.CROSS_CHAIN_ID] ?? null
     : null
 export const CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY =
     process.env.CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY
