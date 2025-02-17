@@ -100,7 +100,7 @@ async function main() {
     if (localHardhat.includes(chainId)) return
 
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true") {
-        const crossChainId = 11155111
+        const crossChainId = 84532
         if (crossChainId === +chainId) {
             console.log("Cross chain deployment is not needed for the same chain")
             return
