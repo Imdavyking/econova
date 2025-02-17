@@ -134,6 +134,8 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     WRAPPED_SONIC_CONTRACT_ADDRESS: ${
       process.env.WRAPPED_SONIC_CONTRACT_ADDRESS
     }
+    SONIC_CHAIN_ID: 146
+    BSC_CHAIN_ID: 56
     The categories available are:
     ${JSON.stringify(charityCategories)}
     
