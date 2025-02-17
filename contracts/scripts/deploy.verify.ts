@@ -28,6 +28,8 @@ async function main() {
     const chainName = process.env.CHAIN_NAME!
     const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
     const chainSymbol = process.env.CHAIN_SYMBOL!
+    const layerZeroChainInfo = LZ_CHAINS[+chainId]
+    const [owner] = await ethers.getSigners()
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
     console.log(`EcoNovaCourseNFTDeployer deployed to: ${ecoCourseNFTAddress}`)
 
@@ -37,7 +39,7 @@ async function main() {
     await verify(verifier, [])
 
     const tokenAddress = await contract.i_ecoNovaToken()
-    await verify(tokenAddress, [])
+    await verify(tokenAddress, [layerZeroChainInfo.endpointV2, owner.address])
 
     console.log(`Verifier deployed to: ${verifier}`)
 
@@ -98,7 +100,6 @@ async function main() {
     if (localHardhat.includes(chainId)) return
 
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true") {
-        const layerZeroChainInfo = LZ_CHAINS[+chainId]
         const crossChainId = 11155111
         if (crossChainId === +chainId) {
             console.log("Cross chain deployment is not needed for the same chain")
