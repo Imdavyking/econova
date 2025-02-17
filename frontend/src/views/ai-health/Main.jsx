@@ -50,22 +50,20 @@ const AIHealth = () => {
 
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-md w-full">
         <div className="mb-4">
-          <label className="block text-black">Weight (kg):</label>
           <input
             type="number"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            className="w-full p-2 border border-blue-700 rounded mt-1 text-black"
+            className="intro-x login__input form-control py-3 px-4 block"
             placeholder="Enter weight in kg"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Height (cm):</label>
           <input
             type="number"
             value={height}
             onChange={(e) => setHeight(e.target.value)}
-            className="w-full p-2 border  border-blue-700 rounded mt-1 text-black"
+            className="intro-x login__input form-control py-3 px-4 block"
             placeholder="Enter height in cm"
           />
         </div>

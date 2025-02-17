@@ -130,7 +130,6 @@ export default function Bridge() {
         <DarkModeSwitcher />
 
         <div className="space-y-4">
-          <label className="block  font-medium">Select Token:</label>
           <select
             className="intro-x form-control py-3 px-4 block w-full mb-3"
             value={selectedToken.tokenAddress}
@@ -148,9 +147,6 @@ export default function Bridge() {
             ))}
           </select>
 
-          <label className="block  font-medium">
-            Select Source Blockchain:
-          </label>
           <select
             className="intro-x form-control py-3 px-4 block w-full mb-3"
             value={sourceChain.chainId}
@@ -163,9 +159,6 @@ export default function Bridge() {
             ))}
           </select>
 
-          <label className="block  font-medium">
-            Select Destination Blockchain:
-          </label>
           <select
             className="intro-x form-control py-3 px-4 block w-full mb-3"
             value={destinationChain.chainId}
@@ -178,7 +171,6 @@ export default function Bridge() {
             ))}
           </select>
 
-          <label className="block  font-medium">Recipient Address:</label>
           <input
             type="text"
             placeholder="Recipient Address"
@@ -187,7 +179,6 @@ export default function Bridge() {
             className="intro-x login__input form-control py-3 px-4 block"
           />
 
-          <label className="block  font-medium">Amount to Send:</label>
           <input
             type="text"
             placeholder="Amount to Send"
