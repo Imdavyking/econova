@@ -16,7 +16,6 @@ export async function deployCrossChainOFT({
     crossChainTokenAddress: string
 }> {
     try {
-        console.log(crossChainLzInfo)
         const PRIVATE_KEY = process.env.PRIVATE_KEY
         const CROSS_CHAIN_RPC_URL = crossChainLzInfo.rpcUrl
 
@@ -59,7 +58,8 @@ export async function deployCrossChainOFT({
         }
 
         console.log(`🔄 Setting remote token address: ${remoteTokenAddr}`)
-        await EndpointV2.setDestLzEndpoint(remoteTokenAddr, remoteLzInfo.endpointV2)
+        // TODO: fix this
+        // await EndpointV2.setDestLzEndpoint(remoteTokenAddr, remoteLzInfo.endpointV2)
 
         console.log(`🔄 Setting peer for cross-chain Endpoint: ${remoteLzInfo.endpointV2}`)
         await ecoNovaToken.setPeer(

@@ -117,11 +117,15 @@ async function main() {
         })
         const EndpointV2 = await ethers.getContractAt("IEndpointV2", layerZeroChainInfo.endpointV2)
         const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)
-        await EndpointV2.setDestLzEndpoint(crossChainTokenAddress, crossChainLzInfo.endpointV2)
+        // TODO: fix this
+        // await EndpointV2.setDestLzEndpoint(crossChainTokenAddress, crossChainLzInfo.endpointV2)
+        console.log(`🔄 Setting peer for cross-chain Endpoint: ${crossChainLzInfo.endpointV2}`)
         await ecoNovaToken.setPeer(
             crossChainLzInfo.endpointIdV2,
             ethers.zeroPadBytes(crossChainTokenAddress, 32)
         )
+        console.log("✅ Peer setup complete!\n")
+
         updateEnv(crossChainTokenAddress, "frontend", "VITE_CROSS_CHAIN_TOKEN_ADDRESS")
         updateEnv(crossChainLzInfo.rpcUrl!, "frontend", "VITE_CROSS_CHAIN_RPC_URL")
         updateEnv(crossChainId.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
