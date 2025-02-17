@@ -45,7 +45,7 @@ async function getCrossChainTransferDetails(transactionHash, providerUrl) {
   }
 }
 
-async function sendEtherCrossChain(receiverAddress, amountInEther, chainIdTo) {
+async function sendEVMCrossChain(receiverAddress, amountInEther, chainIdTo) {
   try {
     const signer = await getSigner();
 
@@ -88,7 +88,10 @@ async function sendEtherCrossChain(receiverAddress, amountInEther, chainIdTo) {
   }
 }
 
-export { getCrossChainTransferDetails, sendEtherCrossChain };
+export {
+  getCrossChainTransferDetails,
+  sendEVMCrossChain as sendEtherCrossChain,
+};
 
 // export const claim = async (txHash, chainIdFrom, chainIdTo) => {
 //     const { ethereum } = window;
