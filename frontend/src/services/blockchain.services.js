@@ -154,13 +154,14 @@ export async function getOFTSendFee({
     const oftInfo = await getOFTContract(oftTokenAddress);
 
     const erc20TokenContract = await getERC20Contract(oftTokenAddress);
-    // approve the contract to spend the tokens
+
+    const contract = oftInfo.contract;
+
     const approveTx = await erc20TokenContract.approve(
-      oftTokenAddress,
+      await contract.getAddress(),
       tokensToSend
     );
     await approveTx.wait(1);
-    const contract = oftInfo.contract;
 
     const options = Options.newOptions()
       .addExecutorLzReceiveOption(200000, 0)
@@ -177,6 +178,7 @@ export async function getOFTSendFee({
       "0x",
     ];
 
+    console.log({ oftTokenAddress });
     console.log(sendParam);
 
     const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
