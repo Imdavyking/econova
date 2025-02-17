@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
+import { ethers, stripZerosLeft } from "ethers";
 import {
   getOFTSendFee,
   getPeerTokenAddress,
@@ -41,6 +41,7 @@ export default function Bridge() {
   const [userBalance, setUserBalance] = useState("0.00");
   const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
   const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[97]); // Default to baseSepolia
+  const [otherTokenAddress, setOtherTokenAddress] = useState("");
 
   const [selectedToken, setSelectedToken] = useState({
     name: "",
@@ -69,7 +70,8 @@ export default function Bridge() {
       oftTokenAddress: selectedToken.tokenAddress,
     })
       .then((peers) => {
-        console.log({ peers });
+        const otherChainTokenAddress = stripZerosLeft(peers);
+        setOtherTokenAddress(otherChainTokenAddress);
       })
       .catch((error) => {
         console.error("Error fetching peer tokens:", error.message);
@@ -233,12 +235,35 @@ export default function Bridge() {
             className="intro-x login__input form-control py-3 px-4 block"
           />
 
+          {/* {otherTokenAddress && (
+            <div className="text-sm text-gray-500 mt-2">
+              Destination Token Address:{" "}
+              <span className="font-mono break-all">{otherTokenAddress}</span>
+            </div>
+          )}
+
           <div className="mb-3">
             <p className="text-sm">
               Balance:{" "}
               <span className="font-semibold">{userBalance || "0.00"}</span>{" "}
               {selectedToken.symbol}
             </p>
+          </div> */}
+
+          <div className="mb-3">
+            <p className="text-sm">
+              Balance:{" "}
+              <span className="font-semibold">{userBalance || "0.00"}</span>{" "}
+              {selectedToken.symbol}
+            </p>
+            {otherTokenAddress && (
+              <p className="text-sm">
+                Destination Token Address:{" "}
+                <span className="font-semibold break-all">
+                  {otherTokenAddress}
+                </span>
+              </p>
+            )}
           </div>
 
           {nativeFee && (
