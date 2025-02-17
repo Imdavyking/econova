@@ -143,6 +143,21 @@ const getNFTCourseContract = async () => {
   return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, nftCourseAbi, signer);
 };
 
+export const getPeerTokenAddress = async ({ eidB, oftTokenAddress }) => {
+  try {
+    const oftInfo = await getOFTContract(oftTokenAddress);
+
+    const contract = oftInfo.contract;
+
+    const peers = await contract.peers(eidB);
+
+    return peers;
+  } catch (error) {
+    console.error("❌ Error getting peer token address:", error);
+    throw error;
+  }
+};
+
 export async function getOFTSendFee({
   oftTokenAddress,
   recipientAddress,

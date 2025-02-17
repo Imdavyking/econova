@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import {
   getOFTSendFee,
+  getPeerTokenAddress,
   getProjectTokenDetails,
   getTokenBalance,
   sendOFTTokens,
@@ -59,6 +60,21 @@ export default function Bridge() {
       }
     );
   }, [selectedToken]);
+
+  useEffect(() => {
+    if (!sourceChain || !destinationChain || !selectedToken.tokenAddress)
+      return;
+    getPeerTokenAddress({
+      eidB: destinationChain.endpointIdV2,
+      oftTokenAddress: selectedToken.tokenAddress,
+    })
+      .then((peers) => {
+        console.log({ peers });
+      })
+      .catch((error) => {
+        console.error("Error fetching peer tokens:", error.message);
+      });
+  }, [sourceChain, destinationChain, selectedToken]);
 
   useEffect(() => {
     getProjectTokenDetails()
