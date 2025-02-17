@@ -11,13 +11,12 @@ import { toast } from "react-toastify";
 import { APP_NAME, CHAIN_ID } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 export const LZ_CHAINS = {
-  84532: {
+  11155111: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
-    endpointIdV2: EndpointId.BASE_V2_TESTNET,
-    name: "Base Sepolia",
-    rpcUrl: "https://sepolia.base.org",
-    chainId: 84532,
-    image: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png",
+    endpointIdV2: EndpointId.SEPOLIA_V2_TESTNET,
+    name: "sepoliaEth",
+    rpcUrl: "https://eth-sepolia.api.onfinality.io/public",
+    chainId: 11155111,
   },
   57054: {
     endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
