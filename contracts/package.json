@@ -36,6 +36,7 @@
         "timeout": 10000000
     },
     "dependencies": {
+        "@debridge-finance/debridge-protocol-evm-interfaces": "^1.0.4",
         "@layerzerolabs/lz-definitions": "^3.0.68",
         "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
         "@layerzerolabs/oapp-evm": "^0.3.0",
