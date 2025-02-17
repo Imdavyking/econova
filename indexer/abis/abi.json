@@ -20,6 +20,11 @@
         "internalType": "contract IGroth16VerifierP3",
         "name": "_groth16VerifierP3",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lzEndpoint",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",

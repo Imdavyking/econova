@@ -16,6 +16,7 @@ export async function deployCrossChainOFT({
     crossChainTokenAddress: string
 }> {
     try {
+        console.log(crossChainLzInfo)
         const PRIVATE_KEY = process.env.PRIVATE_KEY
         const CROSS_CHAIN_RPC_URL = crossChainLzInfo.rpcUrl
 

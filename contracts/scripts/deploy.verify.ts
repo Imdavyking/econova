@@ -99,12 +99,16 @@ async function main() {
 
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true") {
         const layerZeroChainInfo = LZ_CHAINS[+chainId]
-        const crossChainId = 1115511
+        const crossChainId = 11155111
         if (crossChainId === +chainId) {
             console.log("Cross chain deployment is not needed for the same chain")
             return
         }
-        const crossChainLzInfo = LZ_CHAINS[crossChainId]
+        const crossChainLzInfo = LZ_CHAINS[+crossChainId]
+        if (!crossChainLzInfo) {
+            console.log(`Cross chain info not found for chainId ${crossChainId}`)
+            return
+        }
         const { crossChainTokenAddress } = await deployCrossChainOFT({
             remoteTokenAddr: tokenAddress,
             remoteLzInfo: layerZeroChainInfo,
