@@ -37,7 +37,7 @@ export default function Bridge() {
   const [availableTokens, setAvailableTokens] = useState([]);
 
   const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
-  const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[84532]); // Default to baseSepolia
+  const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[97]); // Default to baseSepolia
 
   const [selectedToken, setSelectedToken] = useState({
     name: "",
@@ -85,6 +85,16 @@ export default function Bridge() {
 
       console.log({ destinationChain });
       console.log({ sourceChain });
+
+      if (recipient.trim() === "") {
+        toast.error("❌ Recipient address is required!");
+        return;
+      }
+
+      if (amount.trim() === "") {
+        toast.error("❌ Amount is required!");
+        return;
+      }
 
       const { nativeFee, lzTokenFee } = await getOFTSendFee({
         oftTokenAddress: selectedToken.tokenAddress,
@@ -195,11 +205,13 @@ export default function Bridge() {
             <div className="">
               <p>
                 Native Fee:{" "}
-                <span className="font-semibold">{nativeFee} ETH</span>
+                <span className="font-semibold">
+                  {nativeFee} {sourceChain.name}
+                </span>
               </p>
               <p>
                 LZ Token Fee:{" "}
-                <span className="font-semibold">{lzTokenFee} ETH</span>
+                <span className="font-semibold">{lzTokenFee} </span>
               </p>
             </div>
           )}
