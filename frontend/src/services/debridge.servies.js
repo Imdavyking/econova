@@ -43,9 +43,7 @@ export const getTxInfo = () => {
     return { txHash: null, chainIdFrom: null, chainIdTo: null };
   }
 };
-export const getTxStatus = async (txHash, chainIdFrom, chainIdTo) => {
-  console.log(txHash, chainIdFrom, chainIdTo);
-
+export const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   try {
     const evmOriginContext = {
       provider: rpcNodes[chainIdFrom],
@@ -129,7 +127,7 @@ async function bridge({ amountInEther, chainIdTo }) {
   }
 }
 
-export const claim = async (txHash, chainIdFrom, chainIdTo) => {
+export const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
   if (!isSupported(chainIdFrom)) {
     throw Error(`chain Id: ${chainIdFrom} is not supported`);
   }
