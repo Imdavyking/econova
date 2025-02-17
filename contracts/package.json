@@ -40,6 +40,7 @@
         "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
         "@layerzerolabs/oapp-evm": "^0.3.0",
         "@layerzerolabs/oft-evm": "^3.1.0",
+        "@layerzerolabs/toolbox-hardhat": "^0.6.6",
         "@openzeppelin/contracts": "^5.2.0",
         "@openzeppelin/merkle-tree": "^1.0.7",
         "@orochi-network/contracts": "^1.3.15",
