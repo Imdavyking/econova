@@ -5,20 +5,23 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 import "@debridge-finance/debridge-protocol-evm-interfaces/contracts/interfaces/ICallProxy.sol";
-import "@debridge-finance/debridge-protocol-evm-interfaces/contracts/interfaces/IDeBridgeGate.sol";
 import "@debridge-finance/debridge-protocol-evm-interfaces/contracts/interfaces/IDeBridgeGateExtended.sol";
 import "@debridge-finance/debridge-protocol-evm-interfaces/contracts/libraries/Flags.sol";
 
-contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
+contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
     /**
      * variables
      */
     uint256 public tokenCounter;
     address public botAddress;
+    address crossChainContractAddress;
     uint256 public TIMESTAMP_EXPIRY = 120;
+    uint256 chainIdTo;
+    IDeBridgeGateExtended public deBridgeGate;
 
     /**
      * enums
@@ -36,6 +39,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     mapping(Level => bytes32) public merkleRoots;
     mapping(bytes32 => bool) private usedSignatures;
     mapping(address => mapping(Level => string)) public userTokenURIs;
+    mapping(uint256 => ChainInfo) supportedChains;
 
     /**
      * events
@@ -44,6 +48,9 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     event BatchNFTClaimed(address indexed user, Level[] levels, uint256[] tokenIds);
     event BotAddressUpdated(address oldBotAddress, address newBotAddress);
     event RootUpdated(Level level, bytes32 root);
+    event NFTReceived(uint256 tokenId, address recipient, string tokenURI);
+    event NFTBridged(uint256 tokenId, address recipient, uint256 targetChainId);
+    event SupportedChainAdded(uint256 chainId, bytes crossChainIncrementorAddress);
 
     /**
      * errors
@@ -55,10 +62,71 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable {
     error EcoNovaCourseNFT__MisMatchedArrayLength();
     error EcoNovaCourseNFT__ExpiredSignature();
     error EcoNovaCourseNFT__SignatureAlreadyUsed();
+    error EcoNovaCourseNFT__AdminBadRole();
+    error EcoNovaCourseNFT__FeeNotCoveredByMsgValue();
+
+    /** modifiers */
+    modifier onlyAdmin() {
+        if (!hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) revert EcoNovaCourseNFT__AdminBadRole();
+        _;
+    }
+
+    /** structs */
+    struct ChainInfo {
+        bool isSupported;
+        bytes callerAddress;
+    }
 
     constructor(address _botAddress) ERC721("EcoNovaCourseNFT", "ECNFT") Ownable(msg.sender) {
         botAddress = _botAddress;
         tokenCounter = 1;
+    }
+
+    function setDeBridgeGate(IDeBridgeGateExtended deBridgeGate_) external onlyAdmin {
+        deBridgeGate = deBridgeGate_;
+    }
+
+    function setChainIdTo(uint256 chainIdTo_) external onlyAdmin {
+        chainIdTo = chainIdTo_;
+    }
+
+    function addChainSupport(
+        uint256 _chainId,
+        bytes memory _crossChainAddress
+    ) external onlyAdmin {
+        supportedChains[_chainId].callerAddress = _crossChainAddress;
+        supportedChains[_chainId].isSupported = true;
+
+        emit SupportedChainAdded(_chainId, _crossChainAddress);
+    }
+
+    function _send(bytes memory _dstTransactionCall, uint256 _executionFee) internal {
+        uint256 protocolFee = deBridgeGate.globalFixedNativeFee();
+        if (msg.value < (protocolFee + _executionFee)) {
+            revert EcoNovaCourseNFT__FeeNotCoveredByMsgValue();
+        }
+
+        uint assetFeeBps = deBridgeGate.globalTransferFeeBps();
+        uint amountToBridge = _executionFee;x
+        uint amountAfterBridge = (amountToBridge * (10000 - assetFeeBps)) / 10000;
+
+        IDeBridgeGate.SubmissionAutoParamsTo memory autoParams;
+        autoParams.executionFee = amountAfterBridge;
+        autoParams.flags = Flags.setFlag(autoParams.flags, Flags.PROXY_WITH_SENDER, true);
+        autoParams.flags = Flags.setFlag(autoParams.flags, Flags.REVERT_IF_EXTERNAL_FAIL, true);
+        autoParams.data = _dstTransactionCall;
+        autoParams.fallbackAddress = abi.encodePacked(msg.sender);
+
+        deBridgeGate.send{value: msg.value}(
+            address(0), 
+            amountToBridge, 
+            chainIdTo, 
+            abi.encodePacked(crossChainContractAddress),
+            "",
+            true,
+            0,
+            abi.encode(autoParams) 
+        );
     }
 
     /**
