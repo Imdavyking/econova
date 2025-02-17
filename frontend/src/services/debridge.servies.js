@@ -2,6 +2,7 @@ import { evm } from "@debridge-finance/desdk";
 import { ethers } from "ethers";
 import { getSigner } from "./blockchain.services";
 import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
+import { Flags } from "@debridge-finance/desdk/lib/evm";
 
 async function getCrossChainTransferDetails(transactionHash, providerUrl) {
   try {
