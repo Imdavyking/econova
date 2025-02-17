@@ -84,7 +84,7 @@ export default function Bridge() {
       const { nativeFee, lzTokenFee } = await getOFTSendFee({
         oftTokenAddress: selectedToken.tokenAddress,
         recipientAddress: recipient,
-        tokensToSend: amount * 10 ** selectedToken.decimals,
+        tokensToSend: amount * 10 ** Number(selectedToken.decimals),
         eidB: destinationChain.endpointIdV2,
       });
 
@@ -105,7 +105,7 @@ export default function Bridge() {
       await sendOFTTokens({
         oftTokenAddress: selectedToken.tokenAddress,
         recipientAddress: recipient,
-        tokensToSend: amount * 10 ** selectedToken.decimals,
+        tokensToSend: amount * 10 ** Number(selectedToken.decimals),
         eidB: destinationChain.endpointIdV2,
       });
 
