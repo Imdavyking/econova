@@ -150,7 +150,16 @@ export async function getOFTSendFee({
   tokensToSend,
 }) {
   try {
+    // 0x6c1ccdb5. error LZ_DefaultSendLibUnavailable().
     const oftInfo = await getOFTContract(oftTokenAddress);
+
+    const erc20TokenContract = await getERC20Contract(oftTokenAddress);
+    // approve the contract to spend the tokens
+    const approveTx = await erc20TokenContract.approve(
+      oftTokenAddress,
+      tokensToSend
+    );
+    await approveTx.wait(1);
     const contract = oftInfo.contract;
 
     const options = Options.newOptions()
@@ -167,6 +176,8 @@ export async function getOFTSendFee({
       "0x",
       "0x",
     ];
+
+    console.log(sendParam);
 
     const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
 

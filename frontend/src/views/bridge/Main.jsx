@@ -84,6 +84,9 @@ export default function Bridge() {
     try {
       setLoading(true);
 
+      console.log({ destinationChain });
+      console.log({ sourceChain });
+
       const { nativeFee, lzTokenFee } = await getOFTSendFee({
         oftTokenAddress: selectedToken.tokenAddress,
         recipientAddress: recipient,
