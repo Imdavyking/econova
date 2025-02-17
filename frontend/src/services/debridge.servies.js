@@ -36,7 +36,7 @@ const storeTxInfo = (txHash, chainIdFrom, chainIdTo) => {
   }
 };
 
-export const getTxInfo = () => {
+const getTxInfo = () => {
   const content = localStorage.getItem(TX_HASH_LOCAL_STORAGE_KEY);
   if (content) {
     return JSON.parse(localStorage.getItem(TX_HASH_LOCAL_STORAGE_KEY));
@@ -44,7 +44,7 @@ export const getTxInfo = () => {
     return { txHash: null, chainIdFrom: null, chainIdTo: null };
   }
 };
-export const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
+const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   try {
     const evmOriginContext = {
       provider: rpcNodes[chainIdFrom],
@@ -128,7 +128,7 @@ async function bridgeService({ bridgeAmount, chainIdTo }) {
   }
 }
 
-export const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
+const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
   try {
     if (!isSupported(chainIdFrom)) {
       throw Error(`chain Id: ${chainIdFrom} is not supported`);
