@@ -58,8 +58,6 @@ extendEnvironment(async (hre) => {
         hre.network.name = newNetwork
         hre.network.config = hre.config.networks[newNetwork]
 
-        console.log(hre.network.config as any)
-
         const ethProvider = new hre.ethers.JsonRpcProvider(
             (hre.network.config as any).url
         ) as unknown as EthereumProvider

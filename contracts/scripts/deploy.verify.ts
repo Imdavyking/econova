@@ -19,11 +19,6 @@ dotenv.config()
 async function main() {
     const chainId = network.config.chainId!
 
-    if (crossChainLzInfo) {
-        hre.changeNetwork(crossChainLzInfo.name)
-    }
-    return
-
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
     const { ecoNovaNFTDeployer } = await hre.ignition.deploy(EcoNovaCourseNFTDeployer)
@@ -65,7 +60,13 @@ async function main() {
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
         process.env.ORACLE_ADDRESS!
 
-    await verify(ecoAddress, [oracle, wallet.address, [...charities], verifier])
+    await verify(ecoAddress, [
+        oracle,
+        wallet.address,
+        [...charities],
+        verifier,
+        layerZeroChainInfo.endpointV2,
+    ])
     await verify(ecoCourseNFTAddress, [wallet.address])
 
     const blockNumber = await ethers.provider.getBlockNumber()
@@ -108,6 +109,11 @@ async function main() {
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true" && process.env.CROSS_CHAIN_ID) {
         if (+crossChainId! === +chainId) {
             console.log("Cross chain deployment is not needed for the same chain")
+            return
+        }
+
+        if (!crossChainLzInfo) {
+            console.error("Cross chain info not found")
             return
         }
 
