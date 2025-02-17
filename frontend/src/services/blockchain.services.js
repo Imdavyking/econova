@@ -177,7 +177,8 @@ export async function getOFTSendFee({
       "0x",
     ];
 
-    console.log({ oftTokenAddress });
+    console.log({ sendParam });
+
     console.log(sendParam);
 
     const [nativeFee, lzTokenFee] = await contract.quoteSend(sendParam, false);
