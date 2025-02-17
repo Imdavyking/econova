@@ -114,6 +114,11 @@ export default function Bridge() {
     }
   };
 
+  function camelToPascalWithSpace(str) {
+    if (!str) return;
+    return str.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase());
+  }
+
   const sendTokens = async () => {
     try {
       setLoading(true);
@@ -169,7 +174,7 @@ export default function Bridge() {
           >
             {Object.values(LZ_CHAINS).map((chain) => (
               <option key={chain.chainId} value={chain.chainId}>
-                {chain.name}
+                {camelToPascalWithSpace(chain.name)}
               </option>
             ))}
           </select>
@@ -181,7 +186,7 @@ export default function Bridge() {
           >
             {Object.values(LZ_CHAINS).map((chain) => (
               <option key={chain.chainId} value={chain.chainId}>
-                {chain.name}
+                {camelToPascalWithSpace(chain.name)}
               </option>
             ))}
           </select>
