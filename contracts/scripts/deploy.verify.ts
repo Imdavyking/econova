@@ -14,11 +14,15 @@ import { copyABI } from "./copy.abi"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { deployCrossChainOFT } from "./econova.token.cross.chain"
 import { crossChainId, crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
-import "hardhat-change-network"
 dotenv.config()
 
 async function main() {
     const chainId = network.config.chainId!
+
+    if (crossChainLzInfo) {
+        hre.changeNetwork(crossChainLzInfo.name)
+    }
+    return
 
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
@@ -107,10 +111,6 @@ async function main() {
             return
         }
 
-        if (!crossChainLzInfo) {
-            console.log(`Cross chain info not found for chainId ${crossChainId}`)
-            return
-        }
         const { crossChainTokenAddress } = await deployCrossChainOFT({
             remoteTokenAddr: tokenAddress,
             remoteLzInfo: layerZeroChainInfo,

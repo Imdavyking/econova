@@ -4,7 +4,11 @@ import "@nomicfoundation/hardhat-toolbox"
 import "@nomicfoundation/hardhat-verify"
 import { HardhatEthersProvider } from "@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider"
 import dotenv from "dotenv"
-import { CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY, LZ_CHAINS } from "./utils/lzendpoints.help"
+import {
+    CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY,
+    crossChainLzInfo,
+    LZ_CHAINS,
+} from "./utils/lzendpoints.help"
 import { EthereumProvider } from "hardhat/types"
 dotenv.config()
 
@@ -40,7 +44,6 @@ if (!API_SCAN_VERIFIER_KEY) {
 }
 
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-const crossChainNetwork = LZ_CHAINS[+CHAIN_ID!]
 
 declare module "hardhat/types/runtime" {
     export interface HardhatRuntimeEnvironment {
@@ -50,16 +53,35 @@ declare module "hardhat/types/runtime" {
 
 extendEnvironment(async (hre) => {
     hre.changeNetwork = async function changeNetwork(newNetwork: string) {
+        console.log(newNetwork)
+        console.log(hre.config.networks)
         hre.network.name = newNetwork
         hre.network.config = hre.config.networks[newNetwork]
-        hre.network.provider = await createProvider(hre.config, newNetwork)
+
+        console.log(hre.network.config as any)
+
         const ethProvider = new hre.ethers.JsonRpcProvider(
             (hre.network.config as any).url
         ) as unknown as EthereumProvider
 
         hre.ethers.provider = new HardhatEthersProvider(ethProvider, newNetwork)
+        hre.network.provider = await createProvider(hre.config, newNetwork)
     }
 })
+
+export const crossChainConfig = crossChainLzInfo
+    ? {
+          [crossChainLzInfo.name]: {
+              url: crossChainLzInfo.rpcUrl,
+              chainId: Number(CHAIN_ID), // Ensure CHAIN_ID is a number
+              accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+          },
+      }
+    : {}
+
+export const crossChainVerifierKeys = crossChainLzInfo
+    ? { [crossChainLzInfo.name]: CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY ?? "" }
+    : {}
 
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
@@ -78,11 +100,7 @@ const config: HardhatUserConfig = {
                 explorerUrl: process.env.CHAIN_BLOCKEXPLORER_URL,
             },
         },
-        [crossChainNetwork.name]: {
-            url: crossChainNetwork.rpcUrl,
-            chainId: +CHAIN_ID!,
-            accounts: [PRIVATE_KEY],
-        },
+        ...crossChainConfig,
     },
     solidity: {
         version: "0.8.28",
@@ -96,7 +114,7 @@ const config: HardhatUserConfig = {
     etherscan: {
         apiKey: {
             testNetwork: API_SCAN_VERIFIER_KEY,
-            [crossChainNetwork.name]: CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY ?? "",
+            ...crossChainVerifierKeys,
         },
         customChains: [
             {
