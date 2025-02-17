@@ -9,7 +9,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
 import { CHAIN_ID } from "../../utils/constants";
-
+import logoUrl from "@/assets/images/logo.png";
 export const LZ_CHAINS = {
   84532: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
@@ -120,110 +120,111 @@ export default function Bridge() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-xl mt-10">
-      <DarkModeSwitcher />
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Send OFT Tokens
-      </h2>
+    <div className="container sm:px-10">
+      <a href="/" className="-intro-x flex items-center pt-5">
+        <img alt="EcoNova" className="w-10" src={logoUrl} />
+        <span className=" text-lg ml-3"> EcoNova Bridge</span>
+      </a>
 
-      <div className="space-y-4">
-        <label className="block text-gray-700 font-medium">Select Token:</label>
-        <select
-          className="w-full p-3 border rounded-lg text-black"
-          value={selectedToken.tokenAddress}
-          onChange={(e) => {
-            const selected = availableTokens.find(
-              (token) => token.tokenAddress === e.target.value
-            );
-            setSelectedToken(selected);
-          }}
-        >
-          {filteredTokens.map((token) => (
-            <option key={token.tokenAddress} value={token.tokenAddress}>
-              {token.name} ({token.symbol})
-            </option>
-          ))}
-        </select>
+      <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
+        <DarkModeSwitcher />
 
-        <label className="block text-gray-700 font-medium">
-          Select Source Blockchain:
-        </label>
-        <select
-          className="w-full p-3 border rounded-lg text-black"
-          value={sourceChain.chainId}
-          onChange={(e) => setSourceChain(LZ_CHAINS[e.target.value])}
-        >
-          {Object.values(LZ_CHAINS).map((chain) => (
-            <option key={chain.chainId} value={chain.chainId}>
-              {chain.name}
-            </option>
-          ))}
-        </select>
+        <div className="space-y-4">
+          <label className="block  font-medium">Select Token:</label>
+          <select
+            className="intro-x form-control py-3 px-4 block w-full mb-3"
+            value={selectedToken.tokenAddress}
+            onChange={(e) => {
+              const selected = availableTokens.find(
+                (token) => token.tokenAddress === e.target.value
+              );
+              setSelectedToken(selected);
+            }}
+          >
+            {filteredTokens.map((token) => (
+              <option key={token.tokenAddress} value={token.tokenAddress}>
+                {token.name} ({token.symbol})
+              </option>
+            ))}
+          </select>
 
-        <label className="block text-gray-700 font-medium">
-          Select Destination Blockchain:
-        </label>
-        <select
-          className="w-full p-3 border rounded-lg text-black"
-          value={destinationChain.chainId}
-          onChange={(e) => setDestinationChain(LZ_CHAINS[e.target.value])}
-        >
-          {Object.values(LZ_CHAINS).map((chain) => (
-            <option key={chain.chainId} value={chain.chainId}>
-              {chain.name}
-            </option>
-          ))}
-        </select>
+          <label className="block  font-medium">
+            Select Source Blockchain:
+          </label>
+          <select
+            className="intro-x form-control py-3 px-4 block w-full mb-3"
+            value={sourceChain.chainId}
+            onChange={(e) => setSourceChain(LZ_CHAINS[e.target.value])}
+          >
+            {Object.values(LZ_CHAINS).map((chain) => (
+              <option key={chain.chainId} value={chain.chainId}>
+                {chain.name}
+              </option>
+            ))}
+          </select>
 
-        <label className="block text-gray-700 font-medium">
-          Recipient Address:
-        </label>
-        <input
-          type="text"
-          placeholder="Recipient Address"
-          value={recipient}
-          onChange={(e) => setRecipient(e.target.value)}
-          className="w-full p-3 border rounded-lg"
-        />
+          <label className="block  font-medium">
+            Select Destination Blockchain:
+          </label>
+          <select
+            className="intro-x form-control py-3 px-4 block w-full mb-3"
+            value={destinationChain.chainId}
+            onChange={(e) => setDestinationChain(LZ_CHAINS[e.target.value])}
+          >
+            {Object.values(LZ_CHAINS).map((chain) => (
+              <option key={chain.chainId} value={chain.chainId}>
+                {chain.name}
+              </option>
+            ))}
+          </select>
 
-        <label className="block text-gray-700 font-medium">
-          Amount to Send:
-        </label>
-        <input
-          type="text"
-          placeholder="Amount to Send"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="w-full p-3 border rounded-lg"
-        />
+          <label className="block  font-medium">Recipient Address:</label>
+          <input
+            type="text"
+            placeholder="Recipient Address"
+            value={recipient}
+            onChange={(e) => setRecipient(e.target.value)}
+            className="intro-x login__input form-control py-3 px-4 block"
+          />
 
-        {nativeFee && (
-          <div className="text-gray-700">
-            <p>
-              Native Fee: <span className="font-semibold">{nativeFee} ETH</span>
-            </p>
-            <p>
-              LZ Token Fee:{" "}
-              <span className="font-semibold">{lzTokenFee} ETH</span>
-            </p>
-          </div>
-        )}
+          <label className="block  font-medium">Amount to Send:</label>
+          <input
+            type="text"
+            placeholder="Amount to Send"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="intro-x login__input form-control py-3 px-4 block"
+          />
 
-        <button
-          className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
-          onClick={estimateFee}
-          disabled={loading}
-        >
-          {loading ? "Estimating..." : "Estimate Fee"}
-        </button>
+          {nativeFee && (
+            <div className="">
+              <p>
+                Native Fee:{" "}
+                <span className="font-semibold">{nativeFee} ETH</span>
+              </p>
+              <p>
+                LZ Token Fee:{" "}
+                <span className="font-semibold">{lzTokenFee} ETH</span>
+              </p>
+            </div>
+          )}
 
-        <button
-          className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400"
-          onClick={sendTokens}
-          disabled={loading || !nativeFee}
-        >
-          {loading ? "Sending..." : "Send Tokens"}
-        </button>
+          <button
+            className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
+            onClick={estimateFee}
+            disabled={loading}
+          >
+            {loading ? "Estimating..." : "Estimate Fee"}
+          </button>
+
+          <button
+            className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400"
+            onClick={sendTokens}
+            disabled={loading || !nativeFee}
+          >
+            {loading ? "Sending..." : "Send Tokens"}
+          </button>
+        </div>
       </div>
     </div>
   );
