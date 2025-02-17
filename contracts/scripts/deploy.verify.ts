@@ -101,11 +101,12 @@ async function main() {
 
     if (process.env.DEPLOY_CROSS_CHAIN_OFT === "true" && process.env.CROSS_CHAIN_ID) {
         const crossChainId = +process.env.CROSS_CHAIN_ID
+        const crossChainLzInfo = LZ_CHAINS[+crossChainId]
         if (crossChainId === +chainId) {
             console.log("Cross chain deployment is not needed for the same chain")
             return
         }
-        const crossChainLzInfo = LZ_CHAINS[+crossChainId]
+
         if (!crossChainLzInfo) {
             console.log(`Cross chain info not found for chainId ${crossChainId}`)
             return
