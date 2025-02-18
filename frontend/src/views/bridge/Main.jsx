@@ -85,7 +85,7 @@ export default function Bridge() {
         setUserBalance(Number(balance) / 10 ** Number(decimals));
       }
     );
-  }, [selectedToken]);
+  }, [selectedToken, loading]);
 
   useEffect(() => {
     if (!sourceChain || !destinationChain || !selectedToken.tokenAddress)
