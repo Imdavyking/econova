@@ -81,7 +81,6 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
   try {
     const deBridgeGate = await getBridgeContract(chainIdFrom);
     const signer = await getSigner();
-    const chainIdFrom = await signer.provider.provider.send("eth_chainId", []);
 
     if (!isSupported(chainIdFrom)) {
       throw Error(`Chain ID: ${chainIdFrom} is not supported`);

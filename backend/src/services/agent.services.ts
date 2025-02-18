@@ -35,6 +35,7 @@ const tools = {
     schema: z.object({
       bridgeAmount: z.number().describe("The amount to bridge"),
       chainIdTo: z.number().describe("The chain ID to bridge to"),
+      chainIdFrom: z.number().describe("The chain ID to bridge from"),
     }),
   }),
   wrapSonic: tool(() => undefined, {
