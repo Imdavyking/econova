@@ -18,7 +18,6 @@ function Main(props) {
   };
 
   setDarkModeClass();
-  return <></>;
   return (
     <>
       {/* BEGIN: Dark Mode Switcher */}
