@@ -9,7 +9,8 @@ import { sonic, bsc } from "viem/chains";
 const supportedChains = [sonic, bsc];
 
 const isSupported = (chainId) => {
-  supportedChains.find((chain) => chain.id === chainId);
+  const firstFind = supportedChains.find((chain) => chain.id === chainId);
+  return firstFind ? true : false;
 };
 
 const TX_HASH_LOCAL_STORAGE_KEY = "debridge_tx_info";

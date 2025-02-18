@@ -38,26 +38,25 @@ async function switchOrAddChain(ethProvider, switchChainId) {
         ]);
         console.log(`Switched to ${switchChainId}`);
       } catch (error) {
-        if (error.code === 4902 && Number(switchChainId) == Number(CHAIN_ID)) {
-          await ethProvider.provider.send("wallet_addEthereumChain", [
-            {
-              chainId: CHAIN_ID,
-              chainName: CHAIN_NAME,
-              nativeCurrency: {
-                name: CHAIN_CURRENCY_NAME,
-                symbol: CHAIN_SYMBOL,
-                decimals: 18,
+        if (error.code === 4902) {
+          if (Number(switchChainId) == Number(CHAIN_ID)) {
+            await ethProvider.provider.send("wallet_addEthereumChain", [
+              {
+                chainId: CHAIN_ID,
+                chainName: CHAIN_NAME,
+                nativeCurrency: {
+                  name: CHAIN_CURRENCY_NAME,
+                  symbol: CHAIN_SYMBOL,
+                  decimals: 18,
+                },
+                rpcUrls: [CHAIN_RPC],
+                blockExplorerUrls: [CHAIN_BLOCKEXPLORER_URL],
               },
-              rpcUrls: [CHAIN_RPC],
-              blockExplorerUrls: [CHAIN_BLOCKEXPLORER_URL],
-            },
-          ]);
-          console.log(`${CHAIN_NAME} Testnet added and switched`);
+            ]);
+            console.log(`${CHAIN_NAME} Testnet added and switched`);
+          }
         } else {
-          console.error(
-            `${FAILED_KEY} to switch to ${CHAIN_NAME} Testnet:`,
-            error
-          );
+          console.error(`${FAILED_KEY} to switch to ${switchChainId}`, error);
         }
       }
     } else {
