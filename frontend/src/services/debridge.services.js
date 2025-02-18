@@ -78,7 +78,8 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo, receiver }) {
     const fee = await deBridgeGate.globalFixedNativeFee();
     const etherToSend = fee + bridgeAmountWei;
 
-    if (userBalance < etherToSend) throw new Error("Insufficient balance");
+    if (userBalance < etherToSend)
+      throw new Error(`Insufficient balance - ${etherToSend} ETH required`);
 
     const message = new evm.Message({
       tokenAddress: ethers.ZeroAddress,
