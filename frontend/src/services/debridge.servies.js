@@ -4,6 +4,7 @@ import { getSigner } from "./blockchain.services";
 import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
 import { Flags } from "@debridge-finance/desdk/lib/evm";
 import { FAILED_KEY } from "../utils/constants";
+import { switchOrAddChain } from "./blockchain.services";
 
 const debridgeAbi = [
   "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
@@ -28,7 +29,7 @@ const chainIdToInfo = {
     chainName: "Sonic Mainnet",
     nativeCurrency: {
       name: "SONIC",
-      symbol: "S",
+      symbol: "SONIC",
       decimals: 18,
     },
     rpcUrls: ["https://rpc.soniclabs.com"],
@@ -36,37 +37,8 @@ const chainIdToInfo = {
   },
 };
 
-const switchBridgeChainId = async (ethProvider, sourceChainId) => {
-  try {
-    const chainId = await ethProvider.provider.send("eth_chainId", []);
-    console.log(`Current chainId: ${Number(chainId)}`);
-
-    if (Number(chainId) !== Number(sourceChainId)) {
-      try {
-        await ethProvider.provider.send("wallet_switchEthereumChain", [
-          { chainId: sourceChainId },
-        ]);
-      } catch (error) {
-        if (error.code === 4902) {
-          await ethProvider.provider.send("wallet_addEthereumChain", [
-            chainIdToInfo[sourceChainId],
-          ]);
-        } else {
-          console.error(`${FAILED_KEY} to switch to ${sourceChainId}:`, error);
-        }
-      }
-    } else {
-      console.log(`Already connected to chainId: ${sourceChainId}`);
-    }
-  } catch (error) {}
-};
-
 const isSupported = (chainId) => {
-  if (chainIdToInfo[chainId]) {
-    return true;
-  }
-
-  return;
+  return !!chainIdToInfo[chainId];
 };
 
 const TX_HASH_LOCAL_STORAGE_KEY = "debridge_tx_info";
@@ -83,29 +55,29 @@ const storeTxInfo = (txHash, chainIdFrom, chainIdTo) => {
 
 const getTxInfo = () => {
   const content = localStorage.getItem(TX_HASH_LOCAL_STORAGE_KEY);
-  if (content) {
-    return JSON.parse(localStorage.getItem(TX_HASH_LOCAL_STORAGE_KEY));
-  } else {
-    return { txHash: null, chainIdFrom: null, chainIdTo: null };
-  }
+  return content
+    ? JSON.parse(content)
+    : { txHash: null, chainIdFrom: null, chainIdTo: null };
 };
+
 const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   try {
     const evmOriginContext = {
-      provider: rpcNodes[chainIdFrom],
+      provider: chainIdToInfo[chainIdFrom].rpcUrls[0],
     };
 
     const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
-
     const evmDestinationContext = {
-      provider: rpcNodes[chainIdTo],
+      provider: chainIdToInfo[chainIdTo].rpcUrls[0],
     };
 
     const [submission] = submissions;
     const isConfirmed = await submission.hasRequiredBlockConfirmations();
+
     if (!isConfirmed) {
       return [0, 0];
     }
+
     const claim = await submission.toEVMClaim(evmDestinationContext);
     const minRequiredSignatures = await claim.getRequiredSignaturesCount();
 
@@ -115,7 +87,8 @@ const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
 
     const signatures = await claim.getSignatures();
     return [signatures.length, minRequiredSignatures];
-  } catch {
+  } catch (error) {
+    console.error("Error getting transaction status:", error);
     return [0, 0];
   }
 };
@@ -127,9 +100,11 @@ const getBridgeContract = async (chainIdTo) => {
     );
     return;
   }
+
   const signer = await getSigner();
 
-  await switchBridgeChainId(signer.provider, +chainIdTo);
+  await switchOrAddChain(signer.provider);
+
   return new ethers.Contract(
     DEFAULT_DEBRIDGE_GATE_ADDRESS,
     debridgeAbi,
@@ -137,6 +112,7 @@ const getBridgeContract = async (chainIdTo) => {
   );
 };
 
+// Bridge service to send tokens
 async function bridgeService({ bridgeAmount, chainIdTo }) {
   try {
     const deBridgeGate = await getBridgeContract(chainIdTo);
@@ -144,11 +120,11 @@ async function bridgeService({ bridgeAmount, chainIdTo }) {
     const chainIdFrom = await signer.provider.provider.send("eth_chainId", []);
 
     if (!isSupported(chainIdFrom)) {
-      throw Error(`chain Id: ${chainIdFrom} is not supported`);
+      throw Error(`Chain ID: ${chainIdFrom} is not supported`);
     }
 
     if (!isSupported(chainIdTo)) {
-      throw Error(`chain Id: ${chainIdTo} is not supported`);
+      throw Error(`Chain ID: ${chainIdTo} is not supported`);
     }
 
     const receiver = await signer.getAddress();
@@ -157,7 +133,7 @@ async function bridgeService({ bridgeAmount, chainIdTo }) {
       tokenAddress: "0x0000000000000000000000000000000000000000",
       amount: ethers.utils.parseEther(bridgeAmount).toString(),
       chainIdTo,
-      receiver: receiver,
+      receiver,
       autoParams: new evm.SendAutoParams({
         executionFee: "0",
         fallbackAddress: receiver,
@@ -167,7 +143,6 @@ async function bridgeService({ bridgeAmount, chainIdTo }) {
     });
 
     const argsForSend = message.getEncodedArgs();
-
     const fee = await deBridgeGate.globalFixedNativeFee();
     const etherToSend = fee.add(ethers.utils.parseEther(bridgeAmount));
 
@@ -184,24 +159,25 @@ async function bridgeService({ bridgeAmount, chainIdTo }) {
   }
 }
 
+// Claim function for cross-chain claims
 const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
   try {
     if (!isSupported(chainIdFrom)) {
-      throw Error(`chain Id: ${chainIdFrom} is not supported`);
+      throw Error(`Chain ID: ${chainIdFrom} is not supported`);
     }
 
     if (!isSupported(chainIdTo)) {
-      throw Error(`chain Id: ${chainIdTo} is not supported`);
+      throw Error(`Chain ID: ${chainIdTo} is not supported`);
     }
 
     const evmOriginContext = {
-      provider: rpcNodes[chainIdFrom],
+      provider: chainIdToInfo[chainIdFrom].rpcUrls[0],
     };
 
     const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
 
     if (submissions.length === 0 || submissions.length > 1) {
-      throw Error();
+      throw Error("Invalid submission count");
     }
 
     const [submission] = submissions;
@@ -212,11 +188,10 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
     }
 
     const evmDestinationContext = {
-      provider: rpcNodes[chainIdTo],
+      provider: chainIdToInfo[chainIdTo].rpcUrls[0],
     };
 
     const claim = await submission.toEVMClaim(evmDestinationContext);
-
     const isSigned = await claim.isSigned();
     const isExecuted = await claim.isExecuted();
 
@@ -225,11 +200,10 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
     }
     if (isExecuted) {
       storeTxInfo(null, null, null);
-      throw Error("Already excuted!");
+      throw Error("Already executed!");
     }
 
     const signer = await getSigner();
-
     const claimArgs = await claim.getEncodedArgs();
 
     const deBridgeGate = new ethers.Contract(
@@ -237,14 +211,14 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
       debridgeAbi,
       signer
     );
-
     const tx = await deBridgeGate.claim(...claimArgs);
     const receipt = await tx.wait();
 
     if (receipt.status === 1) {
       storeTxInfo(null, null, null);
     }
-    return `successfully claimed cross-chain Ether: ${tx.hash}`;
+
+    return `Successfully claimed cross-chain Ether: ${tx.hash}`;
   } catch (error) {
     console.error("Error claiming cross-chain Ether:", error);
     return `${FAILED_KEY} to claim cross-chain Ether: ${error.message}`;

@@ -27,7 +27,6 @@ export const LZ_CHAINS = {
     name: "Sonic Blaze",
     rpcUrl: "https://rpc.blaze.soniclabs.com",
     chainId: 57054,
-    image: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png",
   },
 };
 
