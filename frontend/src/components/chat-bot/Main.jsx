@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AIAgent } from "../../agent/index";
 import { toast } from "react-toastify";
-import { FaSpinner, FaQuestionCircle } from "react-icons/fa";
+import { FaSpinner, FaQuestionCircle, FaComment } from "react-icons/fa";
 
 const ChatWithAdminBot = () => {
   const [isChatboxOpen, setIsChatboxOpen] = useState(false);
@@ -72,12 +72,12 @@ const ChatWithAdminBot = () => {
   return (
     <div>
       {/* Chatbot Button */}
-      <div className="fixed bottom-24 right-0 mb-4 mr-10">
+      <div className="fixed bottom-24 right-4 mb-4 mr-10">
         <button
           onClick={toggleChatbox}
           className="bg-[#28334e] text-white py-2 px-4 rounded-full hover:bg-[#1f2937] transition duration-300 flex items-center h-12 cursor-pointer"
         >
-          Perform action with AI Agent
+          <FaComment className="w-6 h-6" />
         </button>
       </div>
 
@@ -85,7 +85,7 @@ const ChatWithAdminBot = () => {
       <div className="fixed bottom-40 right-4 mb-4 mr-10">
         <button
           onClick={toggleHelp}
-          className="bg-gray-600 text-white p-3 rounded-full hover:bg-gray-700 transition duration-300"
+          className="bg-[#28334e] text-white py-2 px-4 rounded-full hover:bg-[#1f2937] transition duration-300 flex items-center h-12 cursor-pointer"
         >
           <FaQuestionCircle className="w-6 h-6" />
         </button>
