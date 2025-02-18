@@ -78,7 +78,7 @@ export async function getBridgeFee(chainIdFrom) {
   }
 }
 
-async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
+async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo, receiver }) {
   try {
     const deBridgeGate = await getBridgeContract(chainIdFrom);
     const signer = await getSigner();
@@ -91,7 +91,13 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
       throw Error(`Chain ID: ${chainIdTo} is not supported`);
     }
 
-    const receiver = await signer.getAddress();
+    const userAddress = await signer.getAddress();
+
+    if (!receiver) {
+      receiver = userAddress;
+    }
+
+    const userBalance = await signer.provider.getBalance(userAddress);
 
     const message = new evm.Message({
       tokenAddress: "0x0000000000000000000000000000000000000000",
@@ -110,10 +116,6 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
     const fee = await deBridgeGate.globalFixedNativeFee();
 
     const etherToSend = fee + ethers.parseEther(bridgeAmount);
-
-    const userAddress = await signer.getAddress();
-
-    const userBalance = await signer.provider.getBalance(userAddress);
 
     if (userBalance < etherToSend) {
       throw Error("Insufficient balance to send transaction");

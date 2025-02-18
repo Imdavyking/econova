@@ -208,6 +208,7 @@ export default function Bridge() {
           bridgeAmount: amount,
           chainIdTo: destinationChain.chainId,
           chainIdFrom: sourceChain.chainId,
+          receiver: recipient,
         });
         rethrowFailedResponse(response);
       } else {
