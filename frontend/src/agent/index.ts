@@ -45,7 +45,7 @@ export class AIAgent {
       wrapSonic: "Example: Wrap 10 SONIC",
       unwrapSonic: "Example: Unwrap 10 wrappedSonic",
       bridge:
-        "Only Mainnet Bridges are Supported: Example - Bridge 10 SONIC tokens from Ethereum to BSC.",
+        "Only Mainnet Bridges are Supported: Example - Bridge 10 SONIC to BSC.",
     };
   }
 
