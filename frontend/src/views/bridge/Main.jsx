@@ -180,6 +180,10 @@ export default function Bridge() {
         setLzTokenFee(ethers.formatEther(lzTokenFee));
       }
     } catch (error) {
+      if (error instanceof Error) {
+        toast.error(`❌ Error sending tokens: ${error.message}`);
+        return;
+      }
       console.error("Error estimating fee:", error);
       toast.error("❌ Error estimating fee!");
     } finally {
@@ -220,6 +224,10 @@ export default function Bridge() {
       setNativeFee(null);
       setLzTokenFee(null);
     } catch (error) {
+      if (error instanceof Error) {
+        toast.error(`❌ Error sending tokens: ${error.message}`);
+        return;
+      }
       console.error("Error sending tokens:", error);
       toast.error("❌ Error sending tokens!");
     } finally {

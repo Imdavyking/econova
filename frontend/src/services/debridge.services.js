@@ -111,6 +111,14 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
 
     const etherToSend = fee + ethers.parseEther(bridgeAmount);
 
+    const userAddress = await signer.getAddress();
+
+    const userBalance = await signer.provider.getBalance(userAddress);
+
+    if (userBalance < etherToSend) {
+      throw Error("Insufficient balance to send transaction");
+    }
+
     const tx = await deBridgeGate.send(...argsForSend, { value: etherToSend });
     const receipt = await tx.wait();
 
