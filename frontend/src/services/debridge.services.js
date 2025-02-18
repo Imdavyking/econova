@@ -11,6 +11,9 @@ const TX_HASH_LOCAL_STORAGE_KEY = "debridge_tx_info";
 const getProviderByChainId = (chainId) =>
   supportedChains.find((chain) => chain.id === chainId)?.rpcUrls[0];
 
+const getCurrencyByChainId = (chainId) =>
+  supportedChains.find((chain) => chain.id === chainId)?.nativeCurrency.symbol;
+
 const isSupported = (chainId) =>
   supportedChains.some((chain) => chain.id === chainId);
 
@@ -77,12 +80,13 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo, receiver }) {
     const bridgeAmountWei = ethers.parseEther(`${bridgeAmount}`);
     const fee = await deBridgeGate.globalFixedNativeFee();
     const etherToSend = fee + bridgeAmountWei;
+    const currencyName = getCurrencyByChainId(chainIdFrom);
 
     if (userBalance < etherToSend)
       throw new Error(
         `Insufficient balance - ${ethers.formatEther(
           etherToSend.toString()
-        )} Balance required`
+        )} ${currencyName} required`
       );
 
     const message = new evm.Message({
