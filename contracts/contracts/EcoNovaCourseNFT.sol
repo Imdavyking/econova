@@ -105,6 +105,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
     constructor(address _botAddress) ERC721("EcoNovaCourseNFT", "ECNFT") Ownable(msg.sender) {
         botAddress = _botAddress;
         tokenCounter = 1;
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     function supportsInterface(
