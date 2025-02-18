@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
+// This contract is designed to interact with deBridge on mainnets only.
 pragma solidity ^0.8.7;
-
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
@@ -18,9 +18,9 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
      */
     uint256 public tokenCounter;
     address public botAddress;
-    address crossChainContractAddress;
+    /// @dev Address of the cross-chain counter contract (on the `remoteChainID` chain)
+    address remoteAddress;
     uint256 public TIMESTAMP_EXPIRY = 120;
-    uint256 chainIdTo;
     IDeBridgeGateExtended public deBridgeGate;
 
     /**
@@ -89,6 +89,8 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         }
 
         bytes memory nativeSender = callProxy.submissionNativeSender();
+        address senderAddress = bytesToAddress(nativeSender);
+
         if (keccak256(supportedChains[chainIdFrom].callerAddress) != keccak256(nativeSender)) {
             revert EcoNovaCourseNFT__NativeSenderBadRole(nativeSender, chainIdFrom);
         }
@@ -108,19 +110,41 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
+    /**
+     * @notice Check if the contract supports an interface
+     * @param interfaceId - the interface ID
+     */
     function supportsInterface(
         bytes4 interfaceId
     ) public view virtual override(ERC721URIStorage, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
+    /**
+     * @notice Get the address from bytes
+     * @param bys - the bytes to convert to an address
+     */
+
+    function bytesToAddress(bytes memory bys) private pure returns (address addr) {
+        assembly {
+            addr := mload(add(bys, 20))
+        }
+    }
+
+    /**
+     * @notice Set the deBridgeGate contract address
+     * @param deBridgeGate_ - the deBridgeGate contract address
+     */
+
     function setDeBridgeGate(IDeBridgeGateExtended deBridgeGate_) external onlyAdmin {
         deBridgeGate = deBridgeGate_;
     }
 
-    function setChainIdTo(uint256 chainIdTo_) external onlyAdmin {
-        chainIdTo = chainIdTo_;
-    }
+    /**
+     * @notice Add support for a chain
+     * @param _chainId - the chain ID
+     * @param _crossChainAddress - the cross chain address
+     */
 
     function addChainSupport(
         uint256 _chainId,
@@ -132,31 +156,67 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         emit SupportedChainAdded(_chainId, _crossChainAddress);
     }
 
+    /**
+     * @notice Remove support for a chain
+     * @param _chainId - the chain ID
+     */
     function removeChainSupport(uint256 _chainId) external onlyAdmin {
         supportedChains[_chainId].isSupported = false;
+        supportedChains[_chainId].callerAddress = "";
         emit SupportedChainRemoved(_chainId);
     }
 
-    function setCrossChainContractAddress(address _crossChainAddress) external onlyAdmin {
-        crossChainContractAddress = _crossChainAddress;
+    /**
+     * @notice Set the cross chain contract address
+     * @param _remoteAddress - the cross chain address
+     */
+    function setCrossChainContractAddress(address _remoteAddress) external onlyAdmin {
+        remoteAddress = _remoteAddress;
     }
 
-    function sendCrossChainNFT(address recipient, uint256 tokenId) external payable {
-        bytes memory dstTxCall = abi.encodeWithSelector(
-            this.receiveNFT.selector,
-            recipient,
-            tokenId
-        );
+    /**
+     * @notice Mint an NFT
+     * @param recipient - the recipient of the NFT
+     * @param tokenId - the token ID
+     */
 
-        _send(dstTxCall, 0);
+    function sendCrossChainNFT(
+        uint256 dstChain_,
+        address recipient,
+        uint256 tokenId
+    ) external payable {
+        string memory tokenURI_ = tokenURI(tokenId);
+        _burn(tokenId);
+        bytes memory dstTxCall = abi.encodeCall(this.receiveNFT, (recipient, tokenId, tokenURI_));
+        _send(dstChain_, dstTxCall, 0);
     }
 
-    function receiveNFT(bytes memory payload) external onlyValidCrossChainSender {
-        (address recipient, uint256 tokenId) = abi.decode(payload, (address, uint256));
+    /**
+     * @notice Receive an NFT
+     * @param recipient - the recipient of the NFT
+     * @param tokenId - the token ID
+     * @param _tokenURI - the token URI
+     */
+    function receiveNFT(
+        address recipient,
+        uint256 tokenId,
+        string memory _tokenURI
+    ) external onlyValidCrossChainSender {
         _mint(recipient, tokenId);
+        _setTokenURI(tokenId, _tokenURI);
+        emit NFTReceived(tokenId, recipient, _tokenURI);
     }
 
-    function _send(bytes memory _dstTransactionCall, uint256 _executionFee) internal {
+    /**
+     * @notice Send a transaction to the deBridgeGate
+     * @param _dstTransactionCall - the destination transaction call
+     * @param _executionFee - the execution fee
+     */
+    function _send(
+        uint256 dstChain_,
+        bytes memory _dstTransactionCall,
+        uint256 _executionFee
+    ) internal {
         uint256 protocolFee = deBridgeGate.globalFixedNativeFee();
         if (msg.value < (protocolFee + _executionFee)) {
             revert EcoNovaCourseNFT__FeeNotCoveredByMsgValue();
@@ -173,16 +233,20 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         autoParams.data = _dstTransactionCall;
         autoParams.fallbackAddress = abi.encodePacked(msg.sender);
 
-        deBridgeGate.send{value: msg.value}(
-            address(0),
-            amountToBridge,
-            chainIdTo,
-            abi.encodePacked(crossChainContractAddress),
-            "",
-            true,
-            0,
-            abi.encode(autoParams)
-        );
+        try
+            deBridgeGate.send{value: msg.value}(
+                address(0),
+                amountToBridge,
+                dstChain_,
+                abi.encodePacked(remoteAddress),
+                "",
+                true,
+                0,
+                abi.encode(autoParams)
+            )
+        {} catch Error(string memory err) {
+            revert(err);
+        }
     }
 
     /**
