@@ -19,7 +19,10 @@ import {
 } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
-import { bridgeSonicService } from "../../services/debridge.servies";
+import {
+  bridgeSonicService,
+  getBridgeFee,
+} from "../../services/debridge.servies";
 export const LZ_CHAINS = {
   97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
@@ -143,6 +146,8 @@ export default function Bridge() {
       }
 
       if (selectedToken.tokenAddress == ethers.ZeroAddress) {
+        const nativeFee = await getBridgeFee();
+        setNativeFee(ethers.formatEther(nativeFee));
       } else {
         const { nativeFee, lzTokenFee } = await getOFTSendFee({
           oftTokenAddress: selectedToken.tokenAddress,

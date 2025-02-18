@@ -1,15 +1,9 @@
 import { evm } from "@debridge-finance/desdk";
 import { ethers } from "ethers";
 import { getBridgeContract, getSigner } from "./blockchain.services";
-import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
+
 import { Flags } from "@debridge-finance/desdk/lib/evm";
 import { FAILED_KEY } from "../utils/constants";
-
-const debridgeAbi = [
-  "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
-  "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
-  "function globalFixedNativeFee() view returns (uint256)",
-];
 
 const chainIdToInfo = {
   56: {
@@ -92,7 +86,17 @@ const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
-// Bridge service to send tokens
+export async function getBridgeFee() {
+  try {
+    const deBridgeGate = await getBridgeContract();
+    const fee = await deBridgeGate.globalFixedNativeFee();
+    return fee;
+  } catch (error) {
+    console.error("Error getting bridge fee:", error);
+    return `${FAILED_KEY} to get bridge fee: ${error.message}`;
+  }
+}
+
 async function bridgeSonicService({ bridgeAmount, chainIdTo }) {
   try {
     const deBridgeGate = await getBridgeContract();
@@ -183,14 +187,10 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
       throw Error("Already executed!");
     }
 
-    const signer = await getSigner();
     const claimArgs = await claim.getEncodedArgs();
 
-    const deBridgeGate = new ethers.Contract(
-      DEFAULT_DEBRIDGE_GATE_ADDRESS,
-      debridgeAbi,
-      signer
-    );
+    const deBridgeGate = await getBridgeContract();
+
     const tx = await deBridgeGate.claim(...claimArgs);
     const receipt = await tx.wait();
 

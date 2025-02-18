@@ -5,6 +5,7 @@ import oftAbi from "@/assets/json/oft.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
 import iWrappedSonicAbi from "@/assets/json/iwrapped-sonic.json";
 import { BrowserProvider, ethers } from "ethers";
+import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
 import {
   BMI_ADVICE,
   CHAIN_BLOCKEXPLORER_URL,
@@ -24,6 +25,12 @@ import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
+
+const debridgeAbi = [
+  "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
+  "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
+  "function globalFixedNativeFee() view returns (uint256)",
+];
 
 async function switchOrAddChain(ethProvider) {
   try {
