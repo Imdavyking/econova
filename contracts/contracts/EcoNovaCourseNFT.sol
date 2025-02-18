@@ -68,6 +68,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
     error EcoNovaCourseNFT__CallProxyBadRole();
     error EcoNovaCourseNFT__NativeSenderBadRole(bytes nativeSender, uint256 chainIdFrom);
     error EcoNovaCourseNFT__ChainNotSupported(uint256 chainId);
+    error EcoNovaCourseNFT__CrossChainTransferToSameChain();
 
     /** modifiers */
     modifier onlyAdmin() {
@@ -185,6 +186,9 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         address recipient,
         uint256 tokenId
     ) external payable {
+        if (block.chainid == dstChain_) {
+            revert EcoNovaCourseNFT__CrossChainTransferToSameChain();
+        }
         string memory tokenURI_ = tokenURI(tokenId);
         _burn(tokenId);
         bytes memory dstTxCall = abi.encodeCall(this.receiveNFT, (recipient, tokenId, tokenURI_));
@@ -205,6 +209,11 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         _mint(recipient, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         emit NFTReceived(tokenId, recipient, _tokenURI);
+    }
+
+    function getDefaultFeeForCrossChainTransfer() public returns (uint256) {
+        uint256 protocolFee = deBridgeGate.globalFixedNativeFee();
+        return protocolFee;
     }
 
     /**
