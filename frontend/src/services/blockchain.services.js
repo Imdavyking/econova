@@ -45,7 +45,7 @@ async function switchOrAddChain(ethProvider, switchChainId) {
           if (Number(switchChainId) == Number(CHAIN_ID)) {
             await ethProvider.provider.send("wallet_addEthereumChain", [
               {
-                chainId: `0x${Number(CHAIN_ID).toString(16)}`,
+                chainId: `0x${Number(switchChainId).toString(16)}`,
                 chainName: CHAIN_NAME,
                 nativeCurrency: {
                   name: CHAIN_CURRENCY_NAME,
