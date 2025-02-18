@@ -20,6 +20,7 @@ import {
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
 import { bridgeCoin, getBridgeFee } from "../../services/debridge.services";
+import { sonic, bsc } from "viem/chains";
 export const LZ_CHAINS = {
   97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
@@ -59,11 +60,11 @@ export default function Bridge() {
   const [loading, setLoading] = useState(false);
   const [availableTokens, setAvailableTokens] = useState([
     {
-      name: CHAIN_NAME,
-      symbol: CHAIN_SYMBOL,
+      name: sonic.name,
+      symbol: sonic.nativeCurrency.symbol,
       tokenAddress: ethers.ZeroAddress,
       decimals: Number(18),
-      chainId: Number(146),
+      chainId: sonic.id,
     },
   ]);
   const [userBalance, setUserBalance] = useState("---");
@@ -88,7 +89,7 @@ export default function Bridge() {
         setUserBalance(Number(balance) / 10 ** Number(decimals));
       }
     );
-  }, [selectedToken, loading]);
+  }, [selectedToken, loading, sourceChain, destinationChain]);
 
   useEffect(() => {
     if (!sourceChain || !destinationChain || !selectedToken.tokenAddress)
