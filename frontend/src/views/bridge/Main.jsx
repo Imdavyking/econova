@@ -11,10 +11,7 @@ import {
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
-import {
-  APP_NAME,
-  CHAIN_ID,
-} from "../../utils/constants";
+import { APP_NAME, CHAIN_ID } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
 import { bridgeCoin, getBridgeFee } from "../../services/debridge.services";
@@ -83,7 +80,7 @@ export default function Bridge() {
 
   useEffect(() => {
     console.log("selectedToken", selectedToken);
-    getTokenBalance(selectedToken.tokenAddress).then(
+    getTokenBalance(selectedToken.tokenAddress, sourceChain.chainId).then(
       ({ balance, decimals }) => {
         setUserBalance(Number(balance) / 10 ** Number(decimals));
       }
@@ -311,7 +308,11 @@ export default function Bridge() {
           <div className="mb-3">
             <p className="text-sm">
               Balance:{" "}
-              <span className="font-semibold">{userBalance || "---"}</span>{" "}
+              <span className="font-semibold">
+                {userBalance === "---" || userBalance === ""
+                  ? "---"
+                  : userBalance}
+              </span>{" "}
               {selectedToken.symbol}
             </p>
             {otherTokenAddress && (

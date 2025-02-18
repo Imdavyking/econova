@@ -30,14 +30,17 @@ async function switchOrAddChain(ethProvider, switchChainId) {
   try {
     const chainId = await ethProvider.provider.send("eth_chainId", []);
     console.log(`Current chainId: ${Number(chainId)}`);
+    console.log(`Switch chainId: ${Number(switchChainId)}`);
 
     if (Number(chainId) !== Number(switchChainId)) {
       try {
         await ethProvider.provider.send("wallet_switchEthereumChain", [
-          { chainId: switchChainId },
+          { chainId: `0x${Number(switchChainId).toString(16)}` },
         ]);
         console.log(`Switched to ${switchChainId}`);
       } catch (error) {
+        console.log(error);
+        console.log(error.code);
         if (error.code === 4902) {
           if (Number(switchChainId) == Number(CHAIN_ID)) {
             await ethProvider.provider.send("wallet_addEthereumChain", [
@@ -446,14 +449,20 @@ export const getProjectTokenDetails = async () => {
   }
 };
 
-export const getTokenBalance = async (tokenAddress) => {
+export const getTokenBalance = async (tokenAddress, switchChainId) => {
   try {
     const signer = await getSigner();
 
+    await switchOrAddChain(signer.provider, switchChainId);
+
     const address = await signer.getAddress();
 
+    console.log({ address });
+
     if (tokenAddress == ethers.ZeroAddress || tokenAddress == ETH_ADDRESS) {
+      console.log("getting balance");
       const balance = await signer.provider.getBalance(address);
+      console.log("balance", balance);
       return { balance, decimals: 18 };
     }
 
