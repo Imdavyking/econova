@@ -395,6 +395,7 @@ export const getCharityCategoryAddressService = async ({ charityCatogory }) => {
 export const sendSonicService = async ({ recipientAddress, amount }) => {
   try {
     const signer = await getSigner();
+    await switchOrAddChain(signer.provider, CHAIN_ID);
     const tx = await signer.sendTransaction({
       to: recipientAddress,
       value: ethers.parseEther(amount.toString()),
