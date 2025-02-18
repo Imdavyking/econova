@@ -19,10 +19,7 @@ import {
 } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
-import {
-  bridgeSonicService,
-  getBridgeFee,
-} from "../../services/debridge.services";
+import { bridgeCoin, getBridgeFee } from "../../services/debridge.services";
 export const LZ_CHAINS = {
   97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
@@ -191,7 +188,7 @@ export default function Bridge() {
       setLoading(true);
 
       if (selectedToken.tokenAddress == ethers.ZeroAddress) {
-        const response = await bridgeSonicService({
+        const response = await bridgeCoin({
           bridgeAmount: amount,
           chainIdTo: destinationChain.chainId,
           chainIdFrom: sourceChain.chainId,

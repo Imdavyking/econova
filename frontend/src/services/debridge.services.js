@@ -77,7 +77,7 @@ export async function getBridgeFee(chainIdFrom) {
   }
 }
 
-async function bridgeNativeToken({ bridgeAmount, chainIdFrom, chainIdTo }) {
+async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
   try {
     const deBridgeGate = await getBridgeContract(chainIdFrom);
     const signer = await getSigner();
@@ -185,4 +185,4 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
-export { getTxStatus, bridgeNativeToken, claim };
+export { getTxStatus, bridgeCoin, claim };
