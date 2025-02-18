@@ -79,7 +79,11 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo, receiver }) {
     const etherToSend = fee + bridgeAmountWei;
 
     if (userBalance < etherToSend)
-      throw new Error(`Insufficient balance - ${etherToSend} ETH required`);
+      throw new Error(
+        `Insufficient balance - ${ethers.parseEther(
+          etherToSend.toString()
+        )} Balance required`
+      );
 
     const message = new evm.Message({
       tokenAddress: ethers.ZeroAddress,
