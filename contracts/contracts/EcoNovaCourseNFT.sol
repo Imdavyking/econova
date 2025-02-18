@@ -7,13 +7,20 @@ import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/Messa
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./debridge/interfaces/ICallProxy.sol";
 import "./debridge/interfaces/IDeBridgeGateExtended.sol";
 import "./debridge/library/Flags.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./interfaces/IEcoNovaCourseNFT.sol";
+import "hardhat/console.sol";
 
-contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl, ReentrancyGuard {
+contract EcoNovaCourseNFT is
+    ERC721URIStorage,
+    Ownable,
+    AccessControl,
+    ReentrancyGuard,
+    IEcoNovaCourseNFT
+{
     /**
      * variables
      */
@@ -195,7 +202,10 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl, Reentranc
         }
         string memory tokenURI_ = tokenURI(tokenId);
         _burn(tokenId);
-        bytes memory dstTxCall = abi.encodeCall(this.receiveNFT, (recipient, tokenId, tokenURI_));
+        bytes memory dstTxCall = abi.encodeCall(
+            IEcoNovaCourseNFT.receiveNFT,
+            (recipient, tokenId, tokenURI_)
+        );
         _send(dstChain_, dstTxCall, 0);
     }
 
