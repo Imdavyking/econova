@@ -11,8 +11,9 @@ import "hardhat/console.sol";
 import "./debridge/interfaces/ICallProxy.sol";
 import "./debridge/interfaces/IDeBridgeGateExtended.sol";
 import "./debridge/library/Flags.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
+contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl, ReentrancyGuard {
     /**
      * variables
      */
@@ -185,7 +186,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         uint256 dstChain_,
         address recipient,
         uint256 tokenId
-    ) external payable {
+    ) external payable nonReentrant {
         if (block.chainid == dstChain_) {
             revert EcoNovaCourseNFT__CrossChainTransferToSameChain();
         }
@@ -208,7 +209,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         address recipient,
         uint256 tokenId,
         string memory _tokenURI
-    ) external onlyValidCrossChainSender {
+    ) external onlyValidCrossChainSender nonReentrant {
         _mint(recipient, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         emit NFTReceived(tokenId, recipient, _tokenURI);
@@ -223,7 +224,7 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         uint256 dstChain_,
         bytes memory _dstTransactionCall,
         uint256 _executionFee
-    ) internal {
+    ) internal nonReentrant {
         uint256 protocolFee = deBridgeGate.globalFixedNativeFee();
         if (msg.value < (protocolFee + _executionFee)) {
             revert EcoNovaCourseNFT__FeeNotCoveredByMsgValue();
