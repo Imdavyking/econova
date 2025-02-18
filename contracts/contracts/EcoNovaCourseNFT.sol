@@ -27,7 +27,6 @@ contract EcoNovaCourseNFT is
     uint256 public tokenCounter;
     address public botAddress;
     /// @dev Address of the cross-chain counter contract (on the `remoteChainID` chain)
-    address remoteAddress;
     uint256 public TIMESTAMP_EXPIRY = 120;
     IDeBridgeGateExtended public deBridgeGate;
 
@@ -48,6 +47,7 @@ contract EcoNovaCourseNFT is
     mapping(bytes32 => bool) private usedSignatures;
     mapping(address => mapping(Level => string)) public userTokenURIs;
     mapping(uint256 => ChainInfo) supportedChains;
+    mapping(uint256 => address) public remoteAddress;
 
     /**
      * events
@@ -179,8 +179,11 @@ contract EcoNovaCourseNFT is
      * @notice Set the cross chain contract address
      * @param _remoteAddress - the cross chain address
      */
-    function setCrossChainContractAddress(address _remoteAddress) external onlyAdmin {
-        remoteAddress = _remoteAddress;
+    function setCrossChainContractAddress(
+        uint256 _chainId,
+        address _remoteAddress
+    ) external onlyAdmin {
+        remoteAddress[_chainId] = _remoteAddress;
     }
 
     /**
@@ -240,6 +243,10 @@ contract EcoNovaCourseNFT is
             revert EcoNovaCourseNFT__FeeNotCoveredByMsgValue();
         }
 
+        if (remoteAddress[dstChain_] == address(0)) {
+            revert EcoNovaCourseNFT__AddressCannotBeZero();
+        }
+
         uint assetFeeBps = deBridgeGate.globalTransferFeeBps();
         uint amountToBridge = _executionFee;
         uint amountAfterBridge = (amountToBridge * (10000 - assetFeeBps)) / 10000;
@@ -256,7 +263,7 @@ contract EcoNovaCourseNFT is
                 address(0),
                 amountToBridge,
                 dstChain_,
-                abi.encodePacked(remoteAddress),
+                abi.encodePacked(remoteAddress[dstChain_]),
                 "",
                 true,
                 0,
