@@ -32,19 +32,19 @@ const debridgeAbi = [
   "function globalFixedNativeFee() view returns (uint256)",
 ];
 
-async function switchOrAddChain(ethProvider) {
+async function switchOrAddChain(ethProvider, switchChainId) {
   try {
     const chainId = await ethProvider.provider.send("eth_chainId", []);
     console.log(`Current chainId: ${Number(chainId)}`);
 
-    if (Number(chainId) !== Number(CHAIN_ID)) {
+    if (Number(chainId) !== Number(switchChainId)) {
       try {
         await ethProvider.provider.send("wallet_switchEthereumChain", [
-          { chainId: CHAIN_ID },
+          { chainId: switchChainId },
         ]);
-        console.log(`Switched to ${CHAIN_NAME} Testnet`);
+        console.log(`Switched to ${switchChainId}`);
       } catch (error) {
-        if (error.code === 4902) {
+        if (error.code === 4902 && switchChainId == CHAIN_ID) {
           await ethProvider.provider.send("wallet_addEthereumChain", [
             {
               chainId: CHAIN_ID,
@@ -67,7 +67,7 @@ async function switchOrAddChain(ethProvider) {
         }
       }
     } else {
-      console.log(`Already connected to ${CHAIN_NAME} Testnet`);
+      console.log(`Already connected to ${switchChainId}`);
     }
   } catch (error) {}
 }
@@ -78,7 +78,7 @@ export const getSigner = async () => {
   return provider.getSigner();
 };
 
-export const getBridgeContract = async () => {
+export const getBridgeContract = async (chainIdFrom) => {
   if (!window.ethereum) {
     console.log(
       "MetaMask is not installed. Please install it to use this feature."
@@ -88,7 +88,7 @@ export const getBridgeContract = async () => {
 
   const signer = await getSigner();
 
-  await switchOrAddChain(signer.provider);
+  await switchOrAddChain(signer.provider, chainIdFrom);
 
   return new ethers.Contract(
     DEFAULT_DEBRIDGE_GATE_ADDRESS,
@@ -106,7 +106,7 @@ const getIWSonicContract = async () => {
   }
   const signer = await getSigner();
 
-  await switchOrAddChain(signer.provider);
+  await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(
     WRAPPED_SONIC_CONTRACT_ADDRESS,
     iWrappedSonicAbi,
@@ -123,7 +123,7 @@ const getOFTContract = async (tokenAddress) => {
   }
   const signer = await getSigner();
 
-  await switchOrAddChain(signer.provider);
+  await switchOrAddChain(signer.provider, CHAIN_ID);
 
   return {
     contract: new ethers.Contract(tokenAddress, oftAbi, signer),
@@ -140,7 +140,7 @@ const getERC20Contract = async (address) => {
   }
   const signer = await getSigner();
 
-  await switchOrAddChain(signer.provider);
+  await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(address, erc20, signer);
 };
 
@@ -153,7 +153,7 @@ const getContract = async () => {
   }
   const signer = await getSigner();
 
-  await switchOrAddChain(signer.provider);
+  await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 };
 
@@ -166,7 +166,7 @@ const getNFTCourseContract = async () => {
   }
   const signer = await getSigner();
 
-  await switchOrAddChain(signer.provider);
+  await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, nftCourseAbi, signer);
 };
 

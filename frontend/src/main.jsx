@@ -21,6 +21,7 @@ import {
   CHAIN_SYMBOL,
   WALLET_CONNECT_PROJECT_ID,
 } from "./utils/constants";
+import { sonic, bsc, bscTestnet } from "viem/chains";
 
 export const chainInfo = defineChain({
   id: Number(CHAIN_ID),
@@ -45,7 +46,7 @@ export const chainInfo = defineChain({
 const config = getDefaultConfig({
   appName: "EcoNova",
   projectId: WALLET_CONNECT_PROJECT_ID,
-  chains: [chainInfo],
+  chains: [chainInfo, sonic, bsc, bscTestnet],
 });
 const queryClient = new QueryClient();
 

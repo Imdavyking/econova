@@ -22,7 +22,7 @@ import { FaSpinner } from "react-icons/fa";
 import {
   bridgeSonicService,
   getBridgeFee,
-} from "../../services/debridge.servies";
+} from "../../services/debridge.services";
 export const LZ_CHAINS = {
   97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
@@ -38,6 +38,20 @@ export const LZ_CHAINS = {
     rpcUrl: "https://rpc.blaze.soniclabs.com",
     chainId: 57054,
   },
+  146: {
+    endpointV2: "0x6F475642a6e85809B1c36Fa62763669b1b48DD5B",
+    endpointIdV2: EndpointId.SONIC_V2_MAINNET,
+    name: "Sonic Mainnet",
+    rpcUrl: "https://rpc.soniclabs.com",
+    chainId: 146,
+  },
+  56: {
+    endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
+    endpointIdV2: EndpointId.BSC_V2_MAINNET,
+    name: "bscMainnet",
+    rpcUrl: "https://rpc.ankr.com/bsc",
+    chainId: 56,
+  },
 };
 
 export default function Bridge() {
@@ -52,7 +66,7 @@ export default function Bridge() {
       symbol: CHAIN_SYMBOL,
       tokenAddress: ethers.ZeroAddress,
       decimals: Number(18),
-      chainId: Number(CHAIN_ID),
+      chainId: Number(146),
     },
   ]);
   const [userBalance, setUserBalance] = useState("---");
@@ -146,7 +160,7 @@ export default function Bridge() {
       }
 
       if (selectedToken.tokenAddress == ethers.ZeroAddress) {
-        const nativeFee = await getBridgeFee();
+        const nativeFee = await getBridgeFee(sourceChain.chainId);
         setNativeFee(ethers.formatEther(nativeFee));
       } else {
         const { nativeFee, lzTokenFee } = await getOFTSendFee({
@@ -180,6 +194,7 @@ export default function Bridge() {
         const response = await bridgeSonicService({
           bridgeAmount: amount,
           chainIdTo: destinationChain.chainId,
+          chainIdFrom: sourceChain.chainId,
         });
         rethrowFailedResponse(response);
       } else {

@@ -4,34 +4,12 @@ import { getBridgeContract, getSigner } from "./blockchain.services";
 
 import { Flags } from "@debridge-finance/desdk/lib/evm";
 import { FAILED_KEY } from "../utils/constants";
+import { sonic, bsc } from "viem/chains";
 
-const chainIdToInfo = {
-  56: {
-    chainId: 56,
-    chainName: "Binance Smart Chain",
-    nativeCurrency: {
-      name: "BNB",
-      symbol: "BNB",
-      decimals: 18,
-    },
-    rpcUrls: ["https://bsc-dataseed.binance.org/"],
-    blockExplorerUrls: ["https://bscscan.com/"],
-  },
-  146: {
-    chainId: 146,
-    chainName: "Sonic Mainnet",
-    nativeCurrency: {
-      name: "SONIC",
-      symbol: "SONIC",
-      decimals: 18,
-    },
-    rpcUrls: ["https://rpc.soniclabs.com"],
-    blockExplorerUrls: ["https://sonicscan.io/"],
-  },
-};
+const supportedChains = [sonic, bsc];
 
 const isSupported = (chainId) => {
-  return !!chainIdToInfo[chainId];
+  supportedChains.find((chain) => chain.id === chainId);
 };
 
 const TX_HASH_LOCAL_STORAGE_KEY = "debridge_tx_info";
@@ -56,12 +34,14 @@ const getTxInfo = () => {
 const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   try {
     const evmOriginContext = {
-      provider: chainIdToInfo[chainIdFrom].rpcUrls[0],
+      provider: supportedChains.find((chain) => chain.id === chainIdFrom)
+        .rpcUrls[0],
     };
 
     const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
     const evmDestinationContext = {
-      provider: chainIdToInfo[chainIdTo].rpcUrls[0],
+      provider: supportedChains.find((chain) => chain.id === chainIdTo)
+        .rpcUrls[0],
     };
 
     const [submission] = submissions;
@@ -86,9 +66,9 @@ const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
-export async function getBridgeFee() {
+export async function getBridgeFee(chainIdFrom) {
   try {
-    const deBridgeGate = await getBridgeContract();
+    const deBridgeGate = await getBridgeContract(chainIdFrom);
     const fee = await deBridgeGate.globalFixedNativeFee();
     return fee;
   } catch (error) {
@@ -97,9 +77,9 @@ export async function getBridgeFee() {
   }
 }
 
-async function bridgeSonicService({ bridgeAmount, chainIdTo }) {
+async function bridgeNativeToken({ bridgeAmount, chainIdFrom, chainIdTo }) {
   try {
-    const deBridgeGate = await getBridgeContract();
+    const deBridgeGate = await getBridgeContract(chainIdFrom);
     const signer = await getSigner();
     const chainIdFrom = await signer.provider.provider.send("eth_chainId", []);
 
@@ -155,7 +135,7 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
     }
 
     const evmOriginContext = {
-      provider: chainIdToInfo[chainIdFrom].rpcUrls[0],
+      provider: supportedChains.find((chain) => chain.id === chainIdFrom),
     };
 
     const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
@@ -172,7 +152,7 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
     }
 
     const evmDestinationContext = {
-      provider: chainIdToInfo[chainIdTo].rpcUrls[0],
+      provider: supportedChains.find((chain) => chain.id === chainIdTo),
     };
 
     const claim = await submission.toEVMClaim(evmDestinationContext);
@@ -205,4 +185,4 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
-export { getTxStatus, bridgeSonicService, claim };
+export { getTxStatus, bridgeNativeToken, claim };
