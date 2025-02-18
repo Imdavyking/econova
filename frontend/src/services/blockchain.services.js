@@ -70,6 +70,25 @@ export const getSigner = async () => {
   return provider.getSigner();
 };
 
+export const getBridgeContract = async () => {
+  if (!window.ethereum) {
+    console.log(
+      "MetaMask is not installed. Please install it to use this feature."
+    );
+    return;
+  }
+
+  const signer = await getSigner();
+
+  await switchOrAddChain(signer.provider);
+
+  return new ethers.Contract(
+    DEFAULT_DEBRIDGE_GATE_ADDRESS,
+    debridgeAbi,
+    signer
+  );
+};
+
 const getIWSonicContract = async () => {
   if (!window.ethereum) {
     console.log(

@@ -10,7 +10,12 @@ import {
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
-import { APP_NAME, CHAIN_ID } from "../../utils/constants";
+import {
+  APP_NAME,
+  CHAIN_ID,
+  CHAIN_NAME,
+  CHAIN_SYMBOL,
+} from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
 export const LZ_CHAINS = {
@@ -36,7 +41,15 @@ export default function Bridge() {
   const [nativeFee, setNativeFee] = useState(null);
   const [lzTokenFee, setLzTokenFee] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [availableTokens, setAvailableTokens] = useState([]);
+  const [availableTokens, setAvailableTokens] = useState([
+    {
+      name: CHAIN_NAME,
+      symbol: CHAIN_SYMBOL,
+      tokenAddress: ethers.ZeroAddress,
+      decimals: Number(ethers.WeiPerEther),
+      chainId: Number(CHAIN_ID),
+    },
+  ]);
   const [userBalance, setUserBalance] = useState("---");
   const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
   const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[97]); // Default to baseSepolia

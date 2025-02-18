@@ -1,10 +1,9 @@
 import { evm } from "@debridge-finance/desdk";
 import { ethers } from "ethers";
-import { getSigner } from "./blockchain.services";
+import { getBridgeContract, getSigner } from "./blockchain.services";
 import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
 import { Flags } from "@debridge-finance/desdk/lib/evm";
 import { FAILED_KEY } from "../utils/constants";
-import { switchOrAddChain } from "./blockchain.services";
 
 const debridgeAbi = [
   "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
@@ -93,29 +92,10 @@ const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
-const getBridgeContract = async (chainIdTo) => {
-  if (!window.ethereum) {
-    console.log(
-      "MetaMask is not installed. Please install it to use this feature."
-    );
-    return;
-  }
-
-  const signer = await getSigner();
-
-  await switchOrAddChain(signer.provider);
-
-  return new ethers.Contract(
-    DEFAULT_DEBRIDGE_GATE_ADDRESS,
-    debridgeAbi,
-    signer
-  );
-};
-
 // Bridge service to send tokens
 async function bridgeService({ bridgeAmount, chainIdTo }) {
   try {
-    const deBridgeGate = await getBridgeContract(chainIdTo);
+    const deBridgeGate = await getBridgeContract();
     const signer = await getSigner();
     const chainIdFrom = await signer.provider.provider.send("eth_chainId", []);
 
