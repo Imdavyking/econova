@@ -80,7 +80,7 @@ const AIHealth = () => {
         </button>
         {suggestion && (
           <div className="mt-4 text-center">
-            <p className="text-gray-700 mt-2">{suggestion}</p>
+            <p className="mt-2">{suggestion}</p>
           </div>
         )}
       </div>
