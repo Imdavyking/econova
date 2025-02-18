@@ -135,7 +135,8 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
     }
 
     const evmOriginContext = {
-      provider: supportedChains.find((chain) => chain.id === chainIdFrom),
+      provider: supportedChains.find((chain) => chain.id === chainIdFrom)
+        .rpcUrls[0],
     };
 
     const submissions = await evm.Submission.findAll(txHash, evmOriginContext);
@@ -152,7 +153,8 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
     }
 
     const evmDestinationContext = {
-      provider: supportedChains.find((chain) => chain.id === chainIdTo),
+      provider: supportedChains.find((chain) => chain.id === chainIdTo)
+        .rpcUrls[0],
     };
 
     const claim = await submission.toEVMClaim(evmDestinationContext);
