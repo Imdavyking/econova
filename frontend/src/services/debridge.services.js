@@ -95,7 +95,7 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
 
     const message = new evm.Message({
       tokenAddress: "0x0000000000000000000000000000000000000000",
-      amount: ethers.utils.parseEther(bridgeAmount).toString(),
+      amount: ethers.parseEther(bridgeAmount).toString(),
       chainIdTo,
       receiver,
       autoParams: new evm.SendAutoParams({
@@ -108,7 +108,8 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
 
     const argsForSend = message.getEncodedArgs();
     const fee = await deBridgeGate.globalFixedNativeFee();
-    const etherToSend = fee.add(ethers.utils.parseEther(bridgeAmount));
+
+    const etherToSend = fee + ethers.parseEther(bridgeAmount);
 
     const tx = await deBridgeGate.send(...argsForSend, { value: etherToSend });
     const receipt = await tx.wait();
@@ -123,7 +124,6 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo }) {
   }
 }
 
-// Claim function for cross-chain claims
 const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
   try {
     if (!isSupported(chainIdFrom)) {
