@@ -136,6 +136,10 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         emit SupportedChainRemoved(_chainId);
     }
 
+    function setCrossChainContractAddress(address _crossChainAddress) external onlyAdmin {
+        crossChainContractAddress = _crossChainAddress;
+    }
+
     function sendCrossChainNFT(address recipient, uint256 tokenId) external payable {
         bytes memory dstTxCall = abi.encodeWithSelector(
             this.receiveNFT.selector,
