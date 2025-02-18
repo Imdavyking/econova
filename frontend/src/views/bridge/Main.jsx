@@ -25,7 +25,7 @@ export const LZ_CHAINS = {
   97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
     endpointIdV2: EndpointId.BSC_V2_TESTNET,
-    name: "bnbTestnet",
+    name: "bscTestnet",
     rpcUrl: "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
     chainId: 97,
   },
@@ -160,6 +160,11 @@ export default function Bridge() {
         return;
       }
 
+      if (sourceChain.chainId === destinationChain.chainId) {
+        toast.error("❌ Source and Destination chain cannot be the same!");
+        return;
+      }
+
       if (selectedToken.tokenAddress == ethers.ZeroAddress) {
         const nativeFee = await getBridgeFee(sourceChain.chainId);
         setNativeFee(ethers.formatEther(nativeFee));
@@ -190,7 +195,10 @@ export default function Bridge() {
   const sendTokens = async () => {
     try {
       setLoading(true);
-
+      if (sourceChain.chainId === destinationChain.chainId) {
+        toast.error("❌ Source and Destination chain cannot be the same!");
+        return;
+      }
       if (selectedToken.tokenAddress == ethers.ZeroAddress) {
         const response = await bridgeCoin({
           bridgeAmount: amount,
