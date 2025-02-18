@@ -98,8 +98,8 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo, receiver }) {
 
     return `Transaction sent: ${tx.hash}`;
   } catch (error) {
-    console.error("Error sending cross-chain Ether:", error);
-    return `${FAILED_KEY} to send cross-chain Ether: ${error.message}`;
+    console.error("Error gotten while trying to bridge coin:", error);
+    return `${FAILED_KEY} to bridge coin: ${error.message}`;
   }
 }
 
