@@ -14,13 +14,11 @@ import { toast } from "react-toastify";
 import {
   APP_NAME,
   CHAIN_ID,
-  CHAIN_NAME,
-  CHAIN_SYMBOL,
 } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
 import { bridgeCoin, getBridgeFee } from "../../services/debridge.services";
-import { sonic, bsc } from "viem/chains";
+import { sonic } from "viem/chains";
 export const LZ_CHAINS = {
   97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
