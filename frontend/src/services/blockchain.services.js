@@ -26,12 +26,6 @@ import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 
-const debridgeAbi = [
-  "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
-  "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
-  "function globalFixedNativeFee() view returns (uint256)",
-];
-
 async function switchOrAddChain(ethProvider, switchChainId) {
   try {
     const chainId = await ethProvider.provider.send("eth_chainId", []);
@@ -44,7 +38,7 @@ async function switchOrAddChain(ethProvider, switchChainId) {
         ]);
         console.log(`Switched to ${switchChainId}`);
       } catch (error) {
-        if (error.code === 4902 && switchChainId == CHAIN_ID) {
+        if (error.code === 4902 && Number(switchChainId) == Number(CHAIN_ID)) {
           await ethProvider.provider.send("wallet_addEthereumChain", [
             {
               chainId: CHAIN_ID,
@@ -89,6 +83,12 @@ export const getBridgeContract = async (chainIdFrom) => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, chainIdFrom);
+
+  const debridgeAbi = [
+    "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
+    "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
+    "function globalFixedNativeFee() view returns (uint256)",
+  ];
 
   return new ethers.Contract(
     DEFAULT_DEBRIDGE_GATE_ADDRESS,

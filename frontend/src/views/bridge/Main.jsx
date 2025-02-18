@@ -84,12 +84,13 @@ export default function Bridge() {
   );
 
   useEffect(() => {
+    console.log("selectedToken", selectedToken);
     getTokenBalance(selectedToken.tokenAddress).then(
       ({ balance, decimals }) => {
         setUserBalance(Number(balance) / 10 ** Number(decimals));
       }
     );
-  }, [selectedToken, loading, sourceChain, destinationChain]);
+  }, [selectedToken]);
 
   useEffect(() => {
     if (!sourceChain || !destinationChain || !selectedToken.tokenAddress)
@@ -131,7 +132,9 @@ export default function Bridge() {
 
         if (!newTokensSet.has(`${newToken.tokenAddress}-${newToken.chainId}`)) {
           setAvailableTokens([newToken, ...availableTokens]);
+
           if (!selectedToken.tokenAddress) {
+            console.log("called");
             setSelectedToken(newToken);
           }
         }
@@ -139,7 +142,7 @@ export default function Bridge() {
       .catch((error) => {
         console.error("Error fetching tokens:", error);
       });
-  }, [sourceChain]);
+  }, []);
 
   const estimateFee = async () => {
     try {
