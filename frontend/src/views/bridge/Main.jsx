@@ -98,6 +98,7 @@ export default function Bridge() {
     getPeerTokenAddress({
       eidB: destinationChain.endpointIdV2,
       oftTokenAddress: selectedToken.tokenAddress,
+      sourceChainId: sourceChain.chainId,
     })
       .then((peers) => {
         const otherChainTokenAddress = stripZerosLeft(peers);
@@ -169,6 +170,7 @@ export default function Bridge() {
           recipientAddress: recipient,
           tokensToSend: `${amount * 10 ** Number(selectedToken.decimals)}`,
           eidB: destinationChain.endpointIdV2,
+          sourceChainId: sourceChain.chainId,
         });
 
         setNativeFee(ethers.formatEther(nativeFee));

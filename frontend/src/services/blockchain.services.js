@@ -116,7 +116,7 @@ const getIWSonicContract = async () => {
   );
 };
 
-const getOFTContract = async (tokenAddress) => {
+const getOFTContract = async (tokenAddress, sourceChainId) => {
   if (!window.ethereum) {
     console.log(
       "MetaMask is not installed. Please install it to use this feature."
@@ -125,7 +125,7 @@ const getOFTContract = async (tokenAddress) => {
   }
   const signer = await getSigner();
 
-  await switchOrAddChain(signer.provider, CHAIN_ID);
+  await switchOrAddChain(signer.provider, sourceChainId);
 
   return {
     contract: new ethers.Contract(tokenAddress, oftAbi, signer),
@@ -172,9 +172,13 @@ const getNFTCourseContract = async () => {
   return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, nftCourseAbi, signer);
 };
 
-export const getPeerTokenAddress = async ({ eidB, oftTokenAddress }) => {
+export const getPeerTokenAddress = async ({
+  eidB,
+  oftTokenAddress,
+  sourceChainId,
+}) => {
   try {
-    const oftInfo = await getOFTContract(oftTokenAddress);
+    const oftInfo = await getOFTContract(oftTokenAddress, sourceChainId);
 
     const contract = oftInfo.contract;
 
@@ -192,9 +196,10 @@ export async function getOFTSendFee({
   recipientAddress,
   eidB,
   tokensToSend,
+  sourceChainId,
 }) {
   try {
-    const oftInfo = await getOFTContract(oftTokenAddress);
+    const oftInfo = await getOFTContract(oftTokenAddress, sourceChainId);
 
     const contract = oftInfo.contract;
 
