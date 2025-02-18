@@ -28,44 +28,55 @@ import { Options } from "@layerzerolabs/lz-v2-utilities";
 
 async function switchOrAddChain(ethProvider, switchChainId) {
   try {
-    const chainId = await ethProvider.provider.send("eth_chainId", []);
-    console.log(`Current chainId: ${Number(chainId)}`);
-    console.log(`Switch chainId: ${Number(switchChainId)}`);
+    const currentChainId = Number(
+      await ethProvider.provider.send("eth_chainId", [])
+    );
+    const targetChainId = Number(switchChainId);
+    const chainIdHex = `0x${targetChainId.toString(16)}`;
 
-    if (Number(chainId) !== Number(switchChainId)) {
-      try {
-        await ethProvider.provider.send("wallet_switchEthereumChain", [
-          { chainId: `0x${Number(switchChainId).toString(16)}` },
-        ]);
-        console.log(`Switched to ${switchChainId}`);
-      } catch (error) {
-        console.log(error);
-        console.log(error.code);
-        if (error.code === 4902) {
-          if (Number(switchChainId) == Number(CHAIN_ID)) {
-            await ethProvider.provider.send("wallet_addEthereumChain", [
-              {
-                chainId: `0x${Number(switchChainId).toString(16)}`,
-                chainName: CHAIN_NAME,
-                nativeCurrency: {
-                  name: CHAIN_CURRENCY_NAME,
-                  symbol: CHAIN_SYMBOL,
-                  decimals: 18,
-                },
-                rpcUrls: [CHAIN_RPC],
-                blockExplorerUrls: [CHAIN_BLOCKEXPLORER_URL],
-              },
-            ]);
-            console.log(`${CHAIN_NAME} Testnet added and switched`);
-          }
-        } else {
-          console.error(`${FAILED_KEY} to switch to ${switchChainId}`, error);
-        }
-      }
-    } else {
-      console.log(`Already connected to ${switchChainId}`);
+    console.log(
+      `Current chainId: ${currentChainId}, Switch chainId: ${targetChainId}`
+    );
+
+    if (currentChainId === targetChainId) {
+      console.log(`Already connected to ${targetChainId}`);
+      return;
     }
-  } catch (error) {}
+
+    try {
+      await ethProvider.provider.send("wallet_switchEthereumChain", [
+        { chainId: chainIdHex },
+      ]);
+      console.log(`Switched to ${targetChainId}`);
+    } catch (error) {
+      console.error(`Error switching chain:`, error);
+
+      if (error.code === 4902) {
+        console.log(`Chain ${targetChainId} not found. Attempting to add.`);
+
+        if (targetChainId === Number(CHAIN_ID)) {
+          await ethProvider.provider.send("wallet_addEthereumChain", [
+            {
+              chainId: chainIdHex,
+              chainName: CHAIN_NAME,
+              nativeCurrency: {
+                name: CHAIN_CURRENCY_NAME,
+                symbol: CHAIN_SYMBOL,
+                decimals: 18,
+              },
+              rpcUrls: [CHAIN_RPC],
+              blockExplorerUrls: [CHAIN_BLOCKEXPLORER_URL],
+            },
+          ]);
+          console.log(`${CHAIN_NAME} added and switched`);
+        }
+      } else {
+        console.error(`Failed to switch to ${targetChainId}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error(`Unexpected error in switchOrAddChain:`, error);
+  }
 }
 
 export const getSigner = async () => {
