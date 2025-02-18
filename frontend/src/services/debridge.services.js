@@ -80,7 +80,7 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo, receiver }) {
 
     if (userBalance < etherToSend)
       throw new Error(
-        `Insufficient balance - ${ethers.parseEther(
+        `Insufficient balance - ${ethers.formatEther(
           etherToSend.toString()
         )} Balance required`
       );
