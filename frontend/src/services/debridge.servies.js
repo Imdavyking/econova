@@ -93,7 +93,7 @@ const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
 };
 
 // Bridge service to send tokens
-async function bridgeService({ bridgeAmount, chainIdTo }) {
+async function bridgeSonicService({ bridgeAmount, chainIdTo }) {
   try {
     const deBridgeGate = await getBridgeContract();
     const signer = await getSigner();
@@ -205,4 +205,4 @@ const claim = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
-export { getTxStatus, bridgeService, claim };
+export { getTxStatus, bridgeSonicService, claim };

@@ -5,6 +5,7 @@ import {
   getPeerTokenAddress,
   getProjectTokenDetails,
   getTokenBalance,
+  rethrowFailedResponse,
   sendOFTTokens,
 } from "../../services/blockchain.services";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
@@ -18,6 +19,7 @@ import {
 } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
+import { bridgeSonicService } from "../../services/debridge.servies";
 export const LZ_CHAINS = {
   97: {
     endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
@@ -46,7 +48,7 @@ export default function Bridge() {
       name: CHAIN_NAME,
       symbol: CHAIN_SYMBOL,
       tokenAddress: ethers.ZeroAddress,
-      decimals: Number(ethers.WeiPerEther),
+      decimals: Number(18),
       chainId: Number(CHAIN_ID),
     },
   ]);
@@ -77,6 +79,11 @@ export default function Bridge() {
   useEffect(() => {
     if (!sourceChain || !destinationChain || !selectedToken.tokenAddress)
       return;
+
+    if (selectedToken.tokenAddress == ethers.ZeroAddress) {
+      setOtherTokenAddress("");
+      return;
+    }
     getPeerTokenAddress({
       eidB: destinationChain.endpointIdV2,
       oftTokenAddress: selectedToken.tokenAddress,
@@ -135,15 +142,18 @@ export default function Bridge() {
         return;
       }
 
-      const { nativeFee, lzTokenFee } = await getOFTSendFee({
-        oftTokenAddress: selectedToken.tokenAddress,
-        recipientAddress: recipient,
-        tokensToSend: `${amount * 10 ** Number(selectedToken.decimals)}`,
-        eidB: destinationChain.endpointIdV2,
-      });
+      if (selectedToken.tokenAddress == ethers.ZeroAddress) {
+      } else {
+        const { nativeFee, lzTokenFee } = await getOFTSendFee({
+          oftTokenAddress: selectedToken.tokenAddress,
+          recipientAddress: recipient,
+          tokensToSend: `${amount * 10 ** Number(selectedToken.decimals)}`,
+          eidB: destinationChain.endpointIdV2,
+        });
 
-      setNativeFee(ethers.formatEther(nativeFee));
-      setLzTokenFee(ethers.formatEther(lzTokenFee));
+        setNativeFee(ethers.formatEther(nativeFee));
+        setLzTokenFee(ethers.formatEther(lzTokenFee));
+      }
     } catch (error) {
       console.error("Error estimating fee:", error);
       toast.error("❌ Error estimating fee!");
@@ -161,12 +171,21 @@ export default function Bridge() {
     try {
       setLoading(true);
 
-      await sendOFTTokens({
-        oftTokenAddress: selectedToken.tokenAddress,
-        recipientAddress: recipient,
-        tokensToSend: `${amount * 10 ** Number(selectedToken.decimals)}`,
-        eidB: destinationChain.endpointIdV2,
-      });
+      if (selectedToken.tokenAddress == ethers.ZeroAddress) {
+        const response = await bridgeSonicService({
+          bridgeAmount: amount,
+          chainIdTo: destinationChain.chainId,
+        });
+        rethrowFailedResponse(response);
+      } else {
+        const response = await sendOFTTokens({
+          oftTokenAddress: selectedToken.tokenAddress,
+          recipientAddress: recipient,
+          tokensToSend: `${amount * 10 ** Number(selectedToken.decimals)}`,
+          eidB: destinationChain.endpointIdV2,
+        });
+        rethrowFailedResponse(response);
+      }
 
       toast.success("✅ Tokens sent successfully!");
       setNativeFee(null);

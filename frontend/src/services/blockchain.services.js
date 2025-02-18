@@ -14,6 +14,7 @@ import {
   CHAIN_RPC,
   CHAIN_SYMBOL,
   CONTRACT_ADDRESS,
+  ETH_ADDRESS,
   FAILED_KEY,
   FIAT_DECIMALS,
   NFT_COURSE_CONTRACT_ADDRESS,
@@ -444,6 +445,11 @@ export const getTokenBalance = async (tokenAddress) => {
     const signer = await getSigner();
 
     const address = await signer.getAddress();
+
+    if (tokenAddress == ethers.ZeroAddress || tokenAddress == ETH_ADDRESS) {
+      const balance = await signer.provider.getBalance(address);
+      return { balance, decimals: 18 };
+    }
 
     const token = await getERC20Contract(tokenAddress);
 
