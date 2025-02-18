@@ -72,7 +72,7 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo, receiver }) {
 
     receiver ||= await signer.getAddress();
     const userBalance = await signer.provider.getBalance(receiver);
-    const bridgeAmountWei = ethers.parseEther(bridgeAmount);
+    const bridgeAmountWei = ethers.parseEther(`${bridgeAmount}`);
     const fee = await deBridgeGate.globalFixedNativeFee();
     const etherToSend = fee + bridgeAmountWei;
 
