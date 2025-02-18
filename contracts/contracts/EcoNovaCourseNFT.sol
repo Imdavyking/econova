@@ -211,11 +211,6 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         emit NFTReceived(tokenId, recipient, _tokenURI);
     }
 
-    function getDefaultFeeForCrossChainTransfer() public returns (uint256) {
-        uint256 protocolFee = deBridgeGate.globalFixedNativeFee();
-        return protocolFee;
-    }
-
     /**
      * @notice Send a transaction to the deBridgeGate
      * @param _dstTransactionCall - the destination transaction call
