@@ -325,10 +325,15 @@ export default function Bridge() {
                   {nativeFee} {sourceChain.name}
                 </span>
               </p>
-              <p>
-                LZ Token Fee:{" "}
-                <span className="font-semibold">{lzTokenFee} </span>
-              </p>
+
+              {lzTokenFee ? (
+                <p>
+                  LZ Token Fee:{" "}
+                  <span className="font-semibold">{lzTokenFee} </span>
+                </p>
+              ) : (
+                <></>
+              )}
             </div>
           )}
 
