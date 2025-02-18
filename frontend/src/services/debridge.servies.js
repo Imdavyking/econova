@@ -11,17 +11,62 @@ const debridgeAbi = [
   "function globalFixedNativeFee() view returns (uint256)",
 ];
 
-const rpcNodes = {
-  56: "https://rpc.ankr.com/bsc",
-  146: "https://rpc.soniclabs.com",
+const chainIdToInfo = {
+  56: {
+    chainId: 56,
+    chainName: "Binance Smart Chain",
+    nativeCurrency: {
+      name: "BNB",
+      symbol: "BNB",
+      decimals: 18,
+    },
+    rpcUrls: ["https://bsc-dataseed.binance.org/"],
+    blockExplorerUrls: ["https://bscscan.com/"],
+  },
+  146: {
+    chainId: 146,
+    chainName: "Sonic Mainnet",
+    nativeCurrency: {
+      name: "SONIC",
+      symbol: "S",
+      decimals: 18,
+    },
+    rpcUrls: ["https://rpc.soniclabs.com"],
+    blockExplorerUrls: ["https://sonicscan.io/"],
+  },
+};
+
+const switchBridgeChainId = async (ethProvider, sourceChainId) => {
+  try {
+    const chainId = await ethProvider.provider.send("eth_chainId", []);
+    console.log(`Current chainId: ${Number(chainId)}`);
+
+    if (Number(chainId) !== Number(sourceChainId)) {
+      try {
+        await ethProvider.provider.send("wallet_switchEthereumChain", [
+          { chainId: sourceChainId },
+        ]);
+      } catch (error) {
+        if (error.code === 4902) {
+          await ethProvider.provider.send("wallet_addEthereumChain", [
+            chainIdToInfo[sourceChainId],
+          ]);
+        } else {
+          console.error(`${FAILED_KEY} to switch to ${sourceChainId}:`, error);
+        }
+      }
+    } else {
+      console.log(`Already connected to chainId: ${sourceChainId}`);
+    }
+  } catch (error) {}
 };
 
 const isSupported = (chainId) => {
-  return (
-    Object.keys(rpcNodes).filter(
-      (availableChainId) => availableChainId.toString() === chainId.toString()
-    ).length > 0
-  );
+  if (chainIdToInfo[chainId]) {
+    return true;
+  }
+
+  return;
 };
 
 const TX_HASH_LOCAL_STORAGE_KEY = "debridge_tx_info";
@@ -75,10 +120,27 @@ const getTxStatus = async ({ txHash, chainIdFrom, chainIdTo }) => {
   }
 };
 
+const getBridgeContract = async (chainIdTo) => {
+  if (!window.ethereum) {
+    console.log(
+      "MetaMask is not installed. Please install it to use this feature."
+    );
+    return;
+  }
+  const signer = await getSigner();
+
+  await switchBridgeChainId(signer.provider, +chainIdTo);
+  return new ethers.Contract(
+    DEFAULT_DEBRIDGE_GATE_ADDRESS,
+    debridgeAbi,
+    signer
+  );
+};
+
 async function bridgeService({ bridgeAmount, chainIdTo }) {
   try {
+    const deBridgeGate = await getBridgeContract(chainIdTo);
     const signer = await getSigner();
-
     const chainIdFrom = await signer.provider.provider.send("eth_chainId", []);
 
     if (!isSupported(chainIdFrom)) {
@@ -88,12 +150,6 @@ async function bridgeService({ bridgeAmount, chainIdTo }) {
     if (!isSupported(chainIdTo)) {
       throw Error(`chain Id: ${chainIdTo} is not supported`);
     }
-
-    const deBridgeGate = new ethers.Contract(
-      DEFAULT_DEBRIDGE_GATE_ADDRESS,
-      debridgeAbi,
-      signer
-    );
 
     const receiver = await signer.getAddress();
 

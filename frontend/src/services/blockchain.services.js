@@ -72,7 +72,7 @@ export const getSigner = async () => {
 
 const getIWSonicContract = async () => {
   if (!window.ethereum) {
-    toast.info(
+    console.log(
       "MetaMask is not installed. Please install it to use this feature."
     );
     return;
@@ -89,7 +89,7 @@ const getIWSonicContract = async () => {
 
 const getOFTContract = async (tokenAddress) => {
   if (!window.ethereum) {
-    toast.info(
+    console.log(
       "MetaMask is not installed. Please install it to use this feature."
     );
     return;
@@ -106,7 +106,7 @@ const getOFTContract = async (tokenAddress) => {
 
 const getERC20Contract = async (address) => {
   if (!window.ethereum) {
-    toast.info(
+    console.log(
       "MetaMask is not installed. Please install it to use this feature."
     );
     return;
@@ -119,7 +119,7 @@ const getERC20Contract = async (address) => {
 
 const getContract = async () => {
   if (!window.ethereum) {
-    toast.info(
+    console.log(
       "MetaMask is not installed. Please install it to use this feature."
     );
     return;
@@ -132,7 +132,7 @@ const getContract = async () => {
 
 const getNFTCourseContract = async () => {
   if (!window.ethereum) {
-    toast.info(
+    console.log(
       "MetaMask is not installed. Please install it to use this feature."
     );
     return;
