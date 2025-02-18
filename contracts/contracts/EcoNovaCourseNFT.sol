@@ -75,21 +75,19 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         _;
     }
 
-    modifier onlyCrossChainIncrementor() {
+    modifier onlyValidCrossChainSender() {
         ICallProxy callProxy = ICallProxy(deBridgeGate.callProxy());
 
-        // caller is CallProxy?
         if (address(callProxy) != msg.sender) {
             revert EcoNovaCourseNFT__CallProxyBadRole();
         }
 
         uint256 chainIdFrom = callProxy.submissionChainIdFrom();
 
-        if (supportedChains[chainIdFrom].callerAddress.length == 0) {
+        if (!supportedChains[chainIdFrom].isSupported) {
             revert EcoNovaCourseNFT__ChainNotSupported(chainIdFrom);
         }
 
-        // has the transaction being initiated by the whitelisted CrossChainIncrementor on the origin chain?
         bytes memory nativeSender = callProxy.submissionNativeSender();
         if (keccak256(supportedChains[chainIdFrom].callerAddress) != keccak256(nativeSender)) {
             revert EcoNovaCourseNFT__NativeSenderBadRole(nativeSender, chainIdFrom);
@@ -138,29 +136,19 @@ contract EcoNovaCourseNFT is ERC721URIStorage, Ownable, AccessControl {
         emit SupportedChainRemoved(_chainId);
     }
 
-    function incrementWithIncludedGas(uint8 _amount, uint256 _executionFee) external payable {
-        bytes memory dstTxCall = _encodeReceiveCommand(_amount, msg.sender);
+    function sendCrossChainNFT(address recipient, uint256 tokenId) external payable {
+        bytes memory dstTxCall = abi.encodeWithSelector(
+            this.receiveNFT.selector,
+            recipient,
+            tokenId
+        );
 
-        _send(dstTxCall, _executionFee);
+        _send(dstTxCall, 0);
     }
 
-    /* ========== INTERNAL METHODS ========== */
-
-    function _encodeReceiveCommand(
-        uint8 _amount,
-        address _initiator
-    ) internal pure returns (bytes memory) {
-        return abi.encodeWithSelector(this.receiveIncrementCommand.selector, _amount, _initiator);
-    }
-
-    function receiveIncrementCommand(
-        uint8 _amount,
-        address _initiator
-    ) external onlyCrossChainIncrementor {
-        // counter += _amount;
-
-        uint256 chainIdFrom = ICallProxy(deBridgeGate.callProxy()).submissionChainIdFrom();
-        // emit CounterIncremented(counter, _amount, chainIdFrom, _initiator);
+    function receiveNFT(bytes memory payload) external onlyValidCrossChainSender {
+        (address recipient, uint256 tokenId) = abi.decode(payload, (address, uint256));
+        _mint(recipient, tokenId);
     }
 
     function _send(bytes memory _dstTransactionCall, uint256 _executionFee) internal {
