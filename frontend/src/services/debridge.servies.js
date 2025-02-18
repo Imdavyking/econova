@@ -79,7 +79,7 @@ async function bridgeService({ bridgeAmount, chainIdTo }) {
   try {
     const signer = await getSigner();
 
-    const chainIdFrom = await signer.getChainId();
+    const chainIdFrom = await signer.provider.provider.send("eth_chainId", []);
 
     if (!isSupported(chainIdFrom)) {
       throw Error(`chain Id: ${chainIdFrom} is not supported`);
