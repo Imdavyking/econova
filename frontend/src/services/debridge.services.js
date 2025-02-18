@@ -92,7 +92,7 @@ async function bridgeCoin({ bridgeAmount, chainIdFrom, chainIdTo, receiver }) {
     });
 
     const tx = await deBridgeGate.send(...message.getEncodedArgs(), {
-      value: etherToSend,
+      value: etherToSend.toString(),
     });
     storeTxInfo(tx.hash, chainIdFrom, chainIdTo);
 
