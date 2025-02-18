@@ -250,7 +250,13 @@ export default function Bridge() {
           <select
             className="intro-x form-control py-3 px-4 block w-full mb-3"
             value={sourceChain.chainId}
-            onChange={(e) => setSourceChain(LZ_CHAINS[e.target.value])}
+            onChange={(e) => {
+              setSourceChain(LZ_CHAINS[e.target.value]);
+              const firstToken = availableTokens.find(
+                (token) => token.chainId === +e.target.value
+              );
+              setSelectedToken(firstToken);
+            }}
           >
             {Object.values(LZ_CHAINS).map((chain) => (
               <option key={chain.chainId} value={chain.chainId}>
