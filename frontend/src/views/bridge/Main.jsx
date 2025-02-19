@@ -91,6 +91,9 @@ export default function Bridge() {
     if (!sourceChain || !destinationChain || !selectedToken.tokenAddress)
       return;
 
+    setNativeFee(null);
+    setLzTokenFee(null);
+
     if (selectedToken.tokenAddress == ethers.ZeroAddress) {
       setOtherTokenAddress("");
       return;
