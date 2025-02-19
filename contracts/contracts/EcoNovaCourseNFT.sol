@@ -98,7 +98,6 @@ contract EcoNovaCourseNFT is
         }
 
         bytes memory nativeSender = callProxy.submissionNativeSender();
-        address senderAddress = bytesToAddress(nativeSender);
 
         if (keccak256(supportedChains[chainIdFrom].callerAddress) != keccak256(nativeSender)) {
             revert EcoNovaCourseNFT__NativeSenderBadRole(nativeSender, chainIdFrom);
@@ -127,17 +126,6 @@ contract EcoNovaCourseNFT is
         bytes4 interfaceId
     ) public view virtual override(ERC721URIStorage, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
-    }
-
-    /**
-     * @notice Get the address from bytes
-     * @param bys - the bytes to convert to an address
-     */
-
-    function bytesToAddress(bytes memory bys) private pure returns (address addr) {
-        assembly {
-            addr := mload(add(bys, 20))
-        }
     }
 
     /**
