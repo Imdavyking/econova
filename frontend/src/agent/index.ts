@@ -31,7 +31,13 @@ export class AIAgent {
       wrapSonic: wrapSonicService,
       unwrapSonic: unwrapSonicService,
       bridge: bridgeCoin,
-      alloraPredict: async (topicId: number, topicName: string) => {
+      alloraPredict: async ({
+        topicId,
+        topicName,
+      }: {
+        topicId?: number;
+        topicName?: string;
+      }) => {
         try {
           const urlParams = new URLSearchParams();
           if (topicId) {
