@@ -93,7 +93,10 @@ const ChatWithAdminBot = () => {
 
       {/* Help Popover */}
       {isHelpOpen && (
-        <div className="fixed bottom-52 right-4 bg-white shadow-lg rounded-lg p-4 w-80 z-50 mb-4 mr-10">
+        <div
+          className="fixed bottom-52 right-4 bg-white shadow-lg rounded-lg p-4 z-50 mb-4 mr-4
+    w-72 max-h-60 overflow-y-auto sm:w-80 sm:max-h-80 md:w-96 lg:w-[28rem]"
+        >
           <h3 className="text-lg font-semibold text-gray-700">Commands</h3>
           <ul className="list-disc ml-5 mt-2 text-gray-600 break-words">
             {Object.keys(agent.toolsInfo).map((key, index) => (
