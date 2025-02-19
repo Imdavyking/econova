@@ -48,7 +48,8 @@ export class AIAgent {
           }
           const url = `${SERVER_URL}/api/allora/price-inference?${urlParams.toString()}`;
           const response = await fetch(url);
-          return response.json();
+          const data = await response.json();
+          return data;
         } catch (error: any) {
           return `${FAILED_KEY}: ${error.message}`;
         }
