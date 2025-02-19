@@ -8,6 +8,7 @@ import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import dotenv from "dotenv";
 import { charityCategories } from "../utils/charity.categories";
+import { fetchAlloraTopics, fetchInferenceByTopicID } from "./allora.services";
 dotenv.config();
 const openAIApiKey = process.env.OPENAI_API_KEY!;
 const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
@@ -29,6 +30,25 @@ const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 
 const tools = {
+  alloraPredict: tool(
+    async (input) => {
+      const { topicId, topicName } = input;
+      if (topicId === null && topicName === null) {
+        return "Prediction failed. Please provide a topic ID or topic name.";
+      }
+      if (topicId) {
+        return await fetchInferenceByTopicID(topicName!, topicId);
+      }
+    },
+    {
+      name: "alloraPredict",
+      description: "Get price prediction for a token.",
+      schema: z.object({
+        topicId: z.number().nullable(),
+        topicName: z.string().nullable(),
+      }),
+    }
+  ),
   bridge: tool(() => undefined, {
     name: "bridge",
     description: "Bridge tokens to another chain.",
@@ -129,8 +149,14 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     tools: Object.values(tools),
   });
 
+  const alloraTopics = await fetchAlloraTopics();
+
   const systemPrompt = new SystemMessage(
     `You are an assistant that converts user prompts into structured formats.
+    ============ ALLORA NETWORK ============
+    ======== Topics on Allora Network ========
+    ${alloraTopics}
+    ======== End of Allora Network Topics ========
     For sending:
     WRAPPED_SONIC_CONTRACT_ADDRESS: ${
       process.env.WRAPPED_SONIC_CONTRACT_ADDRESS

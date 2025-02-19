@@ -35,6 +35,8 @@ EcoNova is a decentralized charity management system that enables transparent an
         FRONTEND_URL=
         CHAIN_ID=
         WRAPPED_SONIC_CONTRACT_ADDRESS=
+        ALLORA_API_KEY=
+        ALLORA_NETWORK=
      ```
 4. **Start the application** with Docker:
 

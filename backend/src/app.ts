@@ -14,6 +14,10 @@ import { FRONTEND_URL } from "./utils/constants";
 import merkleRoutes from "./routes/merkle.routes";
 import { isLocalhost } from "./utils/islocalhost";
 import { automateCharityFundDistribution } from "./services/automate.services";
+import {
+  fetchAlloraTopics,
+  fetchInferenceByTopicID,
+} from "./services/allora.services";
 
 dotenv.config();
 const app = express();

@@ -27,9 +27,11 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@alloralabs/allora-sdk": "^0.1.0",
     "@langchain/core": "^0.3.27",
     "@langchain/google-genai": "^0.1.6",
     "@langchain/openai": "^0.3.16",
+    "@lighthouse-web3/sdk": "^0.3.7",
     "@openzeppelin/merkle-tree": "^1.0.7",
     "axios": "^1.7.9",
     "cookie-parser": "^1.4.7",
@@ -50,7 +52,6 @@
     "simple-get": "^4.0.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "@lighthouse-web3/sdk": "^0.3.7",
     "zod": "^3.24.1"
   },
   "_moduleDirectories": [
