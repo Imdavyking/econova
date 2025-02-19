@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AIAgent } from "../../agent/index";
 import { toast } from "react-toastify";
 import { FaSpinner, FaQuestionCircle, FaComment } from "react-icons/fa";
@@ -12,6 +12,9 @@ const ChatWithAdminBot = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [lastUserInput, setLastUserInput] = useState("");
 
+  const helpRef = useRef(null);
+  const toggleRef = useRef(null);
+
   const toggleChatbox = () => {
     setIsChatboxOpen((prev) => !prev);
   };
@@ -19,6 +22,24 @@ const ChatWithAdminBot = () => {
   const toggleHelp = () => {
     setIsHelpOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (toggleRef.current && toggleRef.current.contains(event.target)) {
+        return;
+      }
+      if (helpRef.current && !helpRef.current.contains(event.target)) {
+        setIsHelpOpen(false);
+      }
+    }
+
+    if (isHelpOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isHelpOpen]);
 
   const handleSend = async () => {
     if (userInput.trim() !== "") {
@@ -82,7 +103,7 @@ const ChatWithAdminBot = () => {
       </div>
 
       {/* Help Button (Floating) */}
-      <div className="fixed bottom-40 right-4 mb-4 mr-10">
+      <div className="fixed bottom-40 right-4 mb-4 mr-10" ref={toggleRef}>
         <button
           onClick={toggleHelp}
           className="bg-[#28334e] text-white py-2 px-4 rounded-full hover:bg-[#1f2937] transition duration-300 flex items-center h-12 cursor-pointer"
@@ -94,6 +115,7 @@ const ChatWithAdminBot = () => {
       {/* Help Popover */}
       {isHelpOpen && (
         <div
+          ref={helpRef}
           className="fixed bottom-52 right-4 bg-white shadow-lg rounded-lg p-4 z-50 mb-4 mr-4
     w-72 max-h-60 overflow-y-auto sm:w-80 sm:max-h-80 md:w-96 lg:w-[28rem]"
         >
