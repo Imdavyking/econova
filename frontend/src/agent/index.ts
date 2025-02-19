@@ -49,6 +49,7 @@ export class AIAgent {
       unwrapSonic: "Example: Unwrap 10 wrappedSonic",
       bridge:
         "Only Mainnet Bridges are Supported: Example - Bridge 10 SONIC to BSC",
+      alloraPredict: "Example: What is the price of ETH in 5 minutes?.",
     };
   }
 
