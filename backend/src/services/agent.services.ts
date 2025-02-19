@@ -33,11 +33,12 @@ const tools = {
   alloraPredict: tool(
     async (input) => {
       const { topicId, topicName } = input;
-      if (topicId === null && topicName === null) {
-        return "Prediction failed. Please provide a topic ID or topic name.";
+      if (!topicId || !topicName) {
+        const topics = await fetchAlloraTopics();
+        return `Failed to get allora prediction.\nTopics: ${topics}`;
       }
       if (topicId) {
-        return await fetchInferenceByTopicID(topicName!, topicId);
+        return await fetchInferenceByTopicID(topicName, topicId);
       }
     },
     {
@@ -177,5 +178,6 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
+
   return { content: result.content, tool_calls: result.tool_calls };
 }
