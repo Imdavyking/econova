@@ -30,26 +30,14 @@ const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 
 const tools = {
-  alloraPredict: tool(
-    async (input) => {
-      const { topicId, topicName } = input;
-      if (!topicId || !topicName) {
-        const topics = await fetchAlloraTopics();
-        return `Failed to get allora prediction.\nTopics: ${topics}`;
-      }
-      if (topicId) {
-        return await fetchInferenceByTopicID(topicName, topicId);
-      }
-    },
-    {
-      name: "alloraPredict",
-      description: "Get price prediction for a token.",
-      schema: z.object({
-        topicId: z.number().nullable(),
-        topicName: z.string().nullable(),
-      }),
-    }
-  ),
+  alloraPredict: tool(() => undefined, {
+    name: "alloraPredict",
+    description: "Get price prediction for a token.",
+    schema: z.object({
+      topicId: z.number().nullable(),
+      topicName: z.string().nullable(),
+    }),
+  }),
   bridge: tool(() => undefined, {
     name: "bridge",
     description: "Bridge tokens to another chain.",

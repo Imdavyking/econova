@@ -18,6 +18,7 @@ import {
   fetchAlloraTopics,
   fetchInferenceByTopicID,
 } from "./services/allora.services";
+import alloraRoutes from "./routes/allora.routes";
 
 dotenv.config();
 const app = express();
@@ -68,6 +69,7 @@ app.use("/api/llm", llmRoutes);
 app.use("/twitter", twitterRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/merkle", merkleRoutes);
+app.use("/api/allora", alloraRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

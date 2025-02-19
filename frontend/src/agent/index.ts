@@ -30,6 +30,18 @@ export class AIAgent {
       wrapSonic: wrapSonicService,
       unwrapSonic: unwrapSonicService,
       bridge: bridgeCoin,
+      alloraPredict: async (topicId: number, topicName: string) => {
+        const urlParams = new URLSearchParams();
+        if (topicId) {
+          urlParams.append("topicId", `${topicId}`);
+        }
+        if (topicName) {
+          urlParams.append("topicName", topicName);
+        }
+        const url = `/api/allora/price-inference?${urlParams.toString()}`;
+        const response = await fetch(url);
+        return response.json();
+      },
     };
     this.toolsInfo = {
       donate: `Example: Donate 100 USD to a cause. e.g ${Object.keys(
