@@ -200,7 +200,7 @@ contract EcoNovaCourseNFT is
         if (block.chainid == dstChain_) {
             revert EcoNovaCourseNFT__CrossChainTransferToSameChain();
         }
-        if (supportedChains[dstChain_].isSupported == false) {
+        if (!supportedChains[dstChain_].isSupported) {
             revert EcoNovaCourseNFT__ChainNotSupported(dstChain_);
         }
         string memory tokenURI_ = tokenURI(tokenId);
