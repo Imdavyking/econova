@@ -33,7 +33,7 @@ const decodeExecPayload = (data: string): string | null => {
     const decodedData = abiCoder.decode(["string"], data);
     return decodedData[0] || null;
   } catch (error: any) {
-    console.log(error.message);
+    logger.error(`Failed to decode execPayload: ${error.message}`);
     return null;
   }
 };
