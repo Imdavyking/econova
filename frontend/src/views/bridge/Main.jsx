@@ -269,7 +269,9 @@ export default function Bridge() {
               const firstToken = availableTokens.find(
                 (token) => token.chainId === +e.target.value
               );
-              setSelectedToken(firstToken);
+              if (firstToken) {
+                setSelectedToken(firstToken);
+              }
             }}
           >
             {Object.values(LZ_CHAINS).map((chain) => (
