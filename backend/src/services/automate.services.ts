@@ -30,9 +30,10 @@ const ecoNovaManagerContract = new ethers.Contract(
 const decodeExecPayload = (data: string): string | null => {
   try {
     const abiCoder = new ethers.AbiCoder();
-    const decodedData = abiCoder.decode(["bool", "string"], data);
-    return decodedData[1] || null;
-  } catch (error) {
+    const decodedData = abiCoder.decode(["string"], data);
+    return decodedData[0] || null;
+  } catch (error: any) {
+    console.log(error.message);
     return null;
   }
 };
