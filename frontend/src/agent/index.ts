@@ -14,7 +14,7 @@ import {
 import { AiResponseType, SolveTaskResult, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
 import { bridgeCoin } from "../services/debridge.services";
-import { FAILED_KEY } from "../utils/constants";
+import { FAILED_KEY, SERVER_URL } from "../utils/constants";
 
 export class AIAgent {
   tools: { [key: string]: Function };
@@ -46,7 +46,7 @@ export class AIAgent {
           if (topicName) {
             urlParams.append("topicName", topicName);
           }
-          const url = `/api/allora/price-inference?${urlParams.toString()}`;
+          const url = `${SERVER_URL}/api/allora/price-inference?${urlParams.toString()}`;
           const response = await fetch(url);
           return response.json();
         } catch (error: any) {
