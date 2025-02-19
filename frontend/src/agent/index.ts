@@ -14,6 +14,7 @@ import {
 import { AiResponseType, SolveTaskResult, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
 import { bridgeCoin } from "../services/debridge.services";
+import { FAILED_KEY } from "../utils/constants";
 
 export class AIAgent {
   tools: { [key: string]: Function };
@@ -31,16 +32,20 @@ export class AIAgent {
       unwrapSonic: unwrapSonicService,
       bridge: bridgeCoin,
       alloraPredict: async (topicId: number, topicName: string) => {
-        const urlParams = new URLSearchParams();
-        if (topicId) {
-          urlParams.append("topicId", `${topicId}`);
+        try {
+          const urlParams = new URLSearchParams();
+          if (topicId) {
+            urlParams.append("topicId", `${topicId}`);
+          }
+          if (topicName) {
+            urlParams.append("topicName", topicName);
+          }
+          const url = `/api/allora/price-inference?${urlParams.toString()}`;
+          const response = await fetch(url);
+          return response.json();
+        } catch (error: any) {
+          return `${FAILED_KEY}: ${error.message}`;
         }
-        if (topicName) {
-          urlParams.append("topicName", topicName);
-        }
-        const url = `/api/allora/price-inference?${urlParams.toString()}`;
-        const response = await fetch(url);
-        return response.json();
       },
     };
     this.toolsInfo = {

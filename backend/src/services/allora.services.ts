@@ -52,7 +52,7 @@ export const fetchInferenceByTopicID = async (
   try {
     if (!topicId || !topicName) {
       const topics = await fetchAlloraTopics();
-      return `Failed to get allora prediction.\nTopics: ${topics}`;
+      return `error trying to get allora prediction.\nTopics: ${topics}`;
     }
     const inferenceRes = await alloraClient.getInferenceByTopicID(topicId);
 
