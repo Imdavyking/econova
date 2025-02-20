@@ -143,11 +143,11 @@ const LeaderBoard = () => {
                     <tr
                       key={item.id}
                       className={`border-b ${
-                        index === 0
+                        index === 0 && page === 1
                           ? "bg-yellow-200"
-                          : index === 1
+                          : index === 1 && page === 1
                           ? "bg-gray-200"
-                          : index === 2
+                          : index === 2 && page === 1
                           ? "bg-orange-200"
                           : "bg-white"
                       } hover:bg-gray-100 transition`}
