@@ -702,15 +702,10 @@ export async function addTokenToMetaMask() {
       },
     });
 
-    console.log({ wasAdded });
-
-    if (wasAdded) {
-      console.log("Token added successfully!");
-    } else {
-      console.log("User rejected adding the token.");
-    }
+    return wasAdded;
   } catch (error) {
     console.error("Error adding token to MetaMask:", error);
+    return false;
   }
 }
 

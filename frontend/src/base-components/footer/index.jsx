@@ -9,6 +9,9 @@ import AddTokenButton from "../../components/add-token-btn/Main";
 const Footer = () => {
   return (
     <footer className="bg-darkmode-600 text-white py-8 px-6">
+      <div className="flex items-center justify-center md:justify-start mb-6">
+        <AddTokenButton />
+      </div>
       {/* Logo and Name */}
       <div className="flex items-center justify-center md:justify-start mb-6">
         <img alt={APP_NAME} className="w-10 h-10" src={logoUrl} />
@@ -46,9 +49,6 @@ const Footer = () => {
           </li>
           <li>
             <Link to="/bridge">Bridge</Link>
-          </li>
-          <li>
-            <AddTokenButton />
           </li>
         </ul>
 
