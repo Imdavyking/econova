@@ -4,6 +4,7 @@ import erc20 from "@/assets/json/erc20.json";
 import oftAbi from "@/assets/json/oft.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
 import iWrappedSonicAbi from "@/assets/json/iwrapped-sonic.json";
+import multicallAbi from "@/assets/json/multicall3.json";
 import { BrowserProvider, ethers } from "ethers";
 import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
 import {
@@ -18,6 +19,7 @@ import {
   ETH_ADDRESS,
   FAILED_KEY,
   FIAT_DECIMALS,
+  MULTICALL_CONTRACT_ADDRESS,
   NFT_COURSE_CONTRACT_ADDRESS,
   WRAPPED_SONIC_CONTRACT_ADDRESS,
 } from "../utils/constants";
@@ -125,6 +127,37 @@ const getIWSonicContract = async () => {
     iWrappedSonicAbi,
     signer
   );
+};
+
+const getMulticallContract = async () => {
+  if (!window.ethereum) {
+    console.log(
+      "MetaMask is not installed. Please install it to use this feature."
+    );
+    return;
+  }
+  const signer = await getSigner();
+
+  await switchOrAddChain(signer.provider, CHAIN_ID);
+  return new ethers.Contract(MULTICALL_CONTRACT_ADDRESS, multicallAbi, signer);
+};
+
+export const batchTransactions = async (transactions) => {
+  try {
+    const multicall = await getMulticallContract();
+    const calls = transactions.map((tx) => {
+      return {
+        target: tx.contractAddress,
+        callData: tx.data,
+      };
+    });
+
+    const response = await multicall.aggregate(calls);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 const getOFTContract = async (tokenAddress, sourceChainId) => {
