@@ -1,6 +1,6 @@
 /** @format */
 import abi from "@/assets/json/abi.json";
-import erc20 from "@/assets/json/erc20.json";
+import erc20Abi from "@/assets/json/erc20.json";
 import oftAbi from "@/assets/json/oft.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
 import iWrappedSonicAbi from "@/assets/json/iwrapped-sonic.json";
@@ -19,7 +19,7 @@ import {
   ETH_ADDRESS,
   FAILED_KEY,
   FIAT_DECIMALS,
-  MULTICALL_CONTRACT_ADDRESS as MULTICALL3_CONTRACT_ADDRESS,
+  MULTICALL3_CONTRACT_ADDRESS,
   NFT_COURSE_CONTRACT_ADDRESS,
   WRAPPED_SONIC_CONTRACT_ADDRESS,
 } from "../utils/constants";
@@ -27,7 +27,6 @@ import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
-import { erc20Abi } from "viem";
 
 async function switchOrAddChain(ethProvider, switchChainId) {
   try {
@@ -170,7 +169,7 @@ const getERC20Contract = async (address) => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
-  return new ethers.Contract(address, erc20, signer);
+  return new ethers.Contract(address, erc20Abi, signer);
 };
 
 const getContract = async () => {
@@ -490,12 +489,8 @@ export const getTokenBalance = async (tokenAddress, switchChainId) => {
 
     const address = await signer.getAddress();
 
-    console.log({ address });
-
     if (tokenAddress == ethers.ZeroAddress || tokenAddress == ETH_ADDRESS) {
-      console.log("getting balance");
       const balance = await signer.provider.getBalance(address);
-      console.log("balance", balance);
       return { balance, decimals: 18 };
     }
 
@@ -688,8 +683,8 @@ export const batchQuery = async (queries) => {
       (acc, query) => {
         acc.totalValue += query.value ?? 0;
         acc.calls.push({
-          target: query.targetAddress,
-          callData: query.data,
+          target: query.target,
+          callData: query.callData,
           value: query.value ?? 0,
           allowFailure: false,
         });
@@ -698,7 +693,7 @@ export const batchQuery = async (queries) => {
       { calls: [], totalValue: 0 }
     );
 
-    const results = await multicall3.callStatic.aggregate3Value(calls, {
+    const results = await multicall3.aggregate3Value.staticCall(calls, {
       value: totalValue,
     });
 

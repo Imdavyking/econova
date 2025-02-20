@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
-import { APP_NAME, CONTRACT_ADDRESS } from "../../utils/constants";
+import {
+  APP_NAME,
+  CONTRACT_ADDRESS,
+  MULTICALL3_CONTRACT_ADDRESS,
+} from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { ellipsify } from "../../utils";
 import { FaSpinner } from "react-icons/fa";
+import {
+  batchQuery,
+  getProjectTokenDetails,
+} from "../../services/blockchain.services";
+import { ethers } from "ethers";
+import erc20Abi from "@/assets/json/erc20.json";
 // GraphQL Query
 const GET_POINTS = gql`
   query MyQuery {
@@ -22,6 +32,40 @@ const GET_POINTS = gql`
 
 const LeaderBoard = () => {
   const { loading, error, data } = useQuery(GET_POINTS);
+  const erc20 = new ethers.Interface(erc20Abi);
+
+  useEffect(() => {
+    if (!data) return;
+    if (loading) return;
+    getProjectTokenDetails()
+      .then((details) => {
+        const { tokenAddress } = details;
+        batchQuery(
+          data.pointsAddeds.nodes.map((item) => {
+            return {
+              target: tokenAddress,
+              callData: erc20.encodeFunctionData("balanceOf", [item.user]),
+            };
+          })
+        )
+          .then((results) => {
+            for (const { success, returnData } of results) {
+              console.log("success", success);
+              console.log("returnData", returnData);
+
+              const decoded = erc20.decodeFunctionResult(
+                "balanceOf",
+                returnData
+              );
+
+              console.log(decoded[0].toString());
+              console.log("decoded", decoded);
+            }
+          })
+          .catch((error) => console.error(error));
+      })
+      .catch((error) => console.error(error));
+  }, [data, loading]);
 
   if (error) return <p>Error: {error.message}</p>;
   return (
