@@ -136,10 +136,11 @@ const LeaderBoard = () => {
                     CONTRACT_ADDRESS.toLowerCase()
                 )
                 .map((item, index) => {
+                  const globalRank = offset + index + 1;
                   const userBalance =
                     projectTokenBalances.find(
                       (b) => b.user.toLowerCase() === item.user.toLowerCase()
-                    )?.balance || "---"; // Find balance or default to "---"
+                    )?.balance || "---";
 
                   return (
                     <tr
@@ -154,7 +155,7 @@ const LeaderBoard = () => {
                           : "bg-white"
                       } hover:bg-gray-100 transition`}
                     >
-                      <td className="p-3 text-black">{index + 1}</td>
+                      <td className="p-3 text-black">{globalRank}</td>
                       <td className="p-3 font-semibold text-black">
                         {ellipsify(item.user)}
                       </td>
