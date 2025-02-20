@@ -41,6 +41,7 @@ const LeaderBoard = () => {
   const { loading, error, data } = useQuery(GET_POINTS, {
     fetchPolicy: "cache-and-network",
     variables: { first: pageSize, offset },
+    pollInterval: 5000,
   });
 
   const totalPages = Math.ceil(
