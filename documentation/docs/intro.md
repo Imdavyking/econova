@@ -1,4 +1,4 @@
-# **EcoNova**
+# EcoNova
 
 EcoNova is a **decentralized charity management system** that leverages **blockchain, artificial intelligence, and zero-knowledge proofs** to enable **secure, automated, and transparent donations**.
 
