@@ -6,7 +6,7 @@ import { FAILED_KEY } from "../utils/constants";
 import { sonic, bsc } from "viem/chains";
 
 const supportedChains = [sonic, bsc];
-const TX_HASH_LOCAL_STORAGE_KEY = "debridge_tx_info";
+const TX_HASH_LOCAL_STORAGE_KEY = "debridgeTransactionInfoKey";
 
 const getProviderByChainId = (chainId) =>
   supportedChains.find((chain) => chain.id === chainId)?.rpcUrls[0];
