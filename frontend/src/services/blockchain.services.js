@@ -675,21 +675,18 @@ export async function addTokenToMetaMask() {
   try {
     const manager = await getContract();
     const signer = await getSigner();
-
-    const address = await manager.i_ecoNovaToken();
-
-    const token = await getERC20Contract(address);
-
     const ethProvider = signer.provider;
 
-    const chainId = Number(await ethProvider.provider.send("eth_chainId", []));
+    const [address, chainId] = await Promise.all([
+      manager.i_ecoNovaToken(),
+      ethProvider.provider.send("eth_chainId", []),
+    ]);
 
+    const token = await getERC20Contract(address);
     const [symbol, decimals] = await Promise.all([
       token.symbol(),
       token.decimals(),
     ]);
-
-    const image = `${window.location.origin}/logo.png`;
 
     const wasAdded = await ethProvider.provider.send("wallet_watchAsset", {
       type: "ERC20",
@@ -697,8 +694,7 @@ export async function addTokenToMetaMask() {
         address,
         symbol,
         decimals: Number(decimals),
-        image,
-        chainId,
+        image: `${window.location.origin}/logo.png`,
       },
     });
 
