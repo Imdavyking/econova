@@ -15,7 +15,7 @@ import { useSearchParams } from "react-router-dom";
 
 // GraphQL Query
 const GET_POINTS = gql`
-  query MyQuery {
+  query MyQuery($limit: Int!, $offset: Int!) {
     pointsAddeds(orderBy: POINTS_DESC, limit: $limit, offset: $offset) {
       nodes {
         id
