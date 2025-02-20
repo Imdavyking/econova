@@ -10,34 +10,12 @@ import { APP_NAME } from "./utils/constants";
 
 const WalletContext = createContext();
 
-const connectWallet = async () => {
-  try {
-    if (!window.ethereum) {
-      toast.info(
-        "MetaMask is not installed. Please install it to use this feature."
-      );
-      return;
-    }
-
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    const signer = provider.getSigner();
-    const address = await signer.getAddress();
-    setWalletAddress(address);
-  } catch (error) {
-    console.error("Error connecting wallet:", error);
-  }
-};
-
 function App() {
-  const [walletAddress, setWalletAddress] = useState(null);
   useEffect(() => {
     document.title = `${APP_NAME} | Blockchain powered recycling solution`;
   }, []);
   return (
-    <WalletContext.Provider
-      value={{ walletAddress, connectWallet, setWalletAddress }}
-    >
+    <WalletContext.Provider value={{}}>
       <RecoilRoot>
         <ToastContainer />
         <BrowserRouter>
