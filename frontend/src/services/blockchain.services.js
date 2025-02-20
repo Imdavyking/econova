@@ -686,7 +686,7 @@ export const batchQuery = async (queries) => {
           target: query.target,
           callData: query.callData,
           value: query.value ?? 0,
-          allowFailure: false,
+          allowFailure: query.allowFailure ?? false,
         });
         return acc;
       },

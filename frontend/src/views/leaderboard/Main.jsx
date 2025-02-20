@@ -1,10 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
-import {
-  APP_NAME,
-  CONTRACT_ADDRESS,
-  MULTICALL3_CONTRACT_ADDRESS,
-} from "../../utils/constants";
+import { APP_NAME, CONTRACT_ADDRESS } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { ellipsify } from "../../utils";
@@ -15,6 +11,7 @@ import {
 } from "../../services/blockchain.services";
 import { ethers } from "ethers";
 import erc20Abi from "@/assets/json/erc20.json";
+
 // GraphQL Query
 const GET_POINTS = gql`
   query MyQuery {
@@ -33,44 +30,43 @@ const GET_POINTS = gql`
 const LeaderBoard = () => {
   const { loading, error, data } = useQuery(GET_POINTS);
   const erc20 = new ethers.Interface(erc20Abi);
-  const [projectTokenBalances, setProjectTokenBalances] = React.useState([]);
+  const [projectTokenBalances, setProjectTokenBalances] = useState([]);
+  const [projectTokenName, setProjectTokenName] = useState("");
 
   useEffect(() => {
     const fetchTokenBalances = async () => {
       if (!data || loading) return;
 
       try {
-        const { tokenAddress } = await getProjectTokenDetails();
-        const queries = data.pointsAddeds.nodes.map((item) => ({
-          target: tokenAddress,
-          callData: erc20.encodeFunctionData("balanceOf", [item.user]),
-        }));
+        const { tokenAddress, decimals, name } = await getProjectTokenDetails();
+        setProjectTokenName(name);
+
+        const queries = data.pointsAddeds.nodes
+          .filter(
+            (item) =>
+              item.contractAddress.toLowerCase() ===
+              CONTRACT_ADDRESS.toLowerCase()
+          )
+          .map((item) => ({
+            target: tokenAddress,
+            callData: erc20.encodeFunctionData("balanceOf", [item.user]),
+          }));
 
         const results = await batchQuery(queries);
 
         const decodedBalances = results.map(
-          ({ success, returnData }, index) => {
-            if (success) {
-              const [balance] = erc20.decodeFunctionResult(
-                "balanceOf",
-                returnData
-              );
-              return {
-                user: data.pointsAddeds.nodes[index].user,
-                balance: balance.toString(),
-              };
-            } else {
-              return {
-                user: data.pointsAddeds.nodes[index].user,
-                balance: "0",
-              };
-            }
-          }
+          ({ success, returnData }, index) => ({
+            user: data.pointsAddeds.nodes[index].user,
+            balance: success
+              ? ethers.formatUnits(
+                  erc20.decodeFunctionResult("balanceOf", returnData)[0],
+                  decimals
+                )
+              : "0",
+          })
         );
 
-        console.log({ decodedBalances });
-
-        setProjectTokenBalances(decodedBalances); // Store balances in state
+        setProjectTokenBalances(decodedBalances);
       } catch (error) {
         console.error("Error fetching token balances:", error);
       }
@@ -80,13 +76,14 @@ const LeaderBoard = () => {
   }, [data, loading]);
 
   if (error) return <p>Error: {error.message}</p>;
+
   return (
-    <div className="max-w-4xl mx-auto p-4 ">
+    <div className="max-w-4xl mx-auto p-4">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <a href="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
-          <span className="text-lg">{APP_NAME} leaderboard</span>
+          <span className="text-lg">{APP_NAME} Leaderboard</span>
         </a>
       </h2>
 
@@ -100,43 +97,58 @@ const LeaderBoard = () => {
                 <th className="p-3 text-left">Rank</th>
                 <th className="p-3 text-left">User</th>
                 <th className="p-3 text-left">Points</th>
+                <th className="p-3 text-left">
+                  {projectTokenName ?? "Balance"}
+                </th>
+
                 <th className="p-3 text-left">Updated</th>
               </tr>
             </thead>
             <tbody>
               {data.pointsAddeds.nodes
-                .filter((item) => {
-                  console.log({ item });
+                .filter(
+                  (item) =>
+                    item.contractAddress.toLowerCase() ===
+                    CONTRACT_ADDRESS.toLowerCase()
+                )
+                .map((item, index) => {
+                  const userBalance =
+                    projectTokenBalances.find(
+                      (b) => b.user.toLowerCase() === item.user.toLowerCase()
+                    )?.balance || "---"; // Find balance or default to "---"
+
                   return (
-                    String(item.contractAddress).toLowerCase() ==
-                    String(CONTRACT_ADDRESS).toLowerCase()
+                    <tr
+                      key={item.id}
+                      className={`border-b ${
+                        index === 0
+                          ? "bg-yellow-200"
+                          : index === 1
+                          ? "bg-gray-200"
+                          : index === 2
+                          ? "bg-orange-200"
+                          : "bg-white"
+                      } hover:bg-gray-100 transition`}
+                    >
+                      <td className="p-3 text-black">{index + 1}</td>
+                      <td className="p-3 font-semibold text-black">
+                        {ellipsify(item.user)}
+                      </td>
+                      <td className="p-3 font-bold text-blue-600">
+                        {item.points}
+                      </td>
+                      <td className="p-3 font-bold text-green-600">
+                        {userBalance}
+                      </td>{" "}
+                      {/* Show balance */}
+                      <td className="p-3 text-black">
+                        {new Date(
+                          item.updatedTimeStamp * 1000
+                        ).toLocaleString()}
+                      </td>
+                    </tr>
                   );
-                })
-                .map((item, index) => (
-                  <tr
-                    key={item.id}
-                    className={`border-b ${
-                      index === 0
-                        ? "bg-yellow-200"
-                        : index === 1
-                        ? "bg-gray-200"
-                        : index === 2
-                        ? "bg-orange-200"
-                        : "bg-white"
-                    } hover:bg-gray-100 transition`}
-                  >
-                    <td className="p-3 text-black">{index + 1}</td>
-                    <td className="p-3 font-semibold text-black">
-                      {ellipsify(item.user)}
-                    </td>
-                    <td className="p-3 font-bold text-blue-600">
-                      {item.points}
-                    </td>
-                    <td className="p-3 text-black">
-                      {new Date(item.updatedTimeStamp * 1000).toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
+                })}
             </tbody>
           </table>
         </div>
