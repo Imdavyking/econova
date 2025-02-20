@@ -27,9 +27,10 @@ const GET_POINTS = gql`
   }
 `;
 
+const erc20Interface = new ethers.Interface(erc20Abi);
+
 const LeaderBoard = () => {
   const { loading, error, data } = useQuery(GET_POINTS);
-  const erc20Interface = useMemo(() => new ethers.Interface(erc20Abi), []);
   const [projectTokenBalances, setProjectTokenBalances] = useState([]);
   const [projectTokenName, setProjectTokenName] = useState("");
 
