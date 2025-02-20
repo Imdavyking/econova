@@ -327,7 +327,7 @@ contract EcoNovaCourseNFT is
         bytes32 root,
         uint256 timestamp,
         bytes memory signature
-    ) external {
+    ) public {
         if (block.timestamp > timestamp + TIMESTAMP_EXPIRY) {
             revert EcoNovaCourseNFT__ExpiredSignature();
         }
@@ -353,12 +353,33 @@ contract EcoNovaCourseNFT is
     }
 
     /**
+     * @notice Update the Merkle root for a level and claim an NFT
+     * @param level - the level of the course
+     * @param root - the new Merkle root
+     * @param timestamp - the timestamp of the message
+     * @param signature - the signature of the message hash
+     * @param proof - the Merkle proof
+     * @param tokenURI - the token URI for the NFT
+     */
+    function updateRootAndClaim(
+        Level level,
+        bytes32 root,
+        uint256 timestamp,
+        bytes memory signature,
+        bytes32[] memory proof,
+        string memory tokenURI
+    ) external {
+        updateRoot(level, root, timestamp, signature);
+        claimNFT(level, proof, tokenURI);
+    }
+
+    /**
      * @notice Claim an NFT for completing a course
      * @param level - the level of the course
      * @param proof - the Merkle proof
      * @param tokenURI  - the token URI for the NFT
      */
-    function claimNFT(Level level, bytes32[] memory proof, string memory tokenURI) external {
+    function claimNFT(Level level, bytes32[] memory proof, string memory tokenURI) public {
         if (hasClaimedNFT[msg.sender][level]) {
             revert EcoNovaCourseNFT__NFTAlreadyClaimed();
         }

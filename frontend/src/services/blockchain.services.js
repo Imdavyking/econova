@@ -565,6 +565,33 @@ export const updateRoot = async ({ level, root, timestamp, signature }) => {
     throw error;
   }
 };
+export const updateRootAndClaim = async ({
+  level,
+  root,
+  timestamp,
+  signature,
+  proof,
+  tokenURI,
+}) => {
+  try {
+    const manager = await getNFTCourseContract();
+    const tx = await manager.updateRootAndClaim(
+      level,
+      root,
+      timestamp,
+      signature,
+      proof,
+      tokenURI,
+      {
+        gasLimit: 500000,
+      }
+    );
+    await tx.wait(1);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 export const claimNFT = async ({ level, proof, tokenURI }) => {
   try {

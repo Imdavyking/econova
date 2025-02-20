@@ -7,10 +7,9 @@ import { APP_NAME, SERVER_URL } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { signCourseLevel } from "../../services/blockchain.merkle.proof.level";
 import {
-  claimNFT,
   getUserClaimedNFT,
   getUserNFT,
-  updateRoot,
+  updateRootAndClaim,
 } from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
 import { AIAgent } from "../../agent";
@@ -113,9 +112,14 @@ const QuizPage = () => {
         imageHash: ImageUrl,
       } = await response.json();
 
-      await updateRoot({ level, root, timestamp, signature });
-
-      await claimNFT({ level, proof, tokenURI });
+      await updateRootAndClaim({
+        level,
+        root,
+        timestamp,
+        signature,
+        proof,
+        tokenURI,
+      });
 
       setNftImage(ImageUrl);
 
