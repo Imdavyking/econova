@@ -33,6 +33,7 @@ const GET_POINTS = gql`
 const LeaderBoard = () => {
   const { loading, error, data } = useQuery(GET_POINTS);
   const erc20 = new ethers.Interface(erc20Abi);
+  const [projectTokenBalances, setProjectTokenBalances] = React.useState([]);
 
   useEffect(() => {
     const fetchTokenBalances = async () => {
@@ -62,12 +63,14 @@ const LeaderBoard = () => {
               return {
                 user: data.pointsAddeds.nodes[index].user,
                 balance: "0",
-              }; // Handle failed cases
+              };
             }
           }
         );
 
-        setBalances(decodedBalances); // Store balances in state
+        console.log({ decodedBalances });
+
+        setProjectTokenBalances(decodedBalances); // Store balances in state
       } catch (error) {
         console.error("Error fetching token balances:", error);
       }
