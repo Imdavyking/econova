@@ -135,7 +135,6 @@ const QuizPage = () => {
     if (currentIndex < quizQuestions.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      // Calculate score
       let newScore = 0;
       quizQuestions.forEach((q, index) => {
         if (selectedAnswers[index] === q.correctAnswer) {
