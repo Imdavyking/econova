@@ -142,24 +142,6 @@ const getMulticallContract = async () => {
   return new ethers.Contract(MULTICALL_CONTRACT_ADDRESS, multicallAbi, signer);
 };
 
-export const batchTransactions = async (transactions) => {
-  try {
-    const multicall = await getMulticallContract();
-    const calls = transactions.map((tx) => {
-      return {
-        target: tx.contractAddress,
-        callData: tx.data,
-      };
-    });
-
-    const response = await multicall.aggregate(calls);
-    return response;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
-
 const getOFTContract = async (tokenAddress, sourceChainId) => {
   if (!window.ethereum) {
     console.log(
@@ -690,6 +672,24 @@ export const addPointsFromTwitterService = async ({
     return `${FAILED_KEY} to claim ${
       points * POINT_BASIS
     } points for tweet ${tweetId}`;
+  }
+};
+
+export const batchTransactions = async (transactions) => {
+  try {
+    const multicall = await getMulticallContract();
+    const calls = transactions.map((tx) => {
+      return {
+        target: tx.contractAddress,
+        callData: tx.data,
+      };
+    });
+
+    const response = await multicall.aggregate(calls);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 };
 
