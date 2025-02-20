@@ -36,7 +36,7 @@ const LeaderBoard = () => {
   const [projectTokenName, setProjectTokenName] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page")) || 1;
-  const pageSize = 2;
+  const pageSize = 10;
   const offset = (page - 1) * pageSize;
   const { loading, error, data } = useQuery(GET_POINTS, {
     variables: { first: pageSize, offset },
