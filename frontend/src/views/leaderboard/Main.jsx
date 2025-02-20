@@ -6,7 +6,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { ellipsify } from "../../utils";
 import { FaSpinner } from "react-icons/fa";
 import {
-  batchQuery,
+  batchMulticall,
   getProjectTokenDetails,
 } from "../../services/blockchain.services";
 import { ethers } from "ethers";
@@ -52,7 +52,7 @@ const LeaderBoard = () => {
             callData: erc20.encodeFunctionData("balanceOf", [item.user]),
           }));
 
-        const results = await batchQuery(queries);
+        const results = await batchMulticall(queries);
 
         const decodedBalances = results.map(
           ({ success, returnData }, index) => ({

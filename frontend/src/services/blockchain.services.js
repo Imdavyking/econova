@@ -671,7 +671,7 @@ export const addPointsFromTwitterService = async ({
   }
 };
 
-export const batchQuery = async (queries) => {
+export const batchMulticall = async (queries) => {
   try {
     if (!Array.isArray(queries) || queries.length === 0) {
       throw new Error("Invalid queries array");
