@@ -15,8 +15,8 @@ import { useSearchParams } from "react-router-dom";
 
 // GraphQL Query
 const GET_POINTS = gql`
-  query MyQuery($limit: Int!, $offset: Int!) {
-    pointsAddeds(orderBy: POINTS_DESC, limit: $limit, offset: $offset) {
+  query MyQuery($first: Int!, $offset: Int!) {
+    pointsAddeds(orderBy: POINTS_DESC, first: $first, offset: $offset) {
       nodes {
         id
         contractAddress
@@ -35,10 +35,10 @@ const LeaderBoard = () => {
   const [projectTokenName, setProjectTokenName] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page")) || 1;
-  const pageSize = 10; // Number of items per page
+  const pageSize = 10;
   const offset = (page - 1) * pageSize;
   const { loading, error, data } = useQuery(GET_POINTS, {
-    variables: { limit: pageSize, offset },
+    variables: { first: pageSize, offset },
   });
 
   const totalPages = Math.ceil((data?.pointsAddeds.totalCount || 0) / pageSize);
