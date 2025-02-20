@@ -41,7 +41,9 @@ const LeaderBoard = () => {
     variables: { first: pageSize, offset },
   });
 
-  const totalPages = Math.ceil((data?.pointsAddeds.totalCount || 0) / pageSize);
+  const totalPages = Math.ceil(
+    (data?.pointsAddeds?.nodes?.length || 0) / pageSize
+  );
 
   const goToPage = (newPage) => {
     setSearchParams({ page: newPage.toString() });
