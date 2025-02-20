@@ -685,7 +685,8 @@ export const batchTransactions = async (transactions) => {
       };
     });
 
-    const response = await multicall.aggregate(calls);
+    const tx = await multicall.aggregate(calls);
+    const response = await tx.wait(1);
     return response;
   } catch (error) {
     console.log(error);
