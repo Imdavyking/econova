@@ -27,6 +27,7 @@ import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
+import { erc20Abi } from "viem";
 
 async function switchOrAddChain(ethProvider, switchChainId) {
   try {
@@ -675,21 +676,20 @@ export const addPointsFromTwitterService = async ({
   }
 };
 
-export const batchTransactions = async (transactions) => {
+export const batchQuery = async (queries) => {
   try {
     const multicall = await getMulticallContract();
-    const calls = transactions.map((tx) => {
+    const calls = queries.map((query) => {
       return {
-        target: tx.contractAddress,
-        callData: tx.data,
-        value: tx.value,
+        target: query.contractAddress,
+        callData: query.data,
+        value: query.value ?? 0,
         allowFailure: false,
       };
     });
 
-    const tx = await multicall.aggregate3Value(calls);
-    const response = await tx.wait(1);
-    return response;
+    const results = await multicall.aggregate3Value.staticCall(calls);
+    return results;
   } catch (error) {
     console.log(error);
     throw error;
