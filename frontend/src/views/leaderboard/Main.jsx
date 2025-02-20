@@ -29,7 +29,7 @@ const GET_POINTS = gql`
 
 const LeaderBoard = () => {
   const { loading, error, data } = useQuery(GET_POINTS);
-  const erc20 = new ethers.Interface(erc20Abi);
+  const erc20Interface = new ethers.Interface(erc20Abi);
   const [projectTokenBalances, setProjectTokenBalances] = useState([]);
   const [projectTokenName, setProjectTokenName] = useState("");
 
@@ -49,7 +49,9 @@ const LeaderBoard = () => {
           )
           .map((item) => ({
             target: tokenAddress,
-            callData: erc20.encodeFunctionData("balanceOf", [item.user]),
+            callData: erc20Interface.encodeFunctionData("balanceOf", [
+              item.user,
+            ]),
           }));
 
         const results = await batchMulticall(queries);
@@ -59,7 +61,10 @@ const LeaderBoard = () => {
             user: data.pointsAddeds.nodes[index].user,
             balance: success
               ? ethers.formatUnits(
-                  erc20.decodeFunctionResult("balanceOf", returnData)[0],
+                  erc20Interface.decodeFunctionResult(
+                    "balanceOf",
+                    returnData
+                  )[0],
                   decimals
                 )
               : "0",
