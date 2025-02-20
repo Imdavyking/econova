@@ -682,10 +682,12 @@ export const batchTransactions = async (transactions) => {
       return {
         target: tx.contractAddress,
         callData: tx.data,
+        value: tx.value,
+        allowFailure: false,
       };
     });
 
-    const tx = await multicall.aggregate(calls);
+    const tx = await multicall.aggregate3Value(calls);
     const response = await tx.wait(1);
     return response;
   } catch (error) {
