@@ -12,12 +12,7 @@ import userRoutes from "./routes/user.routes";
 import cookieParser from "cookie-parser";
 import { FRONTEND_URL } from "./utils/constants";
 import merkleRoutes from "./routes/merkle.routes";
-import { isLocalhost } from "./utils/islocalhost";
 import { automateCharityFundDistribution } from "./services/automate.services";
-import {
-  fetchAlloraTopics,
-  fetchInferenceByTopicID,
-} from "./services/allora.services";
 import alloraRoutes from "./routes/allora.routes";
 
 dotenv.config();
