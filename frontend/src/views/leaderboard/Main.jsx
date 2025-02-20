@@ -98,7 +98,7 @@ const LeaderBoard = () => {
                 <th className="p-3 text-left">User</th>
                 <th className="p-3 text-left">Points</th>
                 <th className="p-3 text-left">
-                  {projectTokenName ?? "Balance"}
+                  {projectTokenName.trim() == "" ? "Balance" : projectTokenName}
                 </th>
 
                 <th className="p-3 text-left">Updated</th>
