@@ -1,3 +1,4 @@
+import { FAILED_KEY } from "../utils/constants";
 export const alloraPredictService = async ({ topicId, topicName }) => {
   try {
     const urlParams = new URLSearchParams();
