@@ -35,36 +35,45 @@ const LeaderBoard = () => {
   const erc20 = new ethers.Interface(erc20Abi);
 
   useEffect(() => {
-    if (!data) return;
-    if (loading) return;
-    getProjectTokenDetails()
-      .then((details) => {
-        const { tokenAddress } = details;
-        batchQuery(
-          data.pointsAddeds.nodes.map((item) => {
-            return {
-              target: tokenAddress,
-              callData: erc20.encodeFunctionData("balanceOf", [item.user]),
-            };
-          })
-        )
-          .then((results) => {
-            for (const { success, returnData } of results) {
-              console.log("success", success);
-              console.log("returnData", returnData);
+    const fetchTokenBalances = async () => {
+      if (!data || loading) return;
 
-              const decoded = erc20.decodeFunctionResult(
+      try {
+        const { tokenAddress } = await getProjectTokenDetails();
+        const queries = data.pointsAddeds.nodes.map((item) => ({
+          target: tokenAddress,
+          callData: erc20.encodeFunctionData("balanceOf", [item.user]),
+        }));
+
+        const results = await batchQuery(queries);
+
+        const decodedBalances = results.map(
+          ({ success, returnData }, index) => {
+            if (success) {
+              const [balance] = erc20.decodeFunctionResult(
                 "balanceOf",
                 returnData
               );
-
-              console.log(decoded[0].toString());
-              console.log("decoded", decoded);
+              return {
+                user: data.pointsAddeds.nodes[index].user,
+                balance: balance.toString(),
+              };
+            } else {
+              return {
+                user: data.pointsAddeds.nodes[index].user,
+                balance: "0",
+              }; // Handle failed cases
             }
-          })
-          .catch((error) => console.error(error));
-      })
-      .catch((error) => console.error(error));
+          }
+        );
+
+        setBalances(decodedBalances); // Store balances in state
+      } catch (error) {
+        console.error("Error fetching token balances:", error);
+      }
+    };
+
+    fetchTokenBalances();
   }, [data, loading]);
 
   if (error) return <p>Error: {error.message}</p>;
