@@ -43,7 +43,7 @@ const LeaderBoard = () => {
   });
 
   const totalPages = Math.ceil(
-    (data?.pointsAddeds?.nodes?.totalCount || 0) / pageSize
+    (data?.pointsAddeds?.totalCount || 0) / pageSize
   );
 
   const goToPage = (newPage) => {
