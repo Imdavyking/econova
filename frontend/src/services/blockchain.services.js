@@ -130,7 +130,7 @@ const getIWSonicContract = async () => {
   );
 };
 
-const getMulticallContract = async () => {
+const getMulticall3Contract = async () => {
   if (!window.ethereum) {
     console.log(
       "MetaMask is not installed. Please install it to use this feature."
@@ -678,20 +678,33 @@ export const addPointsFromTwitterService = async ({
 
 export const batchQuery = async (queries) => {
   try {
-    const multicall = await getMulticallContract();
-    const calls = queries.map((query) => {
-      return {
-        target: query.targetAddress,
-        callData: query.data,
-        value: query.value ?? 0,
-        allowFailure: false,
-      };
+    if (!Array.isArray(queries) || queries.length === 0) {
+      throw new Error("Invalid queries array");
+    }
+
+    const multicall3 = await getMulticall3Contract();
+
+    const { calls, totalValue } = queries.reduce(
+      (acc, query) => {
+        acc.totalValue += query.value ?? 0;
+        acc.calls.push({
+          target: query.targetAddress,
+          callData: query.data,
+          value: query.value ?? 0,
+          allowFailure: false,
+        });
+        return acc;
+      },
+      { calls: [], totalValue: 0 }
+    );
+
+    const results = await multicall3.callStatic.aggregate3Value(calls, {
+      value: totalValue,
     });
 
-    const results = await multicall.aggregate3Value.staticCall(calls);
     return results;
   } catch (error) {
-    console.log(error);
+    console.error("Batch query failed:", error);
     throw error;
   }
 };
