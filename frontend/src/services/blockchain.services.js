@@ -671,6 +671,49 @@ export const addPointsFromTwitterService = async ({
   }
 };
 
+export async function addTokenToMetaMask() {
+  try {
+    const manager = await getContract();
+    const signer = await getSigner();
+
+    const address = await manager.i_ecoNovaToken();
+
+    const token = await getERC20Contract(address);
+
+    const ethProvider = signer.provider;
+
+    const chainId = Number(await ethProvider.provider.send("eth_chainId", []));
+
+    const [symbol, decimals] = await Promise.all([
+      token.symbol(),
+      token.decimals(),
+    ]);
+
+    const image = `${window.location.origin}/logo.png`;
+
+    const wasAdded = await ethProvider.provider.send("wallet_watchAsset", {
+      type: "ERC20",
+      options: {
+        address,
+        symbol,
+        decimals: Number(decimals),
+        image,
+        chainId,
+      },
+    });
+
+    console.log({ wasAdded });
+
+    if (wasAdded) {
+      console.log("Token added successfully!");
+    } else {
+      console.log("User rejected adding the token.");
+    }
+  } catch (error) {
+    console.error("Error adding token to MetaMask:", error);
+  }
+}
+
 export const batchMulticall = async (queries) => {
   try {
     if (!Array.isArray(queries) || queries.length === 0) {

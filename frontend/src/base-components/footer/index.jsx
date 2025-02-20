@@ -4,6 +4,7 @@ import React from "react";
 import logoUrl from "@/assets/images/logo.png";
 import { Link } from "react-router-dom";
 import { APP_NAME } from "../../utils/constants";
+import AddTokenButton from "../../components/add-token-btn/Main";
 
 const Footer = () => {
   return (
@@ -45,6 +46,9 @@ const Footer = () => {
           </li>
           <li>
             <Link to="/bridge">Bridge</Link>
+          </li>
+          <li>
+            <AddTokenButton />
           </li>
         </ul>
 
