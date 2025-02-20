@@ -19,7 +19,7 @@ import {
   ETH_ADDRESS,
   FAILED_KEY,
   FIAT_DECIMALS,
-  MULTICALL_CONTRACT_ADDRESS,
+  MULTICALL_CONTRACT_ADDRESS as MULTICALL3_CONTRACT_ADDRESS,
   NFT_COURSE_CONTRACT_ADDRESS,
   WRAPPED_SONIC_CONTRACT_ADDRESS,
 } from "../utils/constants";
@@ -139,7 +139,7 @@ const getMulticallContract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
-  return new ethers.Contract(MULTICALL_CONTRACT_ADDRESS, multicallAbi, signer);
+  return new ethers.Contract(MULTICALL3_CONTRACT_ADDRESS, multicallAbi, signer);
 };
 
 const getOFTContract = async (tokenAddress, sourceChainId) => {
