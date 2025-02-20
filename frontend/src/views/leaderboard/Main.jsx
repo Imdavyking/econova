@@ -39,6 +39,7 @@ const LeaderBoard = () => {
   const pageSize = 10;
   const offset = (page - 1) * pageSize;
   const { loading, error, data } = useQuery(GET_POINTS, {
+    fetchPolicy: "cache-and-network",
     variables: { first: pageSize, offset },
   });
 
