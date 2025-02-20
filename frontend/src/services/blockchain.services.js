@@ -681,7 +681,7 @@ export const batchQuery = async (queries) => {
     const multicall = await getMulticallContract();
     const calls = queries.map((query) => {
       return {
-        target: query.contractAddress,
+        target: query.targetAddress,
         callData: query.data,
         value: query.value ?? 0,
         allowFailure: false,
