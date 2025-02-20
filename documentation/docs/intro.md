@@ -1,33 +1,86 @@
-# EcoNova
+# **EcoNova**
 
-EcoNova is a decentralized charity management system that leverages blockchain, artificial intelligence, and zero-knowledge proofs to ensure **transparent, secure, and automated** donations. The platform integrates **ZK-BMI verification**, **AI-powered tutoring**, **autonomous donations**, and **social media engagement rewards** powered by **Zerepy**.
+EcoNova is a **decentralized charity management system** that leverages **blockchain, artificial intelligence, and zero-knowledge proofs** to enable **secure, automated, and transparent donations**.
 
-## 🌍 Features
+The platform integrates:
 
-### 🔹 Zero-Knowledge BMI Checker
+✅ **ZK-BMI verification**  
+🤖 **AI-powered tutoring**  
+💸 **Autonomous donations (powered by Gelato)**  
+📢 **Social media engagement rewards** (powered by **Zerepy**)  
+🔁 **Cross-chain transfers via deBridge & LayerZero**  
+📊 **AI-powered ETH & BTC price predictions via Allora**
 
-EcoNova uses **Zero-Knowledge Proofs (ZKPs)** to verify a person's **Body Mass Index (BMI)** without revealing sensitive data. This feature is essential for **privacy-preserving health data**.
+---
 
-### 🔹 Autonomous Donations
+## 🌍 **Features**
 
-EcoNova automates the **distribution of funds to charitable organizations** based on preset conditions. Using smart contracts, it ensures:
+### 🔹 **Zero-Knowledge BMI Checker**
 
-- **Transparent transactions** ✅
-- **No intermediaries** ⚡
-- **Efficient fund allocation** 💰
-- **Donor tracking & impact reports** 📊
+EcoNova uses **Zero-Knowledge Proofs (ZKPs)** to verify a person’s **Body Mass Index (BMI)** without exposing private health data. This ensures:
 
-### 🔹 AI Tutor (Sonic & DeFiAI)
+- **Privacy-preserving health verification** 🔒
+- **Eligibility-based donations without revealing user details** 🏥
 
-EcoNova integrates an **AI-powered tutor**, leveraging **Sonic and DeFiAI** to educate users on:
+---
+
+### 🔹 **Automated Donations via Gelato**
+
+EcoNova **automates** donation execution using **Gelato**, a decentralized smart contract automation protocol. This ensures:
+
+- **Gasless & trustless transactions** ⛽
+- **Smart contract-driven donation scheduling** 🕒
+- **Fully autonomous fund distribution** 💸
+- **No reliance on manual execution** 🚀
+
+By integrating **Gelato**, donors can set predefined conditions (e.g., recurring donations, impact-based donations) that **execute automatically** when criteria are met.
+
+---
+
+### 🔹 **AI Tutor (Sonic & DeFiAI)**
+
+EcoNova features an **AI-powered tutor** to educate users on:
 
 - **Blockchain fundamentals** 🏗️
 - **Decentralized Finance (DeFi)** 💱
 - **Smart contract security** 🔐
 
-### 🔹 Engagement Rewards via Zerepy
+---
 
-EcoNova's **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
+### 🔹 **Cross-Chain Transfers**
+
+EcoNova enables **secure & cost-efficient cross-chain transfers** using:
+
+#### 🔀 **deBridge for Sonic-to-BSC Transfers**
+
+💱 **deBridge** allows seamless asset transfers from **Sonic to BSC**, enabling users to move funds between ecosystems efficiently.
+
+- **Fast & cost-effective transfers** ⚡
+- **Improved liquidity across chains** 🔄
+- **Eliminates reliance on centralized bridges** 💡
+
+#### 🔀 **LayerZero for EcoNovaToken Cross-Chain Transfers**
+
+🌉 **LayerZero** powers **EcoNovaToken** transfers across multiple chains, ensuring:
+
+- **Seamless interoperability between networks** 🔗
+- **Trustless and decentralized bridging** 🏦
+- **Efficient cross-chain transactions for donations & rewards** 💸
+
+---
+
+### 🔹 **AI-Powered Price Predictions (Allora)**
+
+EcoNova integrates **Allora** AI agents to predict **ETH and BTC price trends**, helping donors optimize contributions based on market conditions.
+
+- **AI-driven market insights** 📈
+- **Predictive analytics for crypto transfers** 🧠
+
+---
+
+### 🔹 **Engagement Rewards via Zerepy**
+
+EcoNova’s **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
 
 - **Posts updates** 📢
 - **Tracks user engagement (likes, retweets)** 🔍
@@ -36,11 +89,13 @@ EcoNova's **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
 
 ---
 
-## 📜 Documentation
+## 📜 **Documentation**
 
 For detailed guides, visit our **[documentation](https://econovadocs.vercel.app/)**.
 
-## 📡 Smart Contract Infrastructure
+---
+
+## 📡 **Smart Contract Infrastructure**
 
 EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
 
@@ -50,30 +105,22 @@ EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
 
 ---
 
-## 🤖 AI & Social Media Integration
-
-EcoNova leverages **AI** through **Zerepy**, which:
-
-- **Automates Twitter posts** via **EcoNova_bot** 🐦
-- **Engages with donors and supporters** 📢
-- **Distributes rewards based on engagement metrics** 🎖️
-
----
-
-## 🔐 Security & Compliance
+## 🔐 **Security & Compliance**
 
 - **Zero-Knowledge Proofs (ZKPs)** for private health verification
 - **Decentralized fund allocation** with no single point of failure
+- **Secure & trustless cross-chain transfers via deBridge & LayerZero**
+- **Automated & gas-efficient donations using Gelato**
 
 ---
 
-## 🤝 Contribute
+## 🤝 **Contribute**
 
 Want to help? Submit a PR or report issues via our **[GitHub](https://github.com/Imdavyking/econova/)**.
 
 ---
 
-## 📬 Stay Connected
+## 📬 **Stay Connected**
 
 - **Twitter:** [@EcoNova_Bot](https://x.com/EcoNova_Bot)
 - **Docs:** [Read the Docs](https://econovadocs.vercel.app/)

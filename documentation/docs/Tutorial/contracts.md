@@ -32,7 +32,6 @@ Create a `.env` file in the project root and add the following variables:
  ORACLE_ADDRESS=
  NODE_ENV=
  CHAIN_ID=
- CHAIN_BLOCKEXPLORER_URL=
  API_URL=
  BROWSER_URL=
  CHAIN_NAME=
@@ -40,6 +39,8 @@ Create a `.env` file in the project root and add the following variables:
  CHAIN_SYMBOL=
  CHAIN_BLOCKEXPLORER_URL=
  API_SCAN_VERIFIER_KEY=
+ CROSS_CHAIN_ID=
+ CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY=
 ```
 
 ## Usage
