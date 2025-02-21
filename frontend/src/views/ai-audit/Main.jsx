@@ -22,7 +22,10 @@ export default function AiAudit() {
       contractAddress: CONTRACT_ADDRESS,
     })
       .then((result) => {
-        console.log(result);
+        if (!result.data) {
+          return;
+        }
+        console.log(JSON.parse(result.data));
       })
       .catch((error) => {
         console.error(error);
