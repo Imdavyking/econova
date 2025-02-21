@@ -37,6 +37,9 @@ export default function AiAudit() {
           const mainContract = Object.values(sources).find((source) =>
             source.content.includes(`contract ${contractName}`)
           );
+          if (mainContract && mainContract.content) {
+            setContractCode(mainContract.content);
+          }
           console.log({ mainContract });
         }
       })
