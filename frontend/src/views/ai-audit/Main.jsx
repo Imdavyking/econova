@@ -154,7 +154,7 @@ export default function AiAudit() {
         </a>
       </h2>
       <div className="w-full max-w-lg bg-gray-800 p-6 rounded-2xl shadow-lg">
-        {/* Contract Address Input */}
+        {/* Verified Contract Address Input */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
             Enter Verified Contract Address
