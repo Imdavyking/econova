@@ -3,7 +3,7 @@ import { getVerifiedContractCode } from "../services/block.explorer.services";
 
 export const getVerifiedSourceCode = async (req: Request, res: Response) => {
   try {
-    const { contractAddress } = req.query;
+    const { contractAddress } = req.body;
     if (!contractAddress) {
       res.status(400).json({ error: "Missing contractAddress" });
       return;
