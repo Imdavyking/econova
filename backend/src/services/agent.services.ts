@@ -29,108 +29,108 @@ const categorySchema = Object.values(charityCategories).map(
 const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 
-const tools = {
-  alloraPredict: tool(() => undefined, {
-    name: "alloraPredict",
-    description: "Get price prediction for a token.",
-    schema: z.object({
-      topicId: z.number().nullable(),
-      topicName: z.string().nullable(),
-    }),
-  }),
-  bridge: tool(() => undefined, {
-    name: "bridge",
-    description: "Bridge tokens to another chain.",
-    schema: z.object({
-      bridgeAmount: z.number().describe("The amount to bridge"),
-      chainIdTo: z.number().describe("The chain ID to bridge to"),
-      chainIdFrom: z.number().describe("The chain ID to bridge from"),
-    }),
-  }),
-  wrapSonic: tool(() => undefined, {
-    name: "wrapSonic",
-    description: "Wrap sonic to wS.",
-    schema: z.object({
-      amount: z.number().describe("The amount of sonic to wrap"),
-    }),
-  }),
-  unwrapSonic: tool(() => undefined, {
-    name: "unwrapSonic",
-    description: "Unwrap wS to Sonic.",
-    schema: z.object({
-      amount: z.number().describe("The amount of wS to unwrap"),
-    }),
-  }),
-  sendERC20Token: tool(() => undefined, {
-    name: "sendERC20Token",
-    description: "Send ERC20 tokens to a specific address.",
-    schema: z.object({
-      tokenAddress: z.string().describe("The token to send"),
-      recipientAddress: z.string().describe("The address to send tokens to"),
-      amount: z.number().describe("The amount of tokens to send"),
-    }),
-  }),
-  sendSonic: tool(() => undefined, {
-    name: "sendSonic",
-    description: "Send SONIC (also called S) tokens to a specific address.",
-    schema: z.object({
-      recipientAddress: z
-        .string()
-        .describe("The address to send SONIC tokens to"),
-      amount: z.number().describe("The amount of SONIC tokens to send"),
-    }),
-  }),
-  quizQuestions: tool(() => undefined, {
-    name: "quizQuestions",
-    description: "Answer quiz questions.",
-    schema: z.object({
-      question: z.string().describe("The quiz question"),
-      options: z.array(z.string()).describe("The quiz options"),
-      correctAnswer: z.string().describe("The correct answer"),
-    }),
-  }),
-  donate: tool(() => undefined, {
-    name: "donate",
-    description: "Donate funds to a specific foundation based on category.",
-    schema: z.object({
-      category: z.enum(categorySchema),
-      tokenAddress: tokenSchema.describe("The token to donate"),
-      amountInUsd: z
-        .union([z.number(), z.string()])
-        .describe("The amount in USD"),
-    }),
-  }),
-  adviceOnHealth: tool(() => undefined, {
-    name: "adviceOnHealth",
-    description: "",
-    schema: z.object({
-      isHealthy: z.boolean().describe("user is healthy using BMI"),
-      advice: z
-        .string()
-        .describe("AI advice to the user on how to improve their health"),
-    }),
-  }),
-  redeemPoints: tool(() => undefined, {
-    name: "redeemPoints",
-    description: "Redeem points for rewards.",
-    schema: z.object({
-      points: z
-        .union([z.number(), z.string()])
-        .describe("The points to redeem"),
-    }),
-  }),
-  deployToken: tool(() => undefined, {
-    name: "deployToken",
-    description: "Deploy a new token.",
-    schema: z.object({
-      name: z.string().describe("The token's name"),
-      symbol: z.string().describe("The token's symbol"),
-      initialSupply: z.number().describe("The token's initial supply"),
-    }),
-  }),
-};
-
 export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
+  const tools = {
+    alloraPredict: tool(() => undefined, {
+      name: "alloraPredict",
+      description: "Get price prediction for a token.",
+      schema: z.object({
+        topicId: z.number().nullable(),
+        topicName: z.string().nullable(),
+      }),
+    }),
+    bridge: tool(() => undefined, {
+      name: "bridge",
+      description: "Bridge tokens to another chain.",
+      schema: z.object({
+        bridgeAmount: z.number().describe("The amount to bridge"),
+        chainIdTo: z.number().describe("The chain ID to bridge to"),
+        chainIdFrom: z.number().describe("The chain ID to bridge from"),
+      }),
+    }),
+    wrapSonic: tool(() => undefined, {
+      name: "wrapSonic",
+      description: "Wrap sonic to wS.",
+      schema: z.object({
+        amount: z.number().describe("The amount of sonic to wrap"),
+      }),
+    }),
+    unwrapSonic: tool(() => undefined, {
+      name: "unwrapSonic",
+      description: "Unwrap wS to Sonic.",
+      schema: z.object({
+        amount: z.number().describe("The amount of wS to unwrap"),
+      }),
+    }),
+    sendERC20Token: tool(() => undefined, {
+      name: "sendERC20Token",
+      description: "Send ERC20 tokens to a specific address.",
+      schema: z.object({
+        tokenAddress: z.string().describe("The token to send"),
+        recipientAddress: z.string().describe("The address to send tokens to"),
+        amount: z.number().describe("The amount of tokens to send"),
+      }),
+    }),
+    sendSonic: tool(() => undefined, {
+      name: "sendSonic",
+      description: "Send SONIC (also called S) tokens to a specific address.",
+      schema: z.object({
+        recipientAddress: z
+          .string()
+          .describe("The address to send SONIC tokens to"),
+        amount: z.number().describe("The amount of SONIC tokens to send"),
+      }),
+    }),
+    quizQuestions: tool(() => undefined, {
+      name: "quizQuestions",
+      description: "Answer quiz questions.",
+      schema: z.object({
+        question: z.string().describe("The quiz question"),
+        options: z.array(z.string()).describe("The quiz options"),
+        correctAnswer: z.string().describe("The correct answer"),
+      }),
+    }),
+    donate: tool(() => undefined, {
+      name: "donate",
+      description: "Donate funds to a specific foundation based on category.",
+      schema: z.object({
+        category: z.enum(categorySchema),
+        tokenAddress: tokenSchema.describe("The token to donate"),
+        amountInUsd: z
+          .union([z.number(), z.string()])
+          .describe("The amount in USD"),
+      }),
+    }),
+    adviceOnHealth: tool(() => undefined, {
+      name: "adviceOnHealth",
+      description: "",
+      schema: z.object({
+        isHealthy: z.boolean().describe("user is healthy using BMI"),
+        advice: z
+          .string()
+          .describe("AI advice to the user on how to improve their health"),
+      }),
+    }),
+    redeemPoints: tool(() => undefined, {
+      name: "redeemPoints",
+      description: "Redeem points for rewards.",
+      schema: z.object({
+        points: z
+          .union([z.number(), z.string()])
+          .describe("The points to redeem"),
+      }),
+    }),
+    deployToken: tool(() => undefined, {
+      name: "deployToken",
+      description: "Deploy a new token.",
+      schema: z.object({
+        name: z.string().describe("The token's name"),
+        symbol: z.string().describe("The token's symbol"),
+        initialSupply: z.number().describe("The token's initial supply"),
+      }),
+    }),
+  };
+
   const llm = new ChatOpenAI({
     model: "gpt-4o-mini",
     apiKey: openAIApiKey,
@@ -164,6 +164,74 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
 
     For quiz questions, you will should return quiz questions very randomized and their corresponding answers.
     `
+  );
+  const result = await llm.invoke([systemPrompt, ...messages]);
+
+  return { content: result.content, tool_calls: result.tool_calls };
+}
+
+export async function runAIAuditAgent(messages: (AIMessage | HumanMessage)[]) {
+  const auditTools = {
+    auditResponse: tool(() => undefined, {
+      name: "auditResponse",
+      description: "Get price prediction for a token.",
+      schema: z.object({
+        rating: z.number().describe("The rating of the audit"),
+        overview: z.string().describe("Detailed breakdown of the rating"),
+        issues_detected: z.object({
+          severe: z.array(z.string()).describe("Severe issues"),
+          major: z.array(z.string()).describe("Major risks"),
+          moderate: z.array(z.string()).describe("Moderate concerns"),
+          minor: z.array(z.string()).describe("Minor issues"),
+        }),
+        fix_recommendations: z
+          .array(z.string())
+          .describe("Actionable security improvements"),
+        efficiency_tips: z
+          .array(z.string())
+          .describe("Specific gas optimization tips"),
+      }),
+    }),
+  };
+  const llm = new ChatOpenAI({
+    model: "gpt-4o-mini",
+    apiKey: openAIApiKey,
+  }).bind({
+    tools: Object.values(auditTools),
+  });
+
+  const systemPrompt = new SystemMessage(
+    `You are an expert smart contract security auditor. Your task is to conduct a strict and thorough review of the provided Solidity smart contract, ensuring it meets the highest security and efficiency standards. Any security issue, no matter how minor, must be identified.
+
+Strict Rating System
+⭐ 5 Stars: Awarded only if the contract has zero vulnerabilities, follows all security best practices, uses gas optimally, and implements the latest Solidity features correctly.
+⭐ 4 Stars: Given if the contract has no critical or high-risk vulnerabilities but may have 1-2 moderate concerns that are not easily exploitable.
+⭐ 3 Stars: Assigned if there are no critical flaws but includes at least one high-severity issue or multiple moderate concerns.
+⭐ 2 Stars: Given if the contract has at least one critical flaw or multiple high-risk vulnerabilities that make it unsafe for deployment.
+⭐ 1 Star: If the contract contains multiple critical and high-risk issues, making it highly insecure.
+⭐ 0 Stars: Assigned if the contract has fundamental security flaws that leave it open to immediate exploitation.
+
+======= Security Threat Classification =======
+===== Severe Issues (Any of these results in a 2-star rating or lower) ===== 
+Reentrancy vulnerabilities
+Unchecked external calls
+Integer overflow/underflow risks
+Broken access control mechanisms
+Unprotected selfdestruct or delegatecall
+Manipulable timestamps
+Lack of input validation
+Unprotected critical functions
+
+===== Major Concerns (Any of these prevents a 5-star rating) ===== 
+Missing event emissions for important state changes
+Inefficient gas usage
+Poor error handling
+State variable shadowing
+Complex fallback function logic
+Implicit visibility levels on functions or variables
+JSON Response Format
+Your audit report should be structured as follows:
+`
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
 

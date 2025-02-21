@@ -1,5 +1,9 @@
 import express from "express";
-import { processLLMRequest } from "../controllers/llm.controllers";
+import {
+  processLLMAuditRequest,
+  processLLMRequest,
+} from "../controllers/llm.controllers";
 const llmRoutes = express.Router();
 llmRoutes.post("/", processLLMRequest);
+llmRoutes.post("/audit", processLLMAuditRequest);
 export default llmRoutes;

@@ -1,33 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { FaStar } from "react-icons/fa"; // Import star icons
-import { APP_NAME } from "../../utils/constants";
+import { APP_NAME, SERVER_URL } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { toast } from "react-toastify";
 import { FaSpinner } from "react-icons/fa";
+import { fetchContractFileFromGitHub } from "../../services/github.repo.services";
 import { set } from "lodash";
+import { detectContractLanguage } from "../../services/contract.detect.services";
+import { callLLMAuditApi } from "../../services/openai.services";
 
 export default function AiAudit() {
   const [file, setFile] = useState(null);
   const [githubUrl, setGithubUrl] = useState("");
-  const [contractAddress, setContractAddress] = useState("");
+  const [contractCode, setContractCode] = useState("");
   const [auditResult, setAuditResult] = useState(null);
   const [isAuditing, setIsAuditing] = useState(false);
+
+  const readFileContent = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        detectContractLanguage(e.target.result);
+        setContractCode(e.target.result);
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    reader.readAsText(file);
+  };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (
       selectedFile &&
       (selectedFile.name.endsWith(".sol") ||
+        selectedFile.name.endsWith(".vy") ||
         selectedFile.name.endsWith(".wasm"))
     ) {
       setFile(selectedFile);
+      readFileContent(event);
       setGithubUrl("");
-      setContractAddress("");
+      setContractCode("");
     } else {
       setFile(null);
       toast.error(
-        "Please upload a valid Solidity (.sol) or WebAssembly (.wasm) file."
+        "Please upload a valid Solidity (.sol), Vyper (.vy), or WebAssembly (.wasm) file."
       );
     }
   };
@@ -35,26 +56,26 @@ export default function AiAudit() {
   const handleGithubChange = (e) => {
     setGithubUrl(e.target.value);
     setFile(null); // Clear other fields
-    setContractAddress("");
+    setContractCode("");
   };
 
   const handleContractChange = (e) => {
-    setContractAddress(e.target.value);
+    setContractCode(e.target.value);
     setFile(null); // Clear other fields
     setGithubUrl("");
   };
 
-  //   https://explorer.sonicchain.com/api?module=contract&action=getContract&address=0xYourContractAddress
+  //   https://explorer.sonicchain.com/api?module=contract&action=getContract&address=0xYourcontractCode
 
   const handleSubmit = async () => {
     try {
       setIsAuditing(true);
-      if (!file && !githubUrl && !contractAddress) {
+      if (!file && !githubUrl && !contractCode) {
         toast.error("Please provide at least one submission method.");
         return;
       }
 
-      console.log("Submitting:", { file, githubUrl, contractAddress });
+      console.log("Submitting:", { file, githubUrl, contractCode });
 
       // Simulated audit response
       const simulatedAuditResponse = {
@@ -79,13 +100,29 @@ export default function AiAudit() {
         ],
       };
 
-      await new Promise((resolve) =>
-        setTimeout(() => {
-          setAuditResult(simulatedAuditResponse);
-          resolve();
-        }, 2000)
-      );
+      let currentContractCode = contractCode;
+
+      if (githubUrl) {
+        currentContractCode = await fetchContractFileFromGitHub(githubUrl);
+        setContractCode(contractCode);
+      }
+
+      const response = await callLLMAuditApi({
+        contractCode: currentContractCode,
+      });
+
+      // const response = await fetch(`${SERVER_URL}/api/audit`, {
+      //   method: "POST",
+      //   body: JSON.stringify({ contractCode: currentContractCode }),
+      // });
+      // const result = await response.json();
+      // if (response.ok) {
+      //   setAuditResult(result);
+      // } else {
+      //   throw new Error(result.error || "Audit failed.");
+      // }
     } catch (error) {
+      toast.error(error.message);
     } finally {
       setIsAuditing(false);
     }
@@ -104,12 +141,12 @@ export default function AiAudit() {
         {/* File Upload */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
-            Upload Contract File (.sol / .wasm)
+            Upload Contract File (.sol / .vy / .wasm)
           </label>
           <input
             type="file"
-            accept=".sol,.wasm"
-            disabled={!!githubUrl || !!contractAddress}
+            accept=".sol,.wasm,.vy"
+            disabled={!!githubUrl}
             onChange={handleFileChange}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600"
           />
@@ -118,30 +155,28 @@ export default function AiAudit() {
         {/* GitHub Repo URL */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
-            GitHub Repository URL
+            Public GitHub Repository URL
           </label>
           <input
             type="url"
             placeholder="https://github.com/user/repo"
             value={githubUrl}
-            disabled={!!file || !!contractAddress}
+            disabled={!!file}
             onChange={handleGithubChange}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        {/* Contract Address */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
-            Deployed Contract Address
+            Paste Contract Code
           </label>
-          <input
-            type="text"
-            placeholder="0x..."
-            value={contractAddress}
+          <textarea
+            placeholder="Paste your contract code here..."
+            value={contractCode}
             disabled={!!file || !!githubUrl}
             onChange={handleContractChange}
-            className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600 h-32 focus:ring-blue-500"
           />
         </div>
 
