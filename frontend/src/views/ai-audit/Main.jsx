@@ -36,9 +36,7 @@ export default function AiAudit() {
     const selectedFile = event.target.files[0];
     if (
       selectedFile &&
-      (selectedFile.name.endsWith(".sol") ||
-        selectedFile.name.endsWith(".vy") ||
-        selectedFile.name.endsWith(".wasm"))
+      (selectedFile.name.endsWith(".sol") || selectedFile.name.endsWith(".vy"))
     ) {
       setFile(selectedFile);
       readFileContent(event);
@@ -47,9 +45,7 @@ export default function AiAudit() {
       setAuditResult(null);
     } else {
       setFile(null);
-      toast.error(
-        "Please upload a valid Solidity (.sol), Vyper (.vy), or WebAssembly (.wasm) file."
-      );
+      toast.error("Please upload a valid Solidity (.sol), Vyper (.vy) file.");
     }
   };
 
@@ -117,11 +113,11 @@ export default function AiAudit() {
         {/* File Upload */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
-            Upload Contract File (.sol / .vy / .wasm)
+            Upload Contract File (.sol / .vy)
           </label>
           <input
             type="file"
-            accept=".sol,.wasm,.vy"
+            accept=".sol,.vy"
             disabled={!!githubUrl}
             onChange={handleFileChange}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600"
