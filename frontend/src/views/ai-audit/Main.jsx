@@ -54,11 +54,11 @@ export default function AiAudit() {
     ) {
       setFile(selectedFile);
       readFileContent(event);
-      resetInputs("file");
     } else {
       setFile(null);
       toast.error("Please upload a valid Solidity (.sol) or Vyper (.vy) file.");
     }
+    resetInputs("file");
   };
 
   const readFileContent = (event) => {
