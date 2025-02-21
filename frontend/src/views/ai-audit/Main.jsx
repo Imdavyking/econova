@@ -82,7 +82,7 @@ export default function AiAudit() {
 
       if (githubUrl) {
         currentContractCode = await fetchContractFileFromGitHub(githubUrl);
-        setContractCode(contractCode);
+        setContractCode(currentContractCode);
       }
 
       const response = await callLLMAuditApi({
