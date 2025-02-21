@@ -247,53 +247,65 @@ export default function AiAudit() {
             </div>
 
             <p className="mb-4 text-gray-300">{auditResult.overview}</p>
+            {auditResult.issues_detected &&
+              auditResult.issues_detected.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="font-semibold text-red-400">
+                    Issues Detected:
+                  </h4>
+                  <ul className="list-disc ml-5 text-gray-300">
+                    {Object.entries(auditResult.issues_detected).map(
+                      ([severity, issues]) =>
+                        issues.length > 0 ? (
+                          <li key={severity}>
+                            <span className="font-semibold capitalize">
+                              {severity}:
+                            </span>
+                            <ul className="ml-4 list-disc">
+                              {issues.map((issue, index) => (
+                                <li key={index} className="text-gray-400">
+                                  {issue}
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                        ) : null
+                    )}
+                  </ul>
+                </div>
+              )}
 
-            <div className="mb-4">
-              <h4 className="font-semibold text-red-400">Issues Detected:</h4>
-              <ul className="list-disc ml-5 text-gray-300">
-                {Object.entries(auditResult.issues_detected).map(
-                  ([severity, issues]) =>
-                    issues.length > 0 ? (
-                      <li key={severity}>
-                        <span className="font-semibold capitalize">
-                          {severity}:
-                        </span>
-                        <ul className="ml-4 list-disc">
-                          {issues.map((issue, index) => (
-                            <li key={index} className="text-gray-400">
-                              {issue}
-                            </li>
-                          ))}
-                        </ul>
+            {auditResult.fix_recommendations &&
+              auditResult.fix_recommendations.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="font-semibold text-green-400">
+                    Fix Recommendations:
+                  </h4>
+                  <ul className="list-disc ml-5 text-gray-300">
+                    {auditResult.fix_recommendations.map((fix, index) => (
+                      <li key={index} className="text-gray-400">
+                        {fix}
                       </li>
-                    ) : null
-                )}
-              </ul>
-            </div>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-            <div className="mb-4">
-              <h4 className="font-semibold text-green-400">
-                Fix Recommendations:
-              </h4>
-              <ul className="list-disc ml-5 text-gray-300">
-                {auditResult.fix_recommendations.map((fix, index) => (
-                  <li key={index} className="text-gray-400">
-                    {fix}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-blue-400">Efficiency Tips:</h4>
-              <ul className="list-disc ml-5 text-gray-300">
-                {auditResult.efficiency_tips.map((tip, index) => (
-                  <li key={index} className="text-gray-400">
-                    {tip}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {auditResult.efficiency_tips &&
+              auditResult.efficiency_tips.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-blue-400">
+                    Efficiency Tips:
+                  </h4>
+                  <ul className="list-disc ml-5 text-gray-300">
+                    {auditResult.efficiency_tips.map((tip, index) => (
+                      <li key={index} className="text-gray-400">
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
           </div>
         )}
       </div>
