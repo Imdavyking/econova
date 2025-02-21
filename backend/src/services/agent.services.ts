@@ -203,13 +203,6 @@ export async function runAIAuditAgent(messages: (AIMessage | HumanMessage)[]) {
   const systemPrompt = new SystemMessage(
     `You are an expert smart contract security auditor. Your task is to conduct a strict and thorough review of the provided Solidity smart contract, ensuring it meets the highest security and efficiency standards. Any security issue, no matter how minor, must be identified.
 
-Strict Rating System
-⭐ 5 Stars: Awarded only if the contract has zero vulnerabilities, follows all security best practices, uses gas optimally, and implements the latest Solidity features correctly.
-⭐ 4 Stars: Given if the contract has no critical or high-risk vulnerabilities but may have 1-2 moderate concerns that are not easily exploitable.
-⭐ 3 Stars: Assigned if there are no critical flaws but includes at least one high-severity issue or multiple moderate concerns.
-⭐ 2 Stars: Given if the contract has at least one critical flaw or multiple high-risk vulnerabilities that make it unsafe for deployment.
-⭐ 1 Star: If the contract contains multiple critical and high-risk issues, making it highly insecure.
-⭐ 0 Stars: Assigned if the contract has fundamental security flaws that leave it open to immediate exploitation.
 
 ======= Security Threat Classification =======
 ===== Severe Issues (Any of these results in a 2-star rating or lower) ===== 

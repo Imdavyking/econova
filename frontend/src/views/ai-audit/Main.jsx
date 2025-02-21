@@ -77,29 +77,6 @@ export default function AiAudit() {
 
       console.log("Submitting:", { file, githubUrl, contractCode });
 
-      // Simulated audit response
-      const simulatedAuditResponse = {
-        rating: 3, // Rating out of 5
-        overview:
-          "The contract has no critical vulnerabilities but contains high-severity gas inefficiencies.",
-        issues_detected: {
-          severe: [],
-          major: [
-            "Gas optimization needed for loops",
-            "Function visibility is not explicitly set",
-          ],
-          moderate: ["Lack of indexed event parameters"],
-          minor: ["Unused imports detected"],
-        },
-        fix_recommendations: [
-          "Optimize loops to reduce gas costs. Example: Use `mapping` instead of `array` where possible.",
-          "Set function visibility explicitly, e.g., `function myFunction() public {}`",
-        ],
-        efficiency_tips: [
-          "Use `constant` and `immutable` for state variables where applicable to save gas.",
-        ],
-      };
-
       let currentContractCode = contractCode;
 
       if (githubUrl) {
@@ -111,16 +88,14 @@ export default function AiAudit() {
         contractCode: currentContractCode,
       });
 
-      // const response = await fetch(`${SERVER_URL}/api/audit`, {
-      //   method: "POST",
-      //   body: JSON.stringify({ contractCode: currentContractCode }),
-      // });
-      // const result = await response.json();
-      // if (response.ok) {
-      //   setAuditResult(result);
-      // } else {
-      //   throw new Error(result.error || "Audit failed.");
-      // }
+      if (response.tool_calls.length > 0) {
+        const auditResponse = response.tool_calls.find(
+          (call) => call.name === "auditResponse"
+        );
+        if (auditResponse) {
+          setAuditResult(auditResponse.args);
+        }
+      }
     } catch (error) {
       toast.error(error.message);
     } finally {
