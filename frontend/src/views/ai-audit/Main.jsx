@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import { FaStar } from "react-icons/fa"; // Import star icons
 
 export default function AiAudit() {
   const [file, setFile] = useState(null);
@@ -32,7 +33,7 @@ export default function AiAudit() {
 
     // Simulated audit response
     const simulatedAuditResponse = {
-      rating: 3,
+      rating: 3, // Rating out of 5
       overview:
         "The contract has no critical vulnerabilities but contains high-severity gas inefficiencies.",
       issues_detected: {
@@ -122,6 +123,23 @@ export default function AiAudit() {
             <h3 className="text-lg font-semibold mb-2 text-yellow-400">
               Audit Report
             </h3>
+
+            {/* Star Rating Display */}
+            <div className="flex items-center mb-4">
+              {[...Array(5)].map((_, index) => (
+                <FaStar
+                  key={index}
+                  className={`text-xl ${
+                    index < auditResult.rating
+                      ? "text-yellow-400"
+                      : "text-gray-500"
+                  }`}
+                />
+              ))}
+              <span className="ml-2 text-gray-300 text-sm">
+                ({auditResult.rating}/5)
+              </span>
+            </div>
 
             <p className="mb-4 text-gray-300">{auditResult.overview}</p>
 
