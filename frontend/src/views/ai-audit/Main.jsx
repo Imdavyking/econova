@@ -17,36 +17,38 @@ export default function AiAudit() {
   const [isAuditing, setIsAuditing] = useState(false);
   const [contractAddress, setContractAddress] = useState("");
 
+  const fetchVerifiedSourceCode = async () => {
+    try {
+      const result = await getVerifiedSourceCode({ contractAddress });
+      if (!result.sourceCode || !result.contractName) {
+        toast.error("No verified source code found for this contract.");
+        return;
+      }
+
+      let sourceCode = result.sourceCode;
+      const contractName = result.contractName;
+
+      if (sourceCode.startsWith("{{") && sourceCode.endsWith("}}")) {
+        sourceCode = sourceCode.slice(1, -1).trim();
+        const contractInfo = JSON.parse(sourceCode);
+        const sources = contractInfo.sources;
+
+        const mainContract = Object.values(sources).find((source) =>
+          source.content.includes(`contract ${contractName}`)
+        );
+        if (mainContract && mainContract.content) {
+          setContractCode(mainContract.content);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error fetching contract source code.");
+    }
+  };
+
   useEffect(() => {
     if (!contractAddress) return;
-
-    getVerifiedSourceCode({ contractAddress })
-      .then((result) => {
-        if (!result.sourceCode || !result.contractName) {
-          toast.error("No verified source code found for this contract.");
-          return;
-        }
-
-        let sourceCode = result.sourceCode;
-        const contractName = result.contractName;
-
-        if (sourceCode.startsWith("{{") && sourceCode.endsWith("}}")) {
-          sourceCode = sourceCode.slice(1, -1).trim();
-          const contractInfo = JSON.parse(sourceCode);
-          const sources = contractInfo.sources;
-
-          const mainContract = Object.values(sources).find((source) =>
-            source.content.includes(`contract ${contractName}`)
-          );
-          if (mainContract && mainContract.content) {
-            setContractCode(mainContract.content);
-          }
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Error fetching contract source code.");
-      });
+    fetchVerifiedSourceCode();
   }, [contractAddress]);
 
   const handleFileChange = (event) => {
