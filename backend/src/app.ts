@@ -17,7 +17,7 @@ import alloraRoutes from "./routes/allora.routes";
 import sourceCodeRoutes from "./routes/source.code.routes";
 
 dotenv.config();
-const app = express();
+export const app = express();
 
 if (app.get("env") === "production") {
   app.set("trust proxy", 1);
