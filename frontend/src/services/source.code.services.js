@@ -1,7 +1,7 @@
 import { SERVER_URL } from "../utils/constants";
 
 export const getVerifiedSourceCode = async ({ contractAddress }) => {
-  const response = await fetch(`${SERVER_URL}/api/llm`, {
+  const response = await fetch(`${SERVER_URL}/api/source-code`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
