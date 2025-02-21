@@ -3,7 +3,10 @@ dotenv.config();
 
 export const getVerifiedContractCode = async (
   address: string
-): Promise<string> => {
+): Promise<{
+  contractName: string;
+  sourceCode: string;
+}> => {
   const response = await fetch(
     `https://api-testnet.sonicscan.org/api?module=contract&action=getsourcecode&address=${address}&apikey=${process.env.API_SCAN_VERIFIER_KEY}`
   );
@@ -11,5 +14,8 @@ export const getVerifiedContractCode = async (
     throw new Error("Failed to fetch contract code");
   }
   const data = await response.json();
-  return data.result[0].SourceCode;
+  return {
+    contractName: data.result[0].ContractName,
+    sourceCode: data.result[0].SourceCode,
+  };
 };

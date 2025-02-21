@@ -8,8 +8,11 @@ export const getVerifiedSourceCode = async (req: Request, res: Response) => {
       res.status(400).json({ error: "Missing contractAddress" });
       return;
     }
-    const code = await getVerifiedContractCode(contractAddress as string);
-    res.json({ data: code });
+
+    const { contractName, sourceCode } = await getVerifiedContractCode(
+      contractAddress as string
+    );
+    res.json({ contractName, sourceCode });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

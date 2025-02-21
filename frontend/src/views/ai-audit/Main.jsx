@@ -25,7 +25,17 @@ export default function AiAudit() {
         if (!result.data) {
           return;
         }
-        console.log(JSON.parse(result.data));
+
+        let sourceCode = result.sourceCode;
+        let contractName = result.contractName;
+
+        if (sourceCode.startsWith("{{") && sourceCode.endsWith("}}")) {
+          sourceCode = sourceCode.slice(1, -1).trim();
+          console.log({
+            parsed: JSON.parse(sourceCode),
+            contractName,
+          });
+        }
       })
       .catch((error) => {
         console.error(error);
