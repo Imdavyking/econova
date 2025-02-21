@@ -157,7 +157,7 @@ export default function AiAudit() {
             type="text"
             placeholder="0x1234...abcd"
             value={contractAddress}
-            disabled={!!file || !!githubUrl || !!contractCode}
+            disabled={!!file || !!githubUrl}
             onChange={handleContractAddressChange}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600"
           />
