@@ -48,6 +48,9 @@ const Footer = () => {
             <Link to="/ai-tutor">AI Tutor</Link>
           </li>
           <li>
+            <Link to="/ai-audit">AI Audit</Link>
+          </li>
+          <li>
             <Link to="/bridge">Bridge</Link>
           </li>
         </ul>

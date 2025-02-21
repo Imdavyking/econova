@@ -5,6 +5,7 @@ import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { toast } from "react-toastify";
 import { FaSpinner } from "react-icons/fa";
+import { set } from "lodash";
 
 export default function AiAudit() {
   const [file, setFile] = useState(null);
@@ -21,12 +22,26 @@ export default function AiAudit() {
         selectedFile.name.endsWith(".wasm"))
     ) {
       setFile(selectedFile);
+      setGithubUrl("");
+      setContractAddress("");
     } else {
       setFile(null);
       toast.error(
         "Please upload a valid Solidity (.sol) or WebAssembly (.wasm) file."
       );
     }
+  };
+
+  const handleGithubChange = (e) => {
+    setGithubUrl(e.target.value);
+    setFile(null); // Clear other fields
+    setContractAddress("");
+  };
+
+  const handleContractChange = (e) => {
+    setContractAddress(e.target.value);
+    setFile(null); // Clear other fields
+    setGithubUrl("");
   };
 
   //   https://explorer.sonicchain.com/api?module=contract&action=getContract&address=0xYourContractAddress
@@ -94,6 +109,7 @@ export default function AiAudit() {
           <input
             type="file"
             accept=".sol,.wasm"
+            disabled={!!githubUrl || !!contractAddress}
             onChange={handleFileChange}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600"
           />
@@ -108,7 +124,8 @@ export default function AiAudit() {
             type="url"
             placeholder="https://github.com/user/repo"
             value={githubUrl}
-            onChange={(e) => setGithubUrl(e.target.value)}
+            disabled={!!file || !!contractAddress}
+            onChange={handleGithubChange}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -122,7 +139,8 @@ export default function AiAudit() {
             type="text"
             placeholder="0x..."
             value={contractAddress}
-            onChange={(e) => setContractAddress(e.target.value)}
+            disabled={!!file || !!githubUrl}
+            onChange={handleContractChange}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
