@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-import { FaStar } from "react-icons/fa"; // Import star icons
-import { APP_NAME, SERVER_URL } from "../../utils/constants";
+import { FaStar } from "react-icons/fa";
+import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { toast } from "react-toastify";
 import { FaSpinner } from "react-icons/fa";
 import { fetchContractFileFromGitHub } from "../../services/github.repo.services";
-import { set } from "lodash";
 import { detectContractLanguage } from "../../services/contract.detect.services";
 import { callLLMAuditApi } from "../../services/openai.services";
 
@@ -55,17 +54,15 @@ export default function AiAudit() {
 
   const handleGithubChange = (e) => {
     setGithubUrl(e.target.value);
-    setFile(null); // Clear other fields
+    setFile(null);
     setContractCode("");
   };
 
   const handleContractChange = (e) => {
     setContractCode(e.target.value);
-    setFile(null); // Clear other fields
+    setFile(null);
     setGithubUrl("");
   };
-
-  //   https://explorer.sonicchain.com/api?module=contract&action=getContract&address=0xYourcontractCode
 
   const handleSubmit = async () => {
     try {
