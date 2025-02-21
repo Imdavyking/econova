@@ -17,7 +17,7 @@ export default function AiAudit() {
   const [isAuditing, setIsAuditing] = useState(false);
   const [contractAddress, setContractAddress] = useState("");
 
-  const fetchVerifiedSourceCode = async () => {
+  const fetchVerifiedSourceCode = async ({ contractAddress }) => {
     try {
       const result = await getVerifiedSourceCode({ contractAddress });
       if (!result.sourceCode || !result.contractName) {
@@ -37,7 +37,7 @@ export default function AiAudit() {
           source.content.includes(`contract ${contractName}`)
         );
         if (mainContract && mainContract.content) {
-          setContractCode(mainContract.content);
+          return mainContract.content;
         }
       }
     } catch (error) {
@@ -45,11 +45,6 @@ export default function AiAudit() {
       toast.error("Error fetching contract source code.");
     }
   };
-
-  useEffect(() => {
-    if (!contractAddress) return;
-    fetchVerifiedSourceCode();
-  }, [contractAddress]);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -109,7 +104,7 @@ export default function AiAudit() {
     try {
       setIsAuditing(true);
       setAuditResult(null);
-      if (!file && !githubUrl && !contractCode) {
+      if (!file && !githubUrl && !contractCode && !contractAddress) {
         toast.error("Please provide at least one submission method.");
         return;
       }
@@ -118,7 +113,16 @@ export default function AiAudit() {
 
       if (githubUrl) {
         currentContractCode = await fetchContractFileFromGitHub(githubUrl);
-        setContractCode(currentContractCode);
+        if (currentContractCode) {
+          setContractCode(currentContractCode);
+        }
+      } else if (contractAddress) {
+        currentContractCode = await fetchVerifiedSourceCode({
+          contractAddress,
+        });
+        if (currentContractCode) {
+          setContractCode(currentContractCode);
+        }
       }
 
       const response = await callLLMAuditApi({
