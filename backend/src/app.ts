@@ -14,6 +14,7 @@ import { FRONTEND_URL } from "./utils/constants";
 import merkleRoutes from "./routes/merkle.routes";
 import { automateCharityFundDistribution } from "./services/automate.services";
 import alloraRoutes from "./routes/allora.routes";
+import sourceCodeRoutes from "./routes/source.code.routes";
 
 dotenv.config();
 const app = express();
@@ -65,6 +66,7 @@ app.use("/twitter", twitterRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/merkle", merkleRoutes);
 app.use("/api/allora", alloraRoutes);
+app.use("/api/source-code", sourceCodeRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

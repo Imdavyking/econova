@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { FaStar } from "react-icons/fa";
-import { APP_NAME } from "../../utils/constants";
+import { APP_NAME, CONTRACT_ADDRESS } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { toast } from "react-toastify";
 import { FaSpinner } from "react-icons/fa";
 import { fetchContractFileFromGitHub } from "../../services/github.repo.services";
 import { detectContractLanguage } from "../../services/contract.detect.services";
 import { callLLMAuditApi } from "../../services/openai.services";
+import { getVerifiedSourceCode } from "../../services/source.code.services";
 
 export default function AiAudit() {
   const [file, setFile] = useState(null);
@@ -15,6 +16,18 @@ export default function AiAudit() {
   const [contractCode, setContractCode] = useState("");
   const [auditResult, setAuditResult] = useState(null);
   const [isAuditing, setIsAuditing] = useState(false);
+
+  useEffect(() => {
+    getVerifiedSourceCode({
+      contractAddress: CONTRACT_ADDRESS,
+    })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const readFileContent = (event) => {
     const file = event.target.files[0];
