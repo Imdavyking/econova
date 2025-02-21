@@ -9,6 +9,7 @@ import DonationCategories from "../views/donate/Categories";
 import LeaderBoard from "../views/leaderboard/Main";
 import AIHealth from "../views/ai-health/Main";
 import AITutor from "../views/ai-tutor/Main";
+import AiAudit from "../views/ai-audit/Main";
 import Bridge from "../views/bridge/Main";
 import AITutorQuiz from "../views/ai-tutor/quiz";
 
@@ -46,7 +47,7 @@ function Router() {
       path: "/ai-tutor",
       element: <AITutor />,
     },
-   
+
     {
       path: "/ai-tutor/quiz/:levelStr",
       element: <AITutorQuiz />,
@@ -54,6 +55,10 @@ function Router() {
     {
       path: "/bridge",
       element: <Bridge />,
+    },
+    {
+      path: "/ai-audit",
+      element: <AiAudit />,
     },
   ];
 
