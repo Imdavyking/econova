@@ -27,14 +27,17 @@ export default function AiAudit() {
         }
 
         let sourceCode = result.sourceCode;
-        let contractName = result.contractName;
+        const contractName = result.contractName;
 
         if (sourceCode.startsWith("{{") && sourceCode.endsWith("}}")) {
           sourceCode = sourceCode.slice(1, -1).trim();
-          console.log({
-            parsed: JSON.parse(sourceCode),
-            contractName,
-          });
+          const contractInfo = JSON.parse(sourceCode);
+          const sources = contractInfo.sources;
+
+          const mainContract = Object.values(sources).find((source) =>
+            source.content.includes(`contract ${contractName}`)
+          );
+          console.log({ mainContract });
         }
       })
       .catch((error) => {
