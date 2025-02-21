@@ -44,6 +44,7 @@ export default function AiAudit() {
       readFileContent(event);
       setGithubUrl("");
       setContractCode("");
+      setAuditResult(null);
     } else {
       setFile(null);
       toast.error(
@@ -56,12 +57,14 @@ export default function AiAudit() {
     setGithubUrl(e.target.value);
     setFile(null);
     setContractCode("");
+    setAuditResult(null);
   };
 
   const handleContractChange = (e) => {
     setContractCode(e.target.value);
     setFile(null);
     setGithubUrl("");
+    setAuditResult(null);
   };
 
   const handleSubmit = async () => {
