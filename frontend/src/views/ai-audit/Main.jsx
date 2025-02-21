@@ -1,12 +1,17 @@
 import { useState } from "react";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { FaStar } from "react-icons/fa"; // Import star icons
+import { APP_NAME } from "../../utils/constants";
+import logoUrl from "@/assets/images/logo.png";
+import { toast } from "react-toastify";
+import { FaSpinner } from "react-icons/fa";
 
 export default function AiAudit() {
   const [file, setFile] = useState(null);
   const [githubUrl, setGithubUrl] = useState("");
   const [contractAddress, setContractAddress] = useState("");
   const [auditResult, setAuditResult] = useState(null);
+  const [isAuditing, setIsAuditing] = useState(false);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -17,57 +22,70 @@ export default function AiAudit() {
     ) {
       setFile(selectedFile);
     } else {
-      alert(
+      setFile(null);
+      toast.error(
         "Please upload a valid Solidity (.sol) or WebAssembly (.wasm) file."
       );
     }
   };
 
+  //   https://explorer.sonicchain.com/api?module=contract&action=getContract&address=0xYourContractAddress
+
   const handleSubmit = async () => {
-    if (!file && !githubUrl && !contractAddress) {
-      alert("Please provide at least one submission method.");
-      return;
-    }
+    try {
+      setIsAuditing(true);
+      if (!file && !githubUrl && !contractAddress) {
+        toast.error("Please provide at least one submission method.");
+        return;
+      }
 
-    console.log("Submitting:", { file, githubUrl, contractAddress });
+      console.log("Submitting:", { file, githubUrl, contractAddress });
 
-    // Simulated audit response
-    const simulatedAuditResponse = {
-      rating: 3, // Rating out of 5
-      overview:
-        "The contract has no critical vulnerabilities but contains high-severity gas inefficiencies.",
-      issues_detected: {
-        severe: [],
-        major: [
-          "Gas optimization needed for loops",
-          "Function visibility is not explicitly set",
+      // Simulated audit response
+      const simulatedAuditResponse = {
+        rating: 3, // Rating out of 5
+        overview:
+          "The contract has no critical vulnerabilities but contains high-severity gas inefficiencies.",
+        issues_detected: {
+          severe: [],
+          major: [
+            "Gas optimization needed for loops",
+            "Function visibility is not explicitly set",
+          ],
+          moderate: ["Lack of indexed event parameters"],
+          minor: ["Unused imports detected"],
+        },
+        fix_recommendations: [
+          "Optimize loops to reduce gas costs. Example: Use `mapping` instead of `array` where possible.",
+          "Set function visibility explicitly, e.g., `function myFunction() public {}`",
         ],
-        moderate: ["Lack of indexed event parameters"],
-        minor: ["Unused imports detected"],
-      },
-      fix_recommendations: [
-        "Optimize loops to reduce gas costs. Example: Use `mapping` instead of `array` where possible.",
-        "Set function visibility explicitly, e.g., `function myFunction() public {}`",
-      ],
-      efficiency_tips: [
-        "Use `constant` and `immutable` for state variables where applicable to save gas.",
-      ],
-    };
+        efficiency_tips: [
+          "Use `constant` and `immutable` for state variables where applicable to save gas.",
+        ],
+      };
 
-    // Simulating API response delay
-    setTimeout(() => {
-      setAuditResult(simulatedAuditResponse);
-    }, 2000);
+      await new Promise((resolve) =>
+        setTimeout(() => {
+          setAuditResult(simulatedAuditResponse);
+          resolve();
+        }, 2000)
+      );
+    } catch (error) {
+    } finally {
+      setIsAuditing(false);
+    }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen text-white px-4">
+    <div className="p-6 max-w-3xl mx-auto flex flex-col items-center">
       <DarkModeSwitcher />
+      <h2 className="text-3xl font-bold text-white mb-4 ">
+        <a href="/" className="flex items-center space-x-3">
+          <img alt={APP_NAME} className="w-10" src={logoUrl} />
+          <span className="text-lg">{APP_NAME} AI Audit</span>
+        </a>
+      </h2>
       <div className="w-full max-w-lg bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Submit Sonic Smart Contract
-        </h2>
-
         {/* File Upload */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
@@ -112,9 +130,13 @@ export default function AiAudit() {
         {/* Submit Button */}
         <button
           onClick={handleSubmit}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition duration-200"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition duration-200 flex flex-col items-center"
         >
-          Submit Contract
+          {isAuditing ? (
+            <FaSpinner className="w-5 h-5 animate-spin" />
+          ) : (
+            "Submit Contract"
+          )}
         </button>
 
         {/* Audit Result Display */}
