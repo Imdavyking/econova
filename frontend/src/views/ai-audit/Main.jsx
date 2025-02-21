@@ -223,6 +223,79 @@ export default function AiAudit() {
             "Submit Contract"
           )}
         </button>
+        {auditResult && (
+          <div className="mt-6 bg-gray-700 p-6 rounded-lg text-sm shadow-lg">
+            <h3 className="text-lg font-semibold mb-2 text-yellow-400">
+              Audit Report
+            </h3>
+
+            {/* Star Rating Display */}
+            <div className="flex items-center mb-4">
+              {[...Array(5)].map((_, index) => (
+                <FaStar
+                  key={index}
+                  className={`text-xl ${
+                    index < auditResult.rating
+                      ? "text-yellow-400"
+                      : "text-gray-500"
+                  }`}
+                />
+              ))}
+              <span className="ml-2 text-gray-300 text-sm">
+                ({auditResult.rating}/5)
+              </span>
+            </div>
+
+            <p className="mb-4 text-gray-300">{auditResult.overview}</p>
+
+            <div className="mb-4">
+              <h4 className="font-semibold text-red-400">Issues Detected:</h4>
+              <ul className="list-disc ml-5 text-gray-300">
+                {Object.entries(auditResult.issues_detected).map(
+                  ([severity, issues]) =>
+                    issues.length > 0 ? (
+                      <li key={severity}>
+                        <span className="font-semibold capitalize">
+                          {severity}:
+                        </span>
+                        <ul className="ml-4 list-disc">
+                          {issues.map((issue, index) => (
+                            <li key={index} className="text-gray-400">
+                              {issue}
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ) : null
+                )}
+              </ul>
+            </div>
+
+            <div className="mb-4">
+              <h4 className="font-semibold text-green-400">
+                Fix Recommendations:
+              </h4>
+              <ul className="list-disc ml-5 text-gray-300">
+                {auditResult.fix_recommendations.map((fix, index) => (
+                  <li key={index} className="text-gray-400">
+                    {fix}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-blue-400">Efficiency Tips:</h4>
+              <ul className="list-disc ml-5 text-gray-300">
+                {auditResult.efficiency_tips.map((tip, index) => (
+                  <li key={index} className="text-gray-400">
+                    {tip}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
