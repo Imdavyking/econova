@@ -202,7 +202,37 @@ export async function runAIAuditAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const systemPrompt = new SystemMessage(
     `You are an expert smart contract security auditor. 
-    `
+    Your task is to conduct a strict and thorough review of the provided Solidity smart contract, ensuring it meets the highest security and efficiency standards. Any security issue, no matter how minor, must be identified.
+
+Strict Rating System
+⭐ 5 Stars: Awarded only if the contract has zero vulnerabilities, follows all security best practices, uses gas optimally, and implements the latest Solidity features correctly.
+⭐ 4 Stars: Given if the contract has no critical or high-risk vulnerabilities but may have 1-2 moderate concerns that are not easily exploitable.
+⭐ 3 Stars: Assigned if there are no critical flaws but includes at least one high-severity issue or multiple moderate concerns.
+⭐ 2 Stars: Given if the contract has at least one critical flaw or multiple high-risk vulnerabilities that make it unsafe for deployment.
+⭐ 1 Star: If the contract contains multiple critical and high-risk issues, making it highly insecure.
+⭐ 0 Stars: Assigned if the contract has fundamental security flaws that leave it open to immediate exploitation.
+
+======= Security Threat Classification =======
+===== Severe Issues (Any of these results in a 2-star rating or lower) ===== 
+Reentrancy vulnerabilities
+Unchecked external calls
+Integer overflow/underflow risks
+Broken access control mechanisms
+Unprotected selfdestruct or delegatecall
+Manipulable timestamps
+Lack of input validation
+Unprotected critical functions
+
+===== Major Concerns (Any of these prevents a 5-star rating) ===== 
+Missing event emissions for important state changes
+Inefficient gas usage
+Poor error handling
+State variable shadowing
+Complex fallback function logic
+Implicit visibility levels on functions or variables
+JSON Response Format
+Your audit report should be structured as follows:
+`
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
 
