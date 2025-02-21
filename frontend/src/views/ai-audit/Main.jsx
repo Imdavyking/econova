@@ -67,6 +67,7 @@ export default function AiAudit() {
   const handleSubmit = async () => {
     try {
       setIsAuditing(true);
+      setAuditResult(null);
       if (!file && !githubUrl && !contractCode) {
         toast.error("Please provide at least one submission method.");
         return;
