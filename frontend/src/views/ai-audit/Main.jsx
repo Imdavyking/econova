@@ -22,7 +22,7 @@ export default function AiAudit() {
       contractAddress: CONTRACT_ADDRESS,
     })
       .then((result) => {
-        if (!result.data) {
+        if (!result.sourceCode || !result.contractName) {
           return;
         }
 
