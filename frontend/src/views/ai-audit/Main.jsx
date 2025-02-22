@@ -186,11 +186,11 @@ export default function AiAudit() {
         {/* GitHub Repo URL */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
-            Public GitHub Repository URL
+            Public GitHub File URL
           </label>
           <input
             type="url"
-            placeholder="https://github.com/user/repo"
+            placeholder="https://github.com/user/repo/blob/branch/path-to-file.sol"
             value={githubUrl}
             disabled={!!file || !!contractAddress}
             onChange={handleGithubChange}
