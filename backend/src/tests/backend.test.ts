@@ -18,7 +18,11 @@ jest.setTimeout(70 * SECONDS);
 afterAll(async () => {
   await new Promise((resolve) => server.close(resolve));
   logger.info("Server closed");
-  await redis.quit();
+  await new Promise((resolve) => {
+    redis.quit(() => {
+      resolve(null);
+    });
+  });
   logger.info("Redis connection closed");
 });
 
