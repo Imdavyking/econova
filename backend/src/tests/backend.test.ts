@@ -2,13 +2,9 @@ import request from "supertest";
 import { app, server } from "../app";
 import {
   describe,
-  beforeEach,
-  it,
   expect,
   jest,
-  afterEach,
 } from "@jest/globals";
-import type { Server } from "http";
 import redis from "../services/redis.services";
 import logger from "../config/logger";
 
