@@ -1,6 +1,9 @@
 import Redis from "ioredis";
 import logger from "../config/logger";
 import { RedisMemoryServer } from "redis-memory-server";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 let redis: Redis;
 
