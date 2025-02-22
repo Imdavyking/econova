@@ -676,12 +676,7 @@ export async function addTokenToMetaMask() {
     const manager = await getContract();
     const signer = await getSigner();
     const ethProvider = signer.provider;
-
-    const [address, chainId] = await Promise.all([
-      manager.i_ecoNovaToken(),
-      ethProvider.provider.send("eth_chainId", []),
-    ]);
-
+    const address = await manager.i_ecoNovaToken();
     const token = await getERC20Contract(address);
     const [symbol, decimals] = await Promise.all([
       token.symbol(),
