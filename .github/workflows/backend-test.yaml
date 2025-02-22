@@ -1,0 +1,43 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    working-directory: ./backend
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    env:
+      REDIS_HOST: ${{secrets.REDIS_HOST}}
+      REDIS_PORT: ${{secrets.REDIS_PORT}}
+      REDIS_PASSWORD: ${{secrets.REDIS_PASSWORD}}
+      NODE_ENV: ${{secrets.NODE_ENV}}
+      MONGO_URI: ${{secrets.MONGO_URI}}
+      PORT: ${{secrets.PORT}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+
+      # Install dependencies
+      - name: Install dependencies
+        run: yarn install
+
+      # Run tests
+      - name: Run tests
+        run: yarn test
