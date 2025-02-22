@@ -7,3 +7,4 @@ dist-ssr
 logs/*
 *.rdb
 build
+coverage

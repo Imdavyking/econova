@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "nodemon src/app.ts",
     "start": "node build/app.js",
-    "build": "yarn && tsc"
+    "build": "yarn && tsc",
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "@types/node": "^22.10.10",
     "@types/simple-get": "^4.0.3",
     "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
