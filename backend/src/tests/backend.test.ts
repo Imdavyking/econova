@@ -20,7 +20,7 @@ beforeAll(async () => {
     redis = await initializeRedis();
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
-    logger.info("MongoDB connected");
+    logger.info(`MongoDB connected at ${mongoServer.getUri()}`);
   } catch (error) {
     console.error("Error setting up test environment:", error);
   }
