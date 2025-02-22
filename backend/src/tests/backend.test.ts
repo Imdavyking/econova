@@ -10,19 +10,16 @@ import {
 } from "@jest/globals";
 import type { Server } from "http";
 import redis from "../services/redis.services";
+import logger from "../config/logger";
 
 const SECONDS = 1000;
 jest.setTimeout(70 * SECONDS);
 
-// let server: Server;
-
-// beforeEach(() => {
-//   server = app.listen(4000);
-// });
-
 afterAll(async () => {
   await new Promise((resolve) => server.close(resolve));
+  logger.info("Server closed");
   await redis.quit();
+  logger.info("Redis connection closed");
 });
 
 describe("Backend tests", () => {
