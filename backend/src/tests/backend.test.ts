@@ -3,12 +3,22 @@ import app from "../utils/create.server";
 import { describe, expect, jest } from "@jest/globals";
 import redis from "../services/redis.services";
 import logger from "../config/logger";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
 
 const SECONDS = 1000;
 jest.setTimeout(70 * SECONDS);
 
+beforeAll(async () => {
+  const mongoServer = await MongoMemoryServer.create();
+  await mongoose.connect(mongoServer.getUri());
+  logger.info("MongoDB connected");
+});
+
 afterAll(async () => {
   logger.info("Server closed");
+  await mongoose.disconnect();
+  await mongoose.connection.close();
   await new Promise((resolve) => {
     redis.quit(() => {
       resolve(null);
