@@ -125,6 +125,8 @@ export default function AiAudit() {
         }
       }
 
+      if (!currentContractCode) return;
+
       const response = await callLLMAuditApi({
         contractCode: currentContractCode,
       });
