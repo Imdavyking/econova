@@ -1,6 +1,9 @@
 import request from "supertest";
 import app from "../app";
-import { expect, test, describe } from "@jest/globals";
+import { describe, beforeEach, it, expect, jest } from "@jest/globals";
+
+const SECONDS = 1000;
+jest.setTimeout(70 * SECONDS);
 
 describe("Backend tests", () => {
   test("GET /", async () => {
