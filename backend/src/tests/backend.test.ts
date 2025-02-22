@@ -1,10 +1,6 @@
 import request from "supertest";
-import { app, server } from "../app";
-import {
-  describe,
-  expect,
-  jest,
-} from "@jest/globals";
+import app from "../utils/create.server";
+import { describe, expect, jest } from "@jest/globals";
 import redis from "../services/redis.services";
 import logger from "../config/logger";
 
@@ -12,10 +8,6 @@ const SECONDS = 1000;
 jest.setTimeout(70 * SECONDS);
 
 afterAll(async () => {
-  await new Promise((resolve) => {
-    server.close();
-    resolve(null);
-  });
   logger.info("Server closed");
   await new Promise((resolve) => {
     redis.quit(() => {
