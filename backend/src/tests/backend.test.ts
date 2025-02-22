@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../app";
+import { app, server } from "../app";
 import {
   describe,
   beforeEach,
@@ -9,6 +9,7 @@ import {
   afterEach,
 } from "@jest/globals";
 import type { Server } from "http";
+import redis from "../services/redis.services";
 
 const SECONDS = 1000;
 jest.setTimeout(70 * SECONDS);
@@ -19,9 +20,10 @@ jest.setTimeout(70 * SECONDS);
 //   server = app.listen(4000);
 // });
 
-// afterEach(() => {
-//   server.close();
-// });
+afterAll(async () => {
+  await new Promise((resolve) => server.close(resolve));
+  await redis.quit();
+});
 
 describe("Backend tests", () => {
   test("GET /api/tweets", async () => {

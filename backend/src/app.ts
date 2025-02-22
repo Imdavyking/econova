@@ -78,6 +78,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
-
+const server = app.listen(PORT, () =>
+  logger.info(`Server running on port ${PORT}`)
+);
+export { app, server };
 export default app;

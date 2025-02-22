@@ -5,7 +5,7 @@
     "dev": "nodemon src/app.ts",
     "start": "node build/app.js",
     "build": "yarn && tsc",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
