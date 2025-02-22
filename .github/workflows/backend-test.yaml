@@ -23,6 +23,8 @@ jobs:
       NODE_ENV: ${{secrets.NODE_ENV}}
       MONGO_URI: ${{secrets.MONGO_URI}}
       PORT: ${{secrets.PORT}}
+      BOT_PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+      RPC_URL: ${{secrets.RPC_URL}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
