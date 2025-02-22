@@ -1,34 +1,20 @@
 import request from "supertest";
 import app from "../app";
+import { expect, test, describe } from "@jest/globals";
 
-describe("GET /", () => {
-  it("should return hello world", async (done) => {
-    request(app)
-      .get("/")
-      .expect("Content-Type", /json/)
-      .expect(200)
-
-      .expect((res) => {
-        if (res.text !== "Hello World!") {
-          done("Hello World! not returned");
-          return;
-        }
-        done();
-      })
-      .end(function (err, res) {
-        if (err) throw err;
-      });
+describe("Backend tests", () => {
+  test("GET /", async () => {
+    const res = await request(app).get("/");
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch(/text\/html|json/);
+    console.log(res.body);
+    expect(res.body).toBe("Hello World!");
   });
-});
 
-describe("GET /api/tweets", () => {
-  it("should return a list of tweets", async (done) => {
-    request(app)
-      .get("/api/tweets")
-      .expect("Content-Type", /json/)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) done(err);
-      });
+  test("GET /api/tweets", async () => {
+    const res = await request(app).get("/api/tweets");
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch(/json/);
+    expect(Array.isArray(res.body)).toBe(true);
   });
 });

@@ -52,8 +52,10 @@ app.use(
 // Database connection
 connectDB();
 
-// Automation for funds distrubtion
-automateCharityFundDistribution();
+if (process.env.NODE_ENV === "production") {
+  // Automation for funds distrubtion
+  automateCharityFundDistribution();
+}
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
@@ -77,6 +79,5 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
-
 
 export default app;
