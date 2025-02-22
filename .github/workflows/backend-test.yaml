@@ -26,6 +26,7 @@ jobs:
       BOT_PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
       RPC_URL: ${{secrets.RPC_URL}}
       CONTRACT_ADDRESS: ${{secrets.CONTRACT_ADDRESS}}
+      FRONTEND_URL: ${{secrets.FRONTEND_URL}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
