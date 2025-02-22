@@ -17,7 +17,7 @@ import alloraRoutes from "./routes/allora.routes";
 import sourceCodeRoutes from "./routes/source.code.routes";
 
 dotenv.config();
-export const app = express();
+const app = express();
 
 if (app.get("env") === "production") {
   app.set("trust proxy", 1);
@@ -77,3 +77,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
+
+
+export default app;
