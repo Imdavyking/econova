@@ -34,10 +34,6 @@ async function initializeRedis() {
     );
   });
 
-  redis.on("close", () => {
-    logger.info("Redis connection closed");
-  });
-
   redis.on("error", (err) => {
     logger.error("Redis error:", err);
   });

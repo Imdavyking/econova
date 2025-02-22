@@ -31,12 +31,8 @@ afterAll(async () => {
   await mongoose.disconnect();
   await mongoose.connection.close();
   logger.info("MongoDB connection closed");
-
-  await new Promise((resolve) => {
-    redis.quit(() => {
-      resolve(null);
-    });
-  });
+  await redis.quit();
+  logger.info("Redis connection closed");
 });
 
 describe("Backend tests", () => {
