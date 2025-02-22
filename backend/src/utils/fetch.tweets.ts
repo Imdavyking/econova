@@ -1,4 +1,4 @@
-import redis from "../services/redis.services"; // Adjust the path as needed
+import initializeRedis from "../utils/redis.app";
 import { getRetweeters, getLikingUsers } from "../services/tweets.services";
 import logger from "../config/logger";
 import { extractMessageFrom429 } from "./";
@@ -15,6 +15,7 @@ const fetchAndCache = async (
   tweetId: string
 ) => {
   try {
+    const redis = await initializeRedis();
     const cacheKey = `${key}-${tweetId}`;
     const cachedData = await redis.get(cacheKey);
 

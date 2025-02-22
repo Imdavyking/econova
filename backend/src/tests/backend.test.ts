@@ -1,36 +1,26 @@
 import request from "supertest";
 import app from "../utils/create.server";
 import { describe, expect, jest } from "@jest/globals";
-import redis from "../services/redis.services";
+import initializeRedis from "../utils/redis.app";
 import logger from "../config/logger";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import { RedisMemoryServer } from "redis-memory-server";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import Redis from "ioredis";
 
 dotenv.config();
 
 const SECONDS = 1000;
 jest.setTimeout(70 * SECONDS);
 
-const redisServer = new RedisMemoryServer();
+let redis: Redis;
+
 beforeAll(async () => {
   try {
+    redis = await initializeRedis();
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
     logger.info("MongoDB connected");
-
-    if (!redisServer.getInstanceInfo()) {
-      await redisServer.start();
-    }
-
-    process.env.REDIS_HOST = await redisServer.getHost();
-    process.env.REDIS_PORT = `${await redisServer.getPort()}`;
-    process.env.REDIS_PASSWORD = "";
-
-    logger.info(
-      `Redis server connected at ${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
-    );
   } catch (error) {
     console.error("Error setting up test environment:", error);
   }
@@ -47,8 +37,6 @@ afterAll(async () => {
       resolve(null);
     });
   });
-  await redisServer.stop();
-  logger.info("Redis connection closed");
 });
 
 describe("Backend tests", () => {
