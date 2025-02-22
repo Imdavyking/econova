@@ -14,20 +14,26 @@ const SECONDS = 1000;
 jest.setTimeout(70 * SECONDS);
 
 const redisServer = new RedisMemoryServer();
-
 beforeAll(async () => {
-  const mongoServer = await MongoMemoryServer.create();
-  await mongoose.connect(mongoServer.getUri());
-  logger.info("MongoDB connected");
-  const host = await redisServer.getHost();
-  const port = await redisServer.getPort();
-  if (!redisServer.getInstanceInfo()) {
-    await redisServer.start();
+  try {
+    const mongoServer = await MongoMemoryServer.create();
+    await mongoose.connect(mongoServer.getUri());
+    logger.info("MongoDB connected");
+
+    if (!redisServer.getInstanceInfo()) {
+      await redisServer.start();
+    }
+
+    process.env.REDIS_HOST = await redisServer.getHost();
+    process.env.REDIS_PORT = `${await redisServer.getPort()}`;
+    process.env.REDIS_PASSWORD = "";
+
+    logger.info(
+      `Redis server connected at ${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+    );
+  } catch (error) {
+    console.error("Error setting up test environment:", error);
   }
-  process.env.REDIS_HOST = host;
-  process.env.REDIS_PORT = `${port}`;
-  process.env.REDIS_PASSWORD = "";
-  logger.info(`Redis server connected at ${host}:${port}`);
 });
 
 afterAll(async () => {
