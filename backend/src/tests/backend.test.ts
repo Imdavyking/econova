@@ -17,6 +17,7 @@ let redis: Redis;
 
 beforeAll(async () => {
   try {
+    process.env.NODE_ENV = "test";
     redis = await initializeRedis();
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
