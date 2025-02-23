@@ -24,14 +24,14 @@ export const secret: {
           `An error occurred while trying to read the secret: ${secretName.replace(
             /[a-zA-Z0-9]/g,
             "*"
-          )}. Err: ${err}`
+          )}`
         );
       } else {
         console.debug(
           `Could not find the secret, probably not running in swarm mode: ${secretName.replace(
             /[a-zA-Z0-9]/g,
             "*"
-          )}. Err: ${err}`
+          )}`
         );
       }
       return "";
