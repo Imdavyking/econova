@@ -41,12 +41,13 @@ EcoNova is a decentralized charity management system that enables transparent an
      ```
 4. **Start the application** with Docker:
 
-   - Create secrets from .env
+   - Set Up Secrets from `.env`
 
-   ```
+   ```sh
    cd ..
    sh create-secrets.sh
    ```
+   📌 *Make sure the `.env` file exists in the backend directory before running this script!*  
 
    - Ensure you have Docker installed and running.
    - To bring up the backend and related services (MongoDB and Redis), run:
