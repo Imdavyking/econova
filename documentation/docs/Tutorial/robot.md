@@ -156,20 +156,7 @@ poetry run python main.py
    ```
    configure-connection twitter    # For Twitter/X integration
    configure-connection openai     # For OpenAI
-   configure-connection anthropic  # For Anthropic
-   configure-connection farcaster  # For Farcaster
-   configure-connection eternalai  # For EternalAI
-   configure-connection solana     # For Solana
-   configure-connection goat       # For Goat
-   configure-connection galadriel  # For Galadriel
-   configure-connection ethereum   # For Ethereum
    configure-connection sonic      # For Sonic
-   configure-connection discord    # For Discord
-   configure-connection ollama     # For Ollama
-   configure-connection xai        # For Grok
-   configure-connection allora     # For Allora
-   configure-connection hyperbolic # For Hyperbolic
-   configure-connection groq       # For GROQ
    ```
 
 2. Use `list-connections` to see all available connections and their status
