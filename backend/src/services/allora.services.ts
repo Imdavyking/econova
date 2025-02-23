@@ -36,7 +36,7 @@ export const fetchAlloraTopics = async () => {
     return output;
   } catch (error) {
     console.error("Error fetching Allora topics:", error);
-    throw error;
+    return "Error fetching Allora topics.";
   }
 };
 
