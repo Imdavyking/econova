@@ -23,9 +23,6 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 # Copy the rest of the source files into the image.
 COPY . .
 
-# Ensure the correct ownership for the logs directory
-# RUN chown -R node /usr/src/app/logs
-
 # Expose the port that the application listens on.
 EXPOSE 3000
 
