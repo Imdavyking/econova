@@ -38,8 +38,7 @@ create_secrets() {
   cd - > /dev/null  # Return to the previous directory
 }
 
-# Run the function for both frontend and backend
-create_secrets "frontend"
+# Run the function for backend
 create_secrets "backend"
 
 echo "Script execution completed!"
