@@ -9,7 +9,30 @@ services:
     networks:
       - app-network
     environment:
-      - DB_PASSWORD_FILE=/run/secrets/DB_PASSWORD
+      - MONGO_URI_FILE=/run/secrets/MONGO_URI
+      - TWITTER_CONSUMER_KEY_FILE=/run/secrets/TWITTER_CONSUMER_KEY
+      - TWITTER_CONSUMER_SECRET_FILE=/run/secrets/TWITTER_CONSUMER_SECRET
+      - TWITTER_ACCESS_TOKEN_FILE=/run/secrets/TWITTER_ACCESS_TOKEN
+      - TWITTER_ACCESS_TOKEN_SECRET_FILE=/run/secrets/TWITTER_ACCESS_TOKEN_SECRET
+      - TWITTER_USER_ID_FILE=/run/secrets/TWITTER_USER_ID
+      - TWITTER_BEARER_TOKEN_FILE=/run/secrets/TWITTER_BEARER_TOKEN
+      - REDIS_HOST_FILE=/run/secrets/REDIS_HOST
+      - REDIS_PORT_FILE=/run/secrets/REDIS_PORT
+      - REDIS_PASSWORD_FILE=/run/secrets/REDIS_PASSWORD
+      - NODE_ENV_FILE=/run/secrets/NODE_ENV
+      - OPENAI_API_KEY_FILE=/run/secrets/OPENAI_API_KEY
+      - JWT_SECRET_FILE=/run/secrets/JWT_SECRET
+      - PORT_FILE=/run/secrets/PORT
+      - BOT_PRIVATE_KEY_FILE=/run/secrets/BOT_PRIVATE_KEY
+      - FRONTEND_URL_FILE=/run/secrets/FRONTEND_URL
+      - CHAIN_ID_FILE=/run/secrets/CHAIN_ID
+      - LIGHTHOUSE_API_KEY_FILE=/run/secrets/LIGHTHOUSE_API_KEY
+      - RPC_URL_FILE=/run/secrets/RPC_URL
+      - CONTRACT_ADDRESS_FILE=/run/secrets/CONTRACT_ADDRESS
+      - WRAPPED_SONIC_CONTRACT_ADDRESS_FILE=/run/secrets/WRAPPED_SONIC_CONTRACT_ADDRESS
+      - ALLORA_API_KEY_FILE=/run/secrets/ALLORA_API_KEY
+      - ALLORA_NETWORK_FILE=/run/secrets/ALLORA_NETWORK
+      - API_SCAN_VERIFIER_KEY_FILE=/run/secrets/API_SCAN_VERIFIER_KEY
 
   redis:
     image: redis:7.4-alpine
@@ -23,7 +46,51 @@ networks:
     driver: bridge
 
 secrets:
-  DB_PASSWORD:
-    file: secrets/DB_PASSWORD  # Reference the secret file created by your script
-  API_KEY:
-    file: secrets/API_KEY
+  MONGO_URI:
+    file: secrets/MONGO_URI
+  TWITTER_CONSUMER_KEY:
+    file: secrets/TWITTER_CONSUMER_KEY
+  TWITTER_CONSUMER_SECRET:
+    file: secrets/TWITTER_CONSUMER_SECRET
+  TWITTER_ACCESS_TOKEN:
+    file: secrets/TWITTER_ACCESS_TOKEN
+  TWITTER_ACCESS_TOKEN_SECRET:
+    file: secrets/TWITTER_ACCESS_TOKEN_SECRET
+  TWITTER_USER_ID:
+    file: secrets/TWITTER_USER_ID
+  TWITTER_BEARER_TOKEN:
+    file: secrets/TWITTER_BEARER_TOKEN
+  REDIS_HOST:
+    file: secrets/REDIS_HOST
+  REDIS_PORT:
+    file: secrets/REDIS_PORT
+  REDIS_PASSWORD:
+    file: secrets/REDIS_PASSWORD
+  NODE_ENV:
+    file: secrets/NODE_ENV
+  OPENAI_API_KEY:
+    file: secrets/OPENAI_API_KEY
+  JWT_SECRET:
+    file: secrets/JWT_SECRET
+  PORT:
+    file: secrets/PORT
+  BOT_PRIVATE_KEY:
+    file: secrets/BOT_PRIVATE_KEY
+  FRONTEND_URL:
+    file: secrets/FRONTEND_URL
+  CHAIN_ID:
+    file: secrets/CHAIN_ID
+  LIGHTHOUSE_API_KEY:
+    file: secrets/LIGHTHOUSE_API_KEY
+  RPC_URL:
+    file: secrets/RPC_URL
+  CONTRACT_ADDRESS:
+    file: secrets/CONTRACT_ADDRESS
+  WRAPPED_SONIC_CONTRACT_ADDRESS:
+    file: secrets/WRAPPED_SONIC_CONTRACT_ADDRESS
+  ALLORA_API_KEY:
+    file: secrets/ALLORA_API_KEY
+  ALLORA_NETWORK:
+    file: secrets/ALLORA_NETWORK
+  API_SCAN_VERIFIER_KEY:
+    file: secrets/API_SCAN_VERIFIER_KEY
