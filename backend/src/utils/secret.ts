@@ -6,21 +6,32 @@ export const secret: {
 } = {
   read: (secretName) => {
     try {
-      console.info(`Reading secret: ${secretName}`);
+      console.info("Attempting to read a secret");
       return fs.readFileSync(`/run/secrets/${secretName}`, "utf8").trim();
     } catch (err: any) {
       const fromEnv = process.env[secretName];
       if (fromEnv) {
-        console.info(`Reading secret from env: ${secretName}`);
+        console.warn(
+          `⚠️ Warning: Using environment variable for secret ${secretName.replace(
+            /[a-zA-Z0-9]/g,
+            "*"
+          )}.`
+        );
         return fromEnv;
       }
       if (err.code !== "ENOENT") {
         console.error(
-          `An error occurred while trying to read the secret: ${secretName}. Err: ${err}`
+          `An error occurred while trying to read the secret: ${secretName.replace(
+            /[a-zA-Z0-9]/g,
+            "*"
+          )}. Err: ${err}`
         );
       } else {
         console.debug(
-          `Could not find the secret, probably not running in swarm mode: ${secretName}. Err: ${err}`
+          `Could not find the secret, probably not running in swarm mode: ${secretName.replace(
+            /[a-zA-Z0-9]/g,
+            "*"
+          )}. Err: ${err}`
         );
       }
       return "";
