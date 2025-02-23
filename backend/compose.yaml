@@ -8,31 +8,6 @@ services:
       - redis
     networks:
       - app-network
-    environment:
-      - MONGO_URI=/run/secrets/MONGO_URI
-      - TWITTER_CONSUMER_KEY=/run/secrets/TWITTER_CONSUMER_KEY
-      - TWITTER_CONSUMER_SECRET=/run/secrets/TWITTER_CONSUMER_SECRET
-      - TWITTER_ACCESS_TOKEN=/run/secrets/TWITTER_ACCESS_TOKEN
-      - TWITTER_ACCESS_TOKEN_SECRET=/run/secrets/TWITTER_ACCESS_TOKEN_SECRET
-      - TWITTER_USER_ID=/run/secrets/TWITTER_USER_ID
-      - TWITTER_BEARER_TOKEN=/run/secrets/TWITTER_BEARER_TOKEN
-      - REDIS_HOST=/run/secrets/REDIS_HOST
-      - REDIS_PORT=/run/secrets/REDIS_PORT
-      - REDIS_PASSWORD=/run/secrets/REDIS_PASSWORD
-      - NODE_ENV=/run/secrets/NODE_ENV
-      - OPENAI_API_KEY=/run/secrets/OPENAI_API_KEY
-      - JWT_SECRET=/run/secrets/JWT_SECRET
-      - PORT=/run/secrets/PORT
-      - BOT_PRIVATE_KEY=/run/secrets/BOT_PRIVATE_KEY
-      - FRONTEND_URL=/run/secrets/FRONTEND_URL
-      - CHAIN_ID=/run/secrets/CHAIN_ID
-      - LIGHTHOUSE_API_KEY=/run/secrets/LIGHTHOUSE_API_KEY
-      - RPC_URL=/run/secrets/RPC_URL
-      - CONTRACT_ADDRESS=/run/secrets/CONTRACT_ADDRESS
-      - WRAPPED_SONIC_CONTRACT_ADDRESS=/run/secrets/WRAPPED_SONIC_CONTRACT_ADDRESS
-      - ALLORA_API_KEY=/run/secrets/ALLORA_API_KEY
-      - ALLORA_NETWORK=/run/secrets/ALLORA_NETWORK
-      - API_SCAN_VERIFIER_KEY=/run/secrets/API_SCAN_VERIFIER_KEY
     secrets:
       - MONGO_URI
       - TWITTER_CONSUMER_KEY
@@ -73,50 +48,50 @@ networks:
 
 secrets:
   MONGO_URI:
-    external: true
+    file: ./secrets/MONGO_URI
   TWITTER_CONSUMER_KEY:
-    external: true
+    file: ./secrets/TWITTER_CONSUMER_KEY
   TWITTER_CONSUMER_SECRET:
-    external: true
+    file: ./secrets/TWITTER_CONSUMER_SECRET
   TWITTER_ACCESS_TOKEN:
-    external: true
+    file: ./secrets/TWITTER_ACCESS_TOKEN
   TWITTER_ACCESS_TOKEN_SECRET:
-    external: true
+    file: ./secrets/TWITTER_ACCESS_TOKEN_SECRET
   TWITTER_USER_ID:
-    external: true
+    file: ./secrets/TWITTER_USER_ID
   TWITTER_BEARER_TOKEN:
-    external: true
+    file: ./secrets/TWITTER_BEARER_TOKEN
   REDIS_HOST:
-    external: true
+    file: ./secrets/REDIS_HOST
   REDIS_PORT:
-    external: true
+    file: ./secrets/REDIS_PORT
   REDIS_PASSWORD:
-    external: true
+    file: ./secrets/REDIS_PASSWORD
   NODE_ENV:
-    external: true
+    file: ./secrets/NODE_ENV
   OPENAI_API_KEY:
-    external: true
+    file: ./secrets/OPENAI_API_KEY
   JWT_SECRET:
-    external: true
+    file: ./secrets/JWT_SECRET
   PORT:
-    external: true
+    file: ./secrets/PORT
   BOT_PRIVATE_KEY:
-    external: true
+    file: ./secrets/BOT_PRIVATE_KEY
   FRONTEND_URL:
-    external: true
+    file: ./secrets/FRONTEND_URL
   CHAIN_ID:
-    external: true
+    file: ./secrets/CHAIN_ID
   LIGHTHOUSE_API_KEY:
-    external: true
+    file: ./secrets/LIGHTHOUSE_API_KEY
   RPC_URL:
-    external: true
+    file: ./secrets/RPC_URL
   CONTRACT_ADDRESS:
-    external: true
+    file: ./secrets/CONTRACT_ADDRESS
   WRAPPED_SONIC_CONTRACT_ADDRESS:
-    external: true
+    file: ./secrets/WRAPPED_SONIC_CONTRACT_ADDRESS
   ALLORA_API_KEY:
-    external: true
+    file: ./secrets/ALLORA_API_KEY
   ALLORA_NETWORK:
-    external: true
+    file: ./secrets/ALLORA_NETWORK
   API_SCAN_VERIFIER_KEY:
-    external: true
+    file: ./secrets/API_SCAN_VERIFIER_KEY

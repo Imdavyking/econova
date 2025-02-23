@@ -7,7 +7,7 @@ export const secret: {
   read: (secretName) => {
     try {
       console.info(`Reading secret: ${secretName}`);
-      return fs.readFileSync(`/run/secrets/${secretName}`, "utf8");
+      return fs.readFileSync(`/run/secrets/${secretName}`, "utf8").trim();
     } catch (err: any) {
       const fromEnv = process.env[secretName];
       if (fromEnv) {

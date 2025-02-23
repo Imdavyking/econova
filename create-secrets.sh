@@ -32,9 +32,6 @@ create_secrets() {
     fi
   done
 
-  # ✅ Remove secrets directory after all secrets are created
-  rm -rf secrets/
-
   cd - > /dev/null  # Return to the previous directory
 }
 
