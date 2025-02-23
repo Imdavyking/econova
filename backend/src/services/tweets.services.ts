@@ -1,7 +1,8 @@
 import { TweetSchemaModel } from "../models/tweets";
 import axios from "axios";
 import dotenv from "dotenv";
-import { processOauth } from "../utils";
+import { environment } from "../utils/config";
+import { processOauth } from "../utils/oauth";
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ export const getRetweeters = async (tweetId: string) => {
   const url = `${BASE_URL}/${tweetId}/retweeted_by`;
   const response = await axios.get(url, {
     headers: {
-      Authorization: `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
+      Authorization: `Bearer ${environment.TWITTER_BEARER_TOKEN}`,
     },
   });
   return response.data;

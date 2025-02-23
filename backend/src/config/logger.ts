@@ -3,6 +3,7 @@ import "winston-daily-rotate-file";
 import path from "path";
 import fs from "fs";
 import { setup_HandleError } from "../utils";
+// import { environment } from "../utils/config";
 
 // Ensure the logs directory exists
 const logDir = path.join(__dirname, "../logs");

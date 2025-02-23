@@ -3,6 +3,7 @@ import { MerkleTreeModel } from "../models/merkle.tree";
 import { ethers } from "ethers";
 import dotenv from "dotenv";
 import { CHAIN_ID } from "../utils/constants";
+import { environment } from "../utils/config";
 dotenv.config();
 
 export async function saveMerkleRoot(address: string, level: number) {
@@ -47,7 +48,7 @@ export const signUserLevelWithRoot = async (
   level: number,
   root: string
 ) => {
-  const botPrivateKey = process.env.BOT_PRIVATE_KEY!;
+  const botPrivateKey = environment.BOT_PRIVATE_KEY!;
   const wallet = new ethers.Wallet(botPrivateKey);
 
   const timestamp = Math.floor(Date.now() / 1000);

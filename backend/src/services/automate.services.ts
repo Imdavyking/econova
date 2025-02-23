@@ -1,12 +1,13 @@
 import { ethers } from "ethers";
 import dotenv from "dotenv";
 import logger from "../config/logger";
+import { environment } from "../utils/config";
 
 dotenv.config();
 
-const BOT_PRIVATE_KEY = process.env.BOT_PRIVATE_KEY!;
-const RPC_URL = process.env.RPC_URL!;
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS!;
+const BOT_PRIVATE_KEY = environment.BOT_PRIVATE_KEY!;
+const RPC_URL = environment.RPC_URL!;
+const CONTRACT_ADDRESS = environment.CONTRACT_ADDRESS!;
 
 const provider = new ethers.JsonRpcProvider(RPC_URL);
 const wallet = new ethers.Wallet(BOT_PRIVATE_KEY, provider);

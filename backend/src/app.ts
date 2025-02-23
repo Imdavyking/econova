@@ -3,6 +3,7 @@ import { connectDB } from "./database/connection";
 import logger from "./config/logger";
 import { automateCharityFundDistribution } from "./services/automate.services";
 import app from "./utils/create.server";
+import { environment } from "./utils/config";
 
 dotenv.config();
 
@@ -13,5 +14,5 @@ connectDB();
 automateCharityFundDistribution();
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = environment.PORT || 3000;
 app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));

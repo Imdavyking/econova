@@ -5,14 +5,15 @@ import {
   PriceInferenceTimeframe,
 } from "@alloralabs/allora-sdk";
 import dotenv from "dotenv";
+import { environment } from "../utils/config";
 dotenv.config();
 
 const alloraClient = new AlloraAPIClient({
   chainSlug:
-    process.env.ALLORA_NETWORK === "mainnet"
+    environment.ALLORA_NETWORK === "mainnet"
       ? ChainSlug.MAINNET
       : ChainSlug.TESTNET,
-  apiKey: process.env.ALLORA_API_KEY || "UP-8cbc632a67a84ac1b4078661",
+  apiKey: environment.ALLORA_API_KEY || "UP-8cbc632a67a84ac1b4078661",
 });
 
 /**

@@ -1,12 +1,13 @@
 import dotenv from "dotenv";
 import OAuth from "oauth-1.0a";
 import crypto from "crypto";
+import { environment } from "../utils/config";
 
 dotenv.config();
 export const oauth = new OAuth({
   consumer: {
-    key: process.env.TWITTER_CONSUMER_KEY!,
-    secret: process.env.TWITTER_CONSUMER_SECRET!,
+    key: environment.TWITTER_CONSUMER_KEY!,
+    secret: environment.TWITTER_CONSUMER_SECRET!,
   },
   signature_method: "HMAC-SHA1",
   hash_function(base_string, key) {

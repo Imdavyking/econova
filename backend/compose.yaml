@@ -33,6 +33,32 @@ services:
       - ALLORA_API_KEY=/run/secrets/ALLORA_API_KEY
       - ALLORA_NETWORK=/run/secrets/ALLORA_NETWORK
       - API_SCAN_VERIFIER_KEY=/run/secrets/API_SCAN_VERIFIER_KEY
+    secrets:
+      - MONGO_URI
+      - TWITTER_CONSUMER_KEY
+      - TWITTER_CONSUMER_SECRET
+      - TWITTER_ACCESS_TOKEN
+      - TWITTER_ACCESS_TOKEN_SECRET
+      - TWITTER_USER_ID
+      - TWITTER_BEARER_TOKEN
+      - REDIS_HOST
+      - REDIS_PORT
+      - REDIS_PASSWORD
+      - NODE_ENV
+      - OPENAI_API_KEY
+      - JWT_SECRET
+      - PORT
+      - BOT_PRIVATE_KEY
+      - FRONTEND_URL
+      - CHAIN_ID
+      - LIGHTHOUSE_API_KEY
+      - RPC_URL
+      - CONTRACT_ADDRESS
+      - WRAPPED_SONIC_CONTRACT_ADDRESS
+      - ALLORA_API_KEY
+      - ALLORA_NETWORK
+      - API_SCAN_VERIFIER_KEY
+    restart: always
 
   redis:
     image: redis:7.4-alpine

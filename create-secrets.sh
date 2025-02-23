@@ -1,4 +1,4 @@
-#!/bin/bash
+s#!/bin/bash
 
 create_secrets() {
   local dir="$1"

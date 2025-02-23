@@ -13,6 +13,7 @@ import { FRONTEND_URL } from "../utils/constants";
 import merkleRoutes from "../routes/merkle.routes";
 import alloraRoutes from "../routes/allora.routes";
 import sourceCodeRoutes from "../routes/source.code.routes";
+import { environment } from "./config";
 
 dotenv.config();
 const app = express();
@@ -28,7 +29,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: environment.NODE_ENV === "production",
     },
   })
 );

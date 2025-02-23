@@ -7,6 +7,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Redis from "ioredis";
+import { environment } from "../utils/config";
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ let redis: Redis;
 
 beforeAll(async () => {
   try {
-    process.env.NODE_ENV = "test";
+    environment.NODE_ENV = "test";
     redis = await initializeRedis();
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());

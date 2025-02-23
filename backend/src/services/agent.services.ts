@@ -9,8 +9,9 @@ import { z } from "zod";
 import dotenv from "dotenv";
 import { charityCategories } from "../utils/charity.categories";
 import { fetchAlloraTopics, fetchInferenceByTopicID } from "./allora.services";
+import { environment } from "../utils/config";
 dotenv.config();
-const openAIApiKey = process.env.OPENAI_API_KEY!;
+const openAIApiKey = environment.OPENAI_API_KEY!;
 const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 const assets = [
@@ -148,7 +149,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     ======== End of Allora Network Topics ========
     For sending:
     WRAPPED_SONIC_CONTRACT_ADDRESS: ${
-      process.env.WRAPPED_SONIC_CONTRACT_ADDRESS
+      environment.WRAPPED_SONIC_CONTRACT_ADDRESS
     }
     SONIC_CHAIN_ID: 146
     BSC_CHAIN_ID: 56
