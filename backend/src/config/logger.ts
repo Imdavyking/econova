@@ -3,7 +3,7 @@ import "winston-daily-rotate-file";
 import path from "path";
 import fs from "fs";
 import { setup_HandleError } from "../utils";
-// import { environment } from "../utils/config";
+import { environment } from "../utils/config";
 
 // Ensure the logs directory exists
 const logDir = path.join(__dirname, "../logs");
@@ -68,7 +68,7 @@ const logger = createLogger({
   ),
   transports: [
     new transports.Console({
-      level: process.env.NODE_ENV === "production" ? "info" : "debug",
+      level: environment.NODE_ENV === "production" ? "info" : "debug",
       format: format.combine(format.colorize(), format.simple()),
     }),
     new transports.DailyRotateFile({
