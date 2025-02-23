@@ -30,7 +30,7 @@ COPY . .
 EXPOSE 3000
 
 # Run the application.
-CMD yarn dev
+CMD yarn dev --host
 
 
 
