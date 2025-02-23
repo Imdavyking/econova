@@ -25,7 +25,8 @@ create_secrets() {
 
     # Check if the secret already exists
     if docker secret ls | awk '{print $2}' | grep -q "^$key$"; then
-      echo "Secret $key already exists, skipping..."
+      echo "Updating secret $key..."
+      echo "$value" | docker secret rm "$key" && docker secret create "$key" "secrets/$key"
     else
       docker secret create "$key" "secrets/$key" && echo "Secret $key created successfully!" || echo "Failed to create secret: $key"
     fi

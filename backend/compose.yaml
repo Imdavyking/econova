@@ -8,8 +8,8 @@ services:
       - redis
     networks:
       - app-network
-    env_file:
-      - .env
+    environment:
+      - DB_PASSWORD_FILE=/run/secrets/DB_PASSWORD
 
   redis:
     image: redis:7.4-alpine
@@ -21,3 +21,9 @@ services:
 networks:
   app-network:
     driver: bridge
+
+secrets:
+  DB_PASSWORD:
+    file: secrets/DB_PASSWORD  # Reference the secret file created by your script
+  API_KEY:
+    file: secrets/API_KEY
