@@ -40,15 +40,18 @@ EcoNova is a decentralized charity management system that enables transparent an
         API_SCAN_VERIFIER_KEY=
      ```
 4. **Start the application** with Docker:
+
    - Create secrets from .env
+
    ```
    cd ..
    sh create-secrets.sh
    ```
+
    - Ensure you have Docker installed and running.
    - To bring up the backend and related services (MongoDB and Redis), run:
      ```bash
-     docker-compose up
+     docker compose up
      ```
    - This will start the application on `localhost:3000`.
 
