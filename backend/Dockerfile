@@ -31,7 +31,7 @@ COPY . .
 # RUN chown -R node /usr/src/app/logs
 
 # Expose the port that the application listens on.
-EXPOSE 3000
+EXPOSE 3100
 
 # Run the application.
 CMD yarn dev
