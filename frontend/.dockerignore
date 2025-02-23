@@ -25,3 +25,5 @@
 **/dist
 LICENSE
 README.md
+.env
+.env.local
