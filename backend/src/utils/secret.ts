@@ -1,40 +1,63 @@
-// dependencies
 import fs from "fs";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const secret: {
   read: (secretName: string) => string;
+  loadAll: () => Record<string, string>;
 } = {
   read: (secretName) => {
     try {
-      console.info("Attempting to read a secret");
       return fs.readFileSync(`/run/secrets/${secretName}`, "utf8").trim();
     } catch (err: any) {
       const fromEnv = process.env[secretName];
       if (fromEnv) {
-        console.warn(
-          `⚠️ Warning: Using environment variable for secret ${secretName.replace(
-            /[a-zA-Z0-9]/g,
-            "*"
-          )}.`
-        );
+        console.warn(`⚠️ Using env variable for secret: ${mask(secretName)}`);
         return fromEnv;
       }
-      if (err.code !== "ENOENT") {
-        console.error(
-          `An error occurred while trying to read the secret: ${secretName.replace(
-            /[a-zA-Z0-9]/g,
-            "*"
-          )}`
-        );
-      } else {
-        console.debug(
-          `Could not find the secret, probably not running in swarm mode: ${secretName.replace(
-            /[a-zA-Z0-9]/g,
-            "*"
-          )}`
-        );
-      }
+      console.error(`❌ Missing secret: ${mask(secretName)}`);
       return "";
     }
   },
+
+  loadAll: () => {
+    const secrets = [
+      "MONGO_URI",
+      "TWITTER_CONSUMER_KEY",
+      "TWITTER_CONSUMER_SECRET",
+      "TWITTER_ACCESS_TOKEN",
+      "TWITTER_ACCESS_TOKEN_SECRET",
+      "TWITTER_USER_ID",
+      "TWITTER_BEARER_TOKEN",
+      "REDIS_HOST",
+      "REDIS_PORT",
+      "REDIS_PASSWORD",
+      "NODE_ENV",
+      "OPENAI_API_KEY",
+      "JWT_SECRET",
+      "PORT",
+      "BOT_PRIVATE_KEY",
+      "FRONTEND_URL",
+      "CHAIN_ID",
+      "LIGHTHOUSE_API_KEY",
+      "RPC_URL",
+      "CONTRACT_ADDRESS",
+      "WRAPPED_SONIC_CONTRACT_ADDRESS",
+      "ALLORA_API_KEY",
+      "ALLORA_NETWORK",
+      "API_SCAN_VERIFIER_KEY",
+    ];
+
+    const loadedSecrets: Record<string, string> = {};
+
+    secrets.forEach((secretName) => {
+      loadedSecrets[secretName] = secret.read(secretName);
+    });
+
+    console.info("✅ All secrets loaded into memory.");
+    return loadedSecrets;
+  },
 };
+
+// Utility to mask secret names in logs
+const mask = (name: string) => name.replace(/[a-zA-Z0-9]/g, "*");
