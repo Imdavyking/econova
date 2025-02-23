@@ -47,50 +47,74 @@ networks:
 
 secrets:
   MONGO_URI:
-    file: secrets/MONGO_URI
+    external: true
+    name: MONGO_URI
   TWITTER_CONSUMER_KEY:
-    file: secrets/TWITTER_CONSUMER_KEY
+    name: TWITTER_CONSUMER_KEY
+    external: true
   TWITTER_CONSUMER_SECRET:
-    file: secrets/TWITTER_CONSUMER_SECRET
+    name: TWITTER_CONSUMER_SECRET
+    external: true
   TWITTER_ACCESS_TOKEN:
-    file: secrets/TWITTER_ACCESS_TOKEN
+    name: TWITTER_ACCESS_TOKEN
+    external: true
   TWITTER_ACCESS_TOKEN_SECRET:
-    file: secrets/TWITTER_ACCESS_TOKEN_SECRET
+    name: TWITTER_ACCESS_TOKEN_SECRET
+    external: true
   TWITTER_USER_ID:
-    file: secrets/TWITTER_USER_ID
+    name: TWITTER_USER_ID
+    external: true
   TWITTER_BEARER_TOKEN:
-    file: secrets/TWITTER_BEARER_TOKEN
+    name: TWITTER_BEARER_TOKEN
+    external: true
   REDIS_HOST:
-    file: secrets/REDIS_HOST
+    name: REDIS_HOST
+    external: true
   REDIS_PORT:
-    file: secrets/REDIS_PORT
+    name: REDIS_PORT
+    external: true
   REDIS_PASSWORD:
-    file: secrets/REDIS_PASSWORD
+    name: REDIS_PASSWORD
+    external: true
   NODE_ENV:
-    file: secrets/NODE_ENV
+    name: NODE_ENV
+    external: true
   OPENAI_API_KEY:
-    file: secrets/OPENAI_API_KEY
+    name: OPENAI_API_KEY
+    external: true
   JWT_SECRET:
-    file: secrets/JWT_SECRET
+    name: JWT_SECRET
+    external: true
   PORT:
-    file: secrets/PORT
+    name: PORT
+    external: true
   BOT_PRIVATE_KEY:
-    file: secrets/BOT_PRIVATE_KEY
+    name: BOT_PRIVATE_KEY
+    external: true
   FRONTEND_URL:
-    file: secrets/FRONTEND_URL
+    name: FRONTEND_URL
+    external: true
   CHAIN_ID:
-    file: secrets/CHAIN_ID
+    name: CHAIN_ID
+    external: true
   LIGHTHOUSE_API_KEY:
-    file: secrets/LIGHTHOUSE_API_KEY
+    name: LIGHTHOUSE_API_KEY
+    external: true
   RPC_URL:
-    file: secrets/RPC_URL
+    name: RPC_URL
+    external: true
   CONTRACT_ADDRESS:
-    file: secrets/CONTRACT_ADDRESS
+    name: CONTRACT_ADDRESS
+    external: true
   WRAPPED_SONIC_CONTRACT_ADDRESS:
-    file: secrets/WRAPPED_SONIC_CONTRACT_ADDRESS
+    name: WRAPPED_SONIC_CONTRACT_ADDRESS
+    external: true
   ALLORA_API_KEY:
-    file: secrets/ALLORA_API_KEY
+    name: ALLORA_API_KEY
+    external: true
   ALLORA_NETWORK:
-    file: secrets/ALLORA_NETWORK
+    name: ALLORA_NETWORK
+    external: true
   API_SCAN_VERIFIER_KEY:
-    file: secrets/API_SCAN_VERIFIER_KEY
+    name: API_SCAN_VERIFIER_KEY
+    external: true
