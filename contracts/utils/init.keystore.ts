@@ -13,7 +13,7 @@ export const initKeystore = (provider: Provider | null) => {
         }
 
         const keyStorePassword = process.env.KEYSTORE_PASSWORD ?? ""
-        const keyStoreFile = path.join(__dirname, process.env.KEYSTORE_FILE ?? "")
+        const keyStoreFile = path.join(process.cwd(), process.env.KEYSTORE_FILE ?? "")
 
         if (!fs.existsSync(keyStoreFile)) {
             console.error(`❌ Keystore file not found: ${keyStoreFile}`)

@@ -1,4 +1,4 @@
-import { ethers } from "hardhat"
+import { ethers } from "ethers"
 
 export const createKeystore = ({
     privatekey,

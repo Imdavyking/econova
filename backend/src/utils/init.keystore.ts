@@ -17,7 +17,7 @@ export const initKeystore = (provider: Provider | null) => {
       return new ethers.Wallet(privateKey, provider);
     }
 
-    const keyStoreFile = path.join(__dirname, secret.read("KEYSTORE_FILE"));
+    const keyStoreFile = path.join(process.cwd(), secret.read("KEYSTORE_FILE"));
     const keyStorePassword = secret.read("KEYSTORE_PASSWORD");
 
     if (!fs.existsSync(keyStoreFile)) {
