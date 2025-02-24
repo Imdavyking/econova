@@ -39,33 +39,17 @@ EcoNova is a decentralized charity management system that enables transparent an
         ALLORA_NETWORK=
         API_SCAN_VERIFIER_KEY=
      ```
-4. **Start the application** with Docker:
 
-   - Set Up Secrets from `.env`
-
-   ```sh
-   cd ..
-   sh create-secrets.sh
-   ```
-   📌 *Make sure the `.env` file exists in the backend directory before running this script!*  
-
-   - Ensure you have Docker installed and running.
-   - To bring up the backend and related services (MongoDB and Redis), run:
-     ```bash
-     docker compose up
-     ```
-   - This will start the application on `localhost:3100`.
-
-5. Alternatively, **start the application locally** without Docker:
-   - Make sure Redis is running locally or on a remote server.
-   - If you're using Redis locally, you can start it with the following command:
+4. **Start the application locally**:  
+   - Make sure Redis is running locally or on a remote server.  
+   - If you're using Redis locally, start it with the following command:  
      ```bash
      redis-server
-     ```
-   - Then, start the application:
-     ```
+     ```  
+   - Then, start the application:  
+     ```bash
      yarn dev
-     ```
+     ```  
 
 ## Usage
 

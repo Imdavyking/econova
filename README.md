@@ -9,7 +9,8 @@ The platform integrates:
 💸 **Autonomous donations (powered by Gelato)**  
 📢 **Social media engagement rewards** (powered by **Zerepy**)  
 🔁 **Cross-chain transfers via deBridge & LayerZero**  
-📊 **AI-powered ETH & BTC price predictions via Allora**
+📊 **AI-powered ETH & BTC price predictions via Allora**  
+🤖 **AI Audit with SonicScan, GitHub Solidity analysis, and security compliance checks**
 
 ---
 
@@ -87,6 +88,8 @@ EcoNova’s **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
 - **Rewards users with tokens based on interactions** 🎁
 - **Encourages community-driven fundraising** 🤝
 
+⚠️ **Note:** Twitter login **will not work** due to callback URL restrictions. Please configure the frontend URL to the Twitter backend.
+
 ---
 
 ## 📜 **Documentation**
@@ -111,6 +114,18 @@ EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
 - **Decentralized fund allocation** with no single point of failure
 - **Secure & trustless cross-chain transfers via deBridge & LayerZero**
 - **Automated & gas-efficient donations using Gelato**
+
+---
+
+## 🤖 **AI Audit**
+
+EcoNova integrates **AI-powered smart contract auditing** using:
+
+- **[SonicScan Testnet API](https://api-testnet.sonicscan.org)** for verified contract address checks
+- **GitHub Solidity file analysis** to detect vulnerabilities
+- **File input support** for manual Solidity audits
+- **Gas optimization suggestions** to reduce transaction costs
+- **Security compliance checks** to enhance contract safety
 
 ---
 
