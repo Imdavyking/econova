@@ -20,6 +20,7 @@ EcoNova is a decentralized charity management system that enables transparent an
 
      ```bash
         KEYSTORE_FILE=./keystore.json
+        KEYSTORE_PASSWORD=
         MONGO_URI=
         TWITTER_CONSUMER_KEY=
         TWITTER_CONSUMER_SECRET=
@@ -42,13 +43,7 @@ EcoNova is a decentralized charity management system that enables transparent an
         API_SCAN_VERIFIER_KEY=
      ```
 
-4. **Export the keystore password before running commands:**
-
-   ```bash
-   export KEYSTORE_PASSWORD="your-secure-password"
-   ```
-
-5. **Start the application locally**:
+4. **Start the application locally**:
    - Make sure Redis is running locally or on a remote server.
    - If you're using Redis locally, start it with the following command:
      ```bash
