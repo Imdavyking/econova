@@ -38,7 +38,6 @@ services:
       - REDIS_PASSWORD
       - KEYSTORE_FILE
       - KEYSTORE_PASSWORD
-      - PRIVATE_KEY
     environment:
       - MONGO_URI=${MONGO_URI:-mongodb://mongodb:27017/ai-bot}
       - REDIS_HOST=${REDIS_HOST:-redis}
@@ -133,8 +132,6 @@ secrets:
     file: ./backend/secrets/JWT_SECRET
   PORT:
     file: ./backend/secrets/PORT
-  PRIVATE_KEY:
-    file: ./backend/secrets/PRIVATE_KEY
   FRONTEND_URL:
     file: ./backend/secrets/FRONTEND_URL
   CHAIN_ID:
