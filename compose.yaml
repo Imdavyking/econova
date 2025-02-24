@@ -24,7 +24,6 @@ services:
       - OPENAI_API_KEY
       - JWT_SECRET
       - PORT
-      - PRIVATE_KEY
       - CHAIN_ID
       - LIGHTHOUSE_API_KEY
       - RPC_URL
@@ -37,6 +36,8 @@ services:
       - REDIS_HOST
       - REDIS_PORT
       - REDIS_PASSWORD
+      - KEYSTORE_FILE
+      - KEYSTORE_PASSWORD
     environment:
       - MONGO_URI=${MONGO_URI:-mongodb://mongodb:27017/ai-bot}
       - REDIS_HOST=${REDIS_HOST:-redis}
@@ -151,6 +152,10 @@ secrets:
     file: ./backend/secrets/ALLORA_NETWORK
   API_SCAN_VERIFIER_KEY:
     file: ./backend/secrets/API_SCAN_VERIFIER_KEY
+  KEYSTORE_FILE:
+    file: ./backend/secrets/KEYSTORE_FILE
+  KEYSTORE_PASSWORD:
+    file: ./backend/secrets/KEYSTORE_PASSWORD
 
 volumes:
   mongodb-data:
