@@ -50,7 +50,6 @@ yarn
 Create a `.env` file in the project root and configure the following variables:
 
 ```bash
-# Path to the encrypted keystore file (absolute or relative to the project root).
 KEYSTORE_FILE=./keystore.json
 RPC_URL=
 ORACLE_ADDRESS=
