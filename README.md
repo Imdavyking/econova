@@ -146,7 +146,7 @@ EcoNova integrates **AI-powered smart contract auditing** using:
   docker compose up
   ```
 
-- The application will be accessible at **`localhost:3100`**.
+- The application will be accessible at **`localhost:3000`**.
 
 ---
 
