@@ -4,11 +4,15 @@ import logger from "./config/logger";
 import { automateCharityFundDistribution } from "./services/automate.services";
 import app from "./utils/create.server";
 import { environment } from "./utils/config";
+import initializeRedis from "./utils/redis.app";
 
 dotenv.config();
 
 // Database connection
 connectDB();
+
+// Initialize Redis
+initializeRedis();
 
 // Automation for funds distrubtion
 automateCharityFundDistribution();

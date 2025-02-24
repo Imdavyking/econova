@@ -6,12 +6,15 @@ import { environment } from "./config";
 
 dotenv.config();
 
-let redis: Redis;
+let redisInstance: Redis | null = null;
 
-async function initializeRedis() {
+async function initializeRedis(): Promise<Redis> {
+  if (redisInstance) {
+    return redisInstance;
+  }
+
   if (environment.NODE_ENV === "test") {
     const redisServer = new RedisMemoryServer();
-
     if (!redisServer.getInstanceInfo()) {
       await redisServer.start();
     }
@@ -23,23 +26,23 @@ async function initializeRedis() {
     logger.info("Using in-memory Redis for testing");
   }
 
-  redis = new Redis({
+  redisInstance = new Redis({
     host: environment.REDIS_HOST || "localhost",
     port: Number(environment.REDIS_PORT) || 6379,
     password: environment.REDIS_PASSWORD,
   });
 
-  redis.on("connect", () => {
+  redisInstance.on("connect", () => {
     logger.info(
       `Redis connected at ${environment.REDIS_HOST}:${environment.REDIS_PORT}`
     );
   });
 
-  redis.on("error", (err) => {
+  redisInstance.on("error", (err) => {
     logger.error("Redis error:", err);
   });
 
-  return redis;
+  return redisInstance;
 }
 
 export default initializeRedis;

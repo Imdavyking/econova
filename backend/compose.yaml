@@ -10,16 +10,12 @@ services:
     networks:
       - app-network
     secrets:
-      - MONGO_URI
       - TWITTER_CONSUMER_KEY
       - TWITTER_CONSUMER_SECRET
       - TWITTER_ACCESS_TOKEN
       - TWITTER_ACCESS_TOKEN_SECRET
       - TWITTER_USER_ID
       - TWITTER_BEARER_TOKEN
-      - REDIS_HOST
-      - REDIS_PORT
-      - REDIS_PASSWORD
       - NODE_ENV
       - OPENAI_API_KEY
       - JWT_SECRET
@@ -34,6 +30,11 @@ services:
       - ALLORA_API_KEY
       - ALLORA_NETWORK
       - API_SCAN_VERIFIER_KEY
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/ai-bot/
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
     restart: always
 
   redis:
@@ -53,6 +54,7 @@ services:
       - mongodb-data:/data/db
     secrets:
       - MONGO_URI
+    command: mongod --quiet --logpath /dev/null 
 
 networks:
   app-network:
@@ -108,7 +110,5 @@ secrets:
   API_SCAN_VERIFIER_KEY:
     file: ./secrets/API_SCAN_VERIFIER_KEY
 
-
 volumes:
   mongodb-data:
-
