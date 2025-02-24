@@ -38,7 +38,7 @@ yarn install  # or npm install
 
 Create a `.env` file in the project root and add the following variables:
 
-```env
+```bash
   RPC_URL=
   CHAIN_ID=
   CONTRACT_ADDRESS=

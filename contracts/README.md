@@ -26,8 +26,10 @@ yarn
 
 Create a `.env` file in the project root and add the following variables:
 
-```env
- PRIVATE_KEY=
+```bash
+ PRIVATE_KEY= # Do not use this in production
+ KEYSTORE_FILE=
+ KEYSTORE_PASSWORD=
  RPC_URL=
  ORACLE_ADDRESS=
  NODE_ENV=

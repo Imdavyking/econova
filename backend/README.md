@@ -17,7 +17,10 @@ EcoNova is a decentralized charity management system that enables transparent an
 
    - Obtain your X Request API credentials from the X Developer Portal.
    - Open the `.env` file and update the following values with your credentials:
-     ```
+     ```bash
+        PRIVATE_KEY= # Do not use this in production
+        KEYSTORE_FILE=
+        KEYSTORE_PASSWORD=
         MONGO_URI=
         TWITTER_CONSUMER_KEY=
         TWITTER_CONSUMER_SECRET=
@@ -32,7 +35,6 @@ EcoNova is a decentralized charity management system that enables transparent an
         OPENAI_API_KEY=
         JWT_SECRET=
         PORT=
-        PRIVATE_KEY=
         FRONTEND_URL=
         CHAIN_ID=
         WRAPPED_SONIC_CONTRACT_ADDRESS=
