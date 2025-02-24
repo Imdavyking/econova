@@ -77,7 +77,7 @@ yarn keystore:create <PRIVATE_KEY> <PASSWORD>
 Then, export the keystore password before running commands:
 
 ```bash
-export KEYSTORE_PASSWORD="your-secure-password"
+export KEYSTORE_PASSWORD="<PASSWORD>"
 ```
 
 ---
