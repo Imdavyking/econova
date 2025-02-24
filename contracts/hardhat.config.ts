@@ -4,14 +4,8 @@ import "@nomicfoundation/hardhat-toolbox"
 import "@nomicfoundation/hardhat-verify"
 import { HardhatEthersProvider } from "@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider"
 import dotenv from "dotenv"
-import {
-    CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY,
-    crossChainLzInfo,
-    LZ_CHAINS,
-} from "./utils/lzendpoints.help"
+import { CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY, crossChainLzInfo } from "./utils/lzendpoints.help"
 import { EthereumProvider } from "hardhat/types"
-import { ethers } from "hardhat"
-import fs from "fs"
 import { getPrivateKeyFromKeyStore } from "./utils/get.wallet"
 dotenv.config()
 
