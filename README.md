@@ -114,6 +114,29 @@ EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
 
 ---
 
+## 🚀 **Start the Application**
+
+### 1️⃣ **Start with Docker**
+
+- **Set up secrets from `.env`**
+
+  ```sh
+  sh create-secrets.sh
+  ```
+
+  📌 _Ensure the `.env` file exists and is configured in both the backend and frontend directories before running this script!_
+
+- **Ensure you have Docker installed and running.**
+- **To start the backend and related services (MongoDB and Redis), run:**
+
+  ```bash
+  docker compose up
+  ```
+
+- The application will be accessible at **`localhost:3100`**.
+
+---
+
 ## 🤝 **Contribute**
 
 Want to help? Submit a PR or report issues via our **[GitHub](https://github.com/Imdavyking/econova/)**.
