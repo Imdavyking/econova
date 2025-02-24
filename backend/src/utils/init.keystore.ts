@@ -3,6 +3,7 @@ import fs from "fs";
 import dotenv from "dotenv";
 import { environment } from "./config";
 import { secret } from "./secret";
+import logger from "../config/logger";
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ export const initKeystore = (provider: Provider | null) => {
   try {
     const privateKey = secret.read("PRIVATE_KEY");
     if (privateKey.trim() !== "") {
-      console.warn(
+      logger.warn(
         "⚠️ Using PRIVATE_KEY from .env file. Do not use in production."
       );
       return new ethers.Wallet(privateKey, provider);
@@ -20,7 +21,7 @@ export const initKeystore = (provider: Provider | null) => {
     const keyStorePassword = secret.read("KEYSTORE_PASSWORD");
 
     if (!fs.existsSync(keyStoreFile)) {
-      console.error(`❌ Keystore file not found: ${keyStoreFile}`);
+      logger.error(`❌ Keystore file not found: ${keyStoreFile}`);
       throw new Error(`Keystore file not found: ${keyStoreFile}`);
     }
 
@@ -29,11 +30,10 @@ export const initKeystore = (provider: Provider | null) => {
       keystore,
       keyStorePassword
     );
-    const wallet = new ethers.Wallet(keystoreDetails.privateKey, provider);
-    console.log("✅ Wallet successfully decrypted from keystore.");
-    return wallet;
+    logger.info("✅ Wallet successfully decrypted from keystore.");
+    return new ethers.Wallet(keystoreDetails.privateKey, provider);
   } catch (error: any) {
-    console.error(`❌ Error decrypting keystore: ${error.message}`);
+    logger.error(`❌ Error decrypting keystore: ${error.message}`);
     throw error;
   }
 };
