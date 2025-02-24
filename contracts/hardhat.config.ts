@@ -10,7 +10,17 @@ import {
     LZ_CHAINS,
 } from "./utils/lzendpoints.help"
 import { EthereumProvider } from "hardhat/types"
+import { ethers } from "hardhat"
+import fs from "fs"
+import { getPrivateKeyFromKeyStore } from "./utils/get.wallet"
 dotenv.config()
+
+if (process.env.KEYSTORE_FILE && process.env.KEYSTORE_PASSWORD) {
+    process.env.PRIVATE_KEY = getPrivateKeyFromKeyStore({
+        keyStoreFile: process.env.KEYSTORE_FILE,
+        keyStorePassword: process.env.KEYSTORE_PASSWORD,
+    })
+}
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 const RPC_URL = process.env.RPC_URL
