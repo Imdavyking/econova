@@ -23,7 +23,7 @@ jobs:
       NODE_ENV: ${{secrets.NODE_ENV}}
       MONGO_URI: ${{secrets.MONGO_URI}}
       PORT: ${{secrets.PORT}}
-      BOT_PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+      PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
       RPC_URL: ${{secrets.RPC_URL}}
       CONTRACT_ADDRESS: ${{secrets.CONTRACT_ADDRESS}}
       FRONTEND_URL: ${{secrets.FRONTEND_URL}}

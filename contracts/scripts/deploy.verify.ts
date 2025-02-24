@@ -15,6 +15,7 @@ import { copyABI } from "./copy.abi"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { deployCrossChainOFT } from "./econova.token.cross.chain"
 import { crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
+import { initKeystore } from "../utils/init.keystore"
 dotenv.config()
 
 async function main() {
@@ -25,8 +26,7 @@ async function main() {
     const { ecoNovaNFTDeployer } = await hre.ignition.deploy(EcoNovaCourseNFTDeployer)
     const ecoAddress = await ecoNovaDeployer.getAddress()
     const ecoCourseNFTAddress = await ecoNovaNFTDeployer.getAddress()
-    const botPrivateKey = process.env.PRIVATE_KEY!
-    const wallet = new ethers.Wallet(botPrivateKey)
+    const wallet = initKeystore(null)
     const chainName = process.env.CHAIN_NAME!
     const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
     const chainSymbol = process.env.CHAIN_SYMBOL!

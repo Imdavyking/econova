@@ -5,6 +5,7 @@ import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition
 import { charityCategories } from "../../utils/charity.categories"
 import { localHardhat } from "../../utils/localhardhat.chainid"
 import { LZ_CHAINS } from "../../utils/lzendpoints.help"
+import { initKeystore } from "../../utils/init.keystore"
 
 dotenv.config()
 
@@ -18,8 +19,7 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
     let lzEndPoint: NamedArtifactContractDeploymentFuture<"EndpointV2Mock"> | string =
         lzInfo.endpointV2
 
-    const botPrivateKey = process.env.PRIVATE_KEY!
-    const wallet = new ethers.Wallet(botPrivateKey)
+    const wallet = initKeystore(null)
 
     if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) {
         oracle = m.contract("MockPythPriceFeed", [])

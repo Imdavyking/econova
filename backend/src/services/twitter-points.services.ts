@@ -18,7 +18,7 @@ export const signTwitterPoints = async (
   userTwitterId: string | number,
   tweetId: string | number
 ) => {
-  const botPrivateKey = environment.BOT_PRIVATE_KEY!;
+  const botPrivateKey = environment.PRIVATE_KEY!;
 
   const wallet = new ethers.Wallet(botPrivateKey);
 

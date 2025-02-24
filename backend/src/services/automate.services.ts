@@ -5,12 +5,12 @@ import { environment } from "../utils/config";
 
 dotenv.config();
 
-const BOT_PRIVATE_KEY = environment.BOT_PRIVATE_KEY!;
+const PRIVATE_KEY = environment.PRIVATE_KEY!;
 const RPC_URL = environment.RPC_URL!;
 const CONTRACT_ADDRESS = environment.CONTRACT_ADDRESS!;
 
 const provider = new ethers.JsonRpcProvider(RPC_URL);
-const wallet = new ethers.Wallet(BOT_PRIVATE_KEY, provider);
+const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 const AUTOMATION_INTERVAL = 60000;
 
 const ecoNovaManagerInterface = new ethers.Interface([

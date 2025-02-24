@@ -48,7 +48,7 @@ export const signUserLevelWithRoot = async (
   level: number,
   root: string
 ) => {
-  const botPrivateKey = environment.BOT_PRIVATE_KEY!;
+  const botPrivateKey = environment.PRIVATE_KEY!;
   const wallet = new ethers.Wallet(botPrivateKey);
 
   const timestamp = Math.floor(Date.now() / 1000);

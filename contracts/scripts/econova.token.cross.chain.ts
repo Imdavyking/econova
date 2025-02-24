@@ -1,6 +1,7 @@
 import { ethers } from "hardhat"
 import dotenv from "dotenv"
 import { LayerZeroChainInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
+import { initKeystore } from "../utils/init.keystore"
 
 dotenv.config()
 
@@ -16,15 +17,16 @@ export async function deployCrossChainOFT({
     crossChainTokenAddress: string
 }> {
     try {
-        const PRIVATE_KEY = process.env.PRIVATE_KEY
         const CROSS_CHAIN_RPC_URL = crossChainLzInfo.rpcUrl
 
-        if (!PRIVATE_KEY || !CROSS_CHAIN_RPC_URL) {
+        if (!CROSS_CHAIN_RPC_URL) {
             throw new Error("❌ Missing PRIVATE_KEY or CROSS_CHAIN_RPC_URL in .env file")
         }
 
         const provider = new ethers.JsonRpcProvider(CROSS_CHAIN_RPC_URL)
-        const deployer = new ethers.Wallet(PRIVATE_KEY, provider)
+
+        const wallet = initKeystore(provider)
+
         const networkInfo = await provider.getNetwork()
 
         const chainId = Number(networkInfo.chainId)
@@ -40,13 +42,9 @@ export async function deployCrossChainOFT({
         console.log(`\n🚀 Deploying EcoNovaToken on Chain ID: ${chainId}`)
         console.log(`🔗 Using LZ Endpoint: ${lzEndpoint.endpointV2}\n`)
 
-        const EcoNovaToken = await ethers.getContractFactory("EcoNovaToken", deployer)
-        const EndpointV2 = await ethers.getContractAt(
-            "IEndpointV2",
-            lzEndpoint.endpointV2,
-            deployer
-        )
-        const ecoNovaToken = await EcoNovaToken.deploy(lzEndpoint.endpointV2, deployer.address)
+        const EcoNovaToken = await ethers.getContractFactory("EcoNovaToken", wallet)
+        const EndpointV2 = await ethers.getContractAt("IEndpointV2", lzEndpoint.endpointV2, wallet)
+        const ecoNovaToken = await EcoNovaToken.deploy(lzEndpoint.endpointV2, wallet.address)
         await ecoNovaToken.waitForDeployment()
 
         const crossTokenAddress = await ecoNovaToken.getAddress()

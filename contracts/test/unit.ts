@@ -10,6 +10,7 @@ import { charityCategories } from "../utils/charity.categories"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
+import { initKeystore } from "../utils/init.keystore"
 
 dotenv.config()
 
@@ -25,9 +26,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               // Contracts are deployed using the first signer/account by default
               const [owner, otherAccount, orgAccount] = await hre.ethers.getSigners()
 
-              const botPrivateKey = process.env.PRIVATE_KEY!
-
-              const wallet = new ethers.Wallet(botPrivateKey)
+              const wallet = initKeystore(null)
 
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
               const EcoNovaCourseNFTDeployer = await hre.ethers.getContractFactory(

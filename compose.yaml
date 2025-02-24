@@ -24,7 +24,7 @@ services:
       - OPENAI_API_KEY
       - JWT_SECRET
       - PORT
-      - BOT_PRIVATE_KEY
+      - PRIVATE_KEY
       - CHAIN_ID
       - LIGHTHOUSE_API_KEY
       - RPC_URL
@@ -131,8 +131,8 @@ secrets:
     file: ./backend/secrets/JWT_SECRET
   PORT:
     file: ./backend/secrets/PORT
-  BOT_PRIVATE_KEY:
-    file: ./backend/secrets/BOT_PRIVATE_KEY
+  PRIVATE_KEY:
+    file: ./backend/secrets/PRIVATE_KEY
   FRONTEND_URL:
     file: ./backend/secrets/FRONTEND_URL
   CHAIN_ID:

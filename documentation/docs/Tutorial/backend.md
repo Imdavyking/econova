@@ -14,6 +14,7 @@ EcoNova is a decentralized charity management system that enables transparent an
    yarn
    ```
 3. Configure X Request API credentials:
+
    - Obtain your X Request API credentials from the X Developer Portal.
    - Open the `.env` file and update the following values with your credentials:
      ```
@@ -31,7 +32,7 @@ EcoNova is a decentralized charity management system that enables transparent an
         OPENAI_API_KEY=
         JWT_SECRET=
         PORT=
-        BOT_PRIVATE_KEY=
+        PRIVATE_KEY=
         FRONTEND_URL=
         CHAIN_ID=
         WRAPPED_SONIC_CONTRACT_ADDRESS=
@@ -40,16 +41,16 @@ EcoNova is a decentralized charity management system that enables transparent an
         API_SCAN_VERIFIER_KEY=
      ```
 
-4. **Start the application locally**:  
-   - Make sure Redis is running locally or on a remote server.  
-   - If you're using Redis locally, start it with the following command:  
+4. **Start the application locally**:
+   - Make sure Redis is running locally or on a remote server.
+   - If you're using Redis locally, start it with the following command:
      ```bash
      redis-server
-     ```  
-   - Then, start the application:  
+     ```
+   - Then, start the application:
      ```bash
      yarn dev
-     ```  
+     ```
 
 ## Usage
 

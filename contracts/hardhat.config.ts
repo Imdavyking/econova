@@ -6,19 +6,17 @@ import { HardhatEthersProvider } from "@nomicfoundation/hardhat-ethers/internal/
 import dotenv from "dotenv"
 import { CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY, crossChainLzInfo } from "./utils/lzendpoints.help"
 import { EthereumProvider } from "hardhat/types"
+import { initKeystore } from "./utils/init.keystore"
 
 dotenv.config()
 
-const PRIVATE_KEY = process.env.PRIVATE_KEY
+const wallet = initKeystore(null)
+
 const RPC_URL = process.env.RPC_URL
 const CHAIN_ID = process.env.CHAIN_ID
 const API_URL = process.env.API_URL
 const BROWSER_URL = process.env.BROWSER_URL
 const API_SCAN_VERIFIER_KEY = process.env.API_SCAN_VERIFIER_KEY
-
-if (!PRIVATE_KEY) {
-    throw new Error("PRIVATE_KEY is not set")
-}
 
 if (!RPC_URL) {
     throw new Error("RPC_URL is not set")
@@ -67,7 +65,7 @@ export const crossChainConfig = crossChainLzInfo
           [crossChainLzInfo.name]: {
               url: crossChainLzInfo.rpcUrl,
               chainId: Number(crossChainLzInfo.chainId), // Ensure CHAIN_ID is a number
-              accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+              accounts: wallet.privateKey ? [wallet.privateKey] : [],
           },
       }
     : {}
@@ -87,7 +85,7 @@ const config: HardhatUserConfig = {
         },
         testNetwork: {
             url: process.env.RPC_URL,
-            accounts: [PRIVATE_KEY],
+            accounts: [wallet.privateKey],
             chainId: +CHAIN_ID!,
             ignition: {
                 explorerUrl: process.env.CHAIN_BLOCKEXPLORER_URL,
