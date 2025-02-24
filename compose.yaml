@@ -88,8 +88,6 @@ services:
       - app-network
     volumes:
       - mongodb-data:/data/db
-    secrets:
-      - MONGO_URI
     command: mongod --quiet --logpath /dev/null
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
