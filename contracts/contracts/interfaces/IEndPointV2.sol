@@ -31,6 +31,8 @@ interface IEndpointV2 {
         bytes memory
     ) external view returns (MessagingFee memory);
 
+    function isSupportedEid(uint32 _eid) external view returns (bool);
+
     struct MessagingParams {
         address dstAddress;
         bytes payload;

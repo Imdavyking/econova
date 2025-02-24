@@ -118,16 +118,24 @@ async function main() {
             return
         }
 
+        const EndpointV2 = await ethers.getContractAt("IEndpointV2", layerZeroChainInfo.endpointV2)
+
+        const isSupported = await EndpointV2.isSupportedEid(crossChainLzInfo.endpointIdV2)
+
+        if (!isSupported) {
+            console.error("Cross chain endpoint is not supported")
+            return
+        }
+
         const { crossChainTokenAddress } = await deployCrossChainOFT({
             remoteTokenAddr: tokenAddress,
             remoteLzInfo: layerZeroChainInfo,
             crossChainLzInfo,
         })
-        const EndpointV2 = await ethers.getContractAt("IEndpointV2", layerZeroChainInfo.endpointV2)
-        const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)
-        // TODO: fix this
-        // await EndpointV2.setDestLzEndpoint(crossChainTokenAddress, crossChainLzInfo.endpointV2)
+
         console.log(`🔄 Setting peer for cross-chain Endpoint: ${crossChainLzInfo.endpointV2}`)
+
+        const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)
         await ecoNovaToken.setPeer(
             crossChainLzInfo.endpointIdV2,
             ethers.zeroPadValue(crossChainTokenAddress, 32)
