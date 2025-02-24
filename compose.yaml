@@ -76,6 +76,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - redis-data:/data
 
   mongodb:
     image: mongo:5.0
@@ -150,3 +152,4 @@ secrets:
 
 volumes:
   mongodb-data:
+  redis-data:
