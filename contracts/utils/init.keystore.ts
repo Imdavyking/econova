@@ -21,9 +21,8 @@ export const initKeystore = (provider: Provider | null) => {
 
         const keystore = fs.readFileSync(keyStoreFile, "utf8")
         const keystoreDetails = ethers.Wallet.fromEncryptedJsonSync(keystore, keyStorePassword)
-        const wallet = new ethers.Wallet(keystoreDetails.privateKey, provider)
         console.log("✅ Wallet successfully decrypted from keystore.")
-        return wallet
+        return new ethers.Wallet(keystoreDetails.privateKey, provider)
     } catch (error: any) {
         console.error(`❌ Error decrypting keystore: ${error.message}`)
         throw error
