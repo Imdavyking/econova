@@ -5,8 +5,10 @@ services:
     ports:
       - 3100:3100
     depends_on:
-      - redis
-      - mongodb
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
     networks:
       - app-network
     secrets:
@@ -35,6 +37,11 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=
       - FRONTEND_URL=http://localhost:3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: always
   
   frontend:
@@ -50,7 +57,9 @@ services:
       - VITE_SERVER_URL=http://localhost:3100
     restart: always
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+
 
   redis:
     image: redis:7.4-alpine
@@ -58,6 +67,11 @@ services:
       - 6379:6379
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mongodb:
     image: mongo:5.0
@@ -70,6 +84,12 @@ services:
     secrets:
       - MONGO_URI
     command: mongod --quiet --logpath /dev/null 
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
 networks:
   app-network:
