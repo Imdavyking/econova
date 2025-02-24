@@ -34,7 +34,7 @@ services:
       - ALLORA_NETWORK
       - API_SCAN_VERIFIER_KEY
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/ai-bot/
+      - MONGO_URI=mongodb://mongodb:27017/ai-bot
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=
