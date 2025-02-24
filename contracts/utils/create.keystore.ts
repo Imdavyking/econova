@@ -40,7 +40,9 @@ if (require.main === module) {
     const args = process.argv.slice(2)
 
     if (args.length < 2) {
-        console.error("❌ Usage: ts-node utils/create.keystore.ts <PRIVATE_KEY> <PASSWORD>")
+        console.error(
+            "❌ Usage: yarn keystore:create <PRIVATE_KEY> <PASSWORD> [OUTPUT_FILE]"
+        )
         process.exit(1)
     }
 
