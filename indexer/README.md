@@ -49,40 +49,7 @@ Create a `.env` file in the project root and add the following variables:
 ## **GraphQL Query Examples**
 ### **Query via cURL**
 ```sh
-curl -X POST http://localhost:5100/graphql \
-  -H "Content-Type: application/json" \
-  --data '{
-    "query": "{ 
-      pointsAddeds(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-        nodes {
-          id
-          blockHeight
-          user
-          points
-          contractAddress
-        }
-      }
-      donations(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-        nodes {
-          id
-          user
-          token
-          amount
-          blockHeight
-          contractAddress
-        }
-      }
-      ownershipTransfers(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-        nodes {
-          id
-          previousOwner
-          newOwner
-          blockHeight
-          contractAddress
-        }
-      }
-    }"
-  }'
+curl -X POST http://localhost:5100/graphql -H "Content-Type: application/json" --data '{"query":"{ pointsAddeds(first: 5, orderBy: BLOCK_HEIGHT_DESC) { nodes { id blockHeight user points contractAddress } } donations(first: 5, orderBy: BLOCK_HEIGHT_DESC) { nodes { id user token amount blockHeight contractAddress } } ownershipTransfers(first: 5, orderBy: BLOCK_HEIGHT_DESC) { nodes { id previousOwner newOwner blockHeight contractAddress } } }"}'
 ```
 
 ### **Query via GraphiQL / Postman**
