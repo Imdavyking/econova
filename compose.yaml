@@ -1,0 +1,129 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - 3100:3100
+    depends_on:
+      - redis
+      - mongodb
+    networks:
+      - app-network
+    secrets:
+      - TWITTER_CONSUMER_KEY
+      - TWITTER_CONSUMER_SECRET
+      - TWITTER_ACCESS_TOKEN
+      - TWITTER_ACCESS_TOKEN_SECRET
+      - TWITTER_USER_ID
+      - TWITTER_BEARER_TOKEN
+      - NODE_ENV
+      - OPENAI_API_KEY
+      - JWT_SECRET
+      - PORT
+      - BOT_PRIVATE_KEY
+      - CHAIN_ID
+      - LIGHTHOUSE_API_KEY
+      - RPC_URL
+      - CONTRACT_ADDRESS
+      - WRAPPED_SONIC_CONTRACT_ADDRESS
+      - ALLORA_API_KEY
+      - ALLORA_NETWORK
+      - API_SCAN_VERIFIER_KEY
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/ai-bot/
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - FRONTEND_URL=http://localhost:3000
+    restart: always
+  
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+    env_file:
+      - ./frontend/.env
+    environment:
+      - VITE_SERVER_URL=http://localhost:3100
+    restart: always
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - 6379:6379
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:5.0
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
+    volumes:
+      - mongodb-data:/data/db
+    secrets:
+      - MONGO_URI
+    command: mongod --quiet --logpath /dev/null 
+
+networks:
+  app-network:
+    driver: bridge
+
+secrets:
+  MONGO_URI:
+    file: ./backend/secrets/MONGO_URI
+  TWITTER_CONSUMER_KEY:
+    file: ./backend/secrets/TWITTER_CONSUMER_KEY
+  TWITTER_CONSUMER_SECRET:
+    file: ./backend/secrets/TWITTER_CONSUMER_SECRET
+  TWITTER_ACCESS_TOKEN:
+    file: ./backend/secrets/TWITTER_ACCESS_TOKEN
+  TWITTER_ACCESS_TOKEN_SECRET:
+    file: ./backend/secrets/TWITTER_ACCESS_TOKEN_SECRET
+  TWITTER_USER_ID:
+    file: ./backend/secrets/TWITTER_USER_ID
+  TWITTER_BEARER_TOKEN:
+    file: ./backend/secrets/TWITTER_BEARER_TOKEN
+  REDIS_HOST:
+    file: ./backend/secrets/REDIS_HOST
+  REDIS_PORT:
+    file: ./backend/secrets/REDIS_PORT
+  REDIS_PASSWORD:
+    file: ./backend/secrets/REDIS_PASSWORD
+  NODE_ENV:
+    file: ./backend/secrets/NODE_ENV
+  OPENAI_API_KEY:
+    file: ./backend/secrets/OPENAI_API_KEY
+  JWT_SECRET:
+    file: ./backend/secrets/JWT_SECRET
+  PORT:
+    file: ./backend/secrets/PORT
+  BOT_PRIVATE_KEY:
+    file: ./backend/secrets/BOT_PRIVATE_KEY
+  FRONTEND_URL:
+    file: ./backend/secrets/FRONTEND_URL
+  CHAIN_ID:
+    file: ./backend/secrets/CHAIN_ID
+  LIGHTHOUSE_API_KEY:
+    file: ./backend/secrets/LIGHTHOUSE_API_KEY
+  RPC_URL:
+    file: ./backend/secrets/RPC_URL
+  CONTRACT_ADDRESS:
+    file: ./backend/secrets/CONTRACT_ADDRESS
+  WRAPPED_SONIC_CONTRACT_ADDRESS:
+    file: ./backend/secrets/WRAPPED_SONIC_CONTRACT_ADDRESS
+  ALLORA_API_KEY:
+    file: ./backend/secrets/ALLORA_API_KEY
+  ALLORA_NETWORK:
+    file: ./backend/secrets/ALLORA_NETWORK
+  API_SCAN_VERIFIER_KEY:
+    file: ./backend/secrets/API_SCAN_VERIFIER_KEY
+
+volumes:
+  mongodb-data:
