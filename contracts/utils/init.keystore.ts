@@ -1,7 +1,6 @@
-import { ethers } from "hardhat"
+import { ethers, Provider } from "ethers"
 import fs from "fs"
 import dotenv from "dotenv"
-import { Provider } from "ethers"
 
 dotenv.config()
 
