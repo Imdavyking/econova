@@ -37,12 +37,12 @@ services:
       - REDIS_PORT
       - REDIS_PASSWORD
       - KEYSTORE_FILE
-      - KEYSTORE_PASSWORD
     environment:
       - MONGO_URI=${MONGO_URI:-mongodb://mongodb:27017/ai-bot}
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD:-}
       - FRONTEND_URL=http://localhost:3000
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100"]
@@ -152,8 +152,6 @@ secrets:
     file: ./backend/secrets/API_SCAN_VERIFIER_KEY
   KEYSTORE_FILE:
     file: ./backend/secrets/KEYSTORE_FILE
-  KEYSTORE_PASSWORD:
-    file: ./backend/secrets/KEYSTORE_PASSWORD
 
 volumes:
   mongodb-data:
