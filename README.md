@@ -137,12 +137,6 @@ EcoNova integrates **AI-powered smart contract auditing** using:
   sh create-secrets.sh
   ```
 
-- **Export the keystore password before running commands:**
-
-  ```bash
-  export KEYSTORE_PASSWORD="your-secure-password"
-  ```
-
 📌 _Ensure the `.env` file exists and is configured in both the backend and frontend directories before running this script!_
 
 - **Ensure Docker is installed and running.**
