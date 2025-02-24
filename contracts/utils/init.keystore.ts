@@ -1,6 +1,7 @@
 import { ethers, Provider } from "ethers"
 import fs from "fs"
 import dotenv from "dotenv"
+import path from "path"
 
 dotenv.config()
 
@@ -11,8 +12,8 @@ export const initKeystore = (provider: Provider | null) => {
             return new ethers.Wallet(process.env.PRIVATE_KEY, provider)
         }
 
-        const keyStoreFile = process.env.KEYSTORE_FILE ?? ""
         const keyStorePassword = process.env.KEYSTORE_PASSWORD ?? ""
+        const keyStoreFile = path.join(__dirname, process.env.KEYSTORE_FILE ?? "")
 
         if (!fs.existsSync(keyStoreFile)) {
             console.error(`❌ Keystore file not found: ${keyStoreFile}`)
