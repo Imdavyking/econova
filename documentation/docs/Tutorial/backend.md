@@ -54,7 +54,7 @@ EcoNova is a decentralized charity management system that enables transparent an
      ```bash
      docker compose up
      ```
-   - This will start the application on `localhost:3000`.
+   - This will start the application on `localhost:3100`.
 
 5. Alternatively, **start the application locally** without Docker:
    - Make sure Redis is running locally or on a remote server.
