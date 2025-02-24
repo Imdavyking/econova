@@ -47,40 +47,80 @@ Create a `.env` file in the project root and add the following variables:
 ```
 
 ## **GraphQL Query Examples**
-
-You can query indexed data with the following example:
-
-```graphql
-{
-  query {
-    pointsAddeds(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-      nodes {
-        id
-        blockHeight
-        user
-        points
-        contractAddress
+### **Query via cURL**
+```sh
+curl -X POST http://localhost:5100/graphql \
+  -H "Content-Type: application/json" \
+  --data '{
+    "query": "{ 
+      pointsAddeds(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+        nodes {
+          id
+          blockHeight
+          user
+          points
+          contractAddress
+        }
       }
-    }
-    donations(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-      nodes {
-        id
-        user
-        token
-        amount
-        blockHeight
-        contractAddress
+      donations(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+        nodes {
+          id
+          user
+          token
+          amount
+          blockHeight
+          contractAddress
+        }
       }
-    }
-    ownershipTransfers(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-      nodes {
-        id
-        previousOwner
-        newOwner
-        blockHeight
-        contractAddress
+      ownershipTransfers(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+        nodes {
+          id
+          previousOwner
+          newOwner
+          blockHeight
+          contractAddress
+        }
       }
-    }
-  }
-}
+    }"
+  }'
 ```
+
+### **Query via GraphiQL / Postman**
+1. Open **Postman** or **GraphiQL**.
+2. Set the **GraphQL Endpoint**:  
+   ```
+   http://localhost:5100/graphql
+   ```
+3. Use this query:
+   ```graphql
+   {
+     pointsAddeds(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+       nodes {
+         id
+         blockHeight
+         user
+         points
+         contractAddress
+       }
+     }
+     donations(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+       nodes {
+         id
+         user
+         token
+         amount
+         blockHeight
+         contractAddress
+       }
+     }
+     ownershipTransfers(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+       nodes {
+         id
+         previousOwner
+         newOwner
+         blockHeight
+         contractAddress
+       }
+     }
+   }
+   ```
