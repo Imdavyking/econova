@@ -17,20 +17,9 @@ EcoNova is a decentralized charity management system that enables transparent an
 
    - Obtain your X Request API credentials from the X Developer Portal.
    - Open the `.env` file and update the following values with your credentials:
+
      ```bash
-        # 🚨 SECURITY NOTICE: Never commit this file to Git! 🚨
-        # Always use environment variables securely in production.
-
-        # Private key (⚠️ DO NOT use in production! Remove before deploying.)
-        PRIVATE_KEY=
-
-        # Path to the encrypted keystore file (absolute or relative to the project root).
         KEYSTORE_FILE=./keystore.json
-
-        # Keystore decryption password (⚠️ Do NOT store directly in this file! Use export instead.)
-        # Run this command in your terminal instead of storing it here:
-        # export KEYSTORE_PASSWORD="your-secure-password"
-        KEYSTORE_PASSWORD=
         MONGO_URI=
         TWITTER_CONSUMER_KEY=
         TWITTER_CONSUMER_SECRET=
@@ -53,7 +42,13 @@ EcoNova is a decentralized charity management system that enables transparent an
         API_SCAN_VERIFIER_KEY=
      ```
 
-4. **Start the application locally**:
+4. **Export the keystore password before running commands:**
+
+   ```bash
+   export KEYSTORE_PASSWORD="your-secure-password"
+   ```
+
+5. **Start the application locally**:
    - Make sure Redis is running locally or on a remote server.
    - If you're using Redis locally, start it with the following command:
      ```bash
@@ -140,34 +135,6 @@ curl -X GET http://localhost:3100/api/tweets/1883180110297120857/liking-users
   "meta": {
     "result_count": 1,
     "next_token": "7140dibdnow9c7btw4b0pn1kiz13e29yg8uwbc15seipg"
-  }
-}
-```
-
-### Get retweeters for a tweet
-
-**Endpoint:** `GET /api/tweets/:id/retweeters`
-
-**Example Request:**
-
-```bash
-curl -X GET http://localhost:3100/api/tweets/1883180110297120857/retweeters
-```
-
-**Example Response:**
-
-```json
-{
-  "data": [
-    {
-      "id": "716078211797487616",
-      "name": "davyĸιng",
-      "username": "im_davyking"
-    }
-  ],
-  "meta": {
-    "result_count": 1,
-    "next_token": "7140dibdnow9c7btw4b0pn1kiz13e2bhpk9u8x8dja3ao"
   }
 }
 ```

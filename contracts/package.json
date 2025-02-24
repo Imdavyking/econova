@@ -4,6 +4,7 @@
     "main": "index.js",
     "license": "MIT",
     "scripts": {
+        "keystore:create": "ts-node utils/create.keystore.ts",
         "format": "prettier --write .",
         "coverage": "hardhat coverage",
         "test": "yarn hardhat test",
