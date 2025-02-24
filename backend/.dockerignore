@@ -28,3 +28,4 @@ LICENSE
 README.md
 .env
 .env.local
+keystore.json
