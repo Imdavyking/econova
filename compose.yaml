@@ -57,9 +57,12 @@ services:
       - ./frontend/.env
     environment:
       - VITE_SERVER_URL=http://localhost:3100
+      - VITE_GRAPH_QL_ENDPOINT=http://localhost:5100
     restart: always
     depends_on:
-      backend:
+      redis:
+        condition: service_healthy
+      mongodb:
         condition: service_healthy
 
   redis:
