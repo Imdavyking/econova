@@ -17,7 +17,7 @@ export const initKeystore = (provider: Provider | null) => {
 
         if (!fs.existsSync(keyStoreFile)) {
             console.error(`❌ Keystore file not found: ${keyStoreFile}`)
-            throw new Error("Keystore file not found")
+            throw new Error(`Keystore file not found: ${keyStoreFile}`)
         }
 
         const keystore = fs.readFileSync(keyStoreFile, "utf8")
