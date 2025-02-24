@@ -33,16 +33,15 @@ services:
       - ALLORA_API_KEY
       - ALLORA_NETWORK
       - API_SCAN_VERIFIER_KEY
-      # uncomment to use secrets instead of docker images
-      # - MONGO_URI
-      # - REDIS_HOST
-      # - REDIS_PORT
-      # - REDIS_PASSWORD
+      - MONGO_URI
+      - REDIS_HOST
+      - REDIS_PORT
+      - REDIS_PASSWORD
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/ai-bot
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=
+      - MONGO_URI=${MONGO_URI:-mongodb://mongodb:27017/ai-bot}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
       - FRONTEND_URL=http://localhost:3000
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100"]
