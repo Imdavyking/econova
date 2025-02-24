@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import dotenv from "dotenv";
 import { CHAIN_ID } from "../utils/constants";
 import { environment } from "../utils/config";
+import { initKeystore } from "../utils/init.keystore";
 dotenv.config();
 
 export async function saveMerkleRoot(address: string, level: number) {
@@ -48,8 +49,7 @@ export const signUserLevelWithRoot = async (
   level: number,
   root: string
 ) => {
-  const botPrivateKey = environment.PRIVATE_KEY!;
-  const wallet = new ethers.Wallet(botPrivateKey);
+  const wallet = initKeystore(null);
 
   const timestamp = Math.floor(Date.now() / 1000);
 

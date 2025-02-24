@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import dotenv from "dotenv";
 import { CHAIN_ID } from "../utils/constants";
 import { environment } from "../utils/config";
+import { initKeystore } from "../utils/init.keystore";
 
 dotenv.config();
 
@@ -18,9 +19,7 @@ export const signTwitterPoints = async (
   userTwitterId: string | number,
   tweetId: string | number
 ) => {
-  const botPrivateKey = environment.PRIVATE_KEY!;
-
-  const wallet = new ethers.Wallet(botPrivateKey);
+  const wallet = initKeystore(null);
 
   const messageHash = ethers.solidityPackedKeccak256(
     ["address", "uint256", "uint256", "uint256", "uint256"],

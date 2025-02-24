@@ -35,7 +35,6 @@ export const secret: {
       "OPENAI_API_KEY",
       "JWT_SECRET",
       "PORT",
-      "PRIVATE_KEY",
       "FRONTEND_URL",
       "CHAIN_ID",
       "LIGHTHOUSE_API_KEY",

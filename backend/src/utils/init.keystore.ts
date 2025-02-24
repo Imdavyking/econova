@@ -1,20 +1,23 @@
 import { ethers, Provider } from "ethers";
 import fs from "fs";
 import dotenv from "dotenv";
+import { environment } from "./config";
+import { secret } from "./secret";
 
 dotenv.config();
 
 export const initKeystore = (provider: Provider | null) => {
   try {
-    if (process.env.PRIVATE_KEY) {
+    const privateKey = secret.read("PRIVATE_KEY");
+    if (privateKey.trim() !== "") {
       console.warn(
         "⚠️ Using PRIVATE_KEY from .env file. Do not use in production."
       );
-      return new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+      return new ethers.Wallet(privateKey, provider);
     }
 
-    const keyStoreFile = process.env.KEYSTORE_FILE ?? "";
-    const keyStorePassword = process.env.KEYSTORE_PASSWORD ?? "";
+    const keyStoreFile = secret.read("KEYSTORE_FILE");
+    const keyStorePassword = secret.read("KEYSTORE_PASSWORD");
 
     if (!fs.existsSync(keyStoreFile)) {
       console.error(`❌ Keystore file not found: ${keyStoreFile}`);

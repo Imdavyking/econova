@@ -2,15 +2,15 @@ import { ethers } from "ethers";
 import dotenv from "dotenv";
 import logger from "../config/logger";
 import { environment } from "../utils/config";
+import { initKeystore } from "../utils/init.keystore";
 
 dotenv.config();
 
-const PRIVATE_KEY = environment.PRIVATE_KEY!;
 const RPC_URL = environment.RPC_URL!;
 const CONTRACT_ADDRESS = environment.CONTRACT_ADDRESS!;
 
 const provider = new ethers.JsonRpcProvider(RPC_URL);
-const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+const wallet = initKeystore(provider);
 const AUTOMATION_INTERVAL = 60000;
 
 const ecoNovaManagerInterface = new ethers.Interface([
