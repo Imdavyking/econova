@@ -12,7 +12,6 @@ export const secret: {
     } catch (err: any) {
       const fromEnv = process.env[secretName];
       if (fromEnv) {
-        console.warn(`⚠️ Using env variable for secret: ${mask(secretName)}`);
         return fromEnv;
       }
       console.error(`❌ Missing secret: ${mask(secretName)}`);
