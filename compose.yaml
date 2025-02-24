@@ -1,3 +1,4 @@
+include: ./indexer/docker-compose.yml
 services:
   backend:
     build:
@@ -43,7 +44,7 @@ services:
       timeout: 5s
       retries: 5
     restart: always
-  
+
   frontend:
     build:
       context: ./frontend
@@ -59,7 +60,6 @@ services:
     depends_on:
       backend:
         condition: service_healthy
-
 
   redis:
     image: redis:7.4-alpine
@@ -83,13 +83,12 @@ services:
       - mongodb-data:/data/db
     secrets:
       - MONGO_URI
-    command: mongod --quiet --logpath /dev/null 
+    command: mongod --quiet --logpath /dev/null
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
-
 
 networks:
   app-network:
