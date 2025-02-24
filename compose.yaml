@@ -33,7 +33,11 @@ services:
       - ALLORA_API_KEY
       - ALLORA_NETWORK
       - API_SCAN_VERIFIER_KEY
-      - MONGO_URI
+      # uncomment to use secrets instead of docker images
+      # - MONGO_URI
+      # - REDIS_HOST
+      # - REDIS_PORT
+      # - REDIS_PASSWORD
     environment:
       - MONGO_URI=mongodb://mongodb:27017/ai-bot
       - REDIS_HOST=redis
