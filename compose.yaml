@@ -62,6 +62,8 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+      graphql-engine:
+        condition: service_healthy
 
   redis:
     image: redis:7.4-alpine
