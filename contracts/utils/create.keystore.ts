@@ -6,9 +6,11 @@ import path from "path"
 export const createKeystore = ({
     privateKey,
     password,
+    outputFile,
 }: {
     privateKey: string
     password: string
+    outputFile?: string
 }) => {
     try {
         if (!privateKey || !password) {
@@ -19,7 +21,7 @@ export const createKeystore = ({
 
         const wallet = new ethers.Wallet(privateKey)
         const keystore = wallet.encryptSync(password)
-        const keyStoreFile = path.join(process.cwd(), "keystore.json")
+        const keyStoreFile = path.join(process.cwd(), outputFile || "keystore.json")
 
         // Save keystore to a file
         fs.writeFileSync(keyStoreFile, keystore)
@@ -42,6 +44,6 @@ if (require.main === module) {
         process.exit(1)
     }
 
-    const [privateKey, password] = args
-    createKeystore({ privateKey, password })
+    const [privateKey, password, outputFile] = args
+    createKeystore({ privateKey, password, outputFile })
 }
