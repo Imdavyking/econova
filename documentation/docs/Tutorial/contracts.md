@@ -1,20 +1,41 @@
-# Contracts
+---
+# **EcoNova Contracts**
 
-EcoNova is a decentralized platform, designed to offer users the ability to interact with smart contracts and decentralized applications, while also providing various incentives for participating in its ecosystem.
+EcoNova is a decentralized platform that enables users to interact with smart contracts and decentralized applications while providing various incentives for participation.
+---
 
-## Requirements
+## **Requirements**
 
--   [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-    -   You'll know you did it right if you can run `git --version` and you see a response like `git version x.x.x`.
--   [Node.js](https://nodejs.org/en/)
-    -   You'll know you've installed Node.js right if you can run:
-        -   `node --version` and get an output like `vx.x.x`.
--   [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/) instead of `npm`
-    -   You'll know you've installed Yarn right if you can run:
-        -   `yarn --version` and get an output like `x.x.x`.
-        -   You might need to install it with `npm`.
+Ensure you have the following installed before starting:
 
-## Quickstart
+-   **[Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)**
+    -   Verify installation:
+        ```bash
+        git --version
+        ```
+        Expected output: `git version x.x.x`
+-   **[Node.js](https://nodejs.org/en/)**
+    -   Verify installation:
+        ```bash
+        node --version
+        ```
+        Expected output: `vx.x.x`
+-   **[Yarn](https://classic.yarnpkg.com/lang/en/docs/install/)** (instead of `npm`)
+    -   Verify installation:
+        ```bash
+        yarn --version
+        ```
+        Expected output: `x.x.x`
+    -   If Yarn is not installed, install it with:
+        ```bash
+        npm install --global yarn
+        ```
+
+---
+
+## **Quickstart**
+
+Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/Imdavyking/econova/
@@ -22,57 +43,93 @@ cd econova/contracts
 yarn
 ```
 
-## Environment Variables
+---
 
-Create a `.env` file in the project root and add the following variables:
+## **Environment Variables Setup**
 
-```env
- PRIVATE_KEY=
- RPC_URL=
- ORACLE_ADDRESS=
- NODE_ENV=
- CHAIN_ID=
- API_URL=
- BROWSER_URL=
- CHAIN_NAME=
- CHAIN_CURRENCY_NAME=
- CHAIN_SYMBOL=
- CHAIN_BLOCKEXPLORER_URL=
- API_SCAN_VERIFIER_KEY=
- CROSS_CHAIN_ID=
- CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY=
+Create a `.env` file in the project root and configure the following variables:
+
+```bash
+KEYSTORE_FILE=./keystore.json
+RPC_URL=
+ORACLE_ADDRESS=
+NODE_ENV=
+CHAIN_ID=
+API_URL=
+BROWSER_URL=
+CHAIN_NAME=
+CHAIN_CURRENCY_NAME=
+CHAIN_SYMBOL=
+CHAIN_BLOCKEXPLORER_URL=
+API_SCAN_VERIFIER_KEY=
+CROSS_CHAIN_ID=
+CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY=
 ```
 
-## Usage
+---
 
-### Deploy:
+## **Keystore Setup**
+
+To create a keystore file and encrypt your private key:
+
+```bash
+yarn keystore:create <PRIVATE_KEY> <PASSWORD>
+```
+
+Then, export the keystore password before running commands:
+
+```bash
+export KEYSTORE_PASSWORD="your-secure-password"
+```
+
+---
+
+## **Usage**
+
+### **Deploy Contracts**
 
 ```bash
 yarn deploy
 ```
 
-### Testing
+### **Run Tests**
 
 ```bash
 yarn test
 ```
 
-## Deployment to Testnet
+---
 
-### 1. Setup Environment Variables
+## **Deployment to Testnet**
 
-You'll want to set your `RPC_URL` and `PRIVATE_KEY` as environment variables. You can add them to a `.env` file, similar to what you see in `.env.example`.
+### **1. Setup Environment Variables**
+-   **Keystore Password**: Instead of storing `KEYSTORE_PASSWORD` in `.env`, export it before running any commands:
 
--   `PRIVATE_KEY`: The private key of your account (like from [MetaMask](https://metamask.io/)). **NOTE:** FOR DEVELOPMENT, PLEASE USE A KEY THAT DOESN'T HAVE ANY REAL FUNDS ASSOCIATED WITH IT.
-    -   You can [learn how to export it here](https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key).
--   `RPC_URL`: This is the URL of the ETH testnet node you're working with.
+    ```bash
+    export KEYSTORE_PASSWORD="your-secure-password"
+    ```
 
-### 2. Get Testnet ETH
+---
 
-Head over to faucet and get some testnet **ETH** tokens. You should see the **ETH** tokens show up in your MetaMask.
+### **2. Get Testnet S**
 
-### 3. Deploy
+Obtain **testnet S** from a faucet to fund your deployments:
+
+-   [Sonic Faucet](https://testnet.soniclabs.com/account)
+
+---
+
+### **3. Deploy Contracts**
 
 ```bash
 yarn deploy
 ```
+
+---
+
+
+## **Need Help?**
+
+For questions or support, open an issue on [GitHub](https://github.com/Imdavyking/econova/issues).
+
+---

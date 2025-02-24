@@ -17,7 +17,10 @@ EcoNova is a decentralized charity management system that enables transparent an
 
    - Obtain your X Request API credentials from the X Developer Portal.
    - Open the `.env` file and update the following values with your credentials:
-     ```
+
+     ```bash
+        KEYSTORE_FILE=./keystore.json
+        KEYSTORE_PASSWORD=
         MONGO_URI=
         TWITTER_CONSUMER_KEY=
         TWITTER_CONSUMER_SECRET=
@@ -32,7 +35,6 @@ EcoNova is a decentralized charity management system that enables transparent an
         OPENAI_API_KEY=
         JWT_SECRET=
         PORT=
-        PRIVATE_KEY=
         FRONTEND_URL=
         CHAIN_ID=
         WRAPPED_SONIC_CONTRACT_ADDRESS=
@@ -128,34 +130,6 @@ curl -X GET http://localhost:3100/api/tweets/1883180110297120857/liking-users
   "meta": {
     "result_count": 1,
     "next_token": "7140dibdnow9c7btw4b0pn1kiz13e29yg8uwbc15seipg"
-  }
-}
-```
-
-### Get retweeters for a tweet
-
-**Endpoint:** `GET /api/tweets/:id/retweeters`
-
-**Example Request:**
-
-```bash
-curl -X GET http://localhost:3100/api/tweets/1883180110297120857/retweeters
-```
-
-**Example Response:**
-
-```json
-{
-  "data": [
-    {
-      "id": "716078211797487616",
-      "name": "davyĸιng",
-      "username": "im_davyking"
-    }
-  ],
-  "meta": {
-    "result_count": 1,
-    "next_token": "7140dibdnow9c7btw4b0pn1kiz13e2bhpk9u8x8dja3ao"
   }
 }
 ```

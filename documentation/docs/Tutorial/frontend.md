@@ -26,7 +26,7 @@ yarn
 
 Create a `.env` file in the project root and add the following variables:
 
-```env
+```bash
   VITE_SERVER_URL=
   VITE_CONTRACT_ADDRESS=
   VITE_CHAIN_ID=
