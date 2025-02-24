@@ -21,7 +21,7 @@ The platform integrates:
 EcoNova uses **Zero-Knowledge Proofs (ZKPs)** to verify a person’s **Body Mass Index (BMI)** without exposing private health data. This ensures:
 
 - **Privacy-preserving health verification** 🔒
-- **Eligibility-based donations without revealing user details** 🏥
+- **Eligibility-based advice without revealing user details** 🏥
 
 ---
 
