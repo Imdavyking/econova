@@ -33,6 +33,7 @@ services:
       - ALLORA_API_KEY
       - ALLORA_NETWORK
       - API_SCAN_VERIFIER_KEY
+      - MONGO_URI
     environment:
       - MONGO_URI=mongodb://mongodb:27017/ai-bot
       - REDIS_HOST=redis
