@@ -1,9 +1,9 @@
 import { ethers, Provider } from "ethers";
 import fs from "fs";
 import dotenv from "dotenv";
-import { environment } from "./config";
 import { secret } from "./secret";
 import logger from "../config/logger";
+import path from "path";
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ export const initKeystore = (provider: Provider | null) => {
       return new ethers.Wallet(privateKey, provider);
     }
 
-    const keyStoreFile = secret.read("KEYSTORE_FILE");
+    const keyStoreFile = path.join(__dirname, secret.read("KEYSTORE_FILE"));
     const keyStorePassword = secret.read("KEYSTORE_PASSWORD");
 
     if (!fs.existsSync(keyStoreFile)) {
