@@ -18,8 +18,18 @@ EcoNova is a decentralized charity management system that enables transparent an
    - Obtain your X Request API credentials from the X Developer Portal.
    - Open the `.env` file and update the following values with your credentials:
      ```bash
-        PRIVATE_KEY= # Do not use this in production
-        KEYSTORE_FILE=
+        # 🚨 SECURITY NOTICE: Never commit this file to Git! 🚨
+        # Always use environment variables securely in production.
+
+        # Private key (⚠️ DO NOT use in production! Remove before deploying.)
+        PRIVATE_KEY=
+
+        # Path to the encrypted keystore file (absolute or relative to the project root).
+        KEYSTORE_FILE=./keystore.json
+
+        # Keystore decryption password (⚠️ Do NOT store directly in this file! Use export instead.)
+        # Run this command in your terminal instead of storing it here:
+        # export KEYSTORE_PASSWORD="your-secure-password"
         KEYSTORE_PASSWORD=
         MONGO_URI=
         TWITTER_CONSUMER_KEY=

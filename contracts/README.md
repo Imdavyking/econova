@@ -27,22 +27,32 @@ yarn
 Create a `.env` file in the project root and add the following variables:
 
 ```bash
- PRIVATE_KEY= # Do not use this in production
- KEYSTORE_FILE=
- KEYSTORE_PASSWORD=
- RPC_URL=
- ORACLE_ADDRESS=
- NODE_ENV=
- CHAIN_ID=
- API_URL=
- BROWSER_URL=
- CHAIN_NAME=
- CHAIN_CURRENCY_NAME=
- CHAIN_SYMBOL=
- CHAIN_BLOCKEXPLORER_URL=
- API_SCAN_VERIFIER_KEY=
- CROSS_CHAIN_ID=
- CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY=
+ # 🚨 SECURITY NOTICE: Never commit this file to Git! 🚨
+# Always use environment variables securely in production.
+
+# Private key (⚠️ DO NOT use in production! Remove before deploying.)
+PRIVATE_KEY=
+
+# Path to the encrypted keystore file (absolute or relative to the project root).
+KEYSTORE_FILE=./keystore.json
+
+# Keystore decryption password (⚠️ Do NOT store directly in this file! Use export instead.)
+# Run this command in your terminal instead of storing it here:
+# export KEYSTORE_PASSWORD="your-secure-password"
+KEYSTORE_PASSWORD=
+RPC_URL=
+ORACLE_ADDRESS=
+NODE_ENV=
+CHAIN_ID=
+API_URL=
+BROWSER_URL=
+CHAIN_NAME=
+CHAIN_CURRENCY_NAME=
+CHAIN_SYMBOL=
+CHAIN_BLOCKEXPLORER_URL=
+API_SCAN_VERIFIER_KEY=
+CROSS_CHAIN_ID=
+CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY=
 ```
 
 ## Usage
