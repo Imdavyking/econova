@@ -42,6 +42,17 @@ services:
     networks:
       - app-network
 
+  mongodb:
+    image: mongo:5.0
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
+    volumes:
+      - mongodb-data:/data/db
+    secrets:
+      - MONGO_URI
+
 networks:
   app-network:
     driver: bridge
@@ -95,3 +106,8 @@ secrets:
     file: ./secrets/ALLORA_NETWORK
   API_SCAN_VERIFIER_KEY:
     file: ./secrets/API_SCAN_VERIFIER_KEY
+
+
+volumes:
+  mongodb-data:
+  
