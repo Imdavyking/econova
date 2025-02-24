@@ -60,7 +60,7 @@ EcoNova is a decentralized charity management system that enables transparent an
 **Example Request:**
 
 ```bash
-curl -X GET http://localhost:3000/api/tweets/1883180110297120857
+curl -X GET http://localhost:3100/api/tweets/1883180110297120857
 ```
 
 **Example Response:**
@@ -81,7 +81,7 @@ curl -X GET http://localhost:3000/api/tweets/1883180110297120857
 **Example Request:**
 
 ```bash
-curl -X GET http://localhost:3000/api/tweets
+curl -X GET http://localhost:3100/api/tweets
 ```
 
 **Example Response:**
@@ -110,7 +110,7 @@ curl -X GET http://localhost:3000/api/tweets
 **Example Request:**
 
 ```bash
-curl -X GET http://localhost:3000/api/tweets/1883180110297120857/liking-users
+curl -X GET http://localhost:3100/api/tweets/1883180110297120857/liking-users
 ```
 
 **Example Response:**
@@ -138,7 +138,7 @@ curl -X GET http://localhost:3000/api/tweets/1883180110297120857/liking-users
 **Example Request:**
 
 ```bash
-curl -X GET http://localhost:3000/api/tweets/1883180110297120857/retweeters
+curl -X GET http://localhost:3100/api/tweets/1883180110297120857/retweeters
 ```
 
 **Example Response:**
@@ -166,7 +166,7 @@ curl -X GET http://localhost:3000/api/tweets/1883180110297120857/retweeters
 **Example Request:**
 
 ```bash
-curl -X GET http://localhost:3000/api/tweets/1883180110297120857/retweeters
+curl -X GET http://localhost:3100/api/tweets/1883180110297120857/retweeters
 ```
 
 **Example Response:**
