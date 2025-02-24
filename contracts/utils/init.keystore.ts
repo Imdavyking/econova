@@ -17,7 +17,7 @@ export const initKeystore = (provider: Provider | null) => {
 
         if (!fs.existsSync(keyStoreFile)) {
             console.error(`❌ Keystore file not found: ${keyStoreFile}`)
-            return null
+            throw new Error("Keystore file not found")
         }
 
         const keystore = fs.readFileSync(keyStoreFile, "utf8")
@@ -26,7 +26,7 @@ export const initKeystore = (provider: Provider | null) => {
         console.log("✅ Wallet successfully decrypted from keystore.")
         return wallet
     } catch (error: any) {
-        console.error("❌ Failed to initialize wallet:", error.message)
-        return null
+        console.error(`❌ Error decrypting keystore: ${error.message}`)
+        throw error
     }
 }
