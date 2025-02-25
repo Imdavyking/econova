@@ -151,6 +151,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     WRAPPED_SONIC_CONTRACT_ADDRESS: ${
       environment.WRAPPED_SONIC_CONTRACT_ADDRESS
     }
+    if you don't know the token address, ask the user to provide it.
     SONIC_CHAIN_ID: 146
     BSC_CHAIN_ID: 56
     The categories available are:
