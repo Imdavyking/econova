@@ -625,13 +625,14 @@ export const getTransactionInfo = async ({ txHash }) => {
     await switchOrAddChain(signer.provider, CHAIN_ID);
     console.log(`Fetching transaction info for ${txHash}`);
     const tx = await signer.provider.getTransactionReceipt(txHash);
+    const txInfo = await tx.getTransaction();
     const blockInfo = await signer.provider.getBlock(tx.blockNumber);
     const timestamp = new Date(blockInfo.timestamp * 1000).toUTCString();
     const { from, to, hash, contractAddress } = tx;
 
-    const value = ethers.formatEther(tx.value ?? 0);
+    const value = ethers.formatEther(txInfo.value ?? 0);
     const gasPrice = ethers.formatEther(tx.gasPrice ?? 0);
-    const gasLimit = ethers.formatEther(tx.gasLimit ?? 0);
+    const gasLimit = ethers.formatEther(txInfo.gasLimit ?? 0);
 
     const isContractCreation = to === null;
 
