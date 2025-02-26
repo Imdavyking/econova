@@ -98,12 +98,16 @@ export default function TransactionAudit() {
             <p className="text-gray-300 text-sm break-words">
               <strong>Hash:</strong> {txInfo.hash}
             </p>
-            <p className="text-gray-300 text-sm break-words">
-              <strong>From:</strong> {txInfo.from}
-            </p>
-            <p className="text-gray-300 text-sm break-words">
-              <strong>To:</strong> {txInfo.to}
-            </p>
+            {txInfo.from && (
+              <p className="text-gray-300 text-sm break-words">
+                <strong>From:</strong> {txInfo.from}
+              </p>
+            )}
+            {txInfo.to && (
+              <p className="text-gray-300 text-sm break-words">
+                <strong>To:</strong> {txInfo.to}
+              </p>
+            )}
             {txInfo.value && (
               <p className="text-gray-300 text-sm">
                 <strong>Amount:</strong>
