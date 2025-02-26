@@ -247,8 +247,7 @@ export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
       name: "txHashSummary",
       description: "Get a summary of a transaction hash.",
       schema: z.object({
-        txHash: z.string().describe("The transaction hash"),
-        chainId: z.number().describe("The chain ID"),
+        hash: z.string().describe("The transaction hash"),
         value: z.number().describe("The value of the transaction"),
         summary: z.string().describe("The summary of the transaction"),
       }),
@@ -262,7 +261,7 @@ export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
   });
 
   const systemPrompt = new SystemMessage(
-    `You are an expert in blockchain transactions. Your task is to analyze the provided transaction hash and provide a detailed summary of the transaction. You should include the chain ID, the value of the transaction, and a brief overview of the transaction's purpose and outcome.`
+    `You are an expert in blockchain transactions. Your task is to analyze the provided transaction hash and provide a detailed summary of the transaction. You should include the value of the transaction, and a brief overview of the transaction's purpose and outcome.`
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
 
