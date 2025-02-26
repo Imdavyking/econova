@@ -625,11 +625,19 @@ export const getTransactionInfo = async ({ txHash }) => {
     await switchOrAddChain(signer.provider, CHAIN_ID);
     const tx = await signer.provider.getTransaction(txHash);
     const blockInfo = await signer.provider.getBlock(tx.blockNumber);
+
     const timestamp = new Date(blockInfo.timestamp * 1000).toUTCString();
     const { from, to, nonce, hash, chainId } = tx;
     const value = ethers.formatEther(tx.value);
     const gasPrice = ethers.formatEther(tx.gasPrice);
     const gasLimit = ethers.formatEther(tx.gasLimit);
+    const [fromCode, toCode] = await Promise.all([
+      signer.provider.getCode(from),
+      signer.provider.getCode(to),
+    ]);
+
+    const fromIsContract = fromCode == "0x00";
+    const toIsContract = toCode == "0x00";
     return {
       value,
       gasPrice,
@@ -642,6 +650,8 @@ export const getTransactionInfo = async ({ txHash }) => {
       timestamp,
       nativeTokenSymbol: CHAIN_CURRENCY_NAME,
       nativeToken: CHAIN_NAME,
+      fromIsContract,
+      toIsContract,
     };
   } catch (error) {
     throw error;
