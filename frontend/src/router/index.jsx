@@ -13,6 +13,7 @@ import AiAudit from "../views/ai-audit/Main";
 import AiInvestment from "../views/ai-investment/Main";
 import Bridge from "../views/bridge/Main";
 import NotFound from "../views/not-found/Main";
+import AiTxAnalysis from "../views/ai-tx-analysis/Main";
 import AITutorQuiz from "../views/ai-tutor/quiz";
 
 function Router() {
@@ -65,6 +66,10 @@ function Router() {
     {
       path: "/ai-investment",
       element: <AiInvestment />,
+    },
+    {
+      path: "/ai-tx-analysis",
+      element: <AiTxAnalysis />,
     },
     {
       path: "*",
