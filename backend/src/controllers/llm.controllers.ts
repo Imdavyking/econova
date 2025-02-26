@@ -72,8 +72,8 @@ export const processTxHashRequest = async (req: Request, res: Response) => {
     const generateActions = await runAIAuditAgent([new HumanMessage(txInfo)]);
 
     res.json(generateActions);
-  } catch (error) {
+  } catch (error: any) {
     console.error("LLM Controller Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: `Internal Server Error ${error.message}` });
   }
 };
