@@ -23,7 +23,7 @@ export default function TransactionAudit() {
     setLegalAdvice(null);
 
     try {
-      const txInfo = await getTransactionInfo({ txHash });
+      const txInfo = await getTransactionInfo({ txHash: txHash.trim() });
       console.log({ txInfo });
       setTxInfo(txInfo);
 

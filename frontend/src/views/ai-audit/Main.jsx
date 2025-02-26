@@ -112,13 +112,15 @@ export default function AiAudit() {
       let currentContractCode = contractCode;
 
       if (githubUrl) {
-        currentContractCode = await fetchContractFileFromGitHub(githubUrl);
+        currentContractCode = await fetchContractFileFromGitHub(
+          githubUrl.trim()
+        );
         if (currentContractCode) {
           setContractCode(currentContractCode);
         }
       } else if (contractAddress) {
         currentContractCode = await fetchVerifiedSourceCode({
-          contractAddress,
+          contractAddress: contractAddress.trim(),
         });
         if (currentContractCode) {
           setContractCode(currentContractCode);
