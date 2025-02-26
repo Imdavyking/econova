@@ -101,6 +101,9 @@ export default function TransactionAudit() {
             <p className="text-gray-300 text-sm">
               <strong>Gas Used:</strong> {txInfo.gasPrice}
             </p>
+            <p className="text-gray-300 text-sm">
+              <strong>Time :</strong> {txInfo.timestamp}
+            </p>
           </div>
         )}
 

@@ -624,20 +624,9 @@ export const getTransactionInfo = async ({ txHash }) => {
 
     await switchOrAddChain(signer.provider, CHAIN_ID);
     const tx = await signer.provider.getTransaction(txHash);
-    const {
-      value,
-      gasPrice,
-      gasLimit,
-      from,
-      to,
-      nonce,
-      hash,
-      chainId,
-      signature,
-      type,
-      blobVersionedHashes,
-      index,
-    } = tx;
+    const blockInfo = await signer.provider.getBlock(tx.blockNumber);
+    const timestamp = new Date(blockInfo.timestamp * 1000).toUTCString();
+    const { value, gasPrice, gasLimit, from, to, nonce, hash, chainId } = tx;
     return {
       value,
       gasPrice,
@@ -647,10 +636,7 @@ export const getTransactionInfo = async ({ txHash }) => {
       nonce,
       hash,
       chainId,
-      signature,
-      type,
-      blobVersionedHashes,
-      index,
+      timestamp,
     };
   } catch (error) {
     throw error;
