@@ -1,6 +1,6 @@
 # EcoNova
 
-EcoNova is a **decentralized charity management system** leveraging **blockchain, artificial intelligence, and zero-knowledge proofs** to enable **secure, automated, and transparent donations**.
+EcoNova is a decentralized platform that integrates blockchain technology, AI, and Zero-Knowledge Proofs (ZKPs) to enable **private health verification, automated donations, AI-powered tutoring, and cross-chain transactions**. It focuses on **trustless and efficient charitable giving** while maintaining user privacy and security.  
 
 ## 🌍 **Key Integrations**
 
