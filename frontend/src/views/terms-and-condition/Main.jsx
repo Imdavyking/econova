@@ -23,7 +23,7 @@ export default function TermsAndConditions() {
               1. Acceptance of Terms
             </h2>
             <p>
-              By accessing and using Econova, you agree to be bound by these
+              By accessing and using {APP_NAME}, you agree to be bound by these
               terms and conditions. If you do not agree, please discontinue use.
             </p>
           </section>
@@ -34,8 +34,8 @@ export default function TermsAndConditions() {
             </h2>
             <p>
               Users must ensure they comply with all applicable laws and
-              regulations while using Econova. Misuse of the platform may result
-              in account suspension.
+              regulations while using {APP_NAME}. Misuse of the platform may
+              result in account suspension.
             </p>
           </section>
 
@@ -44,7 +44,7 @@ export default function TermsAndConditions() {
               3. Intellectual Property
             </h2>
             <p>
-              All content on Econova, including logos, designs, and text, is
+              All content on {APP_NAME}, including logos, designs, and text, is
               protected by copyright laws. Unauthorized use is prohibited.
             </p>
           </section>
@@ -54,7 +54,7 @@ export default function TermsAndConditions() {
               4. Limitation of Liability
             </h2>
             <p>
-              Econova is not responsible for any losses or damages incurred
+              {APP_NAME} is not responsible for any losses or damages incurred
               through the use of our platform. Users assume all risks associated
               with their transactions.
             </p>
@@ -66,7 +66,7 @@ export default function TermsAndConditions() {
             </h2>
             <p>
               We reserve the right to update these terms at any time. Continued
-              use of Econova after modifications indicates acceptance of the
+              use of {APP_NAME} after modifications indicates acceptance of the
               changes.
             </p>
           </section>
@@ -77,8 +77,8 @@ export default function TermsAndConditions() {
             </h2>
             <p>
               For any questions regarding these terms, please contact us at{" "}
-              <a href="mailto:support@econova.com" className="text-blue-400">
-                support@econova.com
+              <a href="mailto:support@{APP_NAME}.com" className="text-blue-400">
+                support@{APP_NAME}.com
               </a>
               .
             </p>
