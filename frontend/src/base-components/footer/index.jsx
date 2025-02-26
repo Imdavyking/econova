@@ -28,6 +28,9 @@ const Footer = () => {
           <li>
             <Link to="/bridge">Bridge</Link>
           </li>
+          <li>
+            <Link to="/tx-analysis">Tx Analysis</Link>
+          </li>
         </ul>
 
         <ul className="space-y-2">

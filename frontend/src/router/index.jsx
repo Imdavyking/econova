@@ -68,7 +68,7 @@ function Router() {
       element: <AiInvestment />,
     },
     {
-      path: "/ai-tx-analysis",
+      path: "/tx-analysis",
       element: <AiTxAnalysis />,
     },
     {
