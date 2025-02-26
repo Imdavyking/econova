@@ -70,7 +70,12 @@ export default function TransactionAudit() {
             type="text"
             placeholder="Enter transaction hash..."
             value={txHash}
-            onChange={(e) => setTxHash(e.target.value)}
+            onChange={(e) => {
+              setTxInfo(null);
+              setTxSummary(null);
+              setLegalAdvice(null);
+              setTxHash(e.target.value);
+            }}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 break-words"
           />
         </div>
