@@ -9,10 +9,10 @@ export const getVerifiedSourceCode = async (req: Request, res: Response) => {
       return;
     }
 
-    const { contractName, sourceCode } = await getVerifiedContractCode(
+    const { contractName, sourceCode, abi } = await getVerifiedContractCode(
       contractAddress as string
     );
-    res.json({ contractName, sourceCode });
+    res.json({ contractName, sourceCode, abi });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

@@ -7,6 +7,7 @@ export const getVerifiedContractCode = async (
 ): Promise<{
   contractName: string;
   sourceCode: string;
+  abi: string;
 }> => {
   const response = await fetch(
     `https://api-testnet.sonicscan.org/api?module=contract&action=getsourcecode&address=${address}&apikey=${environment.API_SCAN_VERIFIER_KEY}`
@@ -18,5 +19,6 @@ export const getVerifiedContractCode = async (
   return {
     contractName: data.result[0].ContractName,
     sourceCode: data.result[0].SourceCode,
+    abi: data.result[0].ABI,
   };
 };
