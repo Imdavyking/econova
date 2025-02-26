@@ -91,6 +91,9 @@ export default function TransactionAudit() {
           <div className="mt-6 bg-gray-700 p-4 rounded-lg">
             <h3 className="text-lg font-semibold mb-2">Transaction Details</h3>
             <p className="text-gray-300 text-sm break-words">
+              <strong>Hash:</strong> {txInfo.hash}
+            </p>
+            <p className="text-gray-300 text-sm break-words">
               <strong>From:</strong> {txInfo.from}
             </p>
             <p className="text-gray-300 text-sm break-words">
