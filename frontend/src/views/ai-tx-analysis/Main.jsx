@@ -6,6 +6,7 @@ import { APP_NAME, CHAIN_SYMBOL } from "../../utils/constants";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { toast } from "react-toastify";
 import logoUrl from "@/assets/images/logo.png";
+import { ethers } from "ethers";
 
 export default function TransactionAudit() {
   const [txHash, setTxHash] = useState("");
@@ -82,7 +83,7 @@ export default function TransactionAudit() {
           {loading ? (
             <FaSpinner className="animate-spin w-5 h-5" />
           ) : (
-            "Fetch Transaction"
+            "Analyze Transaction"
           )}
         </button>
 
@@ -95,12 +96,19 @@ export default function TransactionAudit() {
             <p className="text-gray-300 text-sm break-words">
               <strong>To:</strong> {txInfo.to}
             </p>
-            <p className="text-gray-300 text-sm">
-              <strong>Amount:</strong> {txInfo.value} {CHAIN_SYMBOL}
-            </p>
-            <p className="text-gray-300 text-sm">
-              <strong>Gas Used:</strong> {txInfo.gasPrice}
-            </p>
+            {txInfo.value && (
+              <p className="text-gray-300 text-sm">
+                <strong>Amount:</strong>
+                {Number(ethers.formatEther(`${txInfo.value}`))} {CHAIN_SYMBOL}
+              </p>
+            )}
+            {txInfo.gasPrice && (
+              <p className="text-gray-300 text-sm">
+                <strong>Gas Used:</strong>
+                {Number(ethers.formatEther(`${txInfo.gasPrice}`))}{" "}
+                {CHAIN_SYMBOL}
+              </p>
+            )}
             <p className="text-gray-300 text-sm">
               <strong>Time :</strong> {txInfo.timestamp}
             </p>
