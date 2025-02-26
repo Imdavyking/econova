@@ -21,26 +21,17 @@ const Footer = () => {
       {/* Footer Links */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center md:text-left">
         <ul className="space-y-2">
-          <li className="font-semibold">Information</li>
-          <li>
-            <Link to="/">Terms & Condition</Link>
-          </li>
-          <li>
-            <Link to="https://econovadocs.vercel.app/" target="_blank">
-              Docs
-            </Link>
-          </li>
-        </ul>
-
-        <ul className="space-y-2">
-          <li className="font-semibold">Charity</li>
+          <li className="font-semibold">Product & Charity</li>
           <li>
             <Link to="/donate">Donate</Link>
           </li>
+          <li>
+            <Link to="/bridge">Bridge</Link>
+          </li>
         </ul>
 
         <ul className="space-y-2">
-          <li className="font-semibold">Tools</li>
+          <li className="font-semibold">AI Tools</li>
           <li>
             <Link to="/ai-health">AI Health Advisor</Link>
           </li>
@@ -51,16 +42,23 @@ const Footer = () => {
             <Link to="/ai-audit">AI Audit</Link>
           </li>
           <li>
-            <Link to="/bridge">Bridge</Link>
+            <Link to="/ai-investment">AI Investment</Link>
           </li>
         </ul>
 
         <ul className="space-y-2">
-          <li className="font-semibold">Connect</li>
-
+          <li className="font-semibold">Legal & Socials</li>
           <li>
             <Link to="https://x.com/EcoNova_Bot" target="_blank">
               Twitter
+            </Link>
+          </li>
+          <li>
+            <Link to="/">Terms & Condition</Link>
+          </li>
+          <li>
+            <Link to="https://econovadocs.vercel.app/" target="_blank">
+              Docs
             </Link>
           </li>
         </ul>

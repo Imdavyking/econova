@@ -10,7 +10,9 @@ import LeaderBoard from "../views/leaderboard/Main";
 import AIHealth from "../views/ai-health/Main";
 import AITutor from "../views/ai-tutor/Main";
 import AiAudit from "../views/ai-audit/Main";
+import AiInvestment from "../views/ai-investment/Main";
 import Bridge from "../views/bridge/Main";
+import NotFound from "../views/not-found/Main";
 import AITutorQuiz from "../views/ai-tutor/quiz";
 
 function Router() {
@@ -59,6 +61,14 @@ function Router() {
     {
       path: "/ai-audit",
       element: <AiAudit />,
+    },
+    {
+      path: "/ai-investment",
+      element: <AiInvestment />,
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ];
 
