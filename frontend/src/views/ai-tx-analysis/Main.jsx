@@ -5,10 +5,12 @@ import { callLLMTxHashApi } from "../../services/openai.services";
 import { CHAIN_SYMBOL } from "../../utils/constants";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { toast } from "react-toastify";
+
 export default function TransactionAudit() {
   const [txHash, setTxHash] = useState("");
   const [txInfo, setTxInfo] = useState(null);
   const [txSummary, setTxSummary] = useState(null);
+  const [legalAdvice, setLegalAdvice] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleFetchTransaction = async () => {
@@ -16,6 +18,7 @@ export default function TransactionAudit() {
     setLoading(true);
     setTxInfo(null);
     setTxSummary(null);
+    setLegalAdvice(null);
 
     try {
       const txInfo = await getTransactionInfo({ txHash });
@@ -24,7 +27,17 @@ export default function TransactionAudit() {
 
       const summary = await callLLMTxHashApi({ txInfo });
       console.log({ summary });
-      // setTxSummary(summary);
+
+      // Extract transaction summary and legal advice
+      if (summary && summary.tool_calls) {
+        const txHashSummary = summary.tool_calls.find(
+          (call) => call.name === "txHashSummary"
+        );
+        if (txHashSummary) {
+          setTxSummary(txHashSummary.args.summary);
+          setLegalAdvice(txHashSummary.args.legalAdvice);
+        }
+      }
     } catch (error) {
       console.error({ error });
       toast.error(`An error occurred: ${error.message}`);
@@ -34,7 +47,7 @@ export default function TransactionAudit() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  text-white p-6">
+    <div className="min-h-screen flex items-center justify-center text-white p-6">
       <DarkModeSwitcher />
       <div className="w-full max-w-lg bg-gray-800 p-6 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">
@@ -88,6 +101,15 @@ export default function TransactionAudit() {
           <div className="mt-6 bg-gray-700 p-4 rounded-lg">
             <h3 className="text-lg font-semibold mb-2">AI Summary</h3>
             <p className="text-gray-300 text-sm">{txSummary}</p>
+          </div>
+        )}
+
+        {legalAdvice && (
+          <div className="mt-6 bg-red-700 p-4 rounded-lg border-l-4 border-red-400">
+            <h3 className="text-lg font-semibold text-red-200 mb-2">
+              Legal Advice
+            </h3>
+            <p className="text-red-100 text-sm">{legalAdvice}</p>
           </div>
         )}
       </div>
