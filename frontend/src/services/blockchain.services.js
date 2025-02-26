@@ -645,6 +645,13 @@ export const getTransactionInfo = async ({ txHash }) => {
     const fromIsContract = fromCode != "0x";
     const toIsContract = toCode != "0x";
 
+    const decodedResult = {
+      name: "",
+      isValid: false,
+      inputs: [],
+      params: [],
+    };
+
     if (toIsContract) {
       try {
         const contractCode = await getVerifiedSourceCode({
@@ -655,13 +662,26 @@ export const getTransactionInfo = async ({ txHash }) => {
             ? JSON.parse(contractCode.abi)
             : contractCode.abi
         );
-        const decodedResult = abiDecoder.decodeFunctionData(txInfo.data);
-        console.log({ decodedResult });
+
+        abiDecoder.fragments.find((fragment) => {
+          try {
+            const result = abiDecoder.decodeFunctionData(fragment, txInfo.data);
+
+            decodedResult.name = fragment.name;
+            decodedResult.inputs = fragment.inputs;
+            decodedResult.params = [...result];
+            decodedResult.isValid = true;
+
+            return true;
+          } catch (error) {
+            return false;
+          }
+        });
       } catch (_) {
         console.log(_);
       }
     }
-    return {
+    const decodedData = {
       value,
       gasPrice,
       gasLimit,
@@ -677,6 +697,12 @@ export const getTransactionInfo = async ({ txHash }) => {
       toIsContract,
       isContractCreation,
     };
+
+    if (decodedResult.isValid) {
+      decodedData.decodedResult = decodedResult;
+    }
+
+    return decodedData;
   } catch (error) {
     throw error;
   }
