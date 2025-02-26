@@ -153,7 +153,11 @@ const Home = () => {
               {APP_NAME}
             </h2>
             <p className="text-white font-extrabold text-lg md:text-2xl my-2 text-center max-w-[90%] md:max-w-[60%]">
-              This solution enables donations through blockchain
+              A decentralized platform that integrates blockchain technology,
+              AI, and Zero-Knowledge Proofs (ZKPs) to enable private health
+              verification, automated donations, AI-powered tutoring, and
+              cross-chain transactions. It focuses on trustless and efficient
+              charitable giving while maintaining user privacy and security
               <span className="text-[#c54dfc] px-1">
                 and connects with Twitter
               </span>
