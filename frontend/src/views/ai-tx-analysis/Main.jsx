@@ -2,9 +2,10 @@ import { useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { getTransactionInfo } from "../../services/blockchain.services";
 import { callLLMTxHashApi } from "../../services/openai.services";
-import { CHAIN_SYMBOL } from "../../utils/constants";
+import { APP_NAME, CHAIN_SYMBOL } from "../../utils/constants";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { toast } from "react-toastify";
+import logoUrl from "@/assets/images/logo.png";
 
 export default function TransactionAudit() {
   const [txHash, setTxHash] = useState("");
@@ -48,6 +49,13 @@ export default function TransactionAudit() {
   return (
     <div className="min-h-screen flex items-center justify-center text-white p-6">
       <DarkModeSwitcher />
+      <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
+        <a href="/" className="flex items-center space-x-3">
+          <img alt={APP_NAME} className="w-10" src={logoUrl} />
+          <span className="text-lg">{APP_NAME} AI Tutor</span>
+        </a>
+      </h2>
+
       <div className="w-full max-w-lg bg-gray-800 p-6 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">
           Transaction Analysis
