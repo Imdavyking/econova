@@ -73,7 +73,9 @@ export const processTxHashRequest = async (req: Request, res: Response) => {
       return;
     }
 
-    const generateActions = await runTxHashAgent([new HumanMessage(txInfo)]);
+    const generateActions = await runTxHashAgent([
+      new HumanMessage(JSON.stringify(txInfo)),
+    ]);
 
     res.json(generateActions);
   } catch (error: any) {
