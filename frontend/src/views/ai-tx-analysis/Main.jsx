@@ -75,7 +75,7 @@ export default function TransactionAudit() {
           {loading ? (
             <FaSpinner className="animate-spin w-5 h-5" />
           ) : (
-            "Fetch Transaction"
+            "Analyze Transaction"
           )}
         </button>
 
