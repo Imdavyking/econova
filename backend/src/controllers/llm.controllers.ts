@@ -60,16 +60,16 @@ export const processLLMAuditRequest = async (req: Request, res: Response) => {
  */
 export const processTxHashRequest = async (req: Request, res: Response) => {
   try {
-    const { txHash } = req.body;
+    const { txInfo } = req.body;
 
-    if (!txHash) {
+    if (!txInfo) {
       res.status(400).json({
         error: "Missing required fields: txHash",
       });
       return;
     }
 
-    const generateActions = await runAIAuditAgent([new HumanMessage(txHash)]);
+    const generateActions = await runAIAuditAgent([new HumanMessage(txInfo)]);
 
     res.json(generateActions);
   } catch (error) {
