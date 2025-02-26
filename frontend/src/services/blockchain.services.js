@@ -27,6 +27,7 @@ import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
+import { getVerifiedSourceCode } from "./source.code.services";
 
 async function switchOrAddChain(ethProvider, switchChainId) {
   try {
@@ -643,6 +644,17 @@ export const getTransactionInfo = async ({ txHash }) => {
 
     const fromIsContract = fromCode != "0x";
     const toIsContract = toCode != "0x";
+
+    if (toIsContract) {
+      try {
+        const contractCode = await getVerifiedSourceCode({
+          contractAddress: to,
+        });
+        const abiDecoder = new ethers.Interface(contractCode.abi);
+        const decodedResult = abiDecoder.decodeFunctionData(txInfo.data);
+        console.log({ decodedResult });
+      } catch (_) {}
+    }
     return {
       value,
       gasPrice,
