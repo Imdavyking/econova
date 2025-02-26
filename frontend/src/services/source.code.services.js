@@ -9,5 +9,8 @@ export const getVerifiedSourceCode = async ({ contractAddress }) => {
     },
     body: JSON.stringify({ contractAddress }),
   });
+  if (!response.ok) {
+    throw new Error("Failed to fetch source code");
+  }
   return await response.json();
 };

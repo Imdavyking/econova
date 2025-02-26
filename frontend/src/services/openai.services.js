@@ -21,6 +21,9 @@ export const callLLMAuditApi = async ({ contractCode }) => {
     },
     body: JSON.stringify({ contractCode }),
   });
+  if (!response.ok) {
+    throw new Error("Failed to fetch contract audit");
+  }
   return await response.json();
 };
 

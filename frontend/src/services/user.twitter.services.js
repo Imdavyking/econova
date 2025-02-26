@@ -14,6 +14,9 @@ export const getUserTwitterInfo = async () => {
         Authorization: `Bearer ${getTwitterAuth()}`,
       },
     });
+    if (!response.ok) {
+      throw new Error("Failed to fetch user info");
+    }
     return await response.json();
   } catch (error) {
     throw new Error("Error fetching user info");
