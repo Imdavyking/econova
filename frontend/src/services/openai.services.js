@@ -35,5 +35,8 @@ export const callLLMTxHashApi = async ({ txInfo }) => {
       typeof v === "bigint" ? v.toString() : v
     ),
   });
+  if (!response.ok) {
+    throw new Error("Failed to fetch transaction analysis");
+  }
   return await response.json();
 };
