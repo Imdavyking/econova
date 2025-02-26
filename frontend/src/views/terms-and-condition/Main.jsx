@@ -77,8 +77,8 @@ export default function TermsAndConditions() {
             </h2>
             <p>
               For any questions regarding these terms, please contact us at{" "}
-              <a href="mailto:support@{APP_NAME}.com" className="text-blue-400">
-                support@{APP_NAME}.com
+              <a href="https://x.com/EcoNova_Bot" className="text-blue-400">
+                EcoNova_Bot
               </a>
               .
             </p>
