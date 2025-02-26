@@ -240,3 +240,31 @@ Your audit report should be structured as follows:
 
   return { content: result.content, tool_calls: result.tool_calls };
 }
+
+export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
+  const tools = {
+    txHashSummary: tool(() => undefined, {
+      name: "txHashSummary",
+      description: "Get a summary of a transaction hash.",
+      schema: z.object({
+        txHash: z.string().describe("The transaction hash"),
+        chainId: z.number().describe("The chain ID"),
+        value: z.number().describe("The value of the transaction"),
+        summary: z.string().describe("The summary of the transaction"),
+      }),
+    }),
+  };
+  const llm = new ChatOpenAI({
+    model: "gpt-4o-mini",
+    apiKey: openAIApiKey,
+  }).bind({
+    tools: Object.values(tools),
+  });
+
+  const systemPrompt = new SystemMessage(
+    `You are an expert in blockchain transactions. Your task is to analyze the provided transaction hash and provide a detailed summary of the transaction. You should include the chain ID, the value of the transaction, and a brief overview of the transaction's purpose and outcome.`
+  );
+  const result = await llm.invoke([systemPrompt, ...messages]);
+
+  return { content: result.content, tool_calls: result.tool_calls };
+}

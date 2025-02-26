@@ -23,3 +23,15 @@ export const callLLMAuditApi = async ({ contractCode }) => {
   });
   return await response.json();
 };
+
+export const callLLMTxHashApi = async ({ txHash }) => {
+  const response = await fetch(`${SERVER_URL}/api/llm/tx_hash`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify({ txHash }),
+  });
+  return await response.json();
+};

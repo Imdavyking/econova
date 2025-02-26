@@ -1,6 +1,10 @@
 /** @format */
 
-import { callLLMApi } from "../services/openai.services";
+import {
+  callLLMApi,
+  callLLMAuditApi,
+  callLLMTxHashApi,
+} from "../services/openai.services";
 import {
   deployTokenService,
   donateToFoundationService,
@@ -10,12 +14,13 @@ import {
   sendERC20TokenService,
   wrapSonicService,
   unwrapSonicService,
+  getTransactionInfo,
 } from "../services/blockchain.services";
 import { AiResponseType, SolveTaskResult, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
 import { bridgeCoin } from "../services/debridge.services";
-import { FAILED_KEY, SERVER_URL } from "../utils/constants";
 import { alloraPredictService } from "../services/allora.services";
+import { FAILED_KEY } from "../utils/constants";
 
 export class AIAgent {
   tools: { [key: string]: Function };
@@ -33,6 +38,14 @@ export class AIAgent {
       unwrapSonic: unwrapSonicService,
       bridge: bridgeCoin,
       alloraPredict: alloraPredictService,
+      summarizeTxHash: async ({ txHash }: { txHash: string }) => {
+        try {
+          const txInfo = await getTransactionInfo({ txHash });
+          const txSummary = await callLLMTxHashApi({ txHash });
+        } catch (error) {
+          return `${FAILED_KEY} Transaction not found`;
+        }
+      },
     };
     this.toolsInfo = {
       donate: `Example: Donate 100 USD to a cause. e.g ${Object.keys(
@@ -50,6 +63,8 @@ export class AIAgent {
       bridge:
         "Only Mainnet Bridges are Supported: Example - Bridge 10 SONIC to BSC",
       alloraPredict: "Example: What is the price of ETH in 5 minutes?.",
+      summarizeTxHash:
+        "Example: Summarize transaction 0xeafceb358bc36d757b791c5a452285de69a109e27ffbf5bd7eaf617bf9c50be1",
     };
   }
 

@@ -618,6 +618,45 @@ export const claimNFT = async ({ level, proof, tokenURI }) => {
   }
 };
 
+export const getTransactionInfo = async ({ txHash }) => {
+  try {
+    const signer = await getSigner();
+
+    await switchOrAddChain(signer.provider, CHAIN_ID);
+    const tx = await signer.provider.getTransaction(txHash);
+    const {
+      value,
+      gasPrice,
+      gasLimit,
+      from,
+      to,
+      nonce,
+      hash,
+      chainId,
+      signature,
+      type,
+      blobVersionedHashes,
+      index,
+    } = tx;
+    return {
+      value,
+      gasPrice,
+      gasLimit,
+      from,
+      to,
+      nonce,
+      hash,
+      chainId,
+      signature,
+      type,
+      blobVersionedHashes,
+      index,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const redeemPointsService = async ({ points }) => {
   try {
     const manager = await getContract();

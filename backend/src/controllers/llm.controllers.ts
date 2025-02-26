@@ -53,3 +53,27 @@ export const processLLMAuditRequest = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+/**
+ * Handles LLM Audit API requests
+ * @route POST /api/llm/audit
+ */
+export const processTxHashRequest = async (req: Request, res: Response) => {
+  try {
+    const { txHash } = req.body;
+
+    if (!txHash) {
+      res.status(400).json({
+        error: "Missing required fields: txHash",
+      });
+      return;
+    }
+
+    const generateActions = await runAIAuditAgent([new HumanMessage(txHash)]);
+
+    res.json(generateActions);
+  } catch (error) {
+    console.error("LLM Controller Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
