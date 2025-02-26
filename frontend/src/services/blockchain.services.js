@@ -626,7 +626,10 @@ export const getTransactionInfo = async ({ txHash }) => {
     const tx = await signer.provider.getTransaction(txHash);
     const blockInfo = await signer.provider.getBlock(tx.blockNumber);
     const timestamp = new Date(blockInfo.timestamp * 1000).toUTCString();
-    const { value, gasPrice, gasLimit, from, to, nonce, hash, chainId } = tx;
+    const { from, to, nonce, hash, chainId } = tx;
+    const value = ethers.formatEther(tx.value);
+    const gasPrice = ethers.formatEther(tx.gasPrice);
+    const gasLimit = ethers.formatEther(tx.gasLimit);
     return {
       value,
       gasPrice,

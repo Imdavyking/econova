@@ -99,14 +99,13 @@ export default function TransactionAudit() {
             {txInfo.value && (
               <p className="text-gray-300 text-sm">
                 <strong>Amount:</strong>
-                {Number(ethers.formatEther(`${txInfo.value}`))} {CHAIN_SYMBOL}
+                {Number(txInfo.value)} {CHAIN_SYMBOL}
               </p>
             )}
             {txInfo.gasPrice && (
               <p className="text-gray-300 text-sm">
                 <strong>Gas Used:</strong>
-                {Number(ethers.formatEther(`${txInfo.gasPrice}`))}{" "}
-                {CHAIN_SYMBOL}
+                {Number(txInfo.gasPrice)} {CHAIN_SYMBOL}
               </p>
             )}
             <p className="text-gray-300 text-sm">
