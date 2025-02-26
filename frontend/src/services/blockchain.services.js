@@ -650,10 +650,16 @@ export const getTransactionInfo = async ({ txHash }) => {
         const contractCode = await getVerifiedSourceCode({
           contractAddress: to,
         });
-        const abiDecoder = new ethers.Interface(contractCode.abi);
+        const abiDecoder = new ethers.Interface(
+          typeof contractCode.abi === "string"
+            ? JSON.parse(contractCode.abi)
+            : contractCode.abi
+        );
         const decodedResult = abiDecoder.decodeFunctionData(txInfo.data);
         console.log({ decodedResult });
-      } catch (_) {}
+      } catch (_) {
+        console.log(_);
+      }
     }
     return {
       value,
