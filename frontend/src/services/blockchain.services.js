@@ -665,7 +665,7 @@ export const getTransactionInfo = async ({ txHash }) => {
 
         abiDecoder.fragments.find((fragment) => {
           if (!txInfo.data.startsWith(fragment.selector)) return false;
-          console.log(fragment.selector);
+
           try {
             const result = abiDecoder.decodeFunctionData(fragment, txInfo.data);
             decodedResult.name = fragment.name;
