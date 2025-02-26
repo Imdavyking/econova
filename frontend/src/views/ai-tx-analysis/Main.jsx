@@ -23,8 +23,8 @@ export default function TransactionAudit() {
       setTxInfo(txInfo);
 
       const summary = await callLLMTxHashApi({ txInfo });
-
-      setTxSummary(summary);
+      console.log({ summary });
+      // setTxSummary(summary);
     } catch (error) {
       console.error({ error });
       toast.error(`An error occurred: ${error.message}`);
