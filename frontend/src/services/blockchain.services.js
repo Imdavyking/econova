@@ -640,6 +640,8 @@ export const getTransactionInfo = async ({ txHash }) => {
       hash,
       chainId,
       timestamp,
+      nativeTokenSymbol: CHAIN_CURRENCY_NAME,
+      nativeToken: CHAIN_NAME,
     };
   } catch (error) {
     throw error;
