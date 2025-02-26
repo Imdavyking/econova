@@ -4,7 +4,7 @@ import { getTransactionInfo } from "../../services/blockchain.services";
 import { callLLMTxHashApi } from "../../services/openai.services";
 import { CHAIN_SYMBOL } from "../../utils/constants";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-
+import { toast } from "react-toastify";
 export default function TransactionAudit() {
   const [txHash, setTxHash] = useState("");
   const [txInfo, setTxInfo] = useState(null);
@@ -27,6 +27,7 @@ export default function TransactionAudit() {
       setTxSummary(summary);
     } catch (error) {
       console.error({ error });
+      toast.error(`An error occurred: ${error.message}`);
     } finally {
       setLoading(false);
     }
