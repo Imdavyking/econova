@@ -248,8 +248,8 @@ export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
       description: "Get a summary of a transaction hash.",
       schema: z.object({
         hash: z.string().describe("The transaction hash"),
-        value: z.number().describe("The value of the transaction"),
         summary: z.string().describe("The summary of the transaction"),
+        legalAdvice: z.string().describe("Legal advice on the transaction"),
       }),
     }),
   };

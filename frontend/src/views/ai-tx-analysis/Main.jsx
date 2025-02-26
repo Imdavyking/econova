@@ -23,9 +23,10 @@ export default function TransactionAudit() {
       setTxInfo(txInfo);
 
       const summary = await callLLMTxHashApi({ txInfo });
+
       setTxSummary(summary);
     } catch (error) {
-      console.error(error);
+      console.error({ error });
     } finally {
       setLoading(false);
     }
