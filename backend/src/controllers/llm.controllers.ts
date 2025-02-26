@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { runAIAgent, runAIAuditAgent } from "../services/agent.services";
+import {
+  runAIAgent,
+  runAIAuditAgent,
+  runTxHashAgent,
+} from "../services/agent.services";
 import dotenv from "dotenv";
 import { HumanMessage } from "@langchain/core/messages";
 dotenv.config();
@@ -69,7 +73,7 @@ export const processTxHashRequest = async (req: Request, res: Response) => {
       return;
     }
 
-    const generateActions = await runAIAuditAgent([new HumanMessage(txInfo)]);
+    const generateActions = await runTxHashAgent([new HumanMessage(txInfo)]);
 
     res.json(generateActions);
   } catch (error: any) {
