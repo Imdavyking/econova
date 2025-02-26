@@ -28,7 +28,6 @@ export default function TransactionAudit() {
       const summary = await callLLMTxHashApi({ txInfo });
       console.log({ summary });
 
-      // Extract transaction summary and legal advice
       if (summary && summary.tool_calls) {
         const txHashSummary = summary.tool_calls.find(
           (call) => call.name === "txHashSummary"
@@ -63,7 +62,7 @@ export default function TransactionAudit() {
             placeholder="Enter transaction hash..."
             value={txHash}
             onChange={(e) => setTxHash(e.target.value)}
-            className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 break-words"
           />
         </div>
 
@@ -75,17 +74,17 @@ export default function TransactionAudit() {
           {loading ? (
             <FaSpinner className="animate-spin w-5 h-5" />
           ) : (
-            "Analyze Transaction"
+            "Fetch Transaction"
           )}
         </button>
 
         {txInfo && (
           <div className="mt-6 bg-gray-700 p-4 rounded-lg">
             <h3 className="text-lg font-semibold mb-2">Transaction Details</h3>
-            <p className="text-gray-300 text-sm">
+            <p className="text-gray-300 text-sm break-words">
               <strong>From:</strong> {txInfo.from}
             </p>
-            <p className="text-gray-300 text-sm">
+            <p className="text-gray-300 text-sm break-words">
               <strong>To:</strong> {txInfo.to}
             </p>
             <p className="text-gray-300 text-sm">
@@ -100,7 +99,9 @@ export default function TransactionAudit() {
         {txSummary && (
           <div className="mt-6 bg-gray-700 p-4 rounded-lg">
             <h3 className="text-lg font-semibold mb-2">AI Summary</h3>
-            <p className="text-gray-300 text-sm">{txSummary}</p>
+            <p className="text-gray-300 text-sm break-words whitespace-pre-wrap">
+              {txSummary}
+            </p>
           </div>
         )}
 
@@ -109,7 +110,9 @@ export default function TransactionAudit() {
             <h3 className="text-lg font-semibold text-red-200 mb-2">
               Legal Advice
             </h3>
-            <p className="text-red-100 text-sm">{legalAdvice}</p>
+            <p className="text-red-100 text-sm break-words whitespace-pre-wrap">
+              {legalAdvice}
+            </p>
           </div>
         )}
       </div>
