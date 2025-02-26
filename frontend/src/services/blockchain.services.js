@@ -636,8 +636,8 @@ export const getTransactionInfo = async ({ txHash }) => {
       signer.provider.getCode(to),
     ]);
 
-    const fromIsContract = fromCode == "0x";
-    const toIsContract = toCode == "0x";
+    const fromIsContract = fromCode != "0x";
+    const toIsContract = toCode != "0x";
     return {
       value,
       gasPrice,
