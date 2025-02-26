@@ -262,7 +262,8 @@ export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const systemPrompt = new SystemMessage(
     `You are an expert in blockchain transactions. Your task is to analyze the provided transaction hash and provide a detailed summary of the transaction.
-    if -to- field is empty, it means the transaction is a contract creation.`
+    if -to- field is empty, it means the transaction is a contract creation.
+    the native coin here is Sonic(S)`
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
 
