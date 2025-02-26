@@ -47,12 +47,12 @@ export default function TransactionAudit() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center text-white p-6">
+    <div className="min-h-screen flex items-center justify-center flex-col text-white p-6">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <a href="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
-          <span className="text-lg">{APP_NAME} AI Tutor</span>
+          <span className="text-lg">{APP_NAME} Tx Analysis</span>
         </a>
       </h2>
 
