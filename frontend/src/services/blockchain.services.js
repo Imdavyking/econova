@@ -650,6 +650,7 @@ export const getTransactionInfo = async ({ txHash }) => {
       from,
       to,
       hash,
+      data: txInfo.data,
       contractAddress,
       timestamp,
       nativeTokenSymbol: CHAIN_CURRENCY_NAME,

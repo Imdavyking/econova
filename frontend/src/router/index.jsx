@@ -15,6 +15,7 @@ import Bridge from "../views/bridge/Main";
 import NotFound from "../views/not-found/Main";
 import AiTxAnalysis from "../views/ai-tx-analysis/Main";
 import AITutorQuiz from "../views/ai-tutor/quiz";
+import TermsAndCondition from "../views/term-and-condition/Main";
 
 function Router() {
   const routes = [
@@ -70,6 +71,10 @@ function Router() {
     {
       path: "/tx-analysis",
       element: <AiTxAnalysis />,
+    },
+    {
+      path: "/terms-and-conditions",
+      element: <TermsAndCondition />,
     },
     {
       path: "*",

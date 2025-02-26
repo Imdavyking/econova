@@ -57,7 +57,7 @@ const Footer = () => {
             </Link>
           </li>
           <li>
-            <Link to="/">Terms & Condition</Link>
+            <Link to="/terms-and-conditions">Terms & Condition</Link>
           </li>
           <li>
             <Link to="https://econovadocs.vercel.app/" target="_blank">
