@@ -4,6 +4,7 @@ import {
   getProjectTokenDetails,
   getTokenBalance,
 } from "../../services/blockchain.services";
+import { toast } from "react-toastify";
 import { APP_NAME, CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
@@ -126,7 +127,7 @@ export default function InvestmentAI() {
     console.log("Rebalancing Orders:", rebalanceOrders);
 
     setTimeout(() => {
-      alert("Portfolio rebalanced successfully!");
+      toast.success("Portfolio rebalanced successfully!");
       setRebalancing(false);
     }, 2000);
   };
