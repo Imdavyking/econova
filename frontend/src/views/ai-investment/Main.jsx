@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
 import axios from "axios";
+// return "$coinGeckoBaseurl/coins/$coinGeckoId/market_chart?vs_currency=$defaultCurrency&days=$days";
+const API_URL = "https://api.coingecko.com/api/v3/coins/usd-coin/market_chart";
+const assets = ["sonic-3", "usd-coin"];
 
-const API_URL = "https://api.coingecko.com/api/v3/simple/price";
-const assets = ["sonic-token", "usd-coin", "defi-index-fund"]; // Example asset IDs from CoinGecko
+// curl -X GET "https://pro-api.coingecko.com/api/v3" -H "x-cg-pro-api-key: YOUR_API_KEY"
+
+// CG-eppKJk3qk4wLAcWnj1eKnAcA
+
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -15,21 +19,30 @@ export default function InvestmentAI() {
   useEffect(() => {
     async function fetchMarketData() {
       try {
-        // Fetch real-time prices
         const response = await axios.get(API_URL, {
           params: {
-            ids: assets.join(","),
+            days: 7,
             vs_currencies: "usd",
           },
         });
+
+        console.log(response.data);
+
+        //   {
+        //     "sonic-3": {
+        //         "usd": 0.722857
+        //     },
+        //     "usd-coin": {
+        //         "usd": 0.999808
+        //     }
+        // }
 
         setPrices(response.data);
 
         // Simulate fetching user portfolio
         const userPortfolio = {
-          "sonic-token": 100,
+          "sonic-3": 100,
           "usd-coin": 500,
-          "defi-index-fund": 300,
         };
         setPortfolio(userPortfolio);
 
@@ -45,16 +58,11 @@ export default function InvestmentAI() {
           assets: [
             {
               name: "Sonic Token",
-              allocation: (userPortfolio["sonic-token"] / totalBalance) * 100,
+              allocation: (userPortfolio["sonic-3"] / totalBalance) * 100,
             },
             {
               name: "Stablecoin",
               allocation: (userPortfolio["usd-coin"] / totalBalance) * 100,
-            },
-            {
-              name: "DeFi Index Fund",
-              allocation:
-                (userPortfolio["defi-index-fund"] / totalBalance) * 100,
             },
           ],
         };
