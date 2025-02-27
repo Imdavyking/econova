@@ -16,6 +16,9 @@ export default function InvestmentAI() {
   const [portfolio, setPortfolio] = useState({});
   const [prices, setPrices] = useState({});
 
+  const normalizeBalance = (balance, decimals) =>
+    Number(balance) / 10 ** Number(decimals);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -29,11 +32,11 @@ export default function InvestmentAI() {
             coingeckoId: "sonic-3",
             name: "Sonic Token",
             symbol: "SONIC",
-            address: ETH_ADDRESS, // Ensure this is the correct ERC-20 contract address
+            address: ETH_ADDRESS,
           },
           {
             coingeckoId: "usd-coin",
-            name: name,
+            name,
             symbol: name,
             address: tokenAddress,
           },
@@ -41,40 +44,47 @@ export default function InvestmentAI() {
 
         const results = await Promise.all(
           assetsInfo.map(async (asset) => {
-            const [marketData, balance] = await Promise.all([
-              fetchMarketDataCoingecko({
-                path: `/coins/${asset.coingeckoId}/market_chart`,
-                queryParams: { vs_currency: "usd", days: 7 },
-              }),
-              getTokenBalance(asset.address, CHAIN_ID),
-            ]);
-
-            return { asset, marketData, balance };
+            try {
+              const [marketData, balance] = await Promise.all([
+                fetchMarketDataCoingecko({
+                  path: `/coins/${asset.coingeckoId}/market_chart`,
+                  queryParams: { vs_currency: "usd", days: 7 },
+                }),
+                getTokenBalance(asset.address, CHAIN_ID),
+              ]);
+              return { asset, marketData, balance };
+            } catch (err) {
+              console.error(`Failed to fetch data for ${asset.name}:`, err);
+              return {
+                asset,
+                marketData: null,
+                balance: { balance: "0", decimals: "18" },
+              };
+            }
           })
         );
 
-        console.log(results);
-
-        // Extract market data and balances
         const updatedPrices = {};
         const updatedPortfolio = {};
 
         results.forEach(({ asset, marketData, balance }) => {
           updatedPrices[asset.coingeckoId] =
             marketData?.data?.prices?.[0]?.[1] || 0;
-          updatedPortfolio[asset.coingeckoId] = balance || 0;
+          updatedPortfolio[asset.coingeckoId] = normalizeBalance(
+            balance.balance,
+            balance.decimals
+          );
         });
-
-        console.log(JSON.stringify({ updatedPrices, updatedPortfolio }));
 
         setPrices(updatedPrices);
         setPortfolio(updatedPortfolio);
 
-        // Compute Investment Strategy
         const totalBalance = Object.values(updatedPortfolio).reduce(
-          (a, b) => a + b,
+          (acc, val) => acc + val,
           0
         );
+
+        console.log({ updatedPrices, updatedPortfolio, totalBalance });
 
         if (totalBalance > 0) {
           setStrategy({
@@ -101,6 +111,14 @@ export default function InvestmentAI() {
   const handleRebalance = async () => {
     if (!strategy) return;
     setRebalancing(true);
+
+    const rebalanceOrders = strategy.assets.map((asset) => ({
+      name: asset.name,
+      action: asset.allocation < 50 ? "Buy" : "Sell",
+      amount: Math.abs(asset.allocation - 50),
+    }));
+
+    console.log("Rebalancing Orders:", rebalanceOrders);
 
     setTimeout(() => {
       alert("Portfolio rebalanced successfully!");
