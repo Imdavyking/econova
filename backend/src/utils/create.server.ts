@@ -14,6 +14,7 @@ import merkleRoutes from "../routes/merkle.routes";
 import alloraRoutes from "../routes/allora.routes";
 import sourceCodeRoutes from "../routes/source.code.routes";
 import { environment } from "./config";
+import coinGeckoPriceRoutes from "../routes/coin.gecko.routes";
 
 dotenv.config();
 const app = express();
@@ -60,6 +61,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/merkle", merkleRoutes);
 app.use("/api/allora", alloraRoutes);
 app.use("/api/source-code", sourceCodeRoutes);
+app.use("/api/coin-gecko-price", coinGeckoPriceRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

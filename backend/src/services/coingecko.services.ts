@@ -3,7 +3,13 @@ import { environment } from "../utils/config";
 const API_URL = "https://pro-api.coingecko.com/api/v3";
 const API_KEY = environment.COINGECKO_API_KEY;
 
-const fetchFromCoinGecko = async (path: string, queryParams = {}) => {
+export const fetchPriceFromCoinGecko = async ({
+  path,
+  queryParams = {},
+}: {
+  path: string;
+  queryParams?: Record<string, any>;
+}) => {
   try {
     const queryString = new URLSearchParams(queryParams).toString();
     const url = `${API_URL}${path}?${queryString}`;
