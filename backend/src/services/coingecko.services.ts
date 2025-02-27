@@ -1,7 +1,7 @@
 import { stat } from "fs";
 import { environment } from "../utils/config";
 
-const API_URL = "https://pro-api.coingecko.com/api/v3";
+const API_URL = "https://api.coingecko.com/api/v3";
 const API_KEY = environment.COINGECKO_API_KEY;
 
 export const fetchPriceFromCoinGecko = async ({
@@ -18,7 +18,7 @@ export const fetchPriceFromCoinGecko = async ({
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        "x-cg-pro-api-key": API_KEY,
+        x_cg_demo_api_key: API_KEY,
       },
     });
 
