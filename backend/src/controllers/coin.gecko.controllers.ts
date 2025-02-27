@@ -14,11 +14,11 @@ export const getPriceFromCoinGecko = async (req: Request, res: Response) => {
       return;
     }
 
-    const { contractName, sourceCode, abi } = await fetchPriceFromCoinGecko({
+    const data = await fetchPriceFromCoinGecko({
       path: path as string,
       queryParams: queryParams as Record<string, any>,
     });
-    res.json({ contractName, sourceCode, abi });
+    res.json({ data });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
