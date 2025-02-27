@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchMarketDataCoingecko } from "../../services/coin.gecko.services";
 import { getTokenBalance } from "../../services/blockchain.services";
-import { ETH_ADDRESS } from "../../utils/constants";
+import { CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
 // return "$coinGeckoBaseurl/coins/$coinGeckoId/market_chart?vs_currency=$defaultCurrency&days=$days";
 const API_URL = "https://api.coingecko.com/api/v3/coins/usd-coin/market_chart";
 const assets = ["sonic-3", "usd-coin"];
@@ -13,6 +13,8 @@ export default function InvestmentAI() {
   const [prices, setPrices] = useState({});
   const [portfolio, setPortfolio] = useState({});
   const [rebalancing, setRebalancing] = useState(false);
+
+  const chainIdPortfolio = CHAIN_ID;
 
   useEffect(() => {
     async function fetchMarketData() {
@@ -38,8 +40,8 @@ export default function InvestmentAI() {
 
         // setPrices(response.data);
 
-        // getTokenBalance(ETH_ADDRESS); // sonic-3
-        // getTokenBalance("0x"); // usd-coin
+        // getTokenBalance(ETH_ADDRESS, chainIdPortfolio); // sonic-3
+        // getTokenBalance("0x", chainIdPortfolio); // usd-coin
 
         // Simulate fetching user portfolio
         const userPortfolio = {
