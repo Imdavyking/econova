@@ -503,7 +503,7 @@ export const getTokenBalance = async (tokenAddress, switchChainId) => {
     ]);
     return { balance, decimals };
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     throw error;
   }
 };

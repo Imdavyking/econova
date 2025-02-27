@@ -1,24 +1,12 @@
 import { useState, useEffect } from "react";
 import { fetchMarketDataCoingecko } from "../../services/coin.gecko.services";
-import { getTokenBalance } from "../../services/blockchain.services";
+import {
+  getProjectTokenDetails,
+  getTokenBalance,
+} from "../../services/blockchain.services";
 import { CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-
-const assetsInfo = [
-  {
-    coingeckoId: "sonic-3",
-    name: "Sonic Token",
-    symbol: "SONIC",
-    address: ETH_ADDRESS, // Ensure this is the correct ERC-20 contract address
-  },
-  {
-    coingeckoId: "usd-coin",
-    name: "USD Coin",
-    symbol: "USDC",
-    address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // Correct USDC contract address
-  },
-];
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -33,6 +21,23 @@ export default function InvestmentAI() {
       try {
         setError(null);
         setLoading(true);
+
+        const { tokenAddress, decimals, name } = await getProjectTokenDetails();
+
+        const assetsInfo = [
+          {
+            coingeckoId: "sonic-3",
+            name: "Sonic Token",
+            symbol: "SONIC",
+            address: ETH_ADDRESS, // Ensure this is the correct ERC-20 contract address
+          },
+          {
+            coingeckoId: "usd-coin",
+            name: name,
+            symbol: name,
+            address: tokenAddress,
+          },
+        ];
 
         const results = await Promise.all(
           assetsInfo.map(async (asset) => {
@@ -55,9 +60,12 @@ export default function InvestmentAI() {
         const updatedPortfolio = {};
 
         results.forEach(({ asset, marketData, balance }) => {
-          updatedPrices[asset.coingeckoId] = marketData?.prices?.[0]?.[1] || 0;
+          updatedPrices[asset.coingeckoId] =
+            marketData?.data?.prices?.[0]?.[1] || 0;
           updatedPortfolio[asset.coingeckoId] = balance || 0;
         });
+
+        console.log(JSON.stringify({ updatedPrices, updatedPortfolio }));
 
         setPrices(updatedPrices);
         setPortfolio(updatedPortfolio);
