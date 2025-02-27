@@ -4,9 +4,10 @@ import {
   getProjectTokenDetails,
   getTokenBalance,
 } from "../../services/blockchain.services";
-import { CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
+import { APP_NAME, CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import logoUrl from "@/assets/images/logo.png";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -84,8 +85,6 @@ export default function InvestmentAI() {
           totalBalance += tokenBalance * price;
         });
 
-        console.log({ updatedPrices, updatedPortfolio, totalBalance });
-
         setPrices(updatedPrices);
         setPortfolio(updatedPortfolio);
 
@@ -133,11 +132,14 @@ export default function InvestmentAI() {
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto border border-gray-200 rounded-lg shadow-lg bg-white">
+    <div className="p-6 max-w-lg mx-auto">
       <DarkModeSwitcher />
-      <h1 className="text-2xl font-bold mb-4 text-gray-900">
-        AI Investment Strategy
-      </h1>
+      <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
+        <a href="/" className="flex items-center space-x-3">
+          <img alt={APP_NAME} className="w-10" src={logoUrl} />
+          <span className="text-lg">{APP_NAME} Portfolio</span>
+        </a>
+      </h2>
 
       {loading ? (
         <div className="flex items-center space-x-2 text-gray-500">
