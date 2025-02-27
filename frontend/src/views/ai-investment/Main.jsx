@@ -21,15 +21,22 @@ export default function InvestmentAI() {
   useEffect(() => {
     async function fetchMarketData() {
       try {
-        const result = await fetchMarketDataCoingecko({
+        const sonicMarketData = await fetchMarketDataCoingecko({
           path: "/coins/sonic-3/market_chart",
           queryParams: {
             vs_currency: "usd",
             days: 7,
           },
         });
+        const usdMarketData = await fetchMarketDataCoingecko({
+          path: "/coins/sonic-3/market_chart",
+          queryParams: {
+            vs_currency: "usd-coin",
+            days: 7,
+          },
+        });
 
-        console.log(result);
+        console.log({ sonicMarketData, usdMarketData });
 
         //   {
         //     "sonic-3": {
