@@ -4,6 +4,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {OFT} from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import {Votes} from "@openzeppelin/contracts/governance/utils/Votes.sol";
 import {Checkpoints} from "@openzeppelin/contracts/utils/structs/Checkpoints.sol";
+import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 
 contract EcoNovaToken is OFT, Votes {
     address public immutable DEPLOYER;
@@ -26,7 +27,7 @@ contract EcoNovaToken is OFT, Votes {
     )
         OFT("EcoNovaToken", "ENT", lzEndpoint, delegate)
         Ownable(delegate)
-        ERC20Permit("EcoNovaToken")
+        EIP712("EcoNovaToken", "1")
     {
         DEPLOYER = msg.sender;
     }
