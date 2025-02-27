@@ -8,6 +8,11 @@ import { toast } from "react-toastify";
 import { AIAgent } from "../../agent";
 
 const AIHealth = () => {
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [suggestion, setSuggestion] = useState("");
+
   const checkHealthSummary = async () => {
     try {
       if (!weight || !height) {
@@ -20,9 +25,7 @@ const AIHealth = () => {
         heightInCm: height,
       });
       const agent = new AIAgent();
-
       const { results } = await agent.solveTask(response);
-
       const info = results[0];
 
       if (info) {
@@ -34,12 +37,9 @@ const AIHealth = () => {
       setIsLoading(false);
     }
   };
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [suggestion, setSuggestion] = useState("");
+
   return (
-    <div className="">
+    <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <a href="/" className="flex items-center space-x-3">
@@ -48,13 +48,13 @@ const AIHealth = () => {
         </a>
       </h2>
 
-      <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-8 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
+      <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
         <div className="mb-4">
           <input
             type="number"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            className="intro-x login__input form-control py-3 px-4 block"
+            className="form-control py-3 px-4 block w-full border rounded"
             placeholder="Enter weight in kg"
           />
         </div>
@@ -63,7 +63,7 @@ const AIHealth = () => {
             type="number"
             value={height}
             onChange={(e) => setHeight(e.target.value)}
-            className="intro-x login__input form-control py-3 px-4 block"
+            className="form-control py-3 px-4 block w-full border rounded"
             placeholder="Enter height in cm"
           />
         </div>
