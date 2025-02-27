@@ -12,22 +12,14 @@ import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC2
 contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
     address public immutable DEPLOYER;
     uint256 public immutable MAX_SUPPLY = 21_000_000 * 10 ** decimals();
-
-    error EcoNovaToken__NotDeployerOrOwner();
-    error EcoNovaToken__MaxSupplyExceeded();
     bytes32 private constant PERMIT_TYPEHASH =
         keccak256(
             "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"
         );
 
-    /**
-     * @dev Permit deadline has expired.
-     */
+    error EcoNovaToken__NotDeployerOrOwner();
+    error EcoNovaToken__MaxSupplyExceeded();
     error ERC2612ExpiredSignature(uint256 deadline);
-
-    /**
-     * @dev Mismatched signature.
-     */
     error ERC2612InvalidSigner(address signer, address owner);
 
     modifier deployerOrOwner() {
@@ -69,6 +61,39 @@ contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
         super._update(from, to, value);
     }
 
+    /**
+     * @inheritdoc IERC20Permit
+     */
+
+    function nonces(
+        address owner
+    ) public view virtual override(IERC20Permit, Nonces) returns (uint256) {
+        return super.nonces(owner);
+    }
+
+    /**
+     * @dev Sets `value` as the allowance of `spender` over ``owner``'s tokens,
+     * given ``owner``'s signed approval.
+     *
+     * IMPORTANT: The same issues {IERC20-approve} has related to transaction
+     * ordering also apply here.
+     *
+     * Emits an {Approval} event.
+     *
+     * Requirements:
+     *
+     * - `spender` cannot be the zero address.
+     * - `deadline` must be a timestamp in the future.
+     * - `v`, `r` and `s` must be a valid `secp256k1` signature from `owner`
+     * over the EIP712-formatted function arguments.
+     * - the signature must use ``owner``'s current nonce (see {nonces}).
+     *
+     * For more information on the signature format, see the
+     * https://eips.ethereum.org/EIPS/eip-2612#specification[relevant EIP
+     * section].
+     *
+     * CAUTION: See Security Considerations above.
+     */
     function permit(
         address owner,
         address spender,
@@ -94,15 +119,6 @@ contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
         }
 
         _approve(owner, spender, value);
-    }
-
-    /**
-     * @inheritdoc IERC20Permit
-     */
-    function nonces(
-        address owner
-    ) public view virtual override(IERC20Permit, Nonces) returns (uint256) {
-        return super.nonces(owner);
     }
 
     /**
