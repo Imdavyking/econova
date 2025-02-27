@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { fetchMarketDataCoingecko } from "../../services/coin.gecko.services";
 // return "$coinGeckoBaseurl/coins/$coinGeckoId/market_chart?vs_currency=$defaultCurrency&days=$days";
 const API_URL = "https://api.coingecko.com/api/v3/coins/usd-coin/market_chart";
 const assets = ["sonic-3", "usd-coin"];
-
-// curl -X GET "https://pro-api.coingecko.com/api/v3" -H "x-cg-pro-api-key: YOUR_API_KEY"
-
-// CG-eppKJk3qk4wLAcWnj1eKnAcA
-
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -19,14 +15,15 @@ export default function InvestmentAI() {
   useEffect(() => {
     async function fetchMarketData() {
       try {
-        const response = await axios.get(API_URL, {
-          params: {
+        const result = await fetchMarketDataCoingecko({
+          path: "/coins/usd-coin/market_chart",
+          queryParams: {
+            vs_currency: "usd",
             days: 7,
-            vs_currencies: "usd",
           },
         });
 
-        console.log(response.data);
+        console.log(result);
 
         //   {
         //     "sonic-3": {
@@ -37,7 +34,7 @@ export default function InvestmentAI() {
         //     }
         // }
 
-        setPrices(response.data);
+        // setPrices(response.data);
 
         // Simulate fetching user portfolio
         const userPortfolio = {
