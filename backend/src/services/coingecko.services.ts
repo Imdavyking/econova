@@ -1,3 +1,4 @@
+import { stat } from "fs";
 import { environment } from "../utils/config";
 
 const API_URL = "https://pro-api.coingecko.com/api/v3";
@@ -22,10 +23,22 @@ export const fetchPriceFromCoinGecko = async ({
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      return {
+        status: response.status,
+        statusText: response.statusText,
+        url: url,
+        apiKey: API_KEY,
+      };
+      // throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }
 
-    const text = await response.text();
+    return {
+      status: response.status,
+      statusText: response.statusText,
+      url: url,
+      apiKey: API_KEY,
+      success: true,
+    };
 
     const data = await response.json();
     return data;
