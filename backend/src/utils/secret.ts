@@ -14,7 +14,7 @@ export const secret: {
       if (fromEnv) {
         return fromEnv;
       }
-      console.error(`❌ Missing secret: ${mask(secretName)}`);
+      console.log(`❌ Missing secret: ${mask(secretName)}`);
       return "";
     }
   },
