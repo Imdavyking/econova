@@ -22,24 +22,13 @@ export const fetchPriceFromCoinGecko = async ({
     });
 
     if (!response.ok) {
-      return {
-        status: response.status,
-        statusText: response.statusText,
-      };
-      // throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }
 
     const text = await response.text();
 
-    return {
-      url: url,
-      status: response.status,
-      statusText: response.statusText,
-      text: text,
-    };
-
-    // const data = await response.json();
-    // return data;
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(`Failed to fetch ${path}:`, error);
   }
