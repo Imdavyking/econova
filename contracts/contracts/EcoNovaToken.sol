@@ -7,7 +7,6 @@ import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Vo
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-
 import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 
 contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
