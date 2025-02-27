@@ -51,20 +51,4 @@ contract EcoNovaToken is OFT, ERC20Votes {
     ) internal override(ERC20, ERC20Votes) {
         super._update(from, to, value);
     }
-    /**
-    //  * @dev Move voting power when tokens are transferred.
-    //  *
-    //  * Emits a {IVotes-DelegateVotesChanged} event.
-    //  */
-    // function _update(address from, address to, uint256 value) internal virtual override {
-    //     super._update(from, to, value);
-    //     if (from == address(0)) {
-    //         uint256 supply = totalSupply();
-    //         uint256 cap = _maxSupply();
-    //         if (supply > cap) {
-    //             revert ERC20ExceededSafeSupply(supply, cap);
-    //         }
-    //     }
-    //     _transferVotingUnits(from, to, value);
-    // }
 }
