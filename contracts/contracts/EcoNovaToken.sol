@@ -23,7 +23,11 @@ contract EcoNovaToken is OFT, Votes {
     constructor(
         address lzEndpoint,
         address delegate
-    ) OFT("EcoNovaToken", "ENT", lzEndpoint, delegate) Ownable(delegate) {
+    )
+        OFT("EcoNovaToken", "ENT", lzEndpoint, delegate)
+        Ownable(delegate)
+        ERC20Permit("EcoNovaToken")
+    {
         DEPLOYER = msg.sender;
     }
 
