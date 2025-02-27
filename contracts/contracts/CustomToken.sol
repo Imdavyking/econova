@@ -17,7 +17,7 @@ contract CustomToken is ERC20 {
     ) ERC20(name, symbol) {
         OWNER = owner;
         DEPLOYER = msg.sender;
-        _mint(owner, initialSupply * (10 ** uint256(decimals())));
+        mint(owner, initialSupply * (10 ** uint256(decimals())));
     }
 
     /**
