@@ -19,8 +19,8 @@ contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
 
     error EcoNovaToken__NotDeployerOrOwner();
     error EcoNovaToken__MaxSupplyExceeded();
-    error ERC2612ExpiredSignature(uint256 deadline);
-    error ERC2612InvalidSigner(address signer, address owner);
+    error EcoNovaToken__ERC2612ExpiredSignature(uint256 deadline);
+    error EcoNovaToken__ERC2612InvalidSigner(address signer, address owner);
 
     modifier deployerOrOwner() {
         if (msg.sender != owner() && msg.sender != DEPLOYER) {
@@ -104,7 +104,7 @@ contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
         bytes32 s
     ) public virtual {
         if (block.timestamp > deadline) {
-            revert ERC2612ExpiredSignature(deadline);
+            revert EcoNovaToken__ERC2612ExpiredSignature(deadline);
         }
 
         bytes32 structHash = keccak256(
@@ -115,7 +115,7 @@ contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
 
         address signer = ECDSA.recover(hash, v, r, s);
         if (signer != owner) {
-            revert ERC2612InvalidSigner(signer, owner);
+            revert EcoNovaToken__ERC2612InvalidSigner(signer, owner);
         }
 
         _approve(owner, spender, value);
