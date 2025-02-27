@@ -42,58 +42,64 @@ export default function InvestmentAI() {
           },
         ];
 
+        // Fetch market data and token balances in parallel
         const results = await Promise.all(
           assetsInfo.map(async (asset) => {
             try {
-              const [marketData, balance] = await Promise.all([
+              const [{ data: marketData }, balance] = await Promise.all([
                 fetchMarketDataCoingecko({
                   path: `/coins/${asset.coingeckoId}/market_chart`,
                   queryParams: { vs_currency: "usd", days: 7 },
                 }),
                 getTokenBalance(asset.address, CHAIN_ID),
               ]);
-              return { asset, marketData, balance };
+              return {
+                asset,
+                price: marketData?.prices?.[0]?.[1] || 0,
+                balance,
+              };
             } catch (err) {
               console.error(`Failed to fetch data for ${asset.name}:`, err);
               return {
                 asset,
-                marketData: null,
+                price: 0,
                 balance: { balance: "0", decimals: "18" },
               };
             }
           })
         );
 
+        // Process fetched data
         const updatedPrices = {};
         const updatedPortfolio = {};
+        let totalBalance = 0;
 
-        results.forEach(({ asset, marketData, balance }) => {
-          updatedPrices[asset.coingeckoId] =
-            marketData?.data?.prices?.[0]?.[1] || 0;
-          updatedPortfolio[asset.coingeckoId] = normalizeBalance(
+        results.forEach(({ asset, price, balance }) => {
+          const tokenBalance = normalizeBalance(
             balance.balance,
             balance.decimals
           );
+          updatedPrices[asset.coingeckoId] = price;
+          updatedPortfolio[asset.coingeckoId] = tokenBalance;
+          totalBalance += tokenBalance * price;
         });
+
+        console.log({ updatedPrices, updatedPortfolio, totalBalance });
 
         setPrices(updatedPrices);
         setPortfolio(updatedPortfolio);
-
-        const totalBalance = Object.values(updatedPortfolio).reduce(
-          (acc, val) => acc + val,
-          0
-        );
-
-        console.log({ updatedPrices, updatedPortfolio, totalBalance });
 
         if (totalBalance > 0) {
           setStrategy({
             riskLevel: "Moderate",
             projectedGrowth: "12% annually",
-            assets: assetsInfo.map((asset) => ({
+            assets: results.map(({ asset }) => ({
               name: asset.name,
               allocation:
-                (updatedPortfolio[asset.coingeckoId] / totalBalance) * 100,
+                ((updatedPortfolio[asset.coingeckoId] *
+                  updatedPrices[asset.coingeckoId]) /
+                  totalBalance) *
+                100,
             })),
           });
         }
