@@ -1,101 +1,99 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { fetchMarketDataCoingecko } from "../../services/coin.gecko.services";
 import { getTokenBalance } from "../../services/blockchain.services";
 import { CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-// return "$coinGeckoBaseurl/coins/$coinGeckoId/market_chart?vs_currency=$defaultCurrency&days=$days";
-const API_URL = "https://api.coingecko.com/api/v3/coins/usd-coin/market_chart";
-const assets = ["sonic-3", "usd-coin"];
+
+const assetsInfo = [
+  {
+    coingeckoId: "sonic-3",
+    name: "Sonic Token",
+    symbol: "SONIC",
+    address: ETH_ADDRESS, // Ensure this is the correct ERC-20 contract address
+  },
+  {
+    coingeckoId: "usd-coin",
+    name: "USD Coin",
+    symbol: "USDC",
+    address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // Correct USDC contract address
+  },
+];
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [strategy, setStrategy] = useState(null);
-  const [prices, setPrices] = useState({});
-  const [portfolio, setPortfolio] = useState({});
   const [rebalancing, setRebalancing] = useState(false);
-
-  const chainIdPortfolio = CHAIN_ID;
+  const [portfolio, setPortfolio] = useState({});
+  const [prices, setPrices] = useState({});
 
   useEffect(() => {
-    async function fetchMarketData() {
+    async function fetchData() {
       try {
-        const sonicMarketData = await fetchMarketDataCoingecko({
-          path: "/coins/sonic-3/market_chart",
-          queryParams: {
-            vs_currency: "usd",
-            days: 7,
-          },
+        setError(null);
+        setLoading(true);
+
+        const results = await Promise.all(
+          assetsInfo.map(async (asset) => {
+            const [marketData, balance] = await Promise.all([
+              fetchMarketDataCoingecko({
+                path: `/coins/${asset.coingeckoId}/market_chart`,
+                queryParams: { vs_currency: "usd", days: 7 },
+              }),
+              getTokenBalance(asset.address, CHAIN_ID),
+            ]);
+
+            return { asset, marketData, balance };
+          })
+        );
+
+        console.log(results);
+
+        // Extract market data and balances
+        const updatedPrices = {};
+        const updatedPortfolio = {};
+
+        results.forEach(({ asset, marketData, balance }) => {
+          updatedPrices[asset.coingeckoId] = marketData?.prices?.[0]?.[1] || 0;
+          updatedPortfolio[asset.coingeckoId] = balance || 0;
         });
-        const usdMarketData = await fetchMarketDataCoingecko({
-          path: "/coins/usd-coin/market_chart",
-          queryParams: {
-            vs_currency: "usd",
-            days: 7,
-          },
-        });
 
-        console.log({ sonicMarketData, usdMarketData });
+        setPrices(updatedPrices);
+        setPortfolio(updatedPortfolio);
 
-        //   {
-        //     "sonic-3": {
-        //         "usd": 0.722857
-        //     },
-        //     "usd-coin": {
-        //         "usd": 0.999808
-        //     }
-        // }
-
-        // setPrices(response.data);
-
-        // getTokenBalance(ETH_ADDRESS, chainIdPortfolio); // sonic-3
-        // getTokenBalance("0x", chainIdPortfolio); // usd-coin
-
-        // Simulate fetching user portfolio
-        const userPortfolio = {
-          "sonic-3": 100,
-          "usd-coin": 500,
-        };
-        setPortfolio(userPortfolio);
-
-        // Compute investment strategy dynamically
-        const totalBalance = Object.values(userPortfolio).reduce(
+        // Compute Investment Strategy
+        const totalBalance = Object.values(updatedPortfolio).reduce(
           (a, b) => a + b,
           0
         );
 
-        const strategy = {
-          riskLevel: "Moderate",
-          projectedGrowth: "12% annually",
-          assets: [
-            {
-              name: "Sonic Token",
-              allocation: (userPortfolio["sonic-3"] / totalBalance) * 100,
-            },
-            {
-              name: "Stablecoin",
-              allocation: (userPortfolio["usd-coin"] / totalBalance) * 100,
-            },
-          ],
-        };
-
-        setStrategy(strategy);
-      } catch (error) {
-        console.error("Error fetching market data:", error);
+        if (totalBalance > 0) {
+          setStrategy({
+            riskLevel: "Moderate",
+            projectedGrowth: "12% annually",
+            assets: assetsInfo.map((asset) => ({
+              name: asset.name,
+              allocation:
+                (updatedPortfolio[asset.coingeckoId] / totalBalance) * 100,
+            })),
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching market data:", err);
+        setError("Failed to load market data. Please try again.");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchMarketData();
+    fetchData();
   }, []);
 
   const handleRebalance = async () => {
     if (!strategy) return;
     setRebalancing(true);
 
-    // Simulated rebalance action
     setTimeout(() => {
       alert("Portfolio rebalanced successfully!");
       setRebalancing(false);
@@ -108,12 +106,15 @@ export default function InvestmentAI() {
       <h1 className="text-2xl font-bold mb-4 text-gray-900">
         AI Investment Strategy
       </h1>
+
       {loading ? (
-        <p className="text-gray-500">Analyzing market data...</p>
-      ) : (
-        <></>
-      )}
-      {strategy ? (
+        <div className="flex items-center space-x-2 text-gray-500">
+          <FaSpinner className="animate-spin" />
+          <span>Loading market data...</span>
+        </div>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
+      ) : strategy ? (
         <div className="p-4 border border-gray-300 rounded-lg">
           <h2 className="text-xl font-semibold text-gray-800">
             Risk Level: {strategy.riskLevel}
@@ -121,6 +122,7 @@ export default function InvestmentAI() {
           <p className="text-gray-600">
             Projected Growth: {strategy.projectedGrowth}
           </p>
+
           <div className="mt-4">
             {strategy.assets.map((asset, index) => (
               <div key={index} className="mb-2">
@@ -136,6 +138,7 @@ export default function InvestmentAI() {
               </div>
             ))}
           </div>
+
           <button
             onClick={handleRebalance}
             disabled={rebalancing}
@@ -144,16 +147,13 @@ export default function InvestmentAI() {
             {rebalancing ? "Rebalancing..." : "Rebalance Portfolio"}
           </button>
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 }
 
 // get the price and market data of sonic token
 // get the price and market data of stablecoin
-// get the price and market data of DeFi index fund
 // analyze the data to determine the best investment strategy
 // get user current portfolio balance of each asset
 // calculate the optimal allocation of each asset
