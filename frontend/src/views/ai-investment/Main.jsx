@@ -16,7 +16,7 @@ export default function InvestmentAI() {
     async function fetchMarketData() {
       try {
         const result = await fetchMarketDataCoingecko({
-          path: "/coins/usd-coin/market_chart",
+          path: "/coins/sonic-3/market_chart",
           queryParams: {
             vs_currency: "usd",
             days: 7,
