@@ -3,6 +3,8 @@ import axios from "axios";
 import { fetchMarketDataCoingecko } from "../../services/coin.gecko.services";
 import { getTokenBalance } from "../../services/blockchain.services";
 import { CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
+import { FaSpinner } from "react-icons/fa";
+import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 // return "$coinGeckoBaseurl/coins/$coinGeckoId/market_chart?vs_currency=$defaultCurrency&days=$days";
 const API_URL = "https://api.coingecko.com/api/v3/coins/usd-coin/market_chart";
 const assets = ["sonic-3", "usd-coin"];
@@ -95,12 +97,16 @@ export default function InvestmentAI() {
 
   return (
     <div className="p-6 max-w-lg mx-auto border border-gray-200 rounded-lg shadow-lg bg-white">
+      <DarkModeSwitcher />
       <h1 className="text-2xl font-bold mb-4 text-gray-900">
         AI Investment Strategy
       </h1>
       {loading ? (
         <p className="text-gray-500">Analyzing market data...</p>
       ) : (
+        <></>
+      )}
+      {strategy ? (
         <div className="p-4 border border-gray-300 rounded-lg">
           <h2 className="text-xl font-semibold text-gray-800">
             Risk Level: {strategy.riskLevel}
@@ -131,6 +137,8 @@ export default function InvestmentAI() {
             {rebalancing ? "Rebalancing..." : "Rebalance Portfolio"}
           </button>
         </div>
+      ) : (
+        <></>
       )}
     </div>
   );
