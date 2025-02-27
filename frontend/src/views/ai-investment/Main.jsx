@@ -29,9 +29,9 @@ export default function InvestmentAI() {
           },
         });
         const usdMarketData = await fetchMarketDataCoingecko({
-          path: "/coins/sonic-3/market_chart",
+          path: "/coins/usd-coin/market_chart",
           queryParams: {
-            vs_currency: "usd-coin",
+            vs_currency: "usd",
             days: 7,
           },
         });
