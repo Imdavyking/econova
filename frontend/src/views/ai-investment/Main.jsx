@@ -1,25 +1,85 @@
 import { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import axios from "axios";
 
-const fakeInvestmentStrategy = {
-  riskLevel: "Moderate",
-  assets: [
-    { name: "Sonic Token", allocation: 40 },
-    { name: "Stablecoin", allocation: 30 },
-    { name: "DeFi Index Fund", allocation: 30 },
-  ],
-  projectedGrowth: "12% annually",
-};
+const API_URL = "https://api.coingecko.com/api/v3/simple/price";
+const assets = ["sonic-token", "usd-coin", "defi-index-fund"]; // Example asset IDs from CoinGecko
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
   const [strategy, setStrategy] = useState(null);
+  const [prices, setPrices] = useState({});
+  const [portfolio, setPortfolio] = useState({});
+  const [rebalancing, setRebalancing] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      setStrategy(fakeInvestmentStrategy);
-      setLoading(false);
-    }, 2000);
+    async function fetchMarketData() {
+      try {
+        // Fetch real-time prices
+        const response = await axios.get(API_URL, {
+          params: {
+            ids: assets.join(","),
+            vs_currencies: "usd",
+          },
+        });
+
+        setPrices(response.data);
+
+        // Simulate fetching user portfolio
+        const userPortfolio = {
+          "sonic-token": 100,
+          "usd-coin": 500,
+          "defi-index-fund": 300,
+        };
+        setPortfolio(userPortfolio);
+
+        // Compute investment strategy dynamically
+        const totalBalance = Object.values(userPortfolio).reduce(
+          (a, b) => a + b,
+          0
+        );
+
+        const strategy = {
+          riskLevel: "Moderate",
+          projectedGrowth: "12% annually",
+          assets: [
+            {
+              name: "Sonic Token",
+              allocation: (userPortfolio["sonic-token"] / totalBalance) * 100,
+            },
+            {
+              name: "Stablecoin",
+              allocation: (userPortfolio["usd-coin"] / totalBalance) * 100,
+            },
+            {
+              name: "DeFi Index Fund",
+              allocation:
+                (userPortfolio["defi-index-fund"] / totalBalance) * 100,
+            },
+          ],
+        };
+
+        setStrategy(strategy);
+      } catch (error) {
+        console.error("Error fetching market data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMarketData();
   }, []);
+
+  const handleRebalance = async () => {
+    if (!strategy) return;
+    setRebalancing(true);
+
+    // Simulated rebalance action
+    setTimeout(() => {
+      alert("Portfolio rebalanced successfully!");
+      setRebalancing(false);
+    }, 2000);
+  };
 
   return (
     <div className="p-6 max-w-lg mx-auto border border-gray-200 rounded-lg shadow-lg bg-white">
@@ -40,7 +100,7 @@ export default function InvestmentAI() {
             {strategy.assets.map((asset, index) => (
               <div key={index} className="mb-2">
                 <p className="text-sm font-medium text-gray-700">
-                  {asset.name}: {asset.allocation}%
+                  {asset.name}: {asset.allocation.toFixed(2)}%
                 </p>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
@@ -51,11 +111,28 @@ export default function InvestmentAI() {
               </div>
             ))}
           </div>
-          <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            Rebalance Portfolio
+          <button
+            onClick={handleRebalance}
+            disabled={rebalancing}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            {rebalancing ? "Rebalancing..." : "Rebalance Portfolio"}
           </button>
         </div>
       )}
     </div>
   );
 }
+
+// get the price and market data of sonic token
+// get the price and market data of stablecoin
+// get the price and market data of DeFi index fund
+// analyze the data to determine the best investment strategy
+// get user current portfolio balance of each asset
+// calculate the optimal allocation of each asset
+// return the new investment strategy with the optimal allocation
+// return the projected growth of the new investment strategy
+// return the risk level of the new investment strategy
+// determine the amount of each asset to buy/sell to rebalance the portfolio
+// ask the user to confirm the rebalance
+// execute the rebalance
