@@ -2,7 +2,7 @@ import { stat } from "fs";
 import { environment } from "../utils/config";
 
 const API_URL = "https://api.coingecko.com/api/v3";
-const API_KEY = environment.COINGECKO_API_KEY;
+const API_KEY = environment.COINGECKO_DEMO_API_KEY;
 
 export const fetchPriceFromCoinGecko = async ({
   path,

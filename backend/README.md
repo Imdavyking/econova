@@ -39,7 +39,7 @@
         ALLORA_API_KEY=
         ALLORA_NETWORK=
         API_SCAN_VERIFIER_KEY=
-        COINGECKO_API_KEY=
+        COINGECKO_DEMO_API_KEY=
      ```
 
 4. **Start the application locally**:
