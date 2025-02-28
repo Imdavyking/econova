@@ -11,6 +11,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     bool public canWithdrawFunds = true;
     Category public charityCategory;
     address public automationBot = address(0);
+
     /** constants */
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
@@ -21,16 +22,20 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     error Charity__TokenAlreadyWhitelisted();
     error Charity__TokenNotWhitelisted();
     error Charity__MustBeAutomatedOrOwner(address caller);
+    error Charity__OrganizationAlreadyExists();
+    error Charity__OrganizationNotFound();
 
     /**
      * mappings
      */
     mapping(address => bool) private whitelistedTokens;
+    mapping(address => bool) private organizationExists;
 
     /**
      * arrays
      */
     address[] private tokenList;
+    address[] private organizations;
 
     enum Category {
         Education,
@@ -53,6 +58,8 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     event DonationWithdrawn(address indexed organization, address indexed token, uint256 amount);
     event TokenWhitelisted(address token);
     event TokenRemoved(address token);
+    event OrganizationAdded(address indexed organization);
+    event OrganizationRemoved(address indexed organization);
 
     constructor(Category _category) Ownable(msg.sender) {
         charityCategory = _category;
@@ -127,29 +134,74 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     }
 
     /**
+     * @dev Adds an organization to the list of organizations.
+     * @param organization The address of the organization to add.
+     */
+    function addOrganization(address organization) external onlyOwner {
+        if (organizationExists[organization]) {
+            revert Charity__OrganizationAlreadyExists();
+        }
+        organizationExists[organization] = true;
+        organizations.push(organization);
+        emit OrganizationAdded(organization);
+    }
+
+    /**
+     * @dev Removes an organization from the list of organizations.
+     * @param organization The address of the organization to remove.
+     */
+    function removeOrganization(address organization) external onlyOwner {
+        if (!organizationExists[organization]) {
+            revert Charity__OrganizationNotFound();
+        }
+        organizationExists[organization] = false;
+        uint256 length = organizations.length;
+        for (uint256 i = 0; i < length; i++) {
+            if (organizations[i] == organization) {
+                organizations[i] = organizations[length - 1];
+                organizations.pop();
+                break;
+            }
+        }
+        emit OrganizationRemoved(organization);
+    }
+
+    /**
+     * @dev Returns the list of organizations.
+     */
+
+    function getOrganizations() public view returns (address[] memory) {
+        return organizations;
+    }
+
+    /**
      * Automates funds distribution to the organization.
      * @return canExec - whether the contract can execute the withdrawal
      * @return execPayload - the payload to execute the withdrawal
      */
     function checker() external view returns (bool canExec, bytes memory execPayload) {
-        address organization = owner();
-        uint256 ethBalance = address(this).balance;
+        uint256 orgCount = organizations.length;
+        if (orgCount == 0) {
+            return (false, abi.encode("No Organizations Available "));
+        }
 
         if (!canWithdrawFunds) {
             return (false, abi.encode("Withdrawals Disabled"));
         }
+
+        uint256 ethBalance = address(this).balance;
+        address[] memory tokens = tokenList;
 
         if (ethBalance > 0) {
             return (
                 true,
                 abi.encodeCall(
                     ICharity.withdrawToOrganization,
-                    (ETH_ADDRESS, ethBalance, organization)
+                    (ETH_ADDRESS, ethBalance, organizations)
                 )
             );
         }
 
-        address[] memory tokens = getWhitelistedTokens();
         for (uint256 i = 0; i < tokens.length; i++) {
             uint256 tokenBalance = IERC20(tokens[i]).balanceOf(address(this));
             if (tokenBalance > 0) {
@@ -157,12 +209,11 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
                     true,
                     abi.encodeCall(
                         ICharity.withdrawToOrganization,
-                        (tokens[i], tokenBalance, organization)
+                        (tokens[i], tokenBalance, organizations)
                     )
                 );
             }
         }
-
         return (false, abi.encode("No Funds Available"));
     }
 
@@ -172,50 +223,51 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @return The balance of the contract.
      */
     function balanceOf(address token) external view returns (uint256) {
-        if (token == ETH_ADDRESS) {
-            return address(this).balance;
-        } else {
-            return IERC20(token).balanceOf(address(this));
-        }
+        return
+            token == ETH_ADDRESS ? address(this).balance : IERC20(token).balanceOf(address(this));
     }
 
     /**
      * @dev Withdraw the donation from the contract.
      * @param token The address of the token to withdraw.
      * @param amount The amount to withdraw.
-     * @param organization The address to send the funds to.
+     * @param orgs The list of organizations to withdraw to.
      */
     function withdrawToOrganization(
         address token,
         uint256 amount,
-        address organization
+        address[] memory orgs
     ) external onlyAutomationOrOwner nonReentrant {
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
         }
-        if (token == ETH_ADDRESS) {
-            if (address(this).balance < amount) {
-                revert Charity__SendingFailed();
-            }
-
-            (bool success, ) = organization.call{value: amount}("");
-            if (!success) {
-                revert Charity__SendingFailed();
-            }
-        } else {
-            if (!whitelistedTokens[token]) {
-                revert Charity__TokenNotWhitelisted();
-            }
-            bool sendSuccess = IERC20(token).transfer(organization, amount);
-            if (!sendSuccess) {
-                revert Charity__SendingFailed();
-            }
+        uint256 orgCount = orgs.length;
+        if (orgCount == 0) {
+            revert Charity__OrganizationNotFound();
         }
-        emit DonationWithdrawn(organization, token, amount);
+        uint256 share = amount / orgCount;
+        for (uint256 i = 0; i < orgCount; i++) {
+            if (token == ETH_ADDRESS) {
+                (bool success, ) = orgs[i].call{value: share}("");
+                if (!success) {
+                    revert Charity__SendingFailed();
+                }
+            } else {
+                if (!whitelistedTokens[token]) {
+                    revert Charity__TokenNotWhitelisted();
+                }
+                bool sendSuccess = IERC20(token).transfer(orgs[i], share);
+                if (!sendSuccess) {
+                    revert Charity__SendingFailed();
+                }
+            }
+            emit DonationWithdrawn(orgs[i], token, share);
+        }
     }
 
     /**
      * @dev Fallback function to receive ETH donations.
      */
+
     receive() external payable {}
 }
