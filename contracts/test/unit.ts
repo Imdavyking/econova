@@ -11,7 +11,13 @@ import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { initKeystore } from "../utils/init.keystore"
-import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../utils/constants"
+import {
+    ADDRESS_ZERO,
+    MIN_DELAY,
+    QUORUM_PERCENTAGE,
+    VOTING_DELAY,
+    VOTING_PERIOD,
+} from "../utils/constants"
 
 dotenv.config()
 
@@ -71,6 +77,28 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   VOTING_DELAY
               )
 
+              const proposerRole = await timeLockDeployer.PROPOSER_ROLE()
+              const executorRole = await timeLockDeployer.EXECUTOR_ROLE()
+              const adminRole = await timeLockDeployer.DEFAULT_ADMIN_ROLE()
+
+              console.log({ proposerRole, executorRole, adminRole })
+
+              const adminA = await timeLockDeployer.getRoleAdmin(adminRole)
+              const adminB = await timeLockDeployer.getRoleAdmin(executorRole)
+              const adminC = await timeLockDeployer.getRoleAdmin(adminRole)
+
+              console.log({ adminA, adminB, adminC })
+
+              // const proposerTx = await timeLockDeployer.grantRole(
+              //     proposerRole,
+              //     ecoNovaGovernorDeployer
+              // )
+              //   await proposerTx.wait(1)
+              //   const executorTx = await timeLockDeployer.grantRole(executorRole, ADDRESS_ZERO)
+              //   await executorTx.wait(1)
+              //   const revokeTx = await timeLockDeployer.revokeRole(adminRole, wallet)
+              //   await revokeTx.wait(1)
+
               const abiPath = path.resolve(
                   __dirname,
                   "../artifacts/contracts/EcoNovaToken.sol/EcoNovaToken.json"
@@ -89,6 +117,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   ecoNDeployerAddress,
                   charityDeployer,
                   ecoNovaCourseNFTDeployer,
+                  ecoNovaGovernorDeployer,
               }
           }
 
