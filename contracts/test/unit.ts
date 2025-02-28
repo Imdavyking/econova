@@ -120,6 +120,16 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               })
           })
 
+          describe("CharityGovernance", function () {
+              describe("Validations", function () {
+                  it("Can only add charity organization through governance", async function () {
+                      const { ecoNovaCourseNFTDeployer, otherAccount, owner } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
+                  })
+              })
+          })
+
           describe("NFTCourse", function () {
               describe("Validations", function () {
                   it("Can update root with correct signature.", async function () {
