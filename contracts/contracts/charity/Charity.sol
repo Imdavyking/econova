@@ -11,6 +11,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     bool public canWithdrawFunds = true;
     Category public charityCategory;
     address public automationBot = address(0);
+    address public immutable governorTimeLock;
 
     /** constants */
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
@@ -24,6 +25,8 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     error Charity__MustBeAutomatedOrOwner(address caller);
     error Charity__OrganizationAlreadyExists();
     error Charity__OrganizationNotFound();
+    error Charity__OnlyGovernor();
+    error Charity__GovernorCanNotBeZeroAddress();
 
     /**
      * mappings
@@ -54,6 +57,13 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
         _;
     }
 
+    modifier onlyGovernor() {
+        if (msg.sender != governorTimeLock) {
+            revert Charity__OnlyGovernor();
+        }
+        _;
+    }
+
     /** events */
     event DonationWithdrawn(address indexed organization, address indexed token, uint256 amount);
     event TokenWhitelisted(address token);
@@ -61,8 +71,12 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     event OrganizationAdded(address indexed organization);
     event OrganizationRemoved(address indexed organization);
 
-    constructor(Category _category) Ownable(msg.sender) {
+    constructor(Category _category, address _newGovernorTimeLock) Ownable(msg.sender) {
         charityCategory = _category;
+        governorTimeLock = _newGovernorTimeLock;
+        if (_newGovernorTimeLock == address(0)) {
+            revert Charity__GovernorCanNotBeZeroAddress();
+        }
     }
 
     /**
@@ -93,7 +107,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Adds a token to the whitelist.
      * @param token The address of the token to add.
      */
-    function addWhitelistedToken(address token) external onlyOwner {
+    function addWhitelistedToken(address token) external onlyGovernor {
         if (whitelistedTokens[token]) {
             revert Charity__TokenAlreadyWhitelisted();
         }
@@ -108,7 +122,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Removes a token from the whitelist.
      * @param token The address of the token to remove.
      */
-    function removeWhitelistedToken(address token) external onlyOwner {
+    function removeWhitelistedToken(address token) external onlyGovernor {
         if (!whitelistedTokens[token]) {
             revert Charity__TokenNotWhitelisted();
         }
@@ -137,7 +151,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Adds an organization to the list of organizations.
      * @param organization The address of the organization to add.
      */
-    function addOrganization(address organization) external onlyOwner {
+    function addOrganization(address organization) external onlyGovernor {
         if (organizationExists[organization]) {
             revert Charity__OrganizationAlreadyExists();
         }
@@ -150,7 +164,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Removes an organization from the list of organizations.
      * @param organization The address of the organization to remove.
      */
-    function removeOrganization(address organization) external onlyOwner {
+    function removeOrganization(address organization) external onlyGovernor {
         if (!organizationExists[organization]) {
             revert Charity__OrganizationNotFound();
         }

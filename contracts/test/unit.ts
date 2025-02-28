@@ -11,6 +11,7 @@ import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { initKeystore } from "../utils/init.keystore"
+import { MIN_DELAY } from "../utils/constants"
 
 dotenv.config()
 
@@ -36,7 +37,12 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
               const EndpointV2Mock = await hre.ethers.getContractFactory("EndpointV2Mock")
               const Groth16Verifier = await hre.ethers.getContractFactory("Groth16Verifier")
-              const charityDeployer = await CharityDeployer.deploy(charityCategories.Education)
+              const TimeLock = await hre.ethers.getContractFactory("TimeLock")
+              const timeLockDeployer = await TimeLock.deploy(MIN_DELAY, [], [], wallet.address)
+              const charityDeployer = await CharityDeployer.deploy(
+                  charityCategories.Education,
+                  timeLockDeployer
+              )
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
               const endpointV2Mock = await EndpointV2Mock.deploy(1)
               const groth16Deployer = await Groth16Verifier.deploy()
