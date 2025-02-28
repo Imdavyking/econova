@@ -16,6 +16,7 @@ import { localHardhat } from "../utils/localhardhat.chainid"
 import { deployCrossChainOFT } from "./econova.token.cross.chain"
 import { crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
 import { initKeystore } from "../utils/init.keystore"
+import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../utils/constants"
 dotenv.config()
 
 async function main() {
@@ -34,6 +35,7 @@ async function main() {
     const [owner] = await ethers.getSigners()
     console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
     console.log(`EcoNovaCourseNFTDeployer deployed to: ${ecoCourseNFTAddress}`)
+    const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
 
     const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
 
@@ -48,18 +50,45 @@ async function main() {
     const charityLength = await contract.charityLength()
 
     const charities = []
+    let governorTimeLock
 
     for (let i = 0; i < Number(charityLength); i++) {
         const charity = await contract.charityOrganizations(i)
+        if (typeof governorTimeLock === "undefined") {
+            const charityContract = await ethers.getContractAt("Charity", charity)
+            governorTimeLock = await charityContract.governorTimeLock()
+        }
         console.log(`Charity(${i}):deployed to: ${charity}`)
-        await verify(charity, [i])
+        await verify(charity, [i, governorTimeLock])
         charities.push(charity)
     }
+
+    const ecoNovaGovernorDeployer = await EcoNovaGovernor.deploy(
+        tokenAddress,
+        governorTimeLock!,
+        QUORUM_PERCENTAGE,
+        VOTING_PERIOD,
+        VOTING_DELAY
+    )
+
+    const ecoNovaGovernorAddress = await ecoNovaGovernorDeployer.getAddress()
+
+    console.log(`EcoNovaGovernor deployed to: ${ecoNovaGovernorAddress}`)
 
     if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
 
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
         process.env.ORACLE_ADDRESS!
+
+    await verify(ecoNovaGovernorAddress, [
+        tokenAddress,
+        governorTimeLock,
+        QUORUM_PERCENTAGE,
+        VOTING_PERIOD,
+        VOTING_DELAY,
+    ])
+
+    await verify(governorTimeLock, [MIN_DELAY, [], [], wallet.address])
 
     await verify(ecoAddress, [
         oracle,
@@ -69,6 +98,10 @@ async function main() {
         layerZeroChainInfo.endpointV2,
     ])
     await verify(ecoCourseNFTAddress, [wallet.address])
+
+    if (governorTimeLock !== undefined) {
+        return
+    }
 
     const blockNumber = await ethers.provider.getBlockNumber()
     const rpcUrl = (network.config as any).url

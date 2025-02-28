@@ -38,7 +38,9 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const EndpointV2Mock = await hre.ethers.getContractFactory("EndpointV2Mock")
               const Groth16Verifier = await hre.ethers.getContractFactory("Groth16Verifier")
               const TimeLock = await hre.ethers.getContractFactory("TimeLock")
+              const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
               const timeLockDeployer = await TimeLock.deploy(MIN_DELAY, [], [], wallet.address)
+
               const charityDeployer = await CharityDeployer.deploy(
                   charityCategories.Education,
                   timeLockDeployer
@@ -46,11 +48,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
               const endpointV2Mock = await EndpointV2Mock.deploy(1)
               const groth16Deployer = await Groth16Verifier.deploy()
-
-            //   timeLockDeployer,
-            //   QUORUM_PERCENTAGE,
-            //   VOTING_PERIOD,
-            //   VOTING_DELAY
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(
                   mockPythPriceFeedDeployer,
@@ -65,6 +62,14 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
 
               const ecoNovaTokenAddress = await ecoNDeployer.i_ecoNovaToken()
+
+              const ecoNovaGovernorDeployer = await EcoNovaGovernor.deploy(
+                  ecoNovaTokenAddress,
+                  timeLockDeployer,
+                  QUORUM_PERCENTAGE,
+                  VOTING_PERIOD,
+                  VOTING_DELAY
+              )
 
               const abiPath = path.resolve(
                   __dirname,
