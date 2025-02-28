@@ -10,7 +10,13 @@ import { charityCategories } from "../utils/charity.categories"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
-import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../utils/constants"
+import {
+    ADDRESS_ZERO,
+    MIN_DELAY,
+    QUORUM_PERCENTAGE,
+    VOTING_DELAY,
+    VOTING_PERIOD,
+} from "../utils/constants"
 
 dotenv.config()
 
@@ -25,11 +31,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
           async function deployEcoNovaDeployerFixture() {
               // Contracts are deployed using the first signer/account by default
               const [owner, otherAccount] = await hre.ethers.getSigners()
-
-              console.log({
-                  owner,
-                  otherAccount,
-              })
 
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
               const EcoNovaCourseNFTDeployer = await hre.ethers.getContractFactory(
@@ -77,23 +78,15 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const executorRole = await timeLockDeployer.EXECUTOR_ROLE()
               const adminRole = await timeLockDeployer.DEFAULT_ADMIN_ROLE()
 
-              console.log({ proposerRole, executorRole, adminRole })
-
-              const adminA = await timeLockDeployer.getRoleAdmin(adminRole)
-              const adminB = await timeLockDeployer.getRoleAdmin(executorRole)
-              const adminC = await timeLockDeployer.getRoleAdmin(adminRole)
-
-              console.log({ adminA, adminB, adminC })
-
               const proposerTx = await timeLockDeployer.grantRole(
                   proposerRole,
                   ecoNovaGovernorDeployer
               )
-              //   await proposerTx.wait(1)
-              //   const executorTx = await timeLockDeployer.grantRole(executorRole, ADDRESS_ZERO)
-              //   await executorTx.wait(1)
-              //   const revokeTx = await timeLockDeployer.revokeRole(adminRole, wallet)
-              //   await revokeTx.wait(1)
+              await proposerTx.wait(1)
+              const executorTx = await timeLockDeployer.grantRole(executorRole, ADDRESS_ZERO)
+              await executorTx.wait(1)
+              const revokeTx = await timeLockDeployer.revokeRole(adminRole, owner)
+              await revokeTx.wait(1)
 
               const abiPath = path.resolve(
                   __dirname,
