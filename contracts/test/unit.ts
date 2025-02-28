@@ -11,7 +11,7 @@ import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { initKeystore } from "../utils/init.keystore"
-import { MIN_DELAY } from "../utils/constants"
+import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../utils/constants"
 
 dotenv.config()
 
@@ -46,6 +46,11 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
               const endpointV2Mock = await EndpointV2Mock.deploy(1)
               const groth16Deployer = await Groth16Verifier.deploy()
+
+            //   timeLockDeployer,
+            //   QUORUM_PERCENTAGE,
+            //   VOTING_PERIOD,
+            //   VOTING_DELAY
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(
                   mockPythPriceFeedDeployer,

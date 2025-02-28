@@ -6,7 +6,7 @@ import { charityCategories } from "../../utils/charity.categories"
 import { localHardhat } from "../../utils/localhardhat.chainid"
 import { LZ_CHAINS } from "../../utils/lzendpoints.help"
 import { initKeystore } from "../../utils/init.keystore"
-import { MIN_DELAY } from "../../utils/constants"
+import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../../utils/constants"
 
 dotenv.config()
 
@@ -37,6 +37,15 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
 
         charityContracts.push(m.contract(`Charity`, [category, timeLock], { id: categoryKey }))
     }
+
+    // const governorContract = m.contract("GovernorContract", [
+    //     governanceToken.address,
+    // timeLock,
+    // QUORUM_PERCENTAGE,
+    // VOTING_PERIOD,
+    // VOTING_DELAY,
+    // ])
+
     const groth16Verifier = m.contract("Groth16Verifier")
     const ecoNovaDeployer = m.contract("EcoNovaManager", [
         oracle,
