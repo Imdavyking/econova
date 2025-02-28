@@ -33,8 +33,8 @@ async function main() {
     const chainSymbol = process.env.CHAIN_SYMBOL!
     const layerZeroChainInfo = LZ_CHAINS[+chainId]
     const [owner] = await ethers.getSigners()
-    console.log(`EcoNovaDeployer deployed to: ${ecoAddress}`)
-    console.log(`EcoNovaCourseNFTDeployer deployed to: ${ecoCourseNFTAddress}`)
+    console.log(`EcoNovaManager deployed to: ${ecoAddress}`)
+    console.log(`EcoNovaCourseNFT deployed to: ${ecoCourseNFTAddress}`)
     const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
 
     const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
@@ -43,9 +43,10 @@ async function main() {
     await verify(verifier, [])
 
     const tokenAddress = await contract.i_ecoNovaToken()
+    console.log(`EcoNovaToken deployed to: ${tokenAddress}`)
     await verify(tokenAddress, [layerZeroChainInfo.endpointV2, owner.address])
 
-    console.log(`Verifier deployed to: ${verifier}`)
+    console.log(`Groth16VerifierP3 deployed to: ${verifier}`)
 
     const charityLength = await contract.charityLength()
 
@@ -74,6 +75,7 @@ async function main() {
     const ecoNovaGovernorAddress = await ecoNovaGovernorDeployer.getAddress()
 
     console.log(`EcoNovaGovernor deployed to: ${ecoNovaGovernorAddress}`)
+    console.log(`TimeLock deployed to: ${governorTimeLock}`)
 
     if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
 
