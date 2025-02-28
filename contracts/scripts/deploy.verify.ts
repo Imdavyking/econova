@@ -76,8 +76,6 @@ async function main() {
 
     console.log(`EcoNovaGovernor deployed to: ${ecoNovaGovernorAddress}`)
 
-    if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
-
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
         process.env.ORACLE_ADDRESS!
 
@@ -105,6 +103,8 @@ async function main() {
         layerZeroChainInfo.endpointV2,
     ])
     await verify(ecoCourseNFTAddress, [wallet.address])
+
+    if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
 
     const blockNumber = await ethers.provider.getBlockNumber()
     const rpcUrl = (network.config as any).url
