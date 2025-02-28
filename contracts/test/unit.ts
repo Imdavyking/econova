@@ -123,9 +123,14 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
           describe("CharityGovernance", function () {
               describe("Validations", function () {
                   it("Can only add charity organization through governance", async function () {
-                      const { ecoNovaCourseNFTDeployer, otherAccount, owner } = await loadFixture(
+                      const { charityDeployer, otherAccount, owner } = await loadFixture(
                           deployEcoNovaDeployerFixture
                       )
+                      await expect(
+                          charityDeployer.addOrganization(
+                              "0xefb85BCDfB03e9299a680993aB35194aCb8DaDda"
+                          )
+                      ).to.be.revertedWithCustomError(charityDeployer, "Charity__OnlyGovernor()")
                   })
               })
           })
