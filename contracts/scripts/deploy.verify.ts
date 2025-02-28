@@ -35,7 +35,7 @@ async function main() {
     const [owner] = await ethers.getSigners()
     console.log(`EcoNovaManager deployed to: ${ecoAddress}`)
     console.log(`EcoNovaCourseNFT deployed to: ${ecoCourseNFTAddress}`)
-    const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
+    const GovernorFactory = await hre.ethers.getContractFactory("EcoNovaGovernor")
 
     const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
 
@@ -64,7 +64,7 @@ async function main() {
         charities.push(charity)
     }
 
-    const ecoNovaGovernorDeployer = await EcoNovaGovernor.deploy(
+    const ecoNovaGovernorDeployer = await GovernorFactory.deploy(
         tokenAddress,
         governorTimeLock!,
         QUORUM_PERCENTAGE,
@@ -75,7 +75,6 @@ async function main() {
     const ecoNovaGovernorAddress = await ecoNovaGovernorDeployer.getAddress()
 
     console.log(`EcoNovaGovernor deployed to: ${ecoNovaGovernorAddress}`)
-    console.log(`TimeLock deployed to: ${governorTimeLock}`)
 
     if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
 
@@ -90,7 +89,13 @@ async function main() {
         VOTING_DELAY,
     ])
 
-    await verify(governorTimeLock, [MIN_DELAY, [], [], wallet.address])
+    console.log(`TimeLock deployed to: ${governorTimeLock}`)
+
+    await verify(
+        governorTimeLock,
+        [MIN_DELAY, [], [], wallet.address],
+        "contracts/dao/TimeLock.sol:TimeLock"
+    )
 
     await verify(ecoAddress, [
         oracle,
@@ -101,10 +106,6 @@ async function main() {
     ])
     await verify(ecoCourseNFTAddress, [wallet.address])
 
-    if (governorTimeLock !== undefined) {
-        return
-    }
-
     const blockNumber = await ethers.provider.getBlockNumber()
     const rpcUrl = (network.config as any).url
     const blockExplorerUrl = network.config.ignition.explorerUrl!
@@ -114,6 +115,7 @@ async function main() {
     updateEnv(ecoCourseNFTAddress, "frontend", "VITE_NFT_COURSE_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "backend", "CONTRACT_ADDRESS")
+
     /** block number */
     updateEnv(blockNumber.toString(), "indexer", "BLOCK_NUMBER")
     /** chainid */
