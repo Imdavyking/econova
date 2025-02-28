@@ -13,6 +13,7 @@ import { localHardhat } from "../utils/localhardhat.chainid"
 import {
     ADDRESS_ZERO,
     MIN_DELAY,
+    PROPOSAL_DESCRIPTION,
     QUORUM_PERCENTAGE,
     VOTING_DELAY,
     VOTING_PERIOD,
@@ -96,6 +97,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const ecoNovaInfo = JSON.parse(fs.readFileSync(abiPath, "utf-8"))
 
               const ecoNovaToken = new ethers.Contract(ecoNovaTokenAddress, ecoNovaInfo.abi, owner)
+              const testCharityOrganization = "0xefb85BCDfB03e9299a680993aB35194aCb8DaDda"
 
               return {
                   ecoNDeployer,
@@ -107,6 +109,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   charityDeployer,
                   ecoNovaCourseNFTDeployer,
                   ecoNovaGovernorDeployer,
+                  testCharityOrganization,
               }
           }
 
@@ -122,15 +125,72 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
           describe("CharityGovernance", function () {
               describe("Validations", function () {
-                  it("Can only add charity organization through governance", async function () {
-                      const { charityDeployer, otherAccount, owner } = await loadFixture(
+                  it("Can only add or remove charity organization through governance", async function () {
+                      const { charityDeployer, testCharityOrganization } = await loadFixture(
                           deployEcoNovaDeployerFixture
                       )
                       await expect(
-                          charityDeployer.addOrganization(
-                              "0xefb85BCDfB03e9299a680993aB35194aCb8DaDda"
-                          )
+                          charityDeployer.addOrganization(testCharityOrganization)
                       ).to.be.revertedWithCustomError(charityDeployer, "Charity__OnlyGovernor()")
+
+                      await expect(
+                          charityDeployer.removeOrganization(testCharityOrganization)
+                      ).to.be.revertedWithCustomError(charityDeployer, "Charity__OnlyGovernor()")
+                  })
+
+                  it("proposes, votes, waits, queues, and then executes", async () => {
+                      const { charityDeployer, testCharityOrganization, ecoNovaGovernorDeployer } =
+                          await loadFixture(deployEcoNovaDeployerFixture)
+
+                      const encodedFunctionCall = charityDeployer.interface.encodeFunctionData(
+                          "addOrganization",
+                          [testCharityOrganization]
+                      )
+
+                      // propose
+                      const proposeTx = await ecoNovaGovernorDeployer.propose(
+                          [charityDeployer],
+                          [0],
+                          [encodedFunctionCall],
+                          PROPOSAL_DESCRIPTION
+                      )
+                      const proposeReceipt = await proposeTx.wait(1)
+                      console.log({ proposeReceipt })
+                      //   const proposalId = proposeReceipt!.events![0].args!.proposalId
+                      //   let proposalState = await governor.state(proposalId)
+                      //   console.log(`Current Proposal State: ${proposalState}`)
+                      //   await moveBlocks(VOTING_DELAY + 1)
+                      //   // vote
+                      //   const voteTx = await governor.castVoteWithReason(proposalId, voteWay, reason)
+                      //   await voteTx.wait(1)
+                      //   proposalState = await governor.state(proposalId)
+                      //   assert.equal(proposalState.toString(), "1")
+                      //   console.log(`Current Proposal State: ${proposalState}`)
+                      //   await moveBlocks(VOTING_PERIOD + 1)
+                      //   // queue & execute
+                      //   // const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION))
+                      //   const descriptionHash = ethers.utils.id(PROPOSAL_DESCRIPTION)
+                      //   const queueTx = await governor.queue(
+                      //       [box.address],
+                      //       [0],
+                      //       [encodedFunctionCall],
+                      //       descriptionHash
+                      //   )
+                      //   await queueTx.wait(1)
+                      //   await moveTime(MIN_DELAY + 1)
+                      //   await moveBlocks(1)
+                      //   proposalState = await governor.state(proposalId)
+                      //   console.log(`Current Proposal State: ${proposalState}`)
+                      //   console.log("Executing...")
+                      //   console.log
+                      //   const exTx = await governor.execute(
+                      //       [box.address],
+                      //       [0],
+                      //       [encodedFunctionCall],
+                      //       descriptionHash
+                      //   )
+                      //   await exTx.wait(1)
+                      //   console.log((await box.retrieve()).toString())
                   })
               })
           })
