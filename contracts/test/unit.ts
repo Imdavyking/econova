@@ -10,14 +10,7 @@ import { charityCategories } from "../utils/charity.categories"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
-import { initKeystore } from "../utils/init.keystore"
-import {
-    ADDRESS_ZERO,
-    MIN_DELAY,
-    QUORUM_PERCENTAGE,
-    VOTING_DELAY,
-    VOTING_PERIOD,
-} from "../utils/constants"
+import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../utils/constants"
 
 dotenv.config()
 
@@ -31,9 +24,12 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
           // and reset Hardhat Network to that snapshot in every test.
           async function deployEcoNovaDeployerFixture() {
               // Contracts are deployed using the first signer/account by default
-              const [owner, otherAccount, orgAccount] = await hre.ethers.getSigners()
+              const [owner, otherAccount] = await hre.ethers.getSigners()
 
-              const wallet = initKeystore(null)
+              console.log({
+                  owner,
+                  otherAccount,
+              })
 
               const EcoNovaDeployer = await hre.ethers.getContractFactory("EcoNovaManager")
               const EcoNovaCourseNFTDeployer = await hre.ethers.getContractFactory(
@@ -45,7 +41,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const Groth16Verifier = await hre.ethers.getContractFactory("Groth16Verifier")
               const TimeLock = await hre.ethers.getContractFactory("TimeLock")
               const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
-              const timeLockDeployer = await TimeLock.deploy(MIN_DELAY, [], [], wallet.address)
+              const timeLockDeployer = await TimeLock.deploy(MIN_DELAY, [], [], owner.address)
 
               const charityDeployer = await CharityDeployer.deploy(
                   charityCategories.Education,
@@ -57,13 +53,13 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(
                   mockPythPriceFeedDeployer,
-                  wallet,
+                  owner,
                   [charityDeployer],
                   groth16Deployer,
                   endpointV2Mock
               )
 
-              const ecoNovaCourseNFTDeployer = await EcoNovaCourseNFTDeployer.deploy(wallet)
+              const ecoNovaCourseNFTDeployer = await EcoNovaCourseNFTDeployer.deploy(owner)
 
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
 
@@ -89,10 +85,10 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
               console.log({ adminA, adminB, adminC })
 
-              // const proposerTx = await timeLockDeployer.grantRole(
-              //     proposerRole,
-              //     ecoNovaGovernorDeployer
-              // )
+              const proposerTx = await timeLockDeployer.grantRole(
+                  proposerRole,
+                  ecoNovaGovernorDeployer
+              )
               //   await proposerTx.wait(1)
               //   const executorTx = await timeLockDeployer.grantRole(executorRole, ADDRESS_ZERO)
               //   await executorTx.wait(1)

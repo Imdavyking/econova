@@ -2,6 +2,7 @@
 pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/governance/TimelockController.sol";
+import "hardhat/console.sol";
 
 contract TimeLock is TimelockController {
     // minDelay is how long you have to wait before executing
@@ -19,5 +20,8 @@ contract TimeLock is TimelockController {
         address[] memory proposers,
         address[] memory executors,
         address admin
-    ) TimelockController(minDelay, proposers, executors, admin) {}
+    ) TimelockController(minDelay, proposers, executors, admin) {
+        console.log('admin getting');
+        console.log(admin);
+    }
 }
