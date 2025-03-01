@@ -60,7 +60,8 @@ contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
      * @param amount - the amount of tokens to mint
      */
     function localMint(address to, uint256 amount) external {
-        if (block.chainid != 31337) {
+        uint256 hardhatChainId = 31337;
+        if (block.chainid != hardhatChainId) {
             revert EcoNovaToken__NotOnLocalNet();
         }
         _mint(to, amount);
