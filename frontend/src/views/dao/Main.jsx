@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-import { FaStar, FaSpinner } from "react-icons/fa";
-import { APP_NAME, CONTRACT_ADDRESS } from "../../utils/constants";
-import logoUrl from "@/assets/images/logo.png";
 import { toast } from "react-toastify";
+import { ethers } from "ethers";
+import { FaSpinner } from "react-icons/fa";
 import charityAbi from "@/assets/json/charity.json";
+import { charityCategories } from "../../utils/charity.categories";
+import { getCharityCategoryAddressService } from "../../services/blockchain.services";
+import { ellipsify } from "../../utils/ellipsify";
 
 export default function DAOProposalForm() {
+  const charityInterface = new ethers.Interface(charityAbi);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [contractAddress, setContractAddress] = useState("");
@@ -14,34 +16,121 @@ export default function DAOProposalForm() {
   const [ethValue, setEthValue] = useState("");
   const [signatures, setSignatures] = useState([]);
   const [inputs, setInputs] = useState([]);
+  const [inputValues, setInputValues] = useState({});
+  const [charityAddresses, setCharityAddresses] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const extractSignatures = () => {
     try {
       const functionSignatures = charityAbi
-        .filter((item) => item.type === "function")
-        .map((item) => ({ name: item.name, inputs: item.inputs }));
+        .filter(
+          (item) =>
+            item.type === "function" && item.stateMutability === "nonpayable"
+        )
+        .map((item) => ({
+          name: item.name,
+          inputs: item.inputs,
+        }));
       setSignatures(functionSignatures);
       setContractSignature("");
       setInputs([]);
+      setInputValues({});
     } catch (error) {
       console.error(error);
-
       toast.error("Invalid ABI JSON");
     }
   };
 
   useEffect(() => {
     extractSignatures();
-  }, [charityAbi]);
+
+    const getCharityCategoryWithAddress = async () => {
+      try {
+        const charityCategoryWithAddress = await Promise.all(
+          Object.entries(charityCategories).map(
+            async ([categoryName, index]) => {
+              const address = await getCharityCategoryAddressService({
+                charityCatogory: index,
+              });
+              return { categoryName, index, address };
+            }
+          )
+        );
+
+        setCharityAddresses(charityCategoryWithAddress);
+        if (charityCategoryWithAddress.length > 0) {
+          setContractAddress(charityCategoryWithAddress[0].address); // Set default
+        }
+      } catch (error) {
+        console.error("Error fetching charity category addresses:", error);
+        setCharityAddresses([]);
+      }
+    };
+
+    getCharityCategoryWithAddress();
+  }, []);
 
   const handleSignatureChange = (signature) => {
     setContractSignature(signature);
     const selectedFunction = signatures.find((sig) => sig.name === signature);
     setInputs(selectedFunction ? selectedFunction.inputs : []);
+    setInputValues(
+      selectedFunction
+        ? Object.fromEntries(
+            selectedFunction.inputs.map((input) => [input.name, ""])
+          )
+        : {}
+    );
+  };
+
+  const handleInputChange = (name, value) => {
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const sendProposal = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      // test promise with 2 seconds
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      if (!contractAddress) {
+        return toast.error("Contract address must be selected.");
+      }
+
+      if (!contractSignature) {
+        return toast.error("Contract signature must be selected.");
+      }
+
+      const functionAbi = signatures.find(
+        (sig) => sig.name === contractSignature
+      );
+      if (!functionAbi) {
+        return toast.error("Invalid function signature.");
+      }
+
+      const encodedFunctionCall = charityInterface.encodeFunctionData(
+        contractSignature,
+        Object.values(inputValues)
+      );
+
+      console.log("Encoded function call:", encodedFunctionCall);
+
+      toast.success("Proposal submitted successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error(`Error submitting proposal. ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+    <div className="flex justify-center items-center min-h-screen p-4">
       <div className="w-full max-w-2xl p-6 shadow-lg bg-white rounded-2xl">
         <h2 className="text-xl font-bold mb-4">Create DAO Proposal</h2>
 
@@ -65,14 +154,24 @@ export default function DAOProposalForm() {
           />
         </div>
 
+        {/* Dropdown for Contract Address */}
         <div className="mb-4">
           <label className="block font-medium">Target Contract Address</label>
-          <input
+          <select
             className="w-full p-2 border rounded"
             value={contractAddress}
             onChange={(e) => setContractAddress(e.target.value)}
-            placeholder="0x..."
-          />
+          >
+            {charityAddresses.length > 0 ? (
+              charityAddresses.map((item, index) => (
+                <option key={index} value={item.address}>
+                  {item.categoryName} - {ellipsify(item.address)}
+                </option>
+              ))
+            ) : (
+              <option disabled>No addresses available</option>
+            )}
+          </select>
         </div>
 
         {signatures.length > 0 && (
@@ -82,6 +181,7 @@ export default function DAOProposalForm() {
             </label>
             <select
               className="w-full p-2 border rounded"
+              value={contractSignature}
               onChange={(e) => handleSignatureChange(e.target.value)}
             >
               <option value="">Select a function</option>
@@ -105,6 +205,10 @@ export default function DAOProposalForm() {
                 <input
                   className="w-full p-2 border rounded"
                   placeholder={input.type}
+                  value={inputValues[input.name] || ""}
+                  onChange={(e) =>
+                    handleInputChange(input.name, e.target.value)
+                  }
                 />
               </div>
             ))}
@@ -122,8 +226,16 @@ export default function DAOProposalForm() {
           />
         </div>
 
-        <button className="w-full px-4 py-2 bg-green-500 text-white rounded">
-          Submit Proposal
+        <button
+          className="w-full px-4 py-2 bg-green-500 text-white rounded flex justify-center items-center"
+          onClick={sendProposal}
+          disabled={loading}
+        >
+          {loading ? (
+            <FaSpinner className="animate-spin mr-2" />
+          ) : (
+            "Submit Proposal"
+          )}
         </button>
       </div>
     </div>
