@@ -26,6 +26,8 @@ export async function deployCrossChainOFT({
 
         const [wallet] = await ethers.getSigners()
 
+        console.log("🔐 Deploying EcoNovaToken contract..." + wallet.address)
+
         const networkInfo = await provider.getNetwork()
 
         const chainId = Number(networkInfo.chainId)
@@ -42,7 +44,6 @@ export async function deployCrossChainOFT({
         console.log(`🔗 Using LZ Endpoint: ${lzEndpoint.endpointV2}\n`)
 
         const EcoNovaToken = await ethers.getContractFactory("EcoNovaToken", wallet)
-        const EndpointV2 = await ethers.getContractAt("IEndpointV2", lzEndpoint.endpointV2, wallet)
         const ecoNovaToken = await EcoNovaToken.deploy(lzEndpoint.endpointV2, wallet.address)
         await ecoNovaToken.waitForDeployment()
 
