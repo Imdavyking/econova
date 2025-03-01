@@ -22,13 +22,15 @@ export async function deployCrossChainOFT({
             throw new Error("❌ Missing PRIVATE_KEY or CROSS_CHAIN_RPC_URL in .env file")
         }
 
-        const provider = new ethers.JsonRpcProvider(CROSS_CHAIN_RPC_URL)
-
         const [wallet] = await ethers.getSigners()
+
+        const provider = ethers.getDefaultProvider()
 
         console.log("🔐 Deploying EcoNovaToken contract..." + wallet.address)
 
         const networkInfo = await provider.getNetwork()
+
+        console.log({ networkInfo })
 
         const chainId = Number(networkInfo.chainId)
         if (!chainId) {

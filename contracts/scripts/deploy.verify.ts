@@ -182,6 +182,10 @@ async function main() {
             return
         }
 
+        const currentNetwork = hre.network.name as string
+
+        hre.changeNetwork(crossChainLzInfo.name)
+
         const { crossChainTokenAddress } = await deployCrossChainOFT({
             remoteTokenAddr: tokenAddress,
             remoteLzInfo: layerZeroChainInfo,
@@ -189,6 +193,8 @@ async function main() {
         })
 
         console.log(`🔄 Setting peer for cross-chain Endpoint: ${crossChainLzInfo.endpointV2}`)
+
+        hre.changeNetwork(currentNetwork)
 
         const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)
         await ecoNovaToken.setPeer(
