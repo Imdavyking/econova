@@ -149,11 +149,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           owner,
                       } = await loadFixture(deployEcoNovaDeployerFixture)
 
-                      const encodedFunctionCall = charityDeployer.interface.encodeFunctionData(
-                          "addOrganization",
-                          [testCharityOrganization]
-                      )
-
                       let voterBalance = await ecoNovaToken.balanceOf(owner.address)
 
                       console.log(`Voter Balance: ${voterBalance.toString()}`)
@@ -170,6 +165,10 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       console.log(`Added Balance: ${voterBalance.toString()}`)
 
                       // propose
+                      const encodedFunctionCall = charityDeployer.interface.encodeFunctionData(
+                          "addOrganization",
+                          [testCharityOrganization]
+                      )
                       const proposeTx = await ecoNovaGovernorDeployer.propose(
                           [charityDeployer],
                           [0],
@@ -183,17 +182,22 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
                       const proposalId = logs.args.at(0)
                       let proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+
                       console.log(`Current Proposal State: ${proposalState}`)
                       await moveBlocks(VOTING_DELAY + 1)
                       // vote
                       const voteWay = 1 // for (1) against (0) abstain (2)
                       const reason = "Organization is a good fit for the charity category"
+                      console.log("Voting...")
                       const voteTx = await ecoNovaGovernorDeployer.castVoteWithReason(
                           proposalId,
                           voteWay,
                           reason
                       )
-                      await voteTx.wait(1)
+                      const voteReceipt = await voteTx.wait(1)
+
+                      const voteLogs = voteReceipt?.logs[0] as any
+
                       proposalState = await ecoNovaGovernorDeployer.state(proposalId)
 
                       expect(proposalState).to.equal(1)
