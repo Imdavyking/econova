@@ -1,4 +1,4 @@
-import { ethers } from "hardhat"
+import { ethers, network } from "hardhat"
 import dotenv from "dotenv"
 import { LayerZeroChainInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
 
@@ -22,16 +22,14 @@ export async function deployCrossChainOFT({
             throw new Error("❌ Missing PRIVATE_KEY or CROSS_CHAIN_RPC_URL in .env file")
         }
 
+        const chainId = Number(network.config.chainId)
+
+        console.log("🔗 Chain ID:", chainId)
+
         const [wallet] = await ethers.getSigners()
-
-        const provider = ethers.getDefaultProvider()
-        const networkInfo = await provider.getNetwork()
-
-        console.log({ networkInfo })
 
         console.log("🔐 Deploying EcoNovaToken contract..." + wallet.address)
 
-        const chainId = Number(networkInfo.chainId)
         if (!chainId) {
             throw new Error("❌ Chain ID is undefined. Ensure Hardhat is configured correctly.")
         }
