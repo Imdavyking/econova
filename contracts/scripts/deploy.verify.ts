@@ -12,7 +12,13 @@ import { copyABI } from "./copy.abi"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { deployCrossChainOFT } from "./econova.token.cross.chain"
 import { crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
-import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../utils/constants"
+import {
+    ADDRESS_ZERO,
+    MIN_DELAY,
+    QUORUM_PERCENTAGE,
+    VOTING_DELAY,
+    VOTING_PERIOD,
+} from "../utils/constants"
 dotenv.config()
 
 async function main() {
@@ -99,6 +105,19 @@ async function main() {
         layerZeroChainInfo.endpointV2,
     ])
     await verify(ecoCourseNFTAddress, [wallet.address])
+
+    const timeLockDeployer = await ethers.getContractAt("TimeLock", governorTimeLock!)
+
+    const proposerRole = await timeLockDeployer.PROPOSER_ROLE()
+    const executorRole = await timeLockDeployer.EXECUTOR_ROLE()
+    const adminRole = await timeLockDeployer.DEFAULT_ADMIN_ROLE()
+
+    const proposerTx = await timeLockDeployer.grantRole(proposerRole, ecoNovaGovernorDeployer)
+    await proposerTx.wait(1)
+    const executorTx = await timeLockDeployer.grantRole(executorRole, ADDRESS_ZERO)
+    await executorTx.wait(1)
+    const revokeTx = await timeLockDeployer.revokeRole(adminRole, owner)
+    await revokeTx.wait(1)
 
     if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
 
