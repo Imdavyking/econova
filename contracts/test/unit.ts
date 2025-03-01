@@ -216,12 +216,12 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       //     Expired,
                       //     Executed
                       // }
-                      const queueTx = await ecoNovaGovernorDeployer.queue(
-                          [charityDeployer],
-                          [0],
-                          [encodedFunctionCall],
-                          descriptionHash
-                      )
+                      //   const queueTx = await ecoNovaGovernorDeployer.queue(
+                      //       [charityDeployer],
+                      //       [0],
+                      //       [encodedFunctionCall],
+                      //       descriptionHash
+                      //   )
                       //   await queueTx.wait(1)
                       //   await moveTime(MIN_DELAY + 1)
                       //   await moveBlocks(1)
