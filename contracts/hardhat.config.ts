@@ -38,8 +38,6 @@ if (!API_SCAN_VERIFIER_KEY) {
     throw new Error("API_SCAN_VERIFIER_KEY is not set, used to verify contracts on explorer")
 }
 
-export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-
 declare module "hardhat/types/runtime" {
     export interface HardhatRuntimeEnvironment {
         changeNetwork: Function
