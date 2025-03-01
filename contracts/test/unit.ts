@@ -20,6 +20,7 @@ import {
 } from "../utils/constants"
 import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
+import exp from "constants"
 
 dotenv.config()
 
@@ -151,24 +152,34 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
                       let voterBalance = await ecoNovaToken.balanceOf(owner.address)
 
-                      console.log(`Voter Balance: ${voterBalance.toString()}`)
+                      expect(voterBalance).to.equal(0)
+
+                      const tokenMint = 10 * 10 ** 18
 
                       const mintTx = await ecoNovaToken.localMint(
                           owner.address,
-                          (10 * 10 ** 18).toString()
+                          tokenMint.toString()
                       )
 
                       await mintTx.wait(1)
 
                       voterBalance = await ecoNovaToken.balanceOf(owner.address)
 
-                      console.log(`Added Balance: ${voterBalance.toString()}`)
+                      expect(voterBalance).to.equal(tokenMint.toString())
+
+                      const delegateUser = await ecoNovaToken.delegate(owner.address)
+                      await delegateUser.wait(1)
 
                       // propose
                       const encodedFunctionCall = charityDeployer.interface.encodeFunctionData(
                           "addOrganization",
                           [testCharityOrganization]
                       )
+
+                      let organizationExist = await charityDeployer.organizationExists(
+                          testCharityOrganization
+                      )
+                      expect(organizationExist).to.equal(false)
                       const proposeTx = await ecoNovaGovernorDeployer.propose(
                           [charityDeployer],
                           [0],
@@ -178,12 +189,11 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const proposeReceipt = await proposeTx.wait(1)
                       const logs = proposeReceipt?.logs[0] as any
 
-                      console.log()
-
                       const proposalId = logs.args.at(0)
+
                       let proposalState = await ecoNovaGovernorDeployer.state(proposalId)
 
-                      console.log(`Current Proposal State: ${proposalState}`)
+                      expect(proposalState).to.equal(0)
                       await moveBlocks(VOTING_DELAY + 1)
                       // vote
                       const voteWay = 1 // for (1) against (0) abstain (2)
@@ -194,14 +204,12 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           voteWay,
                           reason
                       )
-                      const voteReceipt = await voteTx.wait(1)
-
-                      const voteLogs = voteReceipt?.logs[0] as any
+                      await voteTx.wait(1)
+                      const timePoint = await ecoNovaGovernorDeployer.proposalSnapshot(proposalId)
 
                       proposalState = await ecoNovaGovernorDeployer.state(proposalId)
 
                       expect(proposalState).to.equal(1)
-                      console.log(`Current Proposal State: ${proposalState}`)
                       await moveBlocks(VOTING_PERIOD + 1)
 
                       // queue & execute
@@ -209,38 +217,33 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const descriptionHash = ethers.id(PROPOSAL_DESCRIPTION)
                       proposalState = await ecoNovaGovernorDeployer.state(proposalId)
 
-                      console.log(`Current Proposal State queue: ${proposalState}`)
-                      //   enum ProposalState {
-                      //     Pending,
-                      //     Active,
-                      //     Canceled,
-                      //     Defeated,
-                      //     Succeeded,
-                      //     Queued,
-                      //     Expired,
-                      //     Executed
-                      // }
-                      //   const queueTx = await ecoNovaGovernorDeployer.queue(
-                      //       [charityDeployer],
-                      //       [0],
-                      //       [encodedFunctionCall],
-                      //       descriptionHash
-                      //   )
-                      //   await queueTx.wait(1)
-                      //   await moveTime(MIN_DELAY + 1)
-                      //   await moveBlocks(1)
-                      // proposalState = await ecoNovaGovernorDeployer.state(proposalId)
-                      // console.log(`Current Proposal State: ${proposalState}`)
-                      // console.log("Executing...")
-                      // console.log
-                      // const exTx = await ecoNovaGovernorDeployer.execute(
-                      //     [box.address],
-                      //     [0],
-                      //     [encodedFunctionCall],
-                      //     descriptionHash
-                      // )
-                      // await exTx.wait(1)
-                      //   console.log((await box.retrieve()).toString())
+                      expect(proposalState).to.equal(4)
+
+                      const queueTx = await ecoNovaGovernorDeployer.queue(
+                          [charityDeployer],
+                          [0],
+                          [encodedFunctionCall],
+                          descriptionHash
+                      )
+                      await queueTx.wait(1)
+                      await moveTime(MIN_DELAY + 1)
+                      await moveBlocks(1)
+                      proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+                      expect(proposalState).to.equal(5)
+                      console.log("Executing...")
+
+                      const exTx = await ecoNovaGovernorDeployer.execute(
+                          [charityDeployer],
+                          [0],
+                          [encodedFunctionCall],
+                          descriptionHash
+                      )
+                      await exTx.wait(1)
+
+                      organizationExist = await charityDeployer.organizationExists(
+                          testCharityOrganization
+                      )
+                      expect(organizationExist).to.equal(true)
                   })
               })
           })

@@ -31,14 +31,14 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     /**
      * mappings
      */
-    mapping(address => bool) private whitelistedTokens;
-    mapping(address => bool) private organizationExists;
+    mapping(address => bool) public whitelistedTokens;
+    mapping(address => bool) public organizationExists;
 
     /**
      * arrays
      */
-    address[] private tokenList;
-    address[] private organizations;
+    address[] public tokenList;
+    address[] public organizations;
 
     enum Category {
         Education,
