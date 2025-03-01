@@ -25,12 +25,11 @@ export async function deployCrossChainOFT({
         const [wallet] = await ethers.getSigners()
 
         const provider = ethers.getDefaultProvider()
-
-        console.log("🔐 Deploying EcoNovaToken contract..." + wallet.address)
-
         const networkInfo = await provider.getNetwork()
 
         console.log({ networkInfo })
+
+        console.log("🔐 Deploying EcoNovaToken contract..." + wallet.address)
 
         const chainId = Number(networkInfo.chainId)
         if (!chainId) {
