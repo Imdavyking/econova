@@ -26,6 +26,9 @@ const Footer = () => {
             <Link to="/donate">Donate</Link>
           </li>
           <li>
+            <Link to="/dao">Dao</Link>
+          </li>
+          <li>
             <Link to="/bridge">Bridge</Link>
           </li>
           <li>

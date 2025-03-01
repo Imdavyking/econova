@@ -12,6 +12,7 @@ import AITutor from "../views/ai-tutor/Main";
 import AiAudit from "../views/ai-audit/Main";
 import AiInvestment from "../views/ai-investment/Main";
 import Bridge from "../views/bridge/Main";
+import Dao from "../views/dao/Main";
 import NotFound from "../views/not-found/Main";
 import AiTxAnalysis from "../views/ai-tx-analysis/Main";
 import AITutorQuiz from "../views/ai-tutor/quiz";
@@ -75,6 +76,10 @@ function Router() {
     {
       path: "/terms-and-conditions",
       element: <TermsAndCondition />,
+    },
+    {
+      path: "/dao",
+      element: <Dao />,
     },
     {
       path: "*",
