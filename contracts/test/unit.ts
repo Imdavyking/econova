@@ -205,7 +205,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           reason
                       )
                       await voteTx.wait(1)
-                      const timePoint = await ecoNovaGovernorDeployer.proposalSnapshot(proposalId)
 
                       proposalState = await ecoNovaGovernorDeployer.state(proposalId)
 
