@@ -18,6 +18,8 @@ import {
     VOTING_DELAY,
     VOTING_PERIOD,
 } from "../utils/constants"
+import { moveBlocks } from "../utils/move-blocks"
+import { moveTime } from "../utils/move-time"
 
 dotenv.config()
 
@@ -155,23 +157,34 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           PROPOSAL_DESCRIPTION
                       )
                       const proposeReceipt = await proposeTx.wait(1)
+                      const logs = proposeReceipt?.logs[0] as any
 
-                      //   const proposalId = proposeReceipt!.events![0].args!.proposalId
-                      //   let proposalState = await governor.state(proposalId)
-                      //   console.log(`Current Proposal State: ${proposalState}`)
-                      //   await moveBlocks(VOTING_DELAY + 1)
-                      //   // vote
-                      //   const voteTx = await governor.castVoteWithReason(proposalId, voteWay, reason)
-                      //   await voteTx.wait(1)
-                      //   proposalState = await governor.state(proposalId)
-                      //   assert.equal(proposalState.toString(), "1")
-                      //   console.log(`Current Proposal State: ${proposalState}`)
-                      //   await moveBlocks(VOTING_PERIOD + 1)
-                      //   // queue & execute
-                      //   // const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION))
-                      //   const descriptionHash = ethers.utils.id(PROPOSAL_DESCRIPTION)
-                      //   const queueTx = await governor.queue(
-                      //       [box.address],
+                      console.log()
+
+                      const proposalId = logs.args.at(0)
+                      let proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+                      console.log(`Current Proposal State: ${proposalState}`)
+                      await moveBlocks(VOTING_DELAY + 1)
+                      // vote
+                      const voteWay = 1 // for (1) against (0) abstain (2)
+                      const reason = "Organization is a good fit for the charity category"
+                      const voteTx = await ecoNovaGovernorDeployer.castVoteWithReason(
+                          proposalId,
+                          voteWay,
+                          reason
+                      )
+                      await voteTx.wait(1)
+                      proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+
+                      expect(proposalState).to.equal(1)
+                      console.log(`Current Proposal State: ${proposalState}`)
+                      await moveBlocks(VOTING_PERIOD + 1)
+
+                      // queue & execute
+
+                      const descriptionHash = ethers.id(PROPOSAL_DESCRIPTION)
+                      //   const queueTx = await ecoNovaGovernorDeployer.queue(
+                      //       [charityDeployer],
                       //       [0],
                       //       [encodedFunctionCall],
                       //       descriptionHash
@@ -179,17 +192,17 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       //   await queueTx.wait(1)
                       //   await moveTime(MIN_DELAY + 1)
                       //   await moveBlocks(1)
-                      //   proposalState = await governor.state(proposalId)
-                      //   console.log(`Current Proposal State: ${proposalState}`)
-                      //   console.log("Executing...")
-                      //   console.log
-                      //   const exTx = await governor.execute(
-                      //       [box.address],
-                      //       [0],
-                      //       [encodedFunctionCall],
-                      //       descriptionHash
-                      //   )
-                      //   await exTx.wait(1)
+                      // proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+                      // console.log(`Current Proposal State: ${proposalState}`)
+                      // console.log("Executing...")
+                      // console.log
+                      // const exTx = await ecoNovaGovernorDeployer.execute(
+                      //     [box.address],
+                      //     [0],
+                      //     [encodedFunctionCall],
+                      //     descriptionHash
+                      // )
+                      // await exTx.wait(1)
                       //   console.log((await box.retrieve()).toString())
                   })
               })
