@@ -155,7 +155,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           PROPOSAL_DESCRIPTION
                       )
                       const proposeReceipt = await proposeTx.wait(1)
-                      console.log({ proposeReceipt })
+
                       //   const proposalId = proposeReceipt!.events![0].args!.proposalId
                       //   let proposalState = await governor.state(proposalId)
                       //   console.log(`Current Proposal State: ${proposalState}`)

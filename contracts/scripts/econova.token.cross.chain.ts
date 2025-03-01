@@ -1,7 +1,6 @@
 import { ethers } from "hardhat"
 import dotenv from "dotenv"
 import { LayerZeroChainInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
-import { initKeystore } from "../utils/init.keystore"
 
 dotenv.config()
 
@@ -25,7 +24,7 @@ export async function deployCrossChainOFT({
 
         const provider = new ethers.JsonRpcProvider(CROSS_CHAIN_RPC_URL)
 
-        const wallet = initKeystore(provider)
+        const [wallet] = await ethers.getSigners()
 
         const networkInfo = await provider.getNetwork()
 

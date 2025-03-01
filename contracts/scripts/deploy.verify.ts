@@ -1,21 +1,17 @@
 import hre, { ethers } from "hardhat"
-import path from "path"
 
 import EcoNovaDeployer from "../ignition/modules/EcoNovaDeployer"
 import EcoNovaCourseNFTDeployer from "../ignition/modules/EcoNovaCourseNFTDeployer"
 import { verify } from "../utils/verify"
-import { run } from "hardhat"
 import dotenv from "dotenv"
 import { network } from "hardhat"
-import { deploy, NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
+import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
 import { cleanDeployments } from "../utils/clean"
-import { createProvider } from "hardhat/internal/core/providers/construction"
 import { updateEnv } from "./update.env"
 import { copyABI } from "./copy.abi"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import { deployCrossChainOFT } from "./econova.token.cross.chain"
 import { crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
-import { initKeystore } from "../utils/init.keystore"
 import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../utils/constants"
 dotenv.config()
 
@@ -25,9 +21,9 @@ async function main() {
     cleanDeployments(chainId!)
     const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
     const { ecoNovaNFTDeployer } = await hre.ignition.deploy(EcoNovaCourseNFTDeployer)
+    const [wallet] = await ethers.getSigners()
     const ecoAddress = await ecoNovaDeployer.getAddress()
     const ecoCourseNFTAddress = await ecoNovaNFTDeployer.getAddress()
-    const wallet = initKeystore(null)
     const chainName = process.env.CHAIN_NAME!
     const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
     const chainSymbol = process.env.CHAIN_SYMBOL!

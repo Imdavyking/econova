@@ -1,14 +1,11 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules"
 import dotenv from "dotenv"
-import { ethers } from "hardhat"
-import { initKeystore } from "../../utils/init.keystore"
 
 dotenv.config()
 
 const ecoNovaNFTModule = buildModule("EcoNovaNFTModule", (m) => {
-    const wallet = initKeystore(null)
-    const ecoNovaNFTDeployer = m.contract("EcoNovaCourseNFT", [wallet.address])
-
+    const wallet = m.getAccount(0)
+    const ecoNovaNFTDeployer = m.contract("EcoNovaCourseNFT", [wallet])
     return { ecoNovaNFTDeployer }
 })
 

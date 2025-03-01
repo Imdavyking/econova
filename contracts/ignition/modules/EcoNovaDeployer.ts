@@ -1,12 +1,11 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules"
 import dotenv from "dotenv"
-import { ethers, network } from "hardhat"
+import { network } from "hardhat"
 import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition-core"
 import { charityCategories } from "../../utils/charity.categories"
 import { localHardhat } from "../../utils/localhardhat.chainid"
 import { LZ_CHAINS } from "../../utils/lzendpoints.help"
-import { initKeystore } from "../../utils/init.keystore"
-import { MIN_DELAY, QUORUM_PERCENTAGE, VOTING_DELAY, VOTING_PERIOD } from "../../utils/constants"
+import { MIN_DELAY } from "../../utils/constants"
 
 dotenv.config()
 
@@ -20,7 +19,7 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
     let lzEndPoint: NamedArtifactContractDeploymentFuture<"EndpointV2Mock"> | string =
         lzInfo.endpointV2
 
-    const wallet = initKeystore(null)
+    const wallet = m.getAccount(0)
 
     if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) {
         oracle = m.contract("MockPythPriceFeed", [])
@@ -28,7 +27,7 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
     }
 
     const charityContracts = []
-    const timeLock = m.contract("TimeLock", [MIN_DELAY, [], [], wallet.address])
+    const timeLock = m.contract("TimeLock", [MIN_DELAY, [], [], wallet])
 
     for (const categoryKey of Object.keys(
         charityCategories
@@ -41,7 +40,7 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
     const groth16Verifier = m.contract("Groth16Verifier")
     const ecoNovaDeployer = m.contract("EcoNovaManager", [
         oracle,
-        wallet.address,
+        wallet,
         charityContracts,
         groth16Verifier,
         lzEndPoint,
