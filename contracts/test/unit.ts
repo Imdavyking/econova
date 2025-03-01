@@ -5,13 +5,13 @@ import { ethers, network } from "hardhat"
 import fs from "fs"
 import path from "path"
 import dotenv from "dotenv"
-import { ETH_ADDRESS } from "../hardhat.config"
 import { charityCategories } from "../utils/charity.categories"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import {
     ADDRESS_ZERO,
+    ETH_ADDRESS,
     MIN_DELAY,
     PROPOSAL_DESCRIPTION,
     QUORUM_PERCENTAGE,
