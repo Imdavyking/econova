@@ -27,7 +27,7 @@ export function copyABI(contractName: string, destinationFolder: string, abiName
         fs.mkdirSync(path.dirname(destPath), { recursive: true })
         fs.writeFileSync(destPath, JSON.stringify(contractJson.abi, null, 2)) // Save only ABI
 
-        console.log(`✅ ABI extracted and copied to ${destinationFolder}/abi.json`)
+        console.log(`✅ ABI extracted and copied to ${destinationFolder}/${abiName ?? "abi"}.json`)
     } catch (error: any) {
         console.error(`❌ Error copying ABI: ${error.message}`)
     }

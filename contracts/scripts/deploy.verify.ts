@@ -155,8 +155,8 @@ async function main() {
     updateEnv(WRAPPED_SONIC_CONTRACT_ADDRESS, "frontend", "VITE_WRAPPED_SONIC_CONTRACT_ADDRESS")
 
     copyABI("EcoNovaManager", "frontend/src/assets/json", null)
-    copyABI("EcoNovaGovernor", "frontend/src/assets/json", "governor.json")
-    copyABI("Charity", "frontend/src/assets/json", "charity.json")
+    copyABI("EcoNovaGovernor", "frontend/src/assets/json", "governor")
+    copyABI("Charity", "frontend/src/assets/json", "charity")
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
     copyABI("EcoNovaManager", "indexer/abis", null)
 
@@ -183,6 +183,8 @@ async function main() {
         }
 
         const currentNetwork = hre.network.name as string
+
+        console.log(crossChainLzInfo.name)
 
         hre.changeNetwork(crossChainLzInfo.name)
 
