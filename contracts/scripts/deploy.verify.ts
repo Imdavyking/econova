@@ -128,6 +128,7 @@ async function main() {
     /** contract address */
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoCourseNFTAddress, "frontend", "VITE_NFT_COURSE_CONTRACT_ADDRESS")
+    updateEnv(ecoNovaGovernorAddress, "frontend", "VITE_ECONOVA_GOVERNOR_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "backend", "CONTRACT_ADDRESS")
 
@@ -154,6 +155,8 @@ async function main() {
     updateEnv(WRAPPED_SONIC_CONTRACT_ADDRESS, "frontend", "VITE_WRAPPED_SONIC_CONTRACT_ADDRESS")
 
     copyABI("EcoNovaManager", "frontend/src/assets/json", null)
+    copyABI("dao/EcoNovaGovernor", "frontend/src/assets/json", "governor.json")
+    copyABI("charity/Charity", "frontend/src/assets/json", "charity.json")
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
     copyABI("EcoNovaManager", "indexer/abis", null)
 
