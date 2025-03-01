@@ -155,8 +155,8 @@ async function main() {
     updateEnv(WRAPPED_SONIC_CONTRACT_ADDRESS, "frontend", "VITE_WRAPPED_SONIC_CONTRACT_ADDRESS")
 
     copyABI("EcoNovaManager", "frontend/src/assets/json", null)
-    copyABI("dao/EcoNovaGovernor", "frontend/src/assets/json", "governor.json")
-    copyABI("charity/Charity", "frontend/src/assets/json", "charity.json")
+    copyABI("EcoNovaGovernor", "frontend/src/assets/json", "governor.json")
+    copyABI("Charity", "frontend/src/assets/json", "charity.json")
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
     copyABI("EcoNovaManager", "indexer/abis", null)
 

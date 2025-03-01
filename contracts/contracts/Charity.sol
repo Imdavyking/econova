@@ -3,8 +3,8 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import {IGelatoChecker} from "../interfaces/IGelatoChecker.sol";
-import {ICharity} from "../interfaces/ICharity.sol";
+import {IGelatoChecker} from "./interfaces/IGelatoChecker.sol";
+import {ICharity} from "./interfaces/ICharity.sol";
 
 contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     /** state variables */
