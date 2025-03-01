@@ -141,13 +141,33 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   })
 
                   it("proposes, votes, waits, queues, and then executes", async () => {
-                      const { charityDeployer, testCharityOrganization, ecoNovaGovernorDeployer } =
-                          await loadFixture(deployEcoNovaDeployerFixture)
+                      const {
+                          charityDeployer,
+                          testCharityOrganization,
+                          ecoNovaGovernorDeployer,
+                          ecoNovaToken,
+                          owner,
+                      } = await loadFixture(deployEcoNovaDeployerFixture)
 
                       const encodedFunctionCall = charityDeployer.interface.encodeFunctionData(
                           "addOrganization",
                           [testCharityOrganization]
                       )
+
+                      let voterBalance = await ecoNovaToken.balanceOf(owner.address)
+
+                      console.log(`Voter Balance: ${voterBalance.toString()}`)
+
+                      const mintTx = await ecoNovaToken.localMint(
+                          owner.address,
+                          (10 * 10 ** 18).toString()
+                      )
+
+                      await mintTx.wait(1)
+
+                      voterBalance = await ecoNovaToken.balanceOf(owner.address)
+
+                      console.log(`Added Balance: ${voterBalance.toString()}`)
 
                       // propose
                       const proposeTx = await ecoNovaGovernorDeployer.propose(
@@ -183,12 +203,25 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       // queue & execute
 
                       const descriptionHash = ethers.id(PROPOSAL_DESCRIPTION)
-                      //   const queueTx = await ecoNovaGovernorDeployer.queue(
-                      //       [charityDeployer],
-                      //       [0],
-                      //       [encodedFunctionCall],
-                      //       descriptionHash
-                      //   )
+                      proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+
+                      console.log(`Current Proposal State queue: ${proposalState}`)
+                      //   enum ProposalState {
+                      //     Pending,
+                      //     Active,
+                      //     Canceled,
+                      //     Defeated,
+                      //     Succeeded,
+                      //     Queued,
+                      //     Expired,
+                      //     Executed
+                      // }
+                      const queueTx = await ecoNovaGovernorDeployer.queue(
+                          [charityDeployer],
+                          [0],
+                          [encodedFunctionCall],
+                          descriptionHash
+                      )
                       //   await queueTx.wait(1)
                       //   await moveTime(MIN_DELAY + 1)
                       //   await moveBlocks(1)

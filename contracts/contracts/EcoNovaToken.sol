@@ -21,6 +21,7 @@ contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
     error EcoNovaToken__MaxSupplyExceeded();
     error EcoNovaToken__ERC2612ExpiredSignature(uint256 deadline);
     error EcoNovaToken__ERC2612InvalidSigner(address signer, address owner);
+    error EcoNovaToken__NotOnLocalNet();
 
     modifier deployerOrOwner() {
         if (msg.sender != owner() && msg.sender != DEPLOYER) {
@@ -49,6 +50,18 @@ contract EcoNovaToken is OFT, ERC20Votes, IERC20Permit {
     function mint(address to, uint256 amount) external deployerOrOwner {
         if (totalSupply() + amount > MAX_SUPPLY) {
             revert EcoNovaToken__MaxSupplyExceeded();
+        }
+        _mint(to, amount);
+    }
+
+    /**
+     * @dev Mint tokens on local network
+     * @param to - the address to mint tokens to
+     * @param amount - the amount of tokens to mint
+     */
+    function localMint(address to, uint256 amount) external {
+        if (block.chainid != 31337) {
+            revert EcoNovaToken__NotOnLocalNet();
         }
         _mint(to, amount);
     }
