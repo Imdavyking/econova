@@ -285,7 +285,7 @@ export async function daoDelegate({ tokenAddress }) {
     const signer = await getSigner();
     const tx = await contract.delegate(signer.address);
     await tx.wait(1);
-    return `delegated governance of ${tokenAddress} to ${delegateAddress}`;
+    return `delegated governance of ${tokenAddress} to ${signer.address}`;
   } catch (error) {
     console.log("❌ Error during delegation:", error);
     return `${FAILED_KEY} to delegate governance of ${tokenAddress}`;
