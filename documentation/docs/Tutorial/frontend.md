@@ -44,6 +44,7 @@ Create a `.env` file in the project root and add the following variables:
   VITE_CROSS_CHAIN_ID=
   VITE_CROSS_CHAIN_ENDPOINT_V2_ID=
   VITE_CROSS_CHAIN_ENDPOINT_V2_ADDRESS=
+  VITE_ECONOVA_GOVERNOR_CONTRACT_ADDRESS=
 ```
 
 # Usage
