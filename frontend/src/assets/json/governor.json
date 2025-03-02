@@ -25,6 +25,11 @@
         "internalType": "uint48",
         "name": "_votingDelay",
         "type": "uint48"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_proposalThreshold",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
