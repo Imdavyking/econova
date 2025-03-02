@@ -15,6 +15,7 @@ import { crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
 import {
     ADDRESS_ZERO,
     MIN_DELAY,
+    PROPOSAL_THRESHOLD,
     QUORUM_PERCENTAGE,
     VOTING_DELAY,
     VOTING_PERIOD,
@@ -71,7 +72,8 @@ async function main() {
         governorTimeLock!,
         QUORUM_PERCENTAGE,
         VOTING_PERIOD,
-        VOTING_DELAY
+        VOTING_DELAY,
+        PROPOSAL_THRESHOLD
     )
 
     const ecoNovaGovernorAddress = await ecoNovaGovernorDeployer.getAddress()

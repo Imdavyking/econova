@@ -14,6 +14,7 @@ import {
     ETH_ADDRESS,
     MIN_DELAY,
     PROPOSAL_DESCRIPTION,
+    PROPOSAL_THRESHOLD,
     QUORUM_PERCENTAGE,
     VOTING_DELAY,
     VOTING_PERIOD,
@@ -75,7 +76,8 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   timeLockDeployer,
                   QUORUM_PERCENTAGE,
                   VOTING_PERIOD,
-                  VOTING_DELAY
+                  VOTING_DELAY,
+                  PROPOSAL_THRESHOLD
               )
 
               const proposerRole = await timeLockDeployer.PROPOSER_ROLE()

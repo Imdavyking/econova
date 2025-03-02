@@ -24,12 +24,11 @@ contract EcoNovaGovernor is
         TimelockController _timelock,
         uint256 _quorumPercentage,
         uint32 _votingPeriod,
-        uint48 _votingDelay
+        uint48 _votingDelay,
+        uint256 _proposalThreshold
     )
-        // proposalThreshold is set to 0, so anybody can create a proposal
-        // in production, it will be set to a reasonable value
         Governor("EcoNovaGovernor")
-        GovernorSettings(_votingDelay, _votingPeriod, 0)
+        GovernorSettings(_votingDelay, _votingPeriod, _proposalThreshold)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(_quorumPercentage)
         GovernorTimelockControl(_timelock)
