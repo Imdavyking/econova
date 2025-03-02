@@ -309,6 +309,7 @@ export async function daoPropose({
     await tx.wait(1);
     return `proposed ${PROPOSAL_DESCRIPTION}`;
   } catch (error) {
+    console.log(error);
     return `${FAILED_KEY} to propose ${PROPOSAL_DESCRIPTION}`;
   }
 }

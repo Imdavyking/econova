@@ -101,6 +101,10 @@ export default function DAOProposalForm() {
     try {
       setLoading(true);
 
+      if (!description) {
+        return toast.error("Description must be provided.");
+      }
+
       if (!contractAddress) {
         return toast.error("Contract address must be selected.");
       }
