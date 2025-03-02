@@ -184,7 +184,7 @@ async function main() {
 
         const currentNetwork = hre.network.name as string
 
-        hre.changeNetwork(crossChainLzInfo.name)
+        await hre.changeNetwork(crossChainLzInfo.name)
 
         const { crossChainTokenAddress } = await deployCrossChainOFT({
             remoteTokenAddr: tokenAddress,
