@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
+import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { FaSpinner } from "react-icons/fa";
 import charityAbi from "@/assets/json/charity.json";
 import { charityCategories } from "../../utils/charity.categories";
@@ -154,9 +155,8 @@ export default function DAOProposalForm() {
 
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
+      <DarkModeSwitcher />
       <div className="w-full max-w-2xl p-6 shadow-lg bg-white rounded-2xl">
-        <h2 className="text-xl font-bold mb-4">Create DAO Proposal</h2>
-
         <div className="mb-4">
           <label className="block font-medium">Description</label>
           <textarea
