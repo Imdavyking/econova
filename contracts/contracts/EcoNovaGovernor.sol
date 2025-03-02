@@ -26,6 +26,8 @@ contract EcoNovaGovernor is
         uint32 _votingPeriod,
         uint48 _votingDelay
     )
+        // proposalThreshold is set to 0, so anybody can create a proposal
+        // in production, it will be set to a reasonable value
         Governor("EcoNovaGovernor")
         GovernorSettings(_votingDelay, _votingPeriod, 0)
         GovernorVotes(_token)
