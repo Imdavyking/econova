@@ -158,6 +158,7 @@ async function main() {
     copyABI("EcoNovaGovernor", "frontend/src/assets/json", "governor")
     copyABI("Charity", "frontend/src/assets/json", "charity")
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
+    copyABI("EcoNovaToken", "frontend/src/assets/json", "erc20")
     copyABI("EcoNovaManager", "indexer/abis", null)
 
     if (localHardhat.includes(chainId)) return

@@ -4,12 +4,17 @@ import { ethers } from "ethers";
 import { FaSpinner } from "react-icons/fa";
 import charityAbi from "@/assets/json/charity.json";
 import { charityCategories } from "../../utils/charity.categories";
-import { getCharityCategoryAddressService } from "../../services/blockchain.services";
+import {
+  daoDelegate,
+  daoPropose,
+  getCharityCategoryAddressService,
+  getProjectTokenDetails,
+  rethrowFailedResponse,
+} from "../../services/blockchain.services";
 import { ellipsify } from "../../utils/ellipsify";
 
 export default function DAOProposalForm() {
   const charityInterface = new ethers.Interface(charityAbi);
-  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [contractAddress, setContractAddress] = useState("");
   const [contractSignature, setContractSignature] = useState("");
@@ -95,8 +100,6 @@ export default function DAOProposalForm() {
 
     try {
       setLoading(true);
-      // test promise with 2 seconds
-      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (!contractAddress) {
         return toast.error("Contract address must be selected.");
@@ -118,6 +121,22 @@ export default function DAOProposalForm() {
         Object.values(inputValues)
       );
 
+      const { tokenAddress } = await getProjectTokenDetails();
+
+      const delegateResponse = await daoDelegate({
+        tokenAddress,
+      });
+
+      rethrowFailedResponse(delegateResponse);
+
+      const proposeResponse = await daoPropose({
+        targetAddress: contractAddress,
+        encodedFunctionCall,
+        PROPOSAL_DESCRIPTION: description,
+      });
+
+      rethrowFailedResponse(proposeResponse);
+
       console.log("Encoded function call:", encodedFunctionCall);
 
       toast.success("Proposal submitted successfully!");
@@ -133,16 +152,6 @@ export default function DAOProposalForm() {
     <div className="flex justify-center items-center min-h-screen p-4">
       <div className="w-full max-w-2xl p-6 shadow-lg bg-white rounded-2xl">
         <h2 className="text-xl font-bold mb-4">Create DAO Proposal</h2>
-
-        <div className="mb-4">
-          <label className="block font-medium">Title</label>
-          <input
-            className="w-full p-2 border rounded"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Proposal Title"
-          />
-        </div>
 
         <div className="mb-4">
           <label className="block font-medium">Description</label>

@@ -1,6 +1,7 @@
 /** @format */
 import abi from "@/assets/json/abi.json";
 import erc20Abi from "@/assets/json/erc20.json";
+import governorAbi from "@/assets/json/governor.json";
 import oftAbi from "@/assets/json/oft.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
 import iWrappedSonicAbi from "@/assets/json/iwrapped-sonic.json";
@@ -16,6 +17,7 @@ import {
   CHAIN_RPC,
   CHAIN_SYMBOL,
   CONTRACT_ADDRESS,
+  ECONOVA_GOVERNOR_CONTRACT_ADDRESS,
   ETH_ADDRESS,
   FAILED_KEY,
   FIAT_DECIMALS,
@@ -199,6 +201,23 @@ const getNFTCourseContract = async () => {
   return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, nftCourseAbi, signer);
 };
 
+const getGovernorContract = async () => {
+  if (!window.ethereum) {
+    console.log(
+      "MetaMask is not installed. Please install it to use this feature."
+    );
+    return;
+  }
+  const signer = await getSigner();
+
+  await switchOrAddChain(signer.provider, CHAIN_ID);
+  return new ethers.Contract(
+    ECONOVA_GOVERNOR_CONTRACT_ADDRESS,
+    governorAbi,
+    signer
+  );
+};
+
 export const getPeerTokenAddress = async ({
   eidB,
   oftTokenAddress,
@@ -257,6 +276,40 @@ export async function getOFTSendFee({
   } catch (error) {
     console.error("❌ Error calculating send fee:", error);
     throw error;
+  }
+}
+
+export async function daoDelegate({ tokenAddress }) {
+  try {
+    const contract = await getERC20Contract(tokenAddress);
+    const signer = await getSigner();
+    const tx = await contract.delegate(signer.address);
+    await tx.wait(1);
+    return `delegated governance of ${tokenAddress} to ${delegateAddress}`;
+  } catch (error) {
+    console.log("❌ Error during delegation:", error);
+    return `${FAILED_KEY} to delegate governance of ${tokenAddress}`;
+  }
+}
+
+export async function daoPropose({
+  targetAddress,
+  encodedFunctionCall,
+  PROPOSAL_DESCRIPTION,
+}) {
+  try {
+    const manager = await getGovernorContract();
+
+    const tx = await manager.propose(
+      [targetAddress],
+      [0],
+      [encodedFunctionCall],
+      PROPOSAL_DESCRIPTION
+    );
+    await tx.wait(1);
+    return `proposed ${title}`;
+  } catch (error) {
+    return `${FAILED_KEY} to propose ${title}`;
   }
 }
 

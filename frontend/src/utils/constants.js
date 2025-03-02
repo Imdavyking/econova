@@ -28,6 +28,8 @@ export const WALLET_CONNECT_PROJECT_ID = import.meta.env
   .VITE_WALLET_CONNECT_PROJECT_ID;
 export const NFT_COURSE_CONTRACT_ADDRESS = import.meta.env
   .VITE_NFT_COURSE_CONTRACT_ADDRESS;
+export const ECONOVA_GOVERNOR_CONTRACT_ADDRESS = import.meta.env
+  .VITE_ECONOVA_GOVERNOR_CONTRACT_ADDRESS;
 export const TWITTER_PROFILE_URL = `https://x.com/${
   import.meta.env.VITE_TWITTER_NAME
 }`;
