@@ -46,15 +46,24 @@ declare module "hardhat/types/runtime" {
 
 extendEnvironment(async (hre) => {
     hre.changeNetwork = async function changeNetwork(newNetwork: string) {
+        if (!this.config.networks[newNetwork]) {
+            throw new Error(`changeNetwork: Couldn't find network '${newNetwork}'`)
+        }
+        const providers: any = {}
+        if (!providers[this.network.name]) {
+            providers[this.network.name] = this.network.provider
+        }
+        this.ethers.provider
         this.network.name = newNetwork
         this.network.config = this.config.networks[newNetwork]
 
-        const ethProvider = new this.ethers.JsonRpcProvider(
-            (this.network.config as any).url
-        ) as unknown as EthereumProvider
-
-        this.ethers.provider = new HardhatEthersProvider(ethProvider, newNetwork)
-        this.network.provider = await createProvider(this.config, newNetwork, this.artifacts)
+        if (!providers[newNetwork]) {
+            providers[newNetwork] = await createProvider(this.config, newNetwork, this.artifacts)
+        }
+        this.network.provider = providers[newNetwork]
+        if (this.ethers) {
+            this.ethers.provider = new HardhatEthersProvider(this.network.provider, newNetwork)
+        }
     }
 })
 

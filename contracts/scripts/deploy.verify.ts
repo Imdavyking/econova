@@ -194,7 +194,7 @@ async function main() {
 
         console.log(`🔄 Setting peer for cross-chain Endpoint: ${crossChainLzInfo.endpointV2}`)
 
-        hre.changeNetwork(currentNetwork)
+        await hre.changeNetwork(currentNetwork)
 
         const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)
         await ecoNovaToken.setPeer(
@@ -203,7 +203,7 @@ async function main() {
         )
         console.log("✅ Peer setup complete!\n")
 
-        hre.changeNetwork(crossChainLzInfo.name)
+        await hre.changeNetwork(crossChainLzInfo.name)
 
         await verify(crossChainTokenAddress, [crossChainLzInfo.endpointV2, owner.address])
 
