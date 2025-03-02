@@ -5,6 +5,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { FaSpinner } from "react-icons/fa";
 import charityAbi from "@/assets/json/charity.json";
 import { charityCategories } from "../../utils/charity.categories";
+import logoUrl from "@/assets/images/logo.png";
 import {
   daoDelegate,
   daoPropose,
@@ -13,6 +14,7 @@ import {
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
 import { ellipsify } from "../../utils/ellipsify";
+import { APP_NAME } from "../../utils/constants";
 
 export default function DAOProposalForm() {
   const charityInterface = new ethers.Interface(charityAbi);
@@ -156,6 +158,12 @@ export default function DAOProposalForm() {
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
       <DarkModeSwitcher />
+      <h2 className="text-3xl font-bold text-white mb-4 ">
+        <a href="/" className="flex items-center space-x-3">
+          <img alt={APP_NAME} className="w-10" src={logoUrl} />
+          <span className="text-lg">{APP_NAME} AI Audit</span>
+        </a>
+      </h2>
       <div className="w-full max-w-2xl p-6 shadow-lg bg-white rounded-2xl">
         <div className="mb-4">
           <label className="block font-medium">Description</label>
