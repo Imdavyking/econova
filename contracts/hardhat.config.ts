@@ -53,7 +53,6 @@ extendEnvironment(async (hre) => {
         if (!providers[this.network.name]) {
             providers[this.network.name] = this.network.provider
         }
-        this.ethers.provider
         this.network.name = newNetwork
         this.network.config = this.config.networks[newNetwork]
 
