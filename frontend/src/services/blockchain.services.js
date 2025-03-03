@@ -861,19 +861,20 @@ export const getTransactionInfo = async ({ txHash }) => {
           if (
             fragment.type !== "function" ||
             !txInfo.data.startsWith(fragment.selector)
-          ) {
+          )
             return false;
-          }
 
           try {
             const result = abiDecoder.decodeFunctionData(fragment, txInfo.data);
-            decodedResult.name = fragment.name;
-            decodedResult.inputs = fragment.inputs;
-            decodedResult.params = [...result];
-            decodedResult.isValid = true;
+            Object.assign(decodedResult, {
+              name: fragment.name,
+              inputs: fragment.inputs,
+              params: [...result],
+              isValid: true,
+            });
 
             return true;
-          } catch (error) {
+          } catch {
             return false;
           }
         });
