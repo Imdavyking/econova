@@ -63,6 +63,7 @@ type ProposalCreated @entity {
   description: String!
   blockHeight: BigInt!
   contractAddress: String!
+  state: BigInt!
 }
 
 type ProposalCanceled @entity {

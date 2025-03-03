@@ -9,13 +9,112 @@ import {
 } from "../types/abi-interfaces/Abi";
 
 import {
+  ProposalCanceledLog,
+  ProposalCreatedLog,
+  ProposalExecutedLog,
+  ProposalQueuedLog,
+} from "../types/abi-interfaces/Governor";
+
+import {
   Donation,
   PointsAdded,
   PointsRedeemed,
   OrocleUpdate,
   OwnershipTransfer,
   CharityAdded,
+  ProposalCanceled,
+  ProposalCreated,
+  ProposalExecuted,
+  ProposalQueued,
 } from "../types";
+
+const ProposalState = {
+  Pending: 0,
+  Active: 1,
+  Canceled: 2,
+  Defeated: 3,
+  Succeeded: 4,
+  Queued: 5,
+  Expired: 6,
+  Executed: 7,
+};
+
+export async function handleProposalCanceledAbiLog(
+  log: ProposalCanceledLog
+): Promise<void> {
+  logger.info(
+    `New ProposalCanceled transaction log at block ${log.blockNumber}`
+  );
+  assert(log.args, "No log.args");
+  const proposal = await ProposalCreated.get(log.args.proposalId.toString());
+
+  if (!proposal) {
+    logger.error("Proposal not found");
+    return;
+  }
+
+  proposal.state = BigInt(ProposalState.Canceled);
+  await proposal.save();
+}
+
+export async function handleProposalExecutedAbiLog(
+  log: ProposalExecutedLog
+): Promise<void> {
+  logger.info(
+    `New ProposalExecuted transaction log at block ${log.blockNumber}`
+  );
+  assert(log.args, "No log.args");
+  const proposal = await ProposalCreated.get(log.args.proposalId.toString());
+
+  if (!proposal) {
+    logger.error("Proposal not found");
+    return;
+  }
+
+  proposal.state = BigInt(ProposalState.Executed);
+  await proposal.save();
+}
+
+export async function handleProposalQueuedAbiLog(
+  log: ProposalQueuedLog
+): Promise<void> {
+  logger.info(`New ProposalQueued transaction log at block ${log.blockNumber}`);
+  assert(log.args, "No log.args");
+  const proposal = await ProposalCreated.get(log.args.proposalId.toString());
+
+  if (!proposal) {
+    logger.error("Proposal not found");
+    return;
+  }
+
+  proposal.state = BigInt(ProposalState.Queued);
+  await proposal.save();
+}
+
+export async function handleProposalCreatedAbiLog(
+  log: ProposalCreatedLog
+): Promise<void> {
+  logger.info(
+    `New ProposalCreated transaction log at block ${log.blockNumber}`
+  );
+  assert(log.args, "No log.args");
+  const transaction = ProposalCreated.create({
+    id: log.args.proposalId.toString(),
+    blockHeight: BigInt(log.blockNumber),
+    proposalId: log.args.proposalId.toBigInt(),
+    proposer: log.args.proposer,
+    targets: log.args.targets,
+    values: log.args.values.map((value) => value.toBigInt()),
+    signatures: log.args.signatures,
+    calldatas: log.args.calldatas,
+    voteStart: log.args.voteStart.toBigInt(),
+    voteEnd: log.args.voteEnd.toBigInt(),
+    description: log.args.description,
+    contractAddress: log.address,
+    state: BigInt(ProposalState.Active),
+  });
+  await transaction.save();
+}
 
 export async function handleDonatedAbiLog(log: DonatedLog): Promise<void> {
   logger.info(`New Donation transaction log at block ${log.blockNumber}`);
