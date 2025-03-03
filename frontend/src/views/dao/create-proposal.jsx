@@ -182,7 +182,6 @@ export default function DAOProposalForm() {
             placeholder="Proposal Description"
           />
         </div>
-        {/* Dropdown for Contract Address */}
         <div className="mb-4">
           <select
             className="intro-x form-control py-3 px-4 block w-full mb-3"
