@@ -116,45 +116,40 @@ const project: EthereumProject = {
         file: "./dist/governor.js",
         handlers: [
           {
-            handler: "handleDonatedAbiLog",
+            handler: "handleProposalCanceledAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
-              topics: ["Donated(address,address,uint256,uint8)"],
+              topics: ["ProposalCanceled(uint256)"],
             },
           },
           {
-            handler: "handleOwnershipTransferredAbiLog",
+            handler: "handleProposalCreatedAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
-              topics: ["OwnershipTransferred(address,address)"],
+              topics: [
+                "ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)",
+              ],
             },
           },
           {
-            handler: "handlePointsAddedAbiLog",
+            handler: "handleProposalExecutedAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
-              topics: ["PointsAdded(address,uint256)"],
+              topics: ["ProposalExecuted(uint256)"],
             },
           },
           {
-            handler: "handlePointsRedeemedAbiLog",
+            handler: "handleProposalQueuedAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
-              topics: ["PointsRedeemed(address,uint256)"],
+              topics: ["ProposalQueued(uint256,uint256)"],
             },
           },
           {
-            handler: "handleSetOracleAbiLog",
+            handler: "handleProposalThresholdSetAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
-              topics: ["SetOracle(address,address)"],
-            },
-          },
-          {
-            handler: "handleCharityAddedAbiLog",
-            kind: EthereumHandlerKind.Event,
-            filter: {
-              topics: ["CharityAdded(uint8,address)"],
+              topics: ["ProposalThresholdSet(uint256,uint256)"],
             },
           },
         ],
