@@ -6,15 +6,17 @@ const GET_PROPOSALS = gql`
   query MyQuery($first: Int!, $offset: Int!) {
     proposalCreateds(orderBy: POINTS_DESC, first: $first, offset: $offset) {
       nodes {
-        id
         contractAddress
         proposalId
         proposer
-        voteStart
-        voteEnd
-        description
+        signatures
         state
         targets
+        voteEnd
+        voteStart
+        description
+        id
+        calldatas
       }
       totalCount
     }
