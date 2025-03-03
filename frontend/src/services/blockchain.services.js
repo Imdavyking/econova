@@ -353,10 +353,7 @@ export async function daoPropose({
       [targetAddress],
       [0],
       [encodedFunctionCall],
-      PROPOSAL_DESCRIPTION,
-      {
-        gasLimit: 500000,
-      }
+      PROPOSAL_DESCRIPTION
     );
     await tx.wait(1);
     return `proposed ${PROPOSAL_DESCRIPTION}`;
