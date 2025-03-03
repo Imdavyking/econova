@@ -368,7 +368,6 @@ export async function daoPropose({
 
 export async function daoVote({ proposalId, voteWay, reason = "" }) {
   try {
-    console.log({ proposalId, voteWay, reason });
     const governor = await getGovernorContract();
     const tx = await governor.castVoteWithReason(proposalId, voteWay, reason);
     await tx.wait(1);
