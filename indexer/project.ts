@@ -104,6 +104,62 @@ const project: EthereumProject = {
         ],
       },
     },
+    {
+      kind: EthereumDatasourceKind.Runtime,
+      startBlock: +process.env.BLOCK_NUMBER!,
+      options: {
+        abi: "Abi",
+        address: process.env.GOVERNOR_CONTRACT_ADDRESS!,
+      },
+      assets: new Map([["Abi", { file: "./abis/governor.json" }]]),
+      mapping: {
+        file: "./dist/governor.js",
+        handlers: [
+          {
+            handler: "handleDonatedAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["Donated(address,address,uint256,uint8)"],
+            },
+          },
+          {
+            handler: "handleOwnershipTransferredAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["OwnershipTransferred(address,address)"],
+            },
+          },
+          {
+            handler: "handlePointsAddedAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["PointsAdded(address,uint256)"],
+            },
+          },
+          {
+            handler: "handlePointsRedeemedAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["PointsRedeemed(address,uint256)"],
+            },
+          },
+          {
+            handler: "handleSetOracleAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["SetOracle(address,address)"],
+            },
+          },
+          {
+            handler: "handleCharityAddedAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["CharityAdded(uint8,address)"],
+            },
+          },
+        ],
+      },
+    },
   ],
   repository: "https://github.com/Imdavyking/econova",
 };

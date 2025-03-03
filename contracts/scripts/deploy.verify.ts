@@ -131,6 +131,7 @@ async function main() {
     updateEnv(ecoCourseNFTAddress, "frontend", "VITE_NFT_COURSE_CONTRACT_ADDRESS")
     updateEnv(ecoNovaGovernorAddress, "frontend", "VITE_ECONOVA_GOVERNOR_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
+    updateEnv(ecoNovaGovernorAddress, "indexer", "GOVERNOR_CONTRACT_ADDRESS")
     updateEnv(ecoAddress, "backend", "CONTRACT_ADDRESS")
 
     /** block number */
@@ -161,6 +162,7 @@ async function main() {
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
     copyABI("EcoNovaToken", "frontend/src/assets/json", "erc20")
     copyABI("EcoNovaManager", "indexer/abis", null)
+    copyABI("EcoNovaGovernor", "indexer/abis", "governor")
 
     if (localHardhat.includes(chainId)) return
 

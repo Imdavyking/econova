@@ -49,3 +49,48 @@ type CharityAdded @entity {
   blockHeight: BigInt!
   contractAddress: String!
 }
+
+type ProposalCreated @entity {
+  id: ID!
+  proposalId: BigInt!
+  proposer: String!
+  targets: [String!]!
+  values: [BigInt!]!
+  signatures: [String!]!
+  calldatas: [String!]!
+  voteStart: BigInt!
+  voteEnd: BigInt!
+  description: String!
+  blockHeight: BigInt!
+  contractAddress: String!
+}
+
+type ProposalCanceled @entity {
+  id: ID!
+  proposalId: BigInt!
+  blockHeight: BigInt!
+  contractAddress: String!
+}
+
+type ProposalExecuted @entity {
+  id: ID!
+  proposalId: BigInt!
+  blockHeight: BigInt!
+  contractAddress: String!
+}
+
+type ProposalQueued @entity {
+  id: ID!
+  proposalId: BigInt!
+  etaSeconds: BigInt!
+  blockHeight: BigInt!
+  contractAddress: String!
+}
+
+type ProposalThresholdSet @entity {
+  id: ID!
+  oldProposalThreshold: BigInt!
+  newProposalThreshold: BigInt!
+  blockHeight: BigInt!
+  contractAddress: String!
+}
