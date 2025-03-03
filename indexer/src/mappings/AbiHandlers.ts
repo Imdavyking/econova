@@ -89,6 +89,16 @@ export async function handleProposalQueuedAbiLog(
 
   proposal.state = BigInt(ProposalState.Queued);
   await proposal.save();
+
+  const transaction = ProposalQueued.create({
+    id: log.transactionHash,
+    blockHeight: BigInt(log.blockNumber),
+    proposalId: log.args.proposalId.toBigInt(),
+    etaSeconds: log.args.etaSeconds.toBigInt(),
+    contractAddress: log.address,
+  });
+
+  await transaction.save();
 }
 
 export async function handleProposalCreatedAbiLog(
