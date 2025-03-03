@@ -107,6 +107,24 @@ export const getBlockNumber = async () => {
   }
 };
 
+function parseContractError(error, contractInterface) {
+  if (!error || !error.data || !contractInterface) return null;
+
+  try {
+    const hasErrorInfo = contractInterface.fragments.find((fragment) =>
+      error.data.startsWith(fragment.selector)
+    );
+
+    if (hasErrorInfo) {
+      return contractInterface.parseError(error.data);
+    }
+  } catch (err) {
+    console.error("Error parsing contract error:", err);
+  }
+
+  return null;
+}
+
 export const getSigner = async () => {
   const provider = new BrowserProvider(window.ethereum);
   await provider.send("eth_requestAccounts", []);
@@ -314,8 +332,11 @@ export async function daoDelegate({ tokenAddress }) {
     await tx.wait(1);
     return `delegated governance of ${tokenAddress} to ${signer.address}`;
   } catch (error) {
+    const errorInfo = parseContractError(error, erc20AbiInterface);
     console.log("❌ Error during delegation:", error);
-    return `${FAILED_KEY} to delegate governance of ${tokenAddress}`;
+    return `${FAILED_KEY} to delegate governance of ${tokenAddress}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 }
 
@@ -338,38 +359,27 @@ export async function daoPropose({
     await tx.wait(1);
     return `proposed ${PROPOSAL_DESCRIPTION}`;
   } catch (error) {
-    const hasErrorInfo = governorAbiInterface.fragments.find((fragment) => {
-      if (!error.data.startsWith(fragment.selector)) return false;
-      return true;
-    });
+    const errorInfo = parseContractError(error, governorAbiInterface);
 
-    if (hasErrorInfo) {
-      const data = governorAbiInterface.decodeErrorResult(error.data);
-      console.log(`Error: ${data}`);
-    }
-
-    return `${FAILED_KEY} to propose ${PROPOSAL_DESCRIPTION}`;
+    return `${FAILED_KEY} to propose ${PROPOSAL_DESCRIPTION}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 }
 
 export async function daoVote({ proposalId, voteWay, reason = "" }) {
   try {
+    console.log({ proposalId, voteWay, reason });
     const governor = await getGovernorContract();
     const tx = await governor.castVoteWithReason(proposalId, voteWay, reason);
     await tx.wait(1);
     return `voted ${voteWay} on proposal ${proposalId}`;
   } catch (error) {
-    const hasErrorInfo = governorAbiInterface.fragments.find((fragment) => {
-      if (!error.data.startsWith(fragment.selector)) return false;
-      return true;
-    });
+    const errorInfo = parseContractError(error, governorAbiInterface);
 
-    if (hasErrorInfo) {
-      const data = governorAbiInterface.decodeErrorResult(error.data);
-      console.log(`Error: ${data}`);
-    }
-
-    return `${FAILED_KEY} to vote ${voteWay} on proposal ${proposalId}`;
+    return `${FAILED_KEY} to vote ${voteWay} on proposal ${proposalId}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 }
 
@@ -419,7 +429,10 @@ export const wrapSonicService = async ({ amount }) => {
 
     return `wrapped ${amount} ${CHAIN_SYMBOL}`;
   } catch (error) {
-    return `${FAILED_KEY} to wrap ${amount} ${CHAIN_SYMBOL} ${error.message}`;
+    const errorInfo = parseContractError(error, iWrappedSonicAbiInterface);
+    return `${FAILED_KEY} to wrap ${amount} ${CHAIN_SYMBOL} ${error.message}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 };
 
@@ -431,7 +444,10 @@ export const unwrapSonicService = async ({ amount }) => {
 
     return `unwrapped ${amount} wrapped ${CHAIN_SYMBOL}`;
   } catch (error) {
-    return `${FAILED_KEY} to unwrap ${amount} ${CHAIN_SYMBOL} ${error.message}`;
+    const errorInfo = parseContractError(error, iWrappedSonicAbiInterface);
+    return `${FAILED_KEY} to unwrap ${amount} ${CHAIN_SYMBOL} ${
+      error.message
+    }: ${errorInfo ? errorInfo.name : error.message}`;
   }
 };
 
@@ -469,7 +485,10 @@ export const saveHealthyBMIProofService = async ({
     return `BMI is healthy, keep up the good work`;
   } catch (error) {
     console.log(`Error: ${error.message}`);
-    return `${FAILED_KEY} : ${BMI_ADVICE}`;
+    const errorInfo = parseContractError(error, managerAbiInterface);
+    return `${FAILED_KEY} : ${BMI_ADVICE}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 };
 
@@ -507,7 +526,10 @@ export const donateToFoundationService = async ({
     )}`;
   } catch (error) {
     console.log(error);
-    return `${FAILED_KEY} to donate ${realAmount} USD`;
+    const errorInfo = parseContractError(error, managerAbiInterface);
+    return `${FAILED_KEY} to donate ${realAmount} USD : ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 };
 
@@ -517,7 +539,10 @@ export const getCharityCategoryAddressService = async ({ charityCatogory }) => {
     const charityAddress = await manager.charityOrganizations(charityCatogory);
     return `${charityAddress}`;
   } catch (error) {
-    return `${FAILED_KEY} to get ${charityCatogory} address`;
+    const errorInfo = parseContractError(error, managerAbiInterface);
+    return `${FAILED_KEY} to get ${charityCatogory} address: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 };
 
@@ -553,7 +578,10 @@ export const sendERC20TokenService = async ({
 
     return `sent ${amount} ${tokenAddress} to ${recipientAddress}`;
   } catch (error) {
-    return `${FAILED_KEY} to send ${amount} ${tokenAddress} to ${recipientAddress}`;
+    const errorInfo = parseContractError(error, erc20AbiInterface);
+    return `${FAILED_KEY} to send ${amount} ${tokenAddress} to ${recipientAddress}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 };
 
@@ -571,7 +599,10 @@ export const deployTokenService = async ({ name, symbol, initialSupply }) => {
     const tokenAddress = logs.args.at(0);
     return `deployed ${name} token at ${tokenAddress}`;
   } catch (error) {
-    return `${FAILED_KEY} to deploy ${name} token`;
+    const errorInfo = parseContractError(error, managerAbiInterface);
+    return `${FAILED_KEY} to deploy ${name} token: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 };
 
@@ -643,6 +674,7 @@ export const getPythPriceFeed = async () => {
     const [price, exp] = await manager.getPricePyth();
     return [price, exp];
   } catch (error) {
+    const _ = parseContractError(error, managerAbiInterface);
     console.log(error);
     throw error;
   }
@@ -829,7 +861,10 @@ export const redeemPointsService = async ({ points }) => {
     await tx.wait(1);
     return `redeemed ${points} points`;
   } catch (error) {
-    return `${FAILED_KEY} to redeem ${points} points`;
+    const errorInfo = parseContractError(error, managerAbiInterface);
+    return `${FAILED_KEY} to redeem ${points} points: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 };
 
@@ -869,9 +904,12 @@ export const addPointsFromTwitterService = async ({
     return `claimed ${points * POINT_BASIS} points for tweet ${tweetId}`;
   } catch (error) {
     console.log(error.message);
+    const errorInfo = parseContractError(error, managerAbiInterface);
     return `${FAILED_KEY} to claim ${
       points * POINT_BASIS
-    } points for tweet ${tweetId}`;
+    } points for tweet ${tweetId}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
   }
 };
 
