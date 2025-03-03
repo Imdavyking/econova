@@ -4,13 +4,17 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 // GraphQL Query
 const GET_PROPOSALS = gql`
   query MyQuery($first: Int!, $offset: Int!) {
-    proposalCreated(orderBy: POINTS_DESC, first: $first, offset: $offset) {
+    proposalCreateds(orderBy: POINTS_DESC, first: $first, offset: $offset) {
       nodes {
         id
         contractAddress
-        points
-        updatedTimeStamp
-        user
+        proposalId
+        proposer
+        voteStart
+        voteEnd
+        description
+        state
+        targets
       }
       totalCount
     }
@@ -26,6 +30,14 @@ export default function DAO() {
     variables: { first: pageSize, offset },
     pollInterval: 5000,
   });
+
+  if (!loading) {
+    console.log(data);
+  }
+
+  if (error) {
+    console.log(`Error! ${error.message}`);
+  }
 
   const totalPages = Math.ceil(
     (data?.pointsAddeds?.totalCount || 0) / pageSize
