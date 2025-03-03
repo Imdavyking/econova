@@ -169,7 +169,7 @@ export default function DAOProposalForm() {
       <a href="/" className="-intro-x flex items-center pt-5">
         <img alt="EcoNova" className="w-10" src={logoUrl} />
         <span className="text-white text-lg ml-3">
-          {APP_NAME} Create Proposal{" "}
+          {APP_NAME} Create Proposal
         </span>
       </a>
 
