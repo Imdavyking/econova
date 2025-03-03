@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
+import Proposal from "./proposal";
 
 const GET_PROPOSALS = gql`
   query MyQuery($first: Int!, $offset: Int!) {
@@ -69,17 +70,8 @@ export default function DAO() {
       )}
 
       <div className="space-y-4">
-        {data?.proposalCreateds?.nodes?.map((proposal) => (
-          <div
-            key={proposal.id}
-            className="p-4 bg-gray-800 rounded-lg shadow-md"
-          >
-            <h2 className="text-lg font-semibold">{proposal.description}</h2>
-            <p className="text-sm text-gray-400">
-              Proposed by: {proposal.proposer}
-            </p>
-            <p className="text-sm text-gray-400">State: {proposal.state}</p>
-          </div>
+        {data?.proposalCreateds?.nodes?.map((proposal, index) => (
+          <Proposal key={index} proposal={proposal} />
         ))}
       </div>
 
