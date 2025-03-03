@@ -163,7 +163,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 z-50">
           <div className="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
             <h2 className="text-lg font-semibold mb-2">Proposal Details</h2>
             <p className="text-sm text-gray-300 mb-2 break-words">
