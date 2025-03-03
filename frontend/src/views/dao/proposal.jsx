@@ -12,46 +12,43 @@ const ProposalState = {
   7: "Executed",
 };
 
-export default function Proposal({ proposal, currentBlock, blockTime = 0.5 }) {
+export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   if (!proposal) return null;
 
   const { id, description, proposer, state, voteEnd } = proposal;
 
-  const estimatedEndTime =
-    Math.floor(Date.now() / 1000) + (voteEnd - currentBlock) * blockTime;
-  const [timeLeft, setTimeLeft] = useState(() =>
-    calculateTimeLeft(estimatedEndTime)
-  );
-
-  function calculateTimeLeft(endTimestamp) {
+  const calculateTimeLeft = () => {
+    const estimatedEndTime =
+      Math.floor(Date.now() / 1000) + (voteEnd - currentBlock) * blockTime;
     const now = Math.floor(Date.now() / 1000);
-    return endTimestamp > now ? endTimestamp - now : 0;
-  }
+    return estimatedEndTime > now ? estimatedEndTime - now : 0;
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft(estimatedEndTime));
-    }, 1000);
+    const updateTimer = () => setTimeLeft(calculateTimeLeft());
 
-    return () => clearInterval(timer); // Cleanup interval on unmount
-  }, [estimatedEndTime]);
+    updateTimer(); // Update immediately on mount
+    const timer = setInterval(updateTimer, 1000);
 
-  function formatTime(seconds) {
+    return () => clearInterval(timer);
+  }, [currentBlock, voteEnd, blockTime]);
+
+  const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
+    const secs = Math.floor(seconds % 60);
     return `${hours}h ${minutes}m ${secs}s`;
-  }
+  };
 
   return (
     <div className="p-4 bg-gray-800 rounded-lg shadow-md">
       <h2 className="text-lg font-semibold">{description}</h2>
       <p className="text-sm text-gray-400">Proposed by: {proposer}</p>
-      {timeLeft > 0 && (
-        <p className="text-sm text-gray-400">
-          State: {ProposalState[state] || "Unknown"}
-        </p>
-      )}
+      <p className="text-sm text-gray-400">
+        State: {ProposalState[state] || "Unknown"}
+      </p>
       {timeLeft > 0 ? (
         <p className="text-sm text-green-400">
           Time Left: {formatTime(timeLeft)}
