@@ -218,7 +218,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         <button
           disabled={isQueueing}
           onClick={handleQueue}
-          className="mt-4 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 transition"
+          className="flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 transition"
         >
           {isQueueing ? (
             <FaSpinner className="w-4 h-4 animate-spin" />
@@ -233,7 +233,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         <button
           disabled={isExecuting}
           onClick={handleExecute}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition"
+          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition"
         >
           {isExecuting ? (
             <FaSpinner className="w-4 h-4 animate-spin" />
@@ -260,6 +260,9 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
             </p>
             <p className="text-sm text-gray-300 mb-2">
               State: {ProposalState[proposalState] || "Unknown"}
+            </p>
+            <p className="text-sm text-gray-300 mb-2">
+              Targets: {targets.join(", ")}
             </p>
             <p className="text-sm text-gray-300">
               Time Left: {formatTime(timeLeft)}
