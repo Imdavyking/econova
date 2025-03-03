@@ -16,7 +16,7 @@ export default function Proposal({ proposal }) {
   if (!proposal) return null; // Prevent rendering if proposal is undefined
 
   const { id, description, proposer, state } = proposal;
-  const endTime = Date.now() +0;
+  const endTime = (Date.now() + 60000) / 1000;
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   function calculateTimeLeft() {
@@ -36,7 +36,7 @@ export default function Proposal({ proposal }) {
   function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
+    const secs = Math.floor(seconds % 60);
     return `${hours}h ${minutes}m ${secs}s`;
   }
 
