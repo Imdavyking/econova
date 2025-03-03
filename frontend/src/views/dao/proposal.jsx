@@ -188,22 +188,22 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
           <FaEye size={20} />
         </button>
       </div>
-      <p className="text-sm text-gray-400">Proposed by: {proposer}</p>
-      {
-        <p className="text-sm text-gray-400">
-          State: {ProposalState[proposalState] || "Unknown"}
-        </p>
-      }
+      <p className="text-sm text-gray-400 mb-2">Proposed by: {proposer}</p>
+      <p className="text-sm text-gray-400 mb-2">
+        State: {ProposalState[proposalState] || "Unknown"}
+      </p>
+
       {timeLeft > 0 && (
-        <p className="text-sm text-green-400">
+        <p className="text-sm text-green-400 mb-4">
           Time Left: {formatTime(timeLeft)}
         </p>
       )}
+
       {proposalState.toString() === "1" && (
         <div className="mt-4 flex space-x-4">
           <button
             disabled={isVotingFor}
-            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition"
+            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition disabled:opacity-50"
             onClick={() => handleVote(1)}
           >
             {isVotingFor ? (
@@ -215,7 +215,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
           </button>
           <button
             disabled={isVotingAgainst}
-            className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition"
+            className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition disabled:opacity-50"
             onClick={() => handleVote(0)}
           >
             {isVotingAgainst ? (
@@ -232,7 +232,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         <button
           disabled={isQueueing}
           onClick={handleQueue}
-          className="flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 transition"
+          className="mt-4 flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 transition disabled:opacity-50"
         >
           {isQueueing ? (
             <FaSpinner className="w-4 h-4 animate-spin" />
@@ -244,12 +244,12 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
       )}
 
       {proposalState?.toString() === "5" && (
-        <>
+        <div className="mt-4">
           {canExecute ? (
             <button
               disabled={isExecuting}
               onClick={handleExecute}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition"
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition disabled:opacity-50"
             >
               {isExecuting ? (
                 <FaSpinner className="w-4 h-4 animate-spin" />
@@ -270,71 +270,94 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
               Loading execution time...
             </div>
           )}
-        </>
+        </div>
       )}
 
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 z-50">
           <div className="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
-            <h2 className="text-lg font-semibold mb-2">Proposal Details</h2>
-            <p className="text-sm text-gray-300 mb-2 break-words">
-              ID: {proposalId}
-            </p>
-            <p className="text-sm text-gray-300 mb-2 break-words">
-              Description: {description}
-            </p>
-            <p className="text-sm text-gray-300 mb-2 break-words">
-              Proposer: {proposer}
-            </p>
-            <p className="text-sm text-gray-300 mb-2">
-              State: {ProposalState[proposalState] || "Unknown"}
-            </p>
-            <p className="text-sm text-gray-300 mb-2">
-              Targets: {targets.join(", ")}
-            </p>
-            <p className="text-sm text-gray-300">
-              Time Left: {formatTime(timeLeft)}
-            </p>
+            <h2 className="text-lg font-semibold mb-4">Proposal Details</h2>
 
-            {votesFor && (
-              <p className="text-sm text-green-400">Votes For: {votesFor}</p>
-            )}
-            {votesAgainst && (
-              <p className="text-sm text-red-400">
-                Votes Against: {votesAgainst}
+            <div className="space-y-3 text-sm text-gray-300">
+              <p className="break-words">
+                <span className="font-semibold">ID:</span> {proposalId}
               </p>
-            )}
+              <p className="break-words">
+                <span className="font-semibold">Description:</span>{" "}
+                {description}
+              </p>
+              <p>
+                <span className="font-semibold">Proposer:</span> {proposer}
+              </p>
+              <p>
+                <span className="font-semibold">State:</span>{" "}
+                {ProposalState[proposalState] || "Unknown"}
+              </p>
+              <p>
+                <span className="font-semibold">Targets:</span>{" "}
+                {targets.join(", ")}
+              </p>
+              <p>
+                <span className="font-semibold">Time Left:</span>{" "}
+                {formatTime(timeLeft)}
+              </p>
+
+              {/* Votes Section */}
+              <div className="mt-4 space-y-2">
+                {votesFor !== undefined && (
+                  <p className="text-sm text-green-400">
+                    Votes For: {votesFor}{" "}
+                    <span className="text-gray-400">
+                      ({weightVotesFor} weighted)
+                    </span>
+                  </p>
+                )}
+                {votesAgainst !== undefined && (
+                  <p className="text-sm text-red-400">
+                    Votes Against: {votesAgainst}{" "}
+                    <span className="text-gray-400">
+                      ({weightVotesAgainst} weighted)
+                    </span>
+                  </p>
+                )}
+              </div>
+            </div>
 
             {/* Decoded Call Data */}
             {decodedData.length > 0 && (
-              <div className="mt-4">
-                <h3 className="text-md font-semibold text-gray-300 mb-2">
+              <div className="mt-6">
+                <h3 className="text-md font-semibold text-gray-300 mb-3">
                   Decoded Call Data:
                 </h3>
-                {decodedData.map((item, index) => (
-                  <div
-                    key={index}
-                    className="p-2 bg-gray-800 rounded-lg mb-2 text-sm"
-                  >
-                    <p className="text-gray-400">
-                      Function:
-                      <span className="text-white">{item.functionName}</span>
-                    </p>
-                    <p className="text-gray-400">
-                      Params:
-                      <span className="text-white">
+                <div className="space-y-2">
+                  {decodedData.map((item, index) => (
+                    <div
+                      key={index}
+                      className="p-3 bg-gray-800 rounded-lg text-sm"
+                    >
+                      <p className="text-gray-400">
+                        <span className="font-semibold text-white">
+                          Function:
+                        </span>{" "}
+                        {item.functionName}
+                      </p>
+                      <p className="text-gray-400">
+                        <span className="font-semibold text-white">
+                          Params:
+                        </span>{" "}
                         {JSON.stringify(item.params)}
-                      </span>
-                    </p>
-                  </div>
-                ))}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
+            {/* Close Button */}
             <button
               onClick={() => setIsModalOpen(false)}
-              className="mt-4 w-full px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
+              className="mt-6 w-full px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
             >
               Close
             </button>
