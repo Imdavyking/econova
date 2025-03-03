@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaThumbsUp, FaThumbsDown, FaEye, FaSpinner } from "react-icons/fa";
 import {
   charityAbiInterface,
+  daoProposalState,
   daoVote,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
@@ -25,6 +26,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [isVotingAgainst, setIsVotingAgainst] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [decodedData, setDecodedData] = useState([]);
+  const [stateAfterTimeOut, setStateAfterTimeOut] = useState(null);
 
   const {
     id,
@@ -81,9 +83,19 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
+  const getProposalState = async () => {
+    try {
+      if (timeLeft > 0) return state;
+      const currentState = await daoProposalState({ proposalId });
+      setStateAfterTimeOut(currentState);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     const updateTimer = () => setTimeLeft(calculateTimeLeft());
     updateTimer();
+    getProposalState();
+
     const timer = setInterval(updateTimer, 1000);
     return () => clearInterval(timer);
   }, [currentBlock, voteEnd, blockTime]);
@@ -124,15 +136,13 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
       <p className="text-sm text-gray-400">Proposed by: {proposer}</p>
       {timeLeft > 0 && (
         <p className="text-sm text-gray-400">
-          State: {ProposalState[state] || "Unknown"}
+          State: {ProposalState[stateAfterTimeOut ?? state] || "Unknown"}
         </p>
       )}
-      {timeLeft > 0 ? (
+      {timeLeft > 0 && (
         <p className="text-sm text-green-400">
           Time Left: {formatTime(timeLeft)}
         </p>
-      ) : (
-        <p className="text-sm text-red-400">Proposal Expired</p>
       )}
       <div className="mt-4 flex space-x-4">
         <button
@@ -176,7 +186,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
               Proposer: {proposer}
             </p>
             <p className="text-sm text-gray-300 mb-2">
-              State: {ProposalState[state] || "Unknown"}
+              State: {ProposalState[stateAfterTimeOut ?? state] || "Unknown"}
             </p>
             <p className="text-sm text-gray-300">
               Time Left: {formatTime(timeLeft)}
