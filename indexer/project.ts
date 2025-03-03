@@ -113,7 +113,7 @@ const project: EthereumProject = {
       },
       assets: new Map([["Abi", { file: "./abis/governor.json" }]]),
       mapping: {
-        file: "./dist/governor.js",
+        file: "./dist/index.js",
         handlers: [
           {
             handler: "handleProposalCanceledAbiLog",
