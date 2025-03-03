@@ -54,6 +54,23 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [proposalState, setProposalState] = useState(state);
   const [isQueueing, setIsQueueing] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
+  const [timeUntilExecution, setTimeUntilExecution] = useState(0);
+
+  useEffect(() => {
+    if (!etaSecondsQueue) return;
+
+    const updateTimeUntilExecution = () => {
+      const now = Math.floor(Date.now() / 1000);
+      setTimeUntilExecution(Math.max(etaSecondsQueue - now, 0));
+    };
+
+    updateTimeUntilExecution(); // Initial calculation
+    const interval = setInterval(updateTimeUntilExecution, 1000); // Update every second
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [etaSecondsQueue]);
+
+  const canExecute = timeUntilExecution === 0;
 
   const decodeCallData = () => {
     if (!Array.isArray(calldatas) || calldatas.length === 0) return;
@@ -230,9 +247,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         </button>
       )}
 
-      {/* MIN_DELAY - check for this before executing (queuetime + mindelay) */}
-
-      {proposalState?.toString() === "5" && (
+      {canExecute ? (
         <button
           disabled={isExecuting}
           onClick={handleExecute}
@@ -245,6 +260,11 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
           )}
           Execute
         </button>
+      ) : (
+        <div className="text-gray-500 text-sm">
+          Execution available in:{" "}
+          <span className="font-bold">{formatTime(timeUntilExecution)}</span>
+        </div>
       )}
 
       {/* Modal */}
