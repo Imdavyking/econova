@@ -110,7 +110,7 @@ export const getBridgeContract = async (chainIdFrom) => {
 
   return new ethers.Contract(
     DEFAULT_DEBRIDGE_GATE_ADDRESS,
-    debridgeAbi,
+    ethers.Interface(debridgeAbi),
     signer
   );
 };
@@ -127,7 +127,7 @@ const getIWSonicContract = async () => {
   await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(
     WRAPPED_SONIC_CONTRACT_ADDRESS,
-    iWrappedSonicAbi,
+    ethers.Interface(iWrappedSonicAbi),
     signer
   );
 };
@@ -142,7 +142,11 @@ const getMulticall3Contract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
-  return new ethers.Contract(MULTICALL3_CONTRACT_ADDRESS, multicallAbi, signer);
+  return new ethers.Contract(
+    MULTICALL3_CONTRACT_ADDRESS,
+    ethers.Interface(multicallAbi),
+    signer
+  );
 };
 
 const getOFTContract = async (tokenAddress, sourceChainId) => {
@@ -157,7 +161,11 @@ const getOFTContract = async (tokenAddress, sourceChainId) => {
   await switchOrAddChain(signer.provider, sourceChainId);
 
   return {
-    contract: new ethers.Contract(tokenAddress, oftAbi, signer),
+    contract: new ethers.Contract(
+      tokenAddress,
+      ethers.Interface(oftAbi),
+      signer
+    ),
     signer: signer,
   };
 };
@@ -172,7 +180,7 @@ const getERC20Contract = async (address) => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
-  return new ethers.Contract(address, erc20Abi, signer);
+  return new ethers.Contract(address, ethers.Interface(erc20Abi), signer);
 };
 
 const getContract = async () => {
@@ -185,7 +193,7 @@ const getContract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
-  return new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+  return new ethers.Contract(CONTRACT_ADDRESS, ethers.Interface(abi), signer);
 };
 
 const getNFTCourseContract = async () => {
@@ -198,7 +206,11 @@ const getNFTCourseContract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
-  return new ethers.Contract(NFT_COURSE_CONTRACT_ADDRESS, nftCourseAbi, signer);
+  return new ethers.Contract(
+    NFT_COURSE_CONTRACT_ADDRESS,
+    ethers.Interface(nftCourseAbi),
+    signer
+  );
 };
 
 const getGovernorContract = async () => {
@@ -213,7 +225,7 @@ const getGovernorContract = async () => {
   await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(
     ECONOVA_GOVERNOR_CONTRACT_ADDRESS,
-    governorAbi,
+    ethers.Interface(governorAbi),
     signer
   );
 };
