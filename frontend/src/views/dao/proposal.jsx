@@ -147,32 +147,34 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
           Time Left: {formatTime(timeLeft)}
         </p>
       )}
-      <div className="mt-4 flex space-x-4">
-        <button
-          disabled={isVotingFor}
-          className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition"
-          onClick={() => handleVote(1)}
-        >
-          {isVotingFor ? (
-            <FaSpinner className="w-4 h-4 animate-spin" />
-          ) : (
-            <FaThumbsUp className="mr-2" />
-          )}{" "}
-          Vote For
-        </button>
-        <button
-          disabled={isVotingAgainst}
-          className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition"
-          onClick={() => handleVote(0)}
-        >
-          {isVotingAgainst ? (
-            <FaSpinner className="w-4 h-4 animate-spin" />
-          ) : (
-            <FaThumbsDown className="mr-2" />
-          )}{" "}
-          Vote Against
-        </button>
-      </div>
+      {proposalState.toString() === "1" && (
+        <div className="mt-4 flex space-x-4">
+          <button
+            disabled={isVotingFor}
+            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition"
+            onClick={() => handleVote(1)}
+          >
+            {isVotingFor ? (
+              <FaSpinner className="w-4 h-4 animate-spin" />
+            ) : (
+              <FaThumbsUp className="mr-2" />
+            )}{" "}
+            Vote For
+          </button>
+          <button
+            disabled={isVotingAgainst}
+            className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition"
+            onClick={() => handleVote(0)}
+          >
+            {isVotingAgainst ? (
+              <FaSpinner className="w-4 h-4 animate-spin" />
+            ) : (
+              <FaThumbsDown className="mr-2" />
+            )}{" "}
+            Vote Against
+          </button>
+        </div>
+      )}
 
       {/* Modal */}
       {isModalOpen && (
