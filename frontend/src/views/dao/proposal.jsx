@@ -127,7 +127,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
 
     const timer = setInterval(updateTimer, 1000);
     return () => clearInterval(timer);
-  }, [currentBlock, voteEnd, blockTime]);
+  }, [currentBlock, voteEnd, blockTime, isVotingFor, isVotingAgainst]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
