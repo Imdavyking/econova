@@ -379,6 +379,20 @@ export async function daoVote({ proposalId, voteWay, reason = "" }) {
   }
 }
 
+export async function daoProposalState({ proposalId }) {
+  try {
+    const governor = await getGovernorContract();
+    const state = await governor.state(proposalId);
+    return state;
+  } catch (error) {
+    const errorInfo = parseContractError(error, governorAbiInterface);
+
+    return `${FAILED_KEY} to get state on proposal ${proposalId}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
+  }
+}
+
 export async function sendOFTTokens({
   oftTokenAddress,
   recipientAddress,
