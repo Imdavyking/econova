@@ -113,9 +113,12 @@ function parseContractError(error, contractInterface) {
   if (!error || !error.data || !contractInterface) return null;
 
   try {
-    const hasErrorInfo = contractInterface.fragments.find((fragment) =>
-      error.data.startsWith(fragment.selector)
-    );
+    const hasErrorInfo = contractInterface.fragments.find((fragment) => {
+      if (fragment.type !== "error") return false;
+      return error.data.startsWith(fragment.selector);
+    });
+
+    console.log(hasErrorInfo);
 
     if (hasErrorInfo) {
       return contractInterface.parseError(error.data);
@@ -402,6 +405,7 @@ export async function daoQueue({ targets, calldatas, description }) {
 export async function daoExecute({ targets, calldatas, description }) {
   try {
     const governor = await getGovernorContract();
+    console.log({ targets, calldatas, description });
     const tx = await governor.execute(
       targets,
       [0],
@@ -411,6 +415,7 @@ export async function daoExecute({ targets, calldatas, description }) {
     await tx.wait(1);
     return `queued proposal ${description}`;
   } catch (error) {
+    console.log(error.data);
     const errorInfo = parseContractError(error, governorAbiInterface);
 
     return `${FAILED_KEY} to queue proposal ${description}: ${
@@ -859,6 +864,7 @@ export const getTransactionInfo = async ({ txHash }) => {
         );
 
         abiDecoder.fragments.find((fragment) => {
+          if(fragment.type !== "function") return false;
           if (!txInfo.data.startsWith(fragment.selector)) return false;
 
           try {
