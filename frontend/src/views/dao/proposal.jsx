@@ -57,7 +57,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [timeUntilExecution, setTimeUntilExecution] = useState(null);
 
   useEffect(() => {
-    if (!etaSecondsQueue) return;
+    if (!etaSecondsQueue || etaSecondsQueue.toString() === "0") return;
 
     const updateTimeUntilExecution = () => {
       const now = Math.floor(Date.now() / 1000);
