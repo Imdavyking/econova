@@ -13,7 +13,6 @@ import { localHardhat } from "../utils/localhardhat.chainid"
 import { deployCrossChainOFT } from "./econova.token.cross.chain"
 import { crossChainLzInfo, LZ_CHAINS } from "../utils/lzendpoints.help"
 import {
-    ADDRESS_ZERO,
     MIN_DELAY,
     PROPOSAL_THRESHOLD,
     QUORUM_PERCENTAGE,
@@ -116,7 +115,7 @@ async function main() {
 
     const proposerTx = await timeLockDeployer.grantRole(proposerRole, ecoNovaGovernorDeployer)
     await proposerTx.wait(1)
-    const executorTx = await timeLockDeployer.grantRole(executorRole, ADDRESS_ZERO)
+    const executorTx = await timeLockDeployer.grantRole(executorRole, ethers.ZeroAddress)
     await executorTx.wait(1)
     const revokeTx = await timeLockDeployer.revokeRole(adminRole, owner)
     await revokeTx.wait(1)

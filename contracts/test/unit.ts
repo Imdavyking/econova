@@ -10,7 +10,6 @@ import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import {
-    ADDRESS_ZERO,
     ETH_ADDRESS,
     MIN_DELAY,
     PROPOSAL_DESCRIPTION,
@@ -53,6 +52,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   charityCategories.Education,
                   timeLockDeployer
               )
+
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
               const endpointV2Mock = await EndpointV2Mock.deploy(1)
               const groth16Deployer = await Groth16Verifier.deploy()
@@ -89,7 +89,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   ecoNovaGovernorDeployer
               )
               await proposerTx.wait(1)
-              const executorTx = await timeLockDeployer.grantRole(executorRole, ADDRESS_ZERO)
+              const executorTx = await timeLockDeployer.grantRole(executorRole, ethers.ZeroAddress)
               await executorTx.wait(1)
               const revokeTx = await timeLockDeployer.revokeRole(adminRole, owner)
               await revokeTx.wait(1)
