@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaThumbsUp, FaThumbsDown, FaEye, FaSpinner } from "react-icons/fa";
 import {
+  charityAbiInterface,
   daoVote,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
@@ -23,8 +24,44 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [isVotingFor, setIsVotingFor] = useState(false);
   const [isVotingAgainst, setIsVotingAgainst] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [decodedData, setDecodedData] = useState([]);
+  const [votesFor, setVotesFor] = useState(0);
+  const [votesAgainst, setVotesAgainst] = useState(0);
 
-  const { id, description, proposer, state, voteEnd, proposalId } = proposal;
+  const { id, description, proposer, state, voteEnd, proposalId, calldatas } =
+    proposal;
+
+  const decodeCallData = () => {
+    if (!Array.isArray(calldatas) || calldatas.length === 0) return;
+
+    const newDecodedData = [];
+
+    calldatas.forEach((calldata) => {
+      try {
+        charityAbiInterface.fragments.some((fragment) => {
+          if (calldata.startsWith(fragment.selector)) {
+            newDecodedData.push({
+              functionName: fragment.name,
+              params: charityAbiInterface.decodeFunctionData(
+                fragment,
+                calldata
+              ),
+            });
+            return true;
+          }
+          return false;
+        });
+      } catch (error) {
+        console.error("Decoding error:", error);
+      }
+    });
+
+    setDecodedData(newDecodedData);
+  };
+
+  useEffect(() => {
+    decodeCallData();
+  }, [calldatas]);
 
   const calculateTimeLeft = () => {
     const estimatedEndTime =
@@ -117,20 +154,56 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-96">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
             <h2 className="text-lg font-semibold mb-2">Proposal Details</h2>
-            <p className="text-sm text-gray-300 mb-2">ID: {proposalId}</p>
-            <p className="text-sm text-gray-300 mb-2">
+            <p className="text-sm text-gray-300 mb-2 break-words">
+              ID: {proposalId}
+            </p>
+            <p className="text-sm text-gray-300 mb-2 break-words">
               Description: {description}
             </p>
-            <p className="text-sm text-gray-300 mb-2">Proposer: {proposer}</p>
+            <p className="text-sm text-gray-300 mb-2 break-words">
+              Proposer: {proposer}
+            </p>
             <p className="text-sm text-gray-300 mb-2">
               State: {ProposalState[state] || "Unknown"}
             </p>
             <p className="text-sm text-gray-300">
               Time Left: {formatTime(timeLeft)}
             </p>
+
+            <p className="text-sm text-green-400">Votes For: {votesFor}</p>
+            <p className="text-sm text-red-400">
+              Votes Against: {votesAgainst}
+            </p>
+
+            {/* Decoded Call Data */}
+            {decodedData.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-md font-semibold text-gray-300 mb-2">
+                  Decoded Call Data:
+                </h3>
+                {decodedData.map((item, index) => (
+                  <div
+                    key={index}
+                    className="p-2 bg-gray-800 rounded-lg mb-2 text-sm"
+                  >
+                    <p className="text-gray-400">
+                      Function:{" "}
+                      <span className="text-white">{item.functionName}</span>
+                    </p>
+                    <p className="text-gray-400">
+                      Params:{" "}
+                      <span className="text-white">
+                        {JSON.stringify(item.params)}
+                      </span>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <button
               onClick={() => setIsModalOpen(false)}
               className="mt-4 w-full px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"

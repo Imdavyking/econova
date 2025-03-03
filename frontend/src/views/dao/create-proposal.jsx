@@ -7,6 +7,7 @@ import charityAbi from "@/assets/json/charity.json";
 import { charityCategories } from "../../utils/charity.categories";
 import logoUrl from "@/assets/images/logo.png";
 import {
+  charityAbiInterface,
   daoDelegate,
   daoPropose,
   getCharityCategoryAddressService,
@@ -17,7 +18,6 @@ import { ellipsify } from "../../utils/ellipsify";
 import { APP_NAME } from "../../utils/constants";
 
 export default function DAOProposalForm() {
-  const charityInterface = new ethers.Interface(charityAbi);
   const [description, setDescription] = useState("");
   const [contractAddress, setContractAddress] = useState("");
   const [contractSignature, setContractSignature] = useState("");
@@ -131,7 +131,7 @@ export default function DAOProposalForm() {
         return toast.error("Invalid function signature.");
       }
 
-      const encodedFunctionCall = charityInterface.encodeFunctionData(
+      const encodedFunctionCall = charityAbiInterface.encodeFunctionData(
         contractSignature,
         Object.values(inputValues)
       );

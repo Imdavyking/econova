@@ -4,6 +4,7 @@ import erc20Abi from "@/assets/json/erc20.json";
 import governorAbi from "@/assets/json/governor.json";
 import oftAbi from "@/assets/json/oft.json";
 import nftCourseAbi from "@/assets/json/course-nft.json";
+import charityAbi from "@/assets/json/charity.json";
 import iWrappedSonicAbi from "@/assets/json/iwrapped-sonic.json";
 import multicallAbi from "@/assets/json/multicall3.json";
 import { BrowserProvider, ethers } from "ethers";
@@ -38,6 +39,7 @@ export const erc20AbiInterface = new ethers.Interface(erc20Abi);
 const managerAbiInterface = new ethers.Interface(managerAbi);
 const iWrappedSonicAbiInterface = new ethers.Interface(iWrappedSonicAbi);
 const multicallAbiInterface = new ethers.Interface(multicallAbi);
+export const charityAbiInterface = new ethers.Interface(charityAbi);
 const debridgeAbiInterface = new ethers.Interface([
   "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
   "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
