@@ -360,7 +360,7 @@ export async function daoPropose({
   } catch (error) {
     const errorInfo = parseContractError(error, governorAbiInterface);
 
-    return `${FAILED_KEY} to propose ${PROPOSAL_DESCRIPTION}: ${
+    return `${FAILED_KEY} to propose: ${
       errorInfo ? errorInfo.name : error.message
     }`;
   }
