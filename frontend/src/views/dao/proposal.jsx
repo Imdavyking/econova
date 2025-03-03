@@ -25,11 +25,20 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [isVotingAgainst, setIsVotingAgainst] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [decodedData, setDecodedData] = useState([]);
-  const [votesFor, setVotesFor] = useState(0);
-  const [votesAgainst, setVotesAgainst] = useState(0);
 
-  const { id, description, proposer, state, voteEnd, proposalId, calldatas } =
-    proposal;
+  const {
+    id,
+    description,
+    proposer,
+    state,
+    voteEnd,
+    proposalId,
+    calldatas,
+    votesFor,
+    votesAgainst,
+    weightVotesFor,
+    weightVotesAgainst,
+  } = proposal;
 
   const decodeCallData = () => {
     if (!Array.isArray(calldatas) || calldatas.length === 0) return;
