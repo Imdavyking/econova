@@ -134,11 +134,11 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         </button>
       </div>
       <p className="text-sm text-gray-400">Proposed by: {proposer}</p>
-      {timeLeft > 0 && (
+      {
         <p className="text-sm text-gray-400">
           State: {ProposalState[stateAfterTimeOut ?? state] || "Unknown"}
         </p>
-      )}
+      }
       {timeLeft > 0 && (
         <p className="text-sm text-green-400">
           Time Left: {formatTime(timeLeft)}
