@@ -9,7 +9,6 @@ const GET_PROPOSALS = gql`
         contractAddress
         proposalId
         proposer
-        signatures
         state
         targets
         voteEnd
