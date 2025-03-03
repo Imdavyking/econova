@@ -1,264 +1,65 @@
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { ethers } from "ethers";
+import { gql, useQuery } from "@apollo/client";
+import { useSearchParams } from "react-router-dom";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-import { FaSpinner } from "react-icons/fa";
-import charityAbi from "@/assets/json/charity.json";
-import { charityCategories } from "../../utils/charity.categories";
-import logoUrl from "@/assets/images/logo.png";
-import {
-  daoDelegate,
-  daoPropose,
-  getCharityCategoryAddressService,
-  getProjectTokenDetails,
-  rethrowFailedResponse,
-} from "../../services/blockchain.services";
-import { ellipsify } from "../../utils/ellipsify";
-import { APP_NAME } from "../../utils/constants";
-
-export default function DAOProposalForm() {
-  const charityInterface = new ethers.Interface(charityAbi);
-  const [description, setDescription] = useState("");
-  const [contractAddress, setContractAddress] = useState("");
-  const [contractSignature, setContractSignature] = useState("");
-  const [ethValue, setEthValue] = useState("");
-  const [signatures, setSignatures] = useState([]);
-  const [inputs, setInputs] = useState([]);
-  const [inputValues, setInputValues] = useState({});
-  const [charityAddresses, setCharityAddresses] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const extractSignatures = () => {
-    try {
-      const functionSignatures = charityAbi
-        .filter(
-          (item) =>
-            item.type === "function" && item.stateMutability === "nonpayable"
-        )
-        .map((item) => ({
-          name: item.name,
-          inputs: item.inputs,
-        }));
-      setSignatures(functionSignatures);
-      setContractSignature("");
-      setInputs([]);
-      setInputValues({});
-    } catch (error) {
-      console.error(error);
-      toast.error("Invalid ABI JSON");
+// GraphQL Query
+const GET_PROPOSALS = gql`
+  query MyQuery($first: Int!, $offset: Int!) {
+    proposalCreated(orderBy: POINTS_DESC, first: $first, offset: $offset) {
+      nodes {
+        id
+        contractAddress
+        points
+        updatedTimeStamp
+        user
+      }
+      totalCount
     }
-  };
+  }
+`;
+export default function DAO() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page")) || 1;
+  const pageSize = 10;
+  const offset = (page - 1) * pageSize;
+  const { loading, error, data } = useQuery(GET_PROPOSALS, {
+    fetchPolicy: "cache-and-network",
+    variables: { first: pageSize, offset },
+    pollInterval: 5000,
+  });
 
-  useEffect(() => {
-    extractSignatures();
+  const totalPages = Math.ceil(
+    (data?.pointsAddeds?.totalCount || 0) / pageSize
+  );
 
-    const getCharityCategoryWithAddress = async () => {
-      try {
-        const charityCategoryWithAddress = await Promise.all(
-          Object.entries(charityCategories).map(
-            async ([categoryName, index]) => {
-              const address = await getCharityCategoryAddressService({
-                charityCatogory: index,
-              });
-              return { categoryName, index, address };
-            }
-          )
-        );
-
-        setCharityAddresses(charityCategoryWithAddress);
-        if (charityCategoryWithAddress.length > 0) {
-          setContractAddress(charityCategoryWithAddress[0].address); // Set default
-        }
-      } catch (error) {
-        console.error("Error fetching charity category addresses:", error);
-        setCharityAddresses([]);
-      }
-    };
-
-    getCharityCategoryWithAddress();
-  }, []);
-
-  const handleSignatureChange = (signature) => {
-    setContractSignature(signature);
-    const selectedFunction = signatures.find((sig) => sig.name === signature);
-    setInputs(selectedFunction ? selectedFunction.inputs : []);
-    setInputValues(
-      selectedFunction
-        ? Object.fromEntries(
-            selectedFunction.inputs.map((input) => [input.name, ""])
-          )
-        : {}
-    );
-  };
-
-  const handleInputChange = (name, value) => {
-    setInputValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-  };
-
-  const sendProposal = async (e) => {
-    e.preventDefault();
-
-    try {
-      setLoading(true);
-
-      if (!description) {
-        return toast.error("Description must be provided.");
-      }
-
-      if (!contractAddress) {
-        return toast.error("Contract address must be selected.");
-      }
-
-      if (!contractSignature) {
-        return toast.error("Contract signature must be selected.");
-      }
-
-      const functionAbi = signatures.find(
-        (sig) => sig.name === contractSignature
-      );
-      if (!functionAbi) {
-        return toast.error("Invalid function signature.");
-      }
-
-      const encodedFunctionCall = charityInterface.encodeFunctionData(
-        contractSignature,
-        Object.values(inputValues)
-      );
-
-      const { tokenAddress } = await getProjectTokenDetails();
-
-      const delegateResponse = await daoDelegate({
-        tokenAddress,
-      });
-
-      rethrowFailedResponse(delegateResponse);
-
-      const proposeResponse = await daoPropose({
-        targetAddress: contractAddress,
-        encodedFunctionCall,
-        PROPOSAL_DESCRIPTION: description,
-      });
-
-      rethrowFailedResponse(proposeResponse);
-
-      console.log("Encoded function call:", encodedFunctionCall);
-
-      toast.success("Proposal submitted successfully!");
-    } catch (error) {
-      console.error(error);
-      toast.error(`Error submitting proposal. ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
+  const goToPage = (newPage) => {
+    setSearchParams({ page: newPage.toString() });
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <>
+      {" "}
       <DarkModeSwitcher />
-      <h2 className="text-3xl font-bold text-white mb-4 ">
-        <a href="/" className="flex items-center space-x-3">
-          <img alt={APP_NAME} className="w-10" src={logoUrl} />
-          <span className="text-lg">{APP_NAME} AI Audit</span>
-        </a>
-      </h2>
-      <div className="w-full max-w-2xl p-6 shadow-lg bg-white rounded-2xl">
-        <div className="mb-4">
-          <label className="block font-medium">Description</label>
-          <textarea
-            className="w-full p-2 border rounded"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Proposal Description"
-          />
-        </div>
+      <div className="flex justify-center space-x-4 mt-4">
+        <button
+          className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+          onClick={() => goToPage(page - 1)}
+          disabled={page <= 1}
+        >
+          Previous
+        </button>
 
-        {/* Dropdown for Contract Address */}
-        <div className="mb-4">
-          <label className="block font-medium">Target Contract Address</label>
-          <select
-            className="w-full p-2 border rounded"
-            value={contractAddress}
-            onChange={(e) => setContractAddress(e.target.value)}
-          >
-            {charityAddresses.length > 0 ? (
-              charityAddresses.map((item, index) => (
-                <option key={index} value={item.address}>
-                  {item.categoryName} - {ellipsify(item.address)}
-                </option>
-              ))
-            ) : (
-              <option disabled>No addresses available</option>
-            )}
-          </select>
-        </div>
-
-        {signatures.length > 0 && (
-          <div className="mb-4">
-            <label className="block font-medium">
-              Target Contract Signature
-            </label>
-            <select
-              className="w-full p-2 border rounded"
-              value={contractSignature}
-              onChange={(e) => handleSignatureChange(e.target.value)}
-            >
-              <option value="">Select a function</option>
-              {signatures.map((sig, index) => (
-                <option key={index} value={sig.name}>
-                  {sig.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {inputs.length > 0 && (
-          <div className="mb-4">
-            <label className="block font-medium">Function Inputs</label>
-            {inputs.map((input, index) => (
-              <div key={index} className="mb-2">
-                <label className="block font-medium">
-                  {input.name || `Parameter ${index + 1}`} ({input.type})
-                </label>
-                <input
-                  className="w-full p-2 border rounded"
-                  placeholder={input.type}
-                  value={inputValues[input.name] || ""}
-                  onChange={(e) =>
-                    handleInputChange(input.name, e.target.value)
-                  }
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="mb-4">
-          <label className="block font-medium">ETH Value</label>
-          <input
-            className="w-full p-2 border rounded"
-            type="number"
-            value={ethValue}
-            onChange={(e) => setEthValue(e.target.value)}
-            placeholder="0.0"
-          />
-        </div>
+        <span className="text-white">
+          Page {page} of {totalPages}
+        </span>
 
         <button
-          className="w-full px-4 py-2 bg-green-500 text-white rounded flex justify-center items-center"
-          onClick={sendProposal}
-          disabled={loading}
+          className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+          onClick={() => goToPage(page + 1)}
+          disabled={page >= totalPages}
         >
-          {loading ? (
-            <FaSpinner className="animate-spin mr-2" />
-          ) : (
-            "Submit Proposal"
-          )}
+          Next
         </button>
       </div>
-    </div>
+    </>
   );
 }
