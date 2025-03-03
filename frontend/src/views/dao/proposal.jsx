@@ -115,10 +115,6 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
 
   const getProposalState = async () => {
     try {
-      if (timeLeft > 0) {
-        setProposalState(state);
-        return;
-      }
       const currentState = await daoProposalState({ proposalId });
       setProposalState(currentState);
     } catch (error) {}
