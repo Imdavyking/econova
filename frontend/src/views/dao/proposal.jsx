@@ -196,7 +196,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
               <FaSpinner className="w-4 h-4 animate-spin" />
             ) : (
               <FaThumbsUp className="mr-2" />
-            )}{" "}
+            )}
             Vote For
           </button>
           <button
@@ -208,7 +208,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
               <FaSpinner className="w-4 h-4 animate-spin" />
             ) : (
               <FaThumbsDown className="mr-2" />
-            )}{" "}
+            )}
             Vote Against
           </button>
         </div>
@@ -224,10 +224,12 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
             <FaSpinner className="w-4 h-4 animate-spin" />
           ) : (
             <FaClock className="mr-2" />
-          )}{" "}
+          )}
           Queue
         </button>
       )}
+
+      {/* MIN_DELAY - check for this before executing (queuetime + mindelay) */}
 
       {proposalState?.toString() === "5" && (
         <button
@@ -239,7 +241,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
             <FaSpinner className="w-4 h-4 animate-spin" />
           ) : (
             <FaPlay className="mr-2" />
-          )}{" "}
+          )}
           Execute
         </button>
       )}
@@ -289,11 +291,11 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
                     className="p-2 bg-gray-800 rounded-lg mb-2 text-sm"
                   >
                     <p className="text-gray-400">
-                      Function:{" "}
+                      Function:
                       <span className="text-white">{item.functionName}</span>
                     </p>
                     <p className="text-gray-400">
-                      Params:{" "}
+                      Params:
                       <span className="text-white">
                         {JSON.stringify(item.params)}
                       </span>
