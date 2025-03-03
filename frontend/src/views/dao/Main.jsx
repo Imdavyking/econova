@@ -20,6 +20,10 @@ const GET_PROPOSALS = gql`
         description
         id
         calldatas
+        votesFor
+        votesAgainst
+        weightVotesFor
+        weightVotesAgainst
       }
       totalCount
     }
