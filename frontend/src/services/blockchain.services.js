@@ -352,6 +352,27 @@ export async function daoPropose({
   }
 }
 
+export async function daoVote({ proposalId, voteWay, reason = "" }) {
+  try {
+    const governor = await getGovernorContract();
+    const tx = await governor.castVoteWithReason(proposalId, voteWay, reason);
+    await tx.wait(1);
+    return `voted ${voteWay} on proposal ${proposalId}`;
+  } catch (error) {
+    const hasErrorInfo = governorAbiInterface.fragments.find((fragment) => {
+      if (!error.data.startsWith(fragment.selector)) return false;
+      return true;
+    });
+
+    if (hasErrorInfo) {
+      const data = governorAbiInterface.decodeErrorResult(error.data);
+      console.log(`Error: ${data}`);
+    }
+
+    return `${FAILED_KEY} to vote ${voteWay} on proposal ${proposalId}`;
+  }
+}
+
 export async function sendOFTTokens({
   oftTokenAddress,
   recipientAddress,

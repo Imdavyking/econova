@@ -12,7 +12,6 @@ import {
   updateRootAndClaim,
 } from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
-import { AIAgent } from "../../agent";
 import tutorData from "@/assets/json/ai_tutor.json";
 import { callLLMApi } from "../../services/openai.services";
 
