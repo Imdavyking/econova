@@ -13,6 +13,7 @@ import AiAudit from "../views/ai-audit/Main";
 import AiInvestment from "../views/ai-investment/Main";
 import Bridge from "../views/bridge/Main";
 import Dao from "../views/dao/Main";
+import CreateProposal from "../views/dao/create-proposal";
 import NotFound from "../views/not-found/Main";
 import AiTxAnalysis from "../views/ai-tx-analysis/Main";
 import AITutorQuiz from "../views/ai-tutor/quiz";
@@ -80,6 +81,10 @@ function Router() {
     {
       path: "/dao",
       element: <Dao />,
+    },
+    {
+      path: "/dao/create-proposal",
+      element: <CreateProposal />,
     },
     {
       path: "*",

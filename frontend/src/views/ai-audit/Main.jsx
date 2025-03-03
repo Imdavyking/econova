@@ -157,7 +157,7 @@ export default function AiAudit() {
           <span className="text-lg">{APP_NAME} AI Audit</span>
         </a>
       </h2>
-      <div className="w-full max-w-lg bg-gray-800 p-6 rounded-2xl shadow-lg">
+      <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
         {/* Verified Contract Address Input */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">

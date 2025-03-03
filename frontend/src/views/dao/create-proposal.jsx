@@ -156,30 +156,26 @@ export default function DAOProposalForm() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center items-center min-h-screen p-4 flex-col">
       <DarkModeSwitcher />
-      <h2 className="text-3xl font-bold text-white mb-4 ">
-        <a href="/" className="flex items-center space-x-3">
-          <img alt={APP_NAME} className="w-10" src={logoUrl} />
-          <span className="text-lg">{APP_NAME} AI Audit</span>
-        </a>
-      </h2>
-      <div className="w-full max-w-2xl p-6 shadow-lg bg-white rounded-2xl">
+      <a href="/" className="-intro-x flex items-center pt-5">
+        <img alt="EcoNova" className="w-10" src={logoUrl} />
+        <span className="text-white text-lg ml-3">{APP_NAME} DAO Propose </span>
+      </a>
+
+      <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
         <div className="mb-4">
-          <label className="block font-medium">Description</label>
           <textarea
-            className="w-full p-2 border rounded"
+            className="intro-x login__input form-control py-3 px-4 block"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Proposal Description"
           />
         </div>
-
         {/* Dropdown for Contract Address */}
         <div className="mb-4">
-          <label className="block font-medium">Target Contract Address</label>
           <select
-            className="w-full p-2 border rounded"
+            className="intro-x form-control py-3 px-4 block w-full mb-3"
             value={contractAddress}
             onChange={(e) => setContractAddress(e.target.value)}
           >
@@ -194,14 +190,10 @@ export default function DAOProposalForm() {
             )}
           </select>
         </div>
-
         {signatures.length > 0 && (
           <div className="mb-4">
-            <label className="block font-medium">
-              Target Contract Signature
-            </label>
             <select
-              className="w-full p-2 border rounded"
+              className="intro-x form-control py-3 px-4 block w-full mb-3"
               value={contractSignature}
               onChange={(e) => handleSignatureChange(e.target.value)}
             >
@@ -214,18 +206,15 @@ export default function DAOProposalForm() {
             </select>
           </div>
         )}
-
         {inputs.length > 0 && (
           <div className="mb-4">
-            <label className="block font-medium">Function Inputs</label>
             {inputs.map((input, index) => (
               <div key={index} className="mb-2">
-                <label className="block font-medium">
-                  {input.name || `Parameter ${index + 1}`} ({input.type})
-                </label>
                 <input
-                  className="w-full p-2 border rounded"
-                  placeholder={input.type}
+                  className="intro-x login__input form-control py-3 px-4 block"
+                  placeholder={`${input.name || `Parameter ${index + 1}`} (${
+                    input.type
+                  })`}
                   value={inputValues[input.name] || ""}
                   onChange={(e) =>
                     handleInputChange(input.name, e.target.value)
@@ -235,20 +224,17 @@ export default function DAOProposalForm() {
             ))}
           </div>
         )}
-
-        <div className="mb-4">
-          <label className="block font-medium">ETH Value</label>
+        {/* <div className="mb-4">
           <input
-            className="w-full p-2 border rounded"
+            className="intro-x login__input form-control py-3 px-4 block"
             type="number"
             value={ethValue}
             onChange={(e) => setEthValue(e.target.value)}
-            placeholder="0.0"
+            placeholder="0.0ETH"
           />
-        </div>
-
+        </div> */}
         <button
-          className="w-full px-4 py-2 bg-green-500 text-white rounded flex justify-center items-center"
+          className="btn btn-primary py-3 px-4 w-full xl:mr-3 align-top"
           onClick={sendProposal}
           disabled={loading}
         >
