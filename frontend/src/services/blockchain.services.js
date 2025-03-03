@@ -96,6 +96,16 @@ async function switchOrAddChain(ethProvider, switchChainId) {
     console.error(`Unexpected error in switchOrAddChain:`, error);
   }
 }
+export const getBlockNumber = async () => {
+  try {
+    const provider = new BrowserProvider(window.ethereum);
+    const blockNumber = await provider.getBlockNumber();
+    return blockNumber;
+  } catch (error) {
+    console.error("Error getting block number:", error);
+    throw error;
+  }
+};
 
 export const getSigner = async () => {
   const provider = new BrowserProvider(window.ethereum);

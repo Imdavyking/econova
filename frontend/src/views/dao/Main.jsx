@@ -4,6 +4,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import Proposal from "./proposal";
+import useCurrentBlock from "../../hooks/useCurrentBlock";
 
 const GET_PROPOSALS = gql`
   query MyQuery($first: Int!, $offset: Int!) {
@@ -28,6 +29,7 @@ const GET_PROPOSALS = gql`
 export default function DAO() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const currentBlock = useCurrentBlock();
   const page = parseInt(searchParams.get("page")) || 1;
   const pageSize = 10;
   const offset = (page - 1) * pageSize;
@@ -71,7 +73,11 @@ export default function DAO() {
 
       <div className="space-y-4">
         {data?.proposalCreateds?.nodes?.map((proposal, index) => (
-          <Proposal key={index} proposal={proposal} />
+          <Proposal
+            key={index}
+            proposal={proposal}
+            currentBlock={currentBlock}
+          />
         ))}
       </div>
 
