@@ -8,6 +8,7 @@ import { FaSpinner } from "react-icons/fa";
 import {
   batchMulticall,
   getProjectTokenDetails,
+  erc20AbiInterface as erc20Interface,
 } from "../../services/blockchain.services";
 import { ethers } from "ethers";
 import erc20Abi from "@/assets/json/erc20.json";
@@ -28,8 +29,6 @@ const GET_POINTS = gql`
     }
   }
 `;
-
-const erc20Interface = new ethers.Interface(erc20Abi);
 
 const LeaderBoard = () => {
   const [projectTokenBalances, setProjectTokenBalances] = useState([]);

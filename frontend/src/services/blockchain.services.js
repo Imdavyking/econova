@@ -31,6 +31,19 @@ import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { getVerifiedSourceCode } from "./source.code.services";
 
+const governorAbiInterface = new ethers.Interface(governorAbi);
+const nftCourseAbiInterface = new ethers.Interface(nftCourseAbi);
+const oftAbiInterface = new ethers.Interface(oftAbi);
+export const erc20AbiInterface = new ethers.Interface(erc20Abi);
+const managerAbiInterface = new ethers.Interface(managerAbi);
+const iWrappedSonicAbiInterface = new ethers.Interface(iWrappedSonicAbi);
+const multicallAbiInterface = new ethers.Interface(multicallAbi);
+const debridgeAbiInterface = new ethers.Interface([
+  "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
+  "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
+  "function globalFixedNativeFee() view returns (uint256)",
+]);
+
 async function switchOrAddChain(ethProvider, switchChainId) {
   try {
     const currentChainId = Number(
@@ -89,19 +102,6 @@ export const getSigner = async () => {
   await provider.send("eth_requestAccounts", []);
   return provider.getSigner();
 };
-
-const governorAbiInterface = new ethers.Interface(governorAbi);
-const nftCourseAbiInterface = new ethers.Interface(nftCourseAbi);
-const oftAbiInterface = new ethers.Interface(oftAbi);
-const erc20AbiInterface = new ethers.Interface(erc20Abi);
-const managerAbiInterface = new ethers.Interface(managerAbi);
-const iWrappedSonicAbiInterface = new ethers.Interface(iWrappedSonicAbi);
-const multicallAbiInterface = new ethers.Interface(multicallAbi);
-const debridgeAbiInterface = new ethers.Interface([
-  "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
-  "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
-  "function globalFixedNativeFee() view returns (uint256)",
-]);
 
 export const getBridgeContract = async (chainIdFrom) => {
   if (!window.ethereum) {
