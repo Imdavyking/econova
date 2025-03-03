@@ -114,7 +114,6 @@ export async function handleProposalCreatedAbiLog(
     proposalId: log.args.proposalId.toBigInt(),
     proposer: log.args.proposer,
     targets: log.args.targets,
-    values: log.args.values.map((value) => value.toBigInt()),
     signatures: log.args.signatures,
     calldatas: log.args.calldatas,
     voteStart: log.args.voteStart.toBigInt(),

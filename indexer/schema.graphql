@@ -55,7 +55,6 @@ type ProposalCreated @entity {
   proposalId: BigInt!
   proposer: String!
   targets: [String!]!
-  values: [BigInt!]!
   signatures: [String!]!
   calldatas: [String!]!
   voteStart: BigInt!
