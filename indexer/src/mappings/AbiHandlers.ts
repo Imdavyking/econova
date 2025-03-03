@@ -42,6 +42,9 @@ const ProposalState = {
   Executed: 7,
 };
 
+const voteForSupport = 1;
+const voteAgainstSupport = 0;
+
 export async function hanldleVoteCastWithParamsAbiLog(
   log: VoteCastWithParamsLog
 ) {
@@ -54,9 +57,6 @@ export async function hanldleVoteCastWithParamsAbiLog(
     logger.error("Proposal not found");
     return;
   }
-
-  const voteForSupport = 1;
-  const voteAgainstSupport = 0;
 
   if (log.args.support === voteForSupport) {
     proposal.votesFor += BigInt(log.args.support);
@@ -77,9 +77,6 @@ export async function hanldleVoteCastAbiLog(log: VoteCastLog) {
     logger.error("Proposal not found");
     return;
   }
-
-  const voteForSupport = 1;
-  const voteAgainstSupport = 0;
 
   if (log.args.support === voteForSupport) {
     proposal.votesFor += BigInt(log.args.support);
