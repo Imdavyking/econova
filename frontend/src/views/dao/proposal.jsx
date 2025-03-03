@@ -32,10 +32,8 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   if (!proposal) return null;
 
   const {
-    id,
     description,
     proposer,
-    state,
     voteEnd,
     targets,
     proposalId,
