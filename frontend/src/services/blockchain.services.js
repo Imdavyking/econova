@@ -108,26 +108,20 @@ export const getBlockNumber = async () => {
     throw error;
   }
 };
-
 function parseContractError(error, contractInterface) {
-  if (!error || !error.data || !contractInterface) return null;
+  if (!error?.data || !contractInterface) return null;
 
   try {
-    const hasErrorInfo = contractInterface.fragments.find((fragment) => {
-      if (fragment.type !== "error") return false;
-      return error.data.startsWith(fragment.selector);
-    });
+    const errorFragment = contractInterface.fragments.find(
+      (fragment) =>
+        fragment.type === "error" && error.data.startsWith(fragment.selector)
+    );
 
-    console.log(hasErrorInfo);
-
-    if (hasErrorInfo) {
-      return contractInterface.parseError(error.data);
-    }
+    return errorFragment ? contractInterface.parseError(error.data) : null;
   } catch (err) {
     console.error("Error parsing contract error:", err);
+    return null;
   }
-
-  return null;
 }
 
 export const getSigner = async () => {
@@ -864,8 +858,11 @@ export const getTransactionInfo = async ({ txHash }) => {
         );
 
         abiDecoder.fragments.find((fragment) => {
-          if(fragment.type !== "function") return false;
-          if (!txInfo.data.startsWith(fragment.selector)) return false;
+          if (
+            fragment.type !== "function" ||
+            !txInfo.data.startsWith(fragment.selector)
+          )
+            return false;
 
           try {
             const result = abiDecoder.decodeFunctionData(fragment, txInfo.data);
