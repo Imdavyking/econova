@@ -180,7 +180,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   return (
     <div className="p-4 bg-gray-800 rounded-lg shadow-md">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">{description}</h2>
+        <h2 className="text-lg font-semibold text-white">{description}</h2>
         <button
           onClick={() => setIsModalOpen(true)}
           className="text-gray-400 hover:text-white"
@@ -277,7 +277,9 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 z-50">
           <div className="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
-            <h2 className="text-lg font-semibold mb-4">Proposal Details</h2>
+            <h2 className="text-lg font-semibold mb-4 text-white">
+              Proposal Details
+            </h2>
 
             <div className="space-y-3 text-sm text-gray-300">
               <p className="break-words">
