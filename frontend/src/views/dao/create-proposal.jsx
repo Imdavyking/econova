@@ -168,7 +168,9 @@ export default function DAOProposalForm() {
       <DarkModeSwitcher />
       <a href="/" className="-intro-x flex items-center pt-5">
         <img alt="EcoNova" className="w-10" src={logoUrl} />
-        <span className="text-white text-lg ml-3">{APP_NAME} DAO Propose </span>
+        <span className="text-white text-lg ml-3">
+          {APP_NAME} Create Proposal{" "}
+        </span>
       </a>
 
       <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
