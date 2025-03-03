@@ -182,10 +182,14 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
               Time Left: {formatTime(timeLeft)}
             </p>
 
-            <p className="text-sm text-green-400">Votes For: {votesFor}</p>
-            <p className="text-sm text-red-400">
-              Votes Against: {votesAgainst}
-            </p>
+            {votesFor && (
+              <p className="text-sm text-green-400">Votes For: {votesFor}</p>
+            )}
+            {votesAgainst && (
+              <p className="text-sm text-red-400">
+                Votes Against: {votesAgainst}
+              </p>
+            )}
 
             {/* Decoded Call Data */}
             {decodedData.length > 0 && (
