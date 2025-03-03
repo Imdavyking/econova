@@ -26,7 +26,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [isVotingAgainst, setIsVotingAgainst] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [decodedData, setDecodedData] = useState([]);
-  const [stateAfterTimeOut, setStateAfterTimeOut] = useState(null);
+  const [proposalState, setProposalState] = useState(null);
 
   const {
     id,
@@ -85,9 +85,12 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
 
   const getProposalState = async () => {
     try {
-      if (timeLeft > 0) return state;
+      if (timeLeft > 0) {
+        setProposalState(state);
+        return;
+      }
       const currentState = await daoProposalState({ proposalId });
-      setStateAfterTimeOut(currentState);
+      setProposalState(currentState);
     } catch (error) {}
   };
 
@@ -136,7 +139,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
       <p className="text-sm text-gray-400">Proposed by: {proposer}</p>
       {
         <p className="text-sm text-gray-400">
-          State: {ProposalState[stateAfterTimeOut ?? state] || "Unknown"}
+          State: {ProposalState[proposalState] || "Unknown"}
         </p>
       }
       {timeLeft > 0 && (
@@ -186,7 +189,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
               Proposer: {proposer}
             </p>
             <p className="text-sm text-gray-300 mb-2">
-              State: {ProposalState[stateAfterTimeOut ?? state] || "Unknown"}
+              State: {ProposalState[proposalState] || "Unknown"}
             </p>
             <p className="text-sm text-gray-300">
               Time Left: {formatTime(timeLeft)}
