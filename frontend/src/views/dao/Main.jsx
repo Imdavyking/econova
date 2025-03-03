@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import { APP_NAME } from "../../utils/constants";
+import logoUrl from "@/assets/images/logo.png";
 
 const GET_PROPOSALS = gql`
   query MyQuery($first: Int!, $offset: Int!) {
@@ -47,7 +49,12 @@ export default function DAO() {
       <DarkModeSwitcher />
 
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">DAO Proposals</h1>
+        <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
+          <a href="/" className="flex items-center space-x-3">
+            <img alt={APP_NAME} className="w-10" src={logoUrl} />
+            <span className="text-lg">{APP_NAME} DAO Proposals</span>
+          </a>
+        </h2>
         <button
           className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300"
           onClick={() => navigate("/dao/create-proposal")}

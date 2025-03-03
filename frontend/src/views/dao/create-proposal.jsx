@@ -30,10 +30,18 @@ export default function DAOProposalForm() {
 
   const extractSignatures = () => {
     try {
+      const governorFunctions = [
+        "addWhitelistedToken",
+        "removeWhitelistedToken",
+        "addOrganization",
+        "removeOrganization",
+      ];
       const functionSignatures = charityAbi
         .filter(
           (item) =>
-            item.type === "function" && item.stateMutability === "nonpayable"
+            item.type === "function" &&
+            item.stateMutability === "nonpayable" &&
+            governorFunctions.includes(item.name)
         )
         .map((item) => ({
           name: item.name,
