@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
-import { daoVote } from "../../services/blockchain.services";
+import {
+  daoVote,
+  rethrowFailedResponse,
+} from "../../services/blockchain.services";
 import { toast } from "react-toastify";
 import { FaSpinner } from "react-icons/fa";
 
@@ -50,15 +53,15 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const handleVoteFor = async () => {
     try {
       setIsVotingFor(true);
-      console.log(`Voted for proposal ${proposalId}`);
 
-      await daoVote({
+      const response = await daoVote({
         proposalId,
         voteWay: 1,
       });
+      rethrowFailedResponse(response);
       toast.success(`Voted for proposal ${proposalId}`);
     } catch (error) {
-      toast.error(`Error voting for proposal: ${error.message} ${proposalId}`);
+      toast.error(`Error voting for proposal: ${error.message}`);
     } finally {
       setIsVotingFor(false);
     }
@@ -67,18 +70,16 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const handleVoteAgainst = async () => {
     try {
       setIsVotingAgainst(true);
-      console.log(`Voted against proposal ${proposalId}`);
 
-      await daoVote.vote({
+      const response = await daoVote({
         proposalId,
         voteWay: 0,
       });
+      rethrowFailedResponse(response);
       toast.success(`Voted against proposal ${id}`);
     } catch (error) {
       console.error("Error voting against proposal:", error);
-      toast.error(
-        `Error voting against proposal: ${error.message} ${proposalId}`
-      );
+      toast.error(`Error voting against proposal: ${error.message}`);
     } finally {
       setIsVotingAgainst(false);
     }
