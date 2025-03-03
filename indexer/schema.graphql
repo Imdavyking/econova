@@ -65,6 +65,8 @@ type ProposalCreated @entity {
   state: BigInt!
   votesFor: BigInt!
   votesAgainst: BigInt!
+  weightVotesFor: BigInt!
+  weightVotesAgainst: BigInt!
 }
 
 type ProposalCanceled @entity {

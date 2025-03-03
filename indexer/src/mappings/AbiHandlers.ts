@@ -60,8 +60,10 @@ export async function hanldleVoteCastWithParamsAbiLog(
 
   if (log.args.support === voteForSupport) {
     proposal.votesFor += BigInt(log.args.support);
+    proposal.weightVotesFor += log.args.weight.toBigInt();
   } else if (log.args.support === voteAgainstSupport) {
     proposal.votesAgainst += BigInt(log.args.support);
+    proposal.weightVotesAgainst += log.args.weight.toBigInt();
   }
 
   await proposal.save();
@@ -80,8 +82,10 @@ export async function hanldleVoteCastAbiLog(log: VoteCastLog) {
 
   if (log.args.support === voteForSupport) {
     proposal.votesFor += BigInt(log.args.support);
+    proposal.weightVotesFor += log.args.weight.toBigInt();
   } else if (log.args.support === voteAgainstSupport) {
     proposal.votesAgainst += BigInt(log.args.support);
+    proposal.weightVotesAgainst += log.args.weight.toBigInt();
   }
 
   await proposal.save();
@@ -171,6 +175,8 @@ export async function handleProposalCreatedAbiLog(
     state: BigInt(ProposalState.Active),
     votesAgainst: BigInt(0),
     votesFor: BigInt(0),
+    weightVotesAgainst: BigInt(0),
+    weightVotesFor: BigInt(0),
   });
   await transaction.save();
 }
