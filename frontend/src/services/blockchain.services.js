@@ -861,8 +861,9 @@ export const getTransactionInfo = async ({ txHash }) => {
           if (
             fragment.type !== "function" ||
             !txInfo.data.startsWith(fragment.selector)
-          )
+          ) {
             return false;
+          }
 
           try {
             const result = abiDecoder.decodeFunctionData(fragment, txInfo.data);
