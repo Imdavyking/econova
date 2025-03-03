@@ -152,6 +152,22 @@ const project: EthereumProject = {
               topics: ["ProposalThresholdSet(uint256,uint256)"],
             },
           },
+          {
+            handler: "hanldleVoteCastAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: ["VoteCast(address,uint256,uint8,uint256,string)"],
+            },
+          },
+          {
+            handler: "hanldleVoteCastWithParamsAbiLog",
+            kind: EthereumHandlerKind.Event,
+            filter: {
+              topics: [
+                "VoteCastWithParams(address,uint256,uint8,uint256,string,bytes)",
+              ],
+            },
+          },
         ],
       },
     },

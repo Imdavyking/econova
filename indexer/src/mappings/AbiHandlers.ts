@@ -13,6 +13,8 @@ import {
   ProposalCreatedLog,
   ProposalExecutedLog,
   ProposalQueuedLog,
+  VoteCastLog,
+  VoteCastWithParamsLog,
 } from "../types/abi-interfaces/Governor";
 
 import {
@@ -26,6 +28,7 @@ import {
   ProposalCreated,
   ProposalExecuted,
   ProposalQueued,
+  VoteCast,
 } from "../types";
 
 const ProposalState = {
@@ -38,6 +41,54 @@ const ProposalState = {
   Expired: 6,
   Executed: 7,
 };
+
+export async function hanldleVoteCastWithParamsAbiLog(
+  log: VoteCastWithParamsLog
+) {
+  logger.info(`New VoteCast transaction log at block ${log.blockNumber}`);
+  assert(log.args, "No log.args");
+
+  const proposal = await ProposalCreated.get(log.args.proposalId.toString());
+
+  if (!proposal) {
+    logger.error("Proposal not found");
+    return;
+  }
+
+  const voteForSupport = 1;
+  const voteAgainstSupport = 0;
+
+  if (log.args.support === voteForSupport) {
+    proposal.votesFor += BigInt(log.args.support);
+  } else if (log.args.support === voteAgainstSupport) {
+    proposal.votesAgainst += BigInt(log.args.support);
+  }
+
+  await proposal.save();
+}
+
+export async function hanldleVoteCastAbiLog(log: VoteCastLog) {
+  logger.info(`New VoteCast transaction log at block ${log.blockNumber}`);
+  assert(log.args, "No log.args");
+
+  const proposal = await ProposalCreated.get(log.args.proposalId.toString());
+
+  if (!proposal) {
+    logger.error("Proposal not found");
+    return;
+  }
+
+  const voteForSupport = 1;
+  const voteAgainstSupport = 0;
+
+  if (log.args.support === voteForSupport) {
+    proposal.votesFor += BigInt(log.args.support);
+  } else if (log.args.support === voteAgainstSupport) {
+    proposal.votesAgainst += BigInt(log.args.support);
+  }
+
+  await proposal.save();
+}
 
 export async function handleProposalCanceledAbiLog(
   log: ProposalCanceledLog
@@ -121,6 +172,8 @@ export async function handleProposalCreatedAbiLog(
     description: log.args.description,
     contractAddress: log.address,
     state: BigInt(ProposalState.Active),
+    votesAgainst: BigInt(0),
+    votesFor: BigInt(0),
   });
   await transaction.save();
 }
