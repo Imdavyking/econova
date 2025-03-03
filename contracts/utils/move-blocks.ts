@@ -7,5 +7,4 @@ export async function moveBlocks(amount: number) {
             params: [],
         })
     }
-    console.log(`Moved ${amount} blocks`)
 }

@@ -200,7 +200,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       // vote
                       const voteWay = 1 // for (1) against (0) abstain (2)
                       const reason = "Organization is a good fit for the charity category"
-                      console.log("Voting...")
+
                       const voteTx = await ecoNovaGovernorDeployer.castVoteWithReason(
                           proposalId,
                           voteWay,
@@ -231,7 +231,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       await moveBlocks(1)
                       proposalState = await ecoNovaGovernorDeployer.state(proposalId)
                       expect(proposalState).to.equal(5)
-                      console.log("Executing...")
 
                       const exTx = await ecoNovaGovernorDeployer.execute(
                           [charityDeployer],
