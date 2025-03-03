@@ -102,15 +102,13 @@ export const getBridgeContract = async (chainIdFrom) => {
 
   await switchOrAddChain(signer.provider, chainIdFrom);
 
-  const debridgeAbi = new ethers.Interface([
-    "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
-    "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
-    "function globalFixedNativeFee() view returns (uint256)",
-  ]);
-
   return new ethers.Contract(
     DEFAULT_DEBRIDGE_GATE_ADDRESS,
-    debridgeAbi,
+    new ethers.Interface([
+      "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
+      "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
+      "function globalFixedNativeFee() view returns (uint256)",
+    ]),
     signer
   );
 };
