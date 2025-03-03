@@ -8,7 +8,7 @@ import useCurrentBlock from "../../hooks/useCurrentBlock";
 
 const GET_PROPOSALS = gql`
   query MyQuery($first: Int!, $offset: Int!) {
-    proposalCreateds(orderBy: STATE_DESC, first: $first, offset: $offset) {
+    proposalCreateds(orderBy: ID_DESC, first: $first, offset: $offset) {
       nodes {
         contractAddress
         proposalId
