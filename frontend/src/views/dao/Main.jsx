@@ -14,6 +14,7 @@ const GET_PROPOSALS = gql`
         proposalId
         proposer
         state
+        etaSecondsQueue
         targets
         voteEnd
         voteStart

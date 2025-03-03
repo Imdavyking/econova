@@ -44,6 +44,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
     votesAgainst,
     weightVotesFor,
     weightVotesAgainst,
+    etaSecondsQueue,
   } = proposal;
 
   const [isVotingFor, setIsVotingFor] = useState(false);

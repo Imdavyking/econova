@@ -63,6 +63,7 @@ type ProposalCreated @entity {
   blockHeight: BigInt!
   contractAddress: String!
   state: BigInt!
+  etaSecondsQueue: BigInt!
   votesFor: BigInt!
   votesAgainst: BigInt!
   weightVotesFor: BigInt!

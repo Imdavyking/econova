@@ -140,6 +140,7 @@ export async function handleProposalQueuedAbiLog(
   }
 
   proposal.state = BigInt(ProposalState.Queued);
+  proposal.etaSecondsQueue = log.args.etaSeconds.toBigInt();
   await proposal.save();
 
   const transaction = ProposalQueued.create({
@@ -173,6 +174,7 @@ export async function handleProposalCreatedAbiLog(
     description: log.args.description,
     contractAddress: log.address,
     state: BigInt(ProposalState.Active),
+    etaSecondsQueue: BigInt(0),
     votesAgainst: BigInt(0),
     votesFor: BigInt(0),
     weightVotesAgainst: BigInt(0),
