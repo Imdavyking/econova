@@ -54,7 +54,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [proposalState, setProposalState] = useState(state);
   const [isQueueing, setIsQueueing] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
-  const [timeUntilExecution, setTimeUntilExecution] = useState(0);
+  const [timeUntilExecution, setTimeUntilExecution] = useState(null);
 
   useEffect(() => {
     if (!etaSecondsQueue) return;
@@ -64,10 +64,10 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
       setTimeUntilExecution(Math.max(etaSecondsQueue - now, 0));
     };
 
-    updateTimeUntilExecution(); // Initial calculation
-    const interval = setInterval(updateTimeUntilExecution, 1000); // Update every second
+    updateTimeUntilExecution();
+    const interval = setInterval(updateTimeUntilExecution, 1000);
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, [etaSecondsQueue]);
 
   const canExecute = timeUntilExecution === 0;
@@ -247,24 +247,34 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         </button>
       )}
 
-      {canExecute ? (
-        <button
-          disabled={isExecuting}
-          onClick={handleExecute}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition"
-        >
-          {isExecuting ? (
-            <FaSpinner className="w-4 h-4 animate-spin" />
+      {proposalState?.toString() === "5" && (
+        <>
+          {canExecute ? (
+            <button
+              disabled={isExecuting}
+              onClick={handleExecute}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition"
+            >
+              {isExecuting ? (
+                <FaSpinner className="w-4 h-4 animate-spin" />
+              ) : (
+                <FaPlay className="mr-2" />
+              )}
+              Execute
+            </button>
+          ) : timeUntilExecution !== null ? (
+            <div className="text-gray-500 text-sm">
+              Execution available in:{" "}
+              <span className="font-bold">
+                {formatTime(timeUntilExecution)}
+              </span>
+            </div>
           ) : (
-            <FaPlay className="mr-2" />
+            <div className="text-gray-500 text-sm">
+              Loading execution time...
+            </div>
           )}
-          Execute
-        </button>
-      ) : (
-        <div className="text-gray-500 text-sm">
-          Execution available in:{" "}
-          <span className="font-bold">{formatTime(timeUntilExecution)}</span>
-        </div>
+        </>
       )}
 
       {/* Modal */}
