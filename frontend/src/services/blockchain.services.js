@@ -1,5 +1,5 @@
 /** @format */
-import abi from "@/assets/json/abi.json";
+import managerAbi from "@/assets/json/abi.json";
 import erc20Abi from "@/assets/json/erc20.json";
 import governorAbi from "@/assets/json/governor.json";
 import oftAbi from "@/assets/json/oft.json";
@@ -90,6 +90,19 @@ export const getSigner = async () => {
   return provider.getSigner();
 };
 
+const governorAbiInterface = new ethers.Interface(governorAbi);
+const nftCourseAbiInterface = new ethers.Interface(nftCourseAbi);
+const oftAbiInterface = new ethers.Interface(oftAbi);
+const erc20AbiInterface = new ethers.Interface(erc20Abi);
+const managerAbiInterface = new ethers.Interface(managerAbi);
+const iWrappedSonicAbiInterface = new ethers.Interface(iWrappedSonicAbi);
+const multicallAbiInterface = new ethers.Interface(multicallAbi);
+const debridgeAbiInterface = new ethers.Interface([
+  "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
+  "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
+  "function globalFixedNativeFee() view returns (uint256)",
+]);
+
 export const getBridgeContract = async (chainIdFrom) => {
   if (!window.ethereum) {
     console.log(
@@ -104,11 +117,7 @@ export const getBridgeContract = async (chainIdFrom) => {
 
   return new ethers.Contract(
     DEFAULT_DEBRIDGE_GATE_ADDRESS,
-    new ethers.Interface([
-      "function send(address _tokenAddress,uint256 _amount,uint256 _chainIdTo,bytes _receiver,bytes _permitEnvelope,bool _useAssetFee,uint32 _referralCode,bytes _autoParams) external payable returns (bytes32)",
-      "function claim(bytes32 _debridgeId,uint256 _amount,uint256 _chainIdFrom,address _receiver,uint256 _nonce,bytes calldata _signatures,bytes calldata _autoParams) external",
-      "function globalFixedNativeFee() view returns (uint256)",
-    ]),
+    debridgeAbiInterface,
     signer
   );
 };
@@ -125,7 +134,7 @@ const getIWSonicContract = async () => {
   await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(
     WRAPPED_SONIC_CONTRACT_ADDRESS,
-    new ethers.Interface(iWrappedSonicAbi),
+    iWrappedSonicAbiInterface,
     signer
   );
 };
@@ -142,7 +151,7 @@ const getMulticall3Contract = async () => {
   await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(
     MULTICALL3_CONTRACT_ADDRESS,
-    new ethers.Interface(multicallAbi),
+    multicallAbiInterface,
     signer
   );
 };
@@ -159,11 +168,7 @@ const getOFTContract = async (tokenAddress, sourceChainId) => {
   await switchOrAddChain(signer.provider, sourceChainId);
 
   return {
-    contract: new ethers.Contract(
-      tokenAddress,
-      new ethers.Interface(oftAbi),
-      signer
-    ),
+    contract: new ethers.Contract(tokenAddress, oftAbiInterface, signer),
     signer: signer,
   };
 };
@@ -178,7 +183,7 @@ const getERC20Contract = async (address) => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
-  return new ethers.Contract(address, new ethers.Interface(erc20Abi), signer);
+  return new ethers.Contract(address, erc20AbiInterface, signer);
 };
 
 const getContract = async () => {
@@ -191,11 +196,7 @@ const getContract = async () => {
   const signer = await getSigner();
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
-  return new ethers.Contract(
-    CONTRACT_ADDRESS,
-    new ethers.Interface(abi),
-    signer
-  );
+  return new ethers.Contract(CONTRACT_ADDRESS, managerAbiInterface, signer);
 };
 
 const getNFTCourseContract = async () => {
@@ -210,7 +211,7 @@ const getNFTCourseContract = async () => {
   await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(
     NFT_COURSE_CONTRACT_ADDRESS,
-    new ethers.Interface(nftCourseAbi),
+    nftCourseAbiInterface,
     signer
   );
 };
@@ -227,7 +228,7 @@ const getGovernorContract = async () => {
   await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(
     ECONOVA_GOVERNOR_CONTRACT_ADDRESS,
-    new ethers.Interface(governorAbi),
+    governorAbiInterface,
     signer
   );
 };
@@ -314,18 +315,29 @@ export async function daoPropose({
   PROPOSAL_DESCRIPTION,
 }) {
   try {
-    const manager = await getGovernorContract();
-
-    const tx = await manager.propose(
+    const governor = await getGovernorContract();
+    const tx = await governor.propose(
       [targetAddress],
       [0],
       [encodedFunctionCall],
-      PROPOSAL_DESCRIPTION
+      PROPOSAL_DESCRIPTION,
+      {
+        gasLimit: 500000,
+      }
     );
     await tx.wait(1);
     return `proposed ${PROPOSAL_DESCRIPTION}`;
   } catch (error) {
-    console.log(error);
+    const hasErrorInfo = governorAbiInterface.fragments.find((fragment) => {
+      if (!error.data.startsWith(fragment.selector)) return false;
+      return true;
+    });
+
+    if (hasErrorInfo) {
+      const data = governorAbiInterface.decodeErrorResult(error.data);
+      console.log(`Error: ${data}`);
+    }
+
     return `${FAILED_KEY} to propose ${PROPOSAL_DESCRIPTION}`;
   }
 }
