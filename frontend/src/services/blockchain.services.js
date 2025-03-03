@@ -328,8 +328,6 @@ export async function daoDelegate({ tokenAddress }) {
   try {
     const contract = await getERC20Contract(tokenAddress);
     const signer = await getSigner();
-    const votingPower = await contract.getVotes(signer.address);
-    console.log(`Voting power: ${votingPower}`);
     const tx = await contract.delegate(signer.address);
     await tx.wait(1);
     return `delegated governance of ${tokenAddress} to ${signer.address}`;
