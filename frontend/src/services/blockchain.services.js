@@ -406,10 +406,7 @@ export async function daoExecute({ targets, calldatas, description }) {
       targets,
       [0],
       calldatas,
-      ethers.id(description),
-      {
-        gasLimit: 5000000,
-      }
+      ethers.id(description)
     );
     await tx.wait(1);
     return `queued proposal ${description}`;
