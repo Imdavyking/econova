@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
-import { FaThumbsUp, FaThumbsDown, FaEye, FaSpinner } from "react-icons/fa";
+import {
+  FaThumbsUp,
+  FaThumbsDown,
+  FaEye,
+  FaSpinner,
+  FaClock,
+  FaPlay,
+} from "react-icons/fa";
 import {
   charityAbiInterface,
+  daoExecute,
   daoProposalState,
+  daoQueue,
   daoVote,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";

@@ -413,7 +413,7 @@ export async function daoExecute({ targets, calldatas, description }) {
   } catch (error) {
     const errorInfo = parseContractError(error, governorAbiInterface);
 
-    return `${FAILED_KEY} to queue proposal ${proposalId}: ${
+    return `${FAILED_KEY} to queue proposal ${description}: ${
       errorInfo ? errorInfo.name : error.message
     }`;
   }
