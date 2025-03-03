@@ -8,10 +8,9 @@ import { FaSpinner } from "react-icons/fa";
 import {
   batchMulticall,
   getProjectTokenDetails,
-  erc20AbiInterface as erc20Interface,
+  erc20AbiInterface,
 } from "../../services/blockchain.services";
 import { ethers } from "ethers";
-import erc20Abi from "@/assets/json/erc20.json";
 import { useSearchParams } from "react-router-dom";
 
 // GraphQL Query
@@ -67,7 +66,7 @@ const LeaderBoard = () => {
           )
           .map((item) => ({
             target: tokenAddress,
-            callData: erc20Interface.encodeFunctionData("balanceOf", [
+            callData: erc20AbiInterface.encodeFunctionData("balanceOf", [
               item.user,
             ]),
           }));
@@ -79,7 +78,7 @@ const LeaderBoard = () => {
             user: data.pointsAddeds.nodes[index].user,
             balance: success
               ? ethers.formatUnits(
-                  erc20Interface.decodeFunctionResult(
+                  erc20AbiInterface.decodeFunctionResult(
                     "balanceOf",
                     returnData
                   )[0],
