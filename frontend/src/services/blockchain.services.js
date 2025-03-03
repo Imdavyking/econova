@@ -379,6 +379,46 @@ export async function daoVote({ proposalId, voteWay, reason = "" }) {
   }
 }
 
+export async function daoQueue({ targets, calldatas, description }) {
+  try {
+    const governor = await getGovernorContract();
+    const tx = await governor.queue(
+      targets,
+      [0],
+      calldatas,
+      ethers.id(description)
+    );
+    await tx.wait(1);
+    return `queued proposal ${description}`;
+  } catch (error) {
+    const errorInfo = parseContractError(error, governorAbiInterface);
+
+    return `${FAILED_KEY} to queue proposal ${proposalId}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
+  }
+}
+
+export async function daoExecute({ targets, calldatas, description }) {
+  try {
+    const governor = await getGovernorContract();
+    const tx = await governor.execute(
+      targets,
+      [0],
+      calldatas,
+      ethers.id(description)
+    );
+    await tx.wait(1);
+    return `queued proposal ${description}`;
+  } catch (error) {
+    const errorInfo = parseContractError(error, governorAbiInterface);
+
+    return `${FAILED_KEY} to queue proposal ${proposalId}: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
+  }
+}
+
 export async function daoProposalState({ proposalId }) {
   try {
     const governor = await getGovernorContract();

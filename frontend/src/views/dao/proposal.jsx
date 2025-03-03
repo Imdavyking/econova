@@ -22,18 +22,13 @@ const ProposalState = {
 export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   if (!proposal) return null;
 
-  const [isVotingFor, setIsVotingFor] = useState(false);
-  const [isVotingAgainst, setIsVotingAgainst] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [decodedData, setDecodedData] = useState([]);
-  const [proposalState, setProposalState] = useState(null);
-
   const {
     id,
     description,
     proposer,
     state,
     voteEnd,
+    targets,
     proposalId,
     calldatas,
     votesFor,
@@ -41,6 +36,14 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
     weightVotesFor,
     weightVotesAgainst,
   } = proposal;
+
+  const [isVotingFor, setIsVotingFor] = useState(false);
+  const [isVotingAgainst, setIsVotingAgainst] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [decodedData, setDecodedData] = useState([]);
+  const [proposalState, setProposalState] = useState(state);
+  const [isQueueing, setIsQueueing] = useState(false);
+  const [isExecuting, setIsExecuting] = useState(false);
 
   const decodeCallData = () => {
     if (!Array.isArray(calldatas) || calldatas.length === 0) return;
@@ -125,6 +128,32 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
     }
   };
 
+  const handleQueue = async () => {
+    try {
+      setIsQueueing(true);
+      const response = await daoQueue({ targets, calldatas, description });
+      rethrowFailedResponse(response);
+      toast.success(`Proposal ${proposalId} queued successfully!`);
+    } catch (error) {
+      toast.error(`Error queuing: ${error.message}`);
+    } finally {
+      setIsQueueing(false);
+    }
+  };
+
+  const handleExecute = async () => {
+    try {
+      setIsExecuting(true);
+      const response = await daoExecute({ targets, calldatas, description });
+      rethrowFailedResponse(response);
+      toast.success(`Proposal ${proposalId} executed successfully!`);
+    } catch (error) {
+      toast.error(`Error executing: ${error.message}`);
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
   return (
     <div className="p-4 bg-gray-800 rounded-lg shadow-md">
       <div className="flex justify-between items-center">
@@ -174,6 +203,36 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
             Vote Against
           </button>
         </div>
+      )}
+
+      {proposalState?.toString() === "4" && (
+        <button
+          disabled={isQueueing}
+          onClick={handleQueue}
+          className="mt-4 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 transition"
+        >
+          {isQueueing ? (
+            <FaSpinner className="w-4 h-4 animate-spin" />
+          ) : (
+            <FaClock className="mr-2" />
+          )}{" "}
+          Queue
+        </button>
+      )}
+
+      {proposalState?.toString() === "5" && (
+        <button
+          disabled={isExecuting}
+          onClick={handleExecute}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition"
+        >
+          {isExecuting ? (
+            <FaSpinner className="w-4 h-4 animate-spin" />
+          ) : (
+            <FaPlay className="mr-2" />
+          )}{" "}
+          Execute
+        </button>
       )}
 
       {/* Modal */}
