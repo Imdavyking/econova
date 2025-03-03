@@ -6,7 +6,7 @@ import logoUrl from "@/assets/images/logo.png";
 
 const GET_PROPOSALS = gql`
   query MyQuery($first: Int!, $offset: Int!) {
-    proposalCreateds(orderBy: POINTS_DESC, first: $first, offset: $offset) {
+    proposalCreateds(orderBy: STATE_DESC, first: $first, offset: $offset) {
       nodes {
         contractAddress
         proposalId
