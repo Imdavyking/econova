@@ -429,8 +429,6 @@ export async function daoExecute({ targets, calldatas, description }) {
     await tx.wait(1);
     return `queued proposal ${description}`;
   } catch (error) {
-    console.log(error.data);
-    // 0x37b51e4d
     let errorInfo = parseContractError(error, governorAbiInterface);
 
     if (!errorInfo) {
