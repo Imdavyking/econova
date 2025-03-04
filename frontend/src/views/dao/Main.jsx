@@ -8,11 +8,12 @@ import useCurrentBlock from "../../hooks/useCurrentBlock";
 import { useEffect, useState } from "react";
 
 const GET_PROPOSALS = gql`
-  query MyQuery($first: Int!, $offset: Int!) {
+  query MyQuery($first: Int!, $offset: Int!, $equalTo: BigFloat) {
     proposalCreateds(
       orderBy: BLOCK_HEIGHT_DESC
       first: $first
       offset: $offset
+      filter: { proposalId: { equalTo: $equalTo } }
     ) {
       nodes {
         contractAddress
@@ -46,7 +47,11 @@ export default function DAO() {
   const offset = (page - 1) * pageSize;
   const { loading, error, data, refetch } = useQuery(GET_PROPOSALS, {
     fetchPolicy: "cache-and-network",
-    variables: { first: pageSize, offset },
+    variables: {
+      first: pageSize,
+      offset,
+      ...(searchQuery ? { equalTo: searchQuery } : {}),
+    },
     pollInterval: 5000,
   });
 
