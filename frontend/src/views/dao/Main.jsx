@@ -52,7 +52,7 @@ export default function DAO() {
 
   useEffect(() => {
     refetch({ first: pageSize, offset, proposalId: searchQuery || null });
-  }, [searchQuery, refetch, pageSize, offset]);
+  }, [searchQuery, pageSize, offset]);
 
   const totalPages = Math.ceil(
     (data?.proposalCreateds?.totalCount || 0) / pageSize
