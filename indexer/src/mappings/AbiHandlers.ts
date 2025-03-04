@@ -42,8 +42,10 @@ const ProposalState = {
   Executed: 7,
 };
 
-const voteForSupport = 1;
-const voteAgainstSupport = 0;
+enum VoteSupport {
+  Against,
+  For,
+}
 
 export async function hanldleVoteCastWithParamsAbiLog(
   log: VoteCastWithParamsLog
@@ -58,10 +60,10 @@ export async function hanldleVoteCastWithParamsAbiLog(
     return;
   }
 
-  if (log.args.support === voteForSupport) {
+  if (log.args.support === VoteSupport.For) {
     proposal.votesFor += BigInt(1);
     proposal.weightVotesFor += log.args.weight.toBigInt();
-  } else if (log.args.support === voteAgainstSupport) {
+  } else if (log.args.support === VoteSupport.Against) {
     proposal.votesAgainst += BigInt(1);
     proposal.weightVotesAgainst += log.args.weight.toBigInt();
   }
@@ -80,10 +82,10 @@ export async function hanldleVoteCastAbiLog(log: VoteCastLog) {
     return;
   }
 
-  if (log.args.support === voteForSupport) {
+  if (log.args.support === VoteSupport.For) {
     proposal.votesFor += BigInt(1);
     proposal.weightVotesFor += log.args.weight.toBigInt();
-  } else if (log.args.support === voteAgainstSupport) {
+  } else if (log.args.support === VoteSupport.Against) {
     proposal.votesAgainst += BigInt(1);
     proposal.weightVotesAgainst += log.args.weight.toBigInt();
   }
