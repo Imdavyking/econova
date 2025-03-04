@@ -431,7 +431,11 @@ export async function daoExecute({ targets, calldatas, description }) {
   } catch (error) {
     console.log(error.data);
     // 0x37b51e4d
-    const errorInfo = parseContractError(error, governorAbiInterface);
+    let errorInfo = parseContractError(error, governorAbiInterface);
+
+    if (!errorInfo) {
+      errorInfo = parseContractError(error, charityAbiInterface);
+    }
 
     return `${FAILED_KEY} to queue proposal: ${
       errorInfo ? errorInfo.name : error.message
