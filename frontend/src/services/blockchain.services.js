@@ -427,7 +427,7 @@ export async function daoExecute({ targets, calldatas, description }) {
       ethers.id(description)
     );
     await tx.wait(1);
-    return `queued proposal ${description}`;
+    return `executed proposal ${description}`;
   } catch (error) {
     let errorInfo = parseContractError(error, governorAbiInterface);
 
@@ -435,7 +435,7 @@ export async function daoExecute({ targets, calldatas, description }) {
       errorInfo = parseContractError(error, charityAbiInterface);
     }
 
-    return `${FAILED_KEY} to queue proposal: ${
+    return `${FAILED_KEY} to execute proposal: ${
       errorInfo ? errorInfo.name : error.message
     }`;
   }
