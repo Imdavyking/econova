@@ -153,14 +153,14 @@ const project: EthereumProject = {
             },
           },
           {
-            handler: "hanldleVoteCastAbiLog",
+            handler: "handleVoteCastAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
               topics: ["VoteCast(address,uint256,uint8,uint256,string)"],
             },
           },
           {
-            handler: "hanldleVoteCastWithParamsAbiLog",
+            handler: "handleVoteCastWithParamsAbiLog",
             kind: EthereumHandlerKind.Event,
             filter: {
               topics: [

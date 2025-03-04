@@ -47,7 +47,7 @@ enum VoteSupport {
   For,
 }
 
-export async function hanldleVoteCastWithParamsAbiLog(
+export async function handleVoteCastWithParamsAbiLog(
   log: VoteCastWithParamsLog
 ) {
   logger.info(`New VoteCast transaction log at block ${log.blockNumber}`);
@@ -71,7 +71,7 @@ export async function hanldleVoteCastWithParamsAbiLog(
   await proposal.save();
 }
 
-export async function hanldleVoteCastAbiLog(log: VoteCastLog) {
+export async function handleVoteCastAbiLog(log: VoteCastLog) {
   logger.info(`New VoteCast transaction log at block ${log.blockNumber}`);
   assert(log.args, "No log.args");
 
