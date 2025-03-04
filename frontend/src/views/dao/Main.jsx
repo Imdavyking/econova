@@ -7,13 +7,42 @@ import Proposal from "./proposal";
 import useCurrentBlock from "../../hooks/useCurrentBlock";
 import { useEffect, useState } from "react";
 
+// const GET_PROPOSALS = gql`
+//   query MyQuery($first: Int!, $offset: Int!, $equalTo: BigFloat) {
+//     proposalCreateds(
+//       orderBy: BLOCK_HEIGHT_DESC
+//       first: $first
+//       offset: $offset
+//       filter: { proposalId: { equalTo: $equalTo } }
+//     ) {
+//       nodes {
+//         contractAddress
+//         proposalId
+//         proposer
+//         state
+//         etaSecondsQueue
+//         targets
+//         voteEnd
+//         voteStart
+//         description
+//         id
+//         calldatas
+//         votesFor
+//         votesAgainst
+//         weightVotesFor
+//         weightVotesAgainst
+//       }
+//       totalCount
+//     }
+//   }
+// `;
+
 const GET_PROPOSALS = gql`
-  query MyQuery($first: Int!, $offset: Int!, $equalTo: BigFloat) {
+  query MyQuery($first: Int!, $offset: Int!) {
     proposalCreateds(
       orderBy: BLOCK_HEIGHT_DESC
       first: $first
       offset: $offset
-      filter: { proposalId: { equalTo: $equalTo } }
     ) {
       nodes {
         contractAddress
@@ -36,7 +65,6 @@ const GET_PROPOSALS = gql`
     }
   }
 `;
-
 export default function DAO() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
