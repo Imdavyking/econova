@@ -58,6 +58,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [isCanceling, setIsCanceling] = useState(false);
   const [signer, setSigner] = useState(null);
   const [timeUntilExecution, setTimeUntilExecution] = useState(null);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
     if (!etaSecondsQueue || etaSecondsQueue.toString() === "0") return;
@@ -134,6 +135,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
     try {
       const currentState = await daoProposalState({ proposalId });
       setProposalState(currentState);
+      setHasLoaded(true);
     } catch (error) {}
   };
 
@@ -229,7 +231,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         </p>
       )}
 
-      {proposalState.toString() === "0" && proposer === signer && (
+      {proposalState.toString() === "0" && proposer === signer && hasLoaded && (
         <button
           disabled={isCanceling}
           onClick={handleCancel}
