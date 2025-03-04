@@ -376,6 +376,26 @@ export async function daoVote({ proposalId, voteWay, reason = "" }) {
   }
 }
 
+export async function daoCancel({ targets, calldatas, description }) {
+  try {
+    const governor = await getGovernorContract();
+    const tx = await governor.cancel(
+      targets,
+      [0],
+      calldatas,
+      ethers.id(description)
+    );
+    await tx.wait(1);
+    return `cancelled proposal ${description}`;
+  } catch (error) {
+    const errorInfo = parseContractError(error, governorAbiInterface);
+
+    return `${FAILED_KEY} to cancel proposal: ${
+      errorInfo ? errorInfo.name : error.message
+    }`;
+  }
+}
+
 export async function daoQueue({ targets, calldatas, description }) {
   try {
     const governor = await getGovernorContract();
@@ -390,7 +410,7 @@ export async function daoQueue({ targets, calldatas, description }) {
   } catch (error) {
     const errorInfo = parseContractError(error, governorAbiInterface);
 
-    return `${FAILED_KEY} to queue proposal ${proposalId}: ${
+    return `${FAILED_KEY} to queue proposal: ${
       errorInfo ? errorInfo.name : error.message
     }`;
   }
@@ -412,7 +432,7 @@ export async function daoExecute({ targets, calldatas, description }) {
     console.log(error.data);
     const errorInfo = parseContractError(error, governorAbiInterface);
 
-    return `${FAILED_KEY} to queue proposal ${description}: ${
+    return `${FAILED_KEY} to queue proposal: ${
       errorInfo ? errorInfo.name : error.message
     }`;
   }

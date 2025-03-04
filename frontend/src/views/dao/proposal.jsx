@@ -6,6 +6,7 @@ import {
   FaSpinner,
   FaClock,
   FaPlay,
+  FaTimes,
 } from "react-icons/fa";
 import {
   charityAbiInterface,
@@ -13,6 +14,7 @@ import {
   daoProposalState,
   daoQueue,
   daoVote,
+  daoCancel,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
@@ -52,6 +54,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [proposalState, setProposalState] = useState(0);
   const [isQueueing, setIsQueueing] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
+  const [isCanceling, setIsCanceling] = useState(false);
   const [timeUntilExecution, setTimeUntilExecution] = useState(null);
 
   useEffect(() => {
@@ -149,6 +152,19 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
     }
   };
 
+  const handleCancel = async () => {
+    try {
+      setIsCanceling(true);
+      const response = await daoCancel({ targets, calldatas, description });
+      rethrowFailedResponse(response);
+      toast.success(`Proposal ${proposalId} canceled successfully!`);
+    } catch (error) {
+      toast.error(`Error canceling proposal: ${error.message}`);
+    } finally {
+      setIsCanceling(false);
+    }
+  };
+
   const handleQueue = async () => {
     try {
       setIsQueueing(true);
@@ -195,6 +211,21 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         <p className="text-sm text-green-400 mb-4">
           Time Left: {formatTime(timeLeft)}
         </p>
+      )}
+
+      {proposalState.toString() === "3" && (
+        <button
+          disabled={isCanceling}
+          onClick={handleCancel}
+          className="mt-4 flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition disabled:opacity-50"
+        >
+          {isCanceling ? (
+            <FaSpinner className="w-4 h-4 animate-spin" />
+          ) : (
+            <FaTimes className="mr-2" />
+          )}
+          Cancel Proposal
+        </button>
       )}
 
       {proposalState.toString() === "1" && (
