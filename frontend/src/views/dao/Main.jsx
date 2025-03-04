@@ -69,6 +69,7 @@ export default function DAO() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const canSearch = false;
   const currentBlock = useCurrentBlock();
   const page = parseInt(searchParams.get("page")) || 1;
   const pageSize = 10;
@@ -114,15 +115,17 @@ export default function DAO() {
         </button>
       </div>
 
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Search by Proposal ID..."
-          className="w-full px-4 py-2 text-black rounded-lg focus:outline-none"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
+      {canSearch && (
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search by Proposal ID..."
+            className="w-full px-4 py-2 text-black rounded-lg focus:outline-none"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      )}
 
       {loading && <p className="text-center">Loading proposals...</p>}
       {error && (
