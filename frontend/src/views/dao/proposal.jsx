@@ -377,11 +377,11 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
                 <h3 className="text-md font-semibold text-gray-300 mb-3">
                   Decoded Call Data:
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-60 overflow-y-auto">
                   {decodedData.map((item, index) => (
                     <div
                       key={index}
-                      className="p-3 bg-gray-800 rounded-lg text-sm"
+                      className="p-3 bg-gray-800 rounded-lg text-sm overflow-x-auto break-words"
                     >
                       <p className="text-gray-400">
                         <span className="font-semibold text-white">
@@ -393,7 +393,9 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
                         <span className="font-semibold text-white">
                           Params:
                         </span>{" "}
-                        {JSON.stringify(item.params)}
+                        <span className="break-all">
+                          {JSON.stringify(item.params)}
+                        </span>
                       </p>
                     </div>
                   ))}
