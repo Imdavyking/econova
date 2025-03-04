@@ -74,11 +74,17 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   }, [etaSecondsQueue]);
 
   useEffect(() => {
-    getSigner().then((signer) => {
-      signer.getAddress().then((address) => {
+    const fetchSignerAddress = async () => {
+      try {
+        const signer = await getSigner();
+        const address = await signer.getAddress();
         setSigner(address);
-      });
-    });
+      } catch (error) {
+        console.error("Failed to fetch signer address:", error);
+      }
+    };
+
+    fetchSignerAddress();
   }, []);
 
   const canExecute = timeUntilExecution === 0;
