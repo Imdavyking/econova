@@ -5,10 +5,15 @@ import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import Proposal from "./proposal";
 import useCurrentBlock from "../../hooks/useCurrentBlock";
+import { useEffect, useState } from "react";
 
 const GET_PROPOSALS = gql`
   query MyQuery($first: Int!, $offset: Int!) {
-    proposalCreateds(orderBy: BLOCK_HEIGHT_DESC, first: $first, offset: $offset) {
+    proposalCreateds(
+      orderBy: BLOCK_HEIGHT_DESC
+      first: $first
+      offset: $offset
+    ) {
       nodes {
         contractAddress
         proposalId
@@ -34,15 +39,20 @@ const GET_PROPOSALS = gql`
 export default function DAO() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   const currentBlock = useCurrentBlock();
   const page = parseInt(searchParams.get("page")) || 1;
   const pageSize = 10;
   const offset = (page - 1) * pageSize;
-  const { loading, error, data } = useQuery(GET_PROPOSALS, {
+  const { loading, error, data, refetch } = useQuery(GET_PROPOSALS, {
     fetchPolicy: "cache-and-network",
     variables: { first: pageSize, offset },
     pollInterval: 5000,
   });
+
+  useEffect(() => {
+    refetch({ first: pageSize, offset, proposalId: searchQuery || null });
+  }, [searchQuery, refetch, pageSize, offset]);
 
   const totalPages = Math.ceil(
     (data?.proposalCreateds?.totalCount || 0) / pageSize
@@ -69,6 +79,16 @@ export default function DAO() {
         >
           Create Proposal
         </button>
+      </div>
+
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search by Proposal ID..."
+          className="w-full px-4 py-2 text-black rounded-lg focus:outline-none"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       {loading && <p className="text-center">Loading proposals...</p>}
