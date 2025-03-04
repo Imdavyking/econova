@@ -16,6 +16,7 @@ import {
   daoVote,
   daoCancel,
   rethrowFailedResponse,
+  getSigner,
 } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
 
@@ -55,6 +56,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [isQueueing, setIsQueueing] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
+  const [signer, setSigner] = useState(null);
   const [timeUntilExecution, setTimeUntilExecution] = useState(null);
 
   useEffect(() => {
@@ -70,6 +72,14 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
 
     return () => clearInterval(interval);
   }, [etaSecondsQueue]);
+
+  useEffect(() => {
+    getSigner().then((signer) => {
+      signer.getAddress().then((address) => {
+        setSigner(address);
+      });
+    });
+  }, []);
 
   const canExecute = timeUntilExecution === 0;
 
@@ -213,7 +223,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         </p>
       )}
 
-      {proposalState.toString() === "3" && (
+      {proposalState.toString() === "0" && proposer === signer && (
         <button
           disabled={isCanceling}
           onClick={handleCancel}
