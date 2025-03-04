@@ -59,10 +59,10 @@ export async function hanldleVoteCastWithParamsAbiLog(
   }
 
   if (log.args.support === voteForSupport) {
-    proposal.votesFor += BigInt(log.args.support);
+    proposal.votesFor += BigInt(1);
     proposal.weightVotesFor += log.args.weight.toBigInt();
   } else if (log.args.support === voteAgainstSupport) {
-    proposal.votesAgainst += BigInt(log.args.support);
+    proposal.votesAgainst += BigInt(1);
     proposal.weightVotesAgainst += log.args.weight.toBigInt();
   }
 
@@ -81,10 +81,10 @@ export async function hanldleVoteCastAbiLog(log: VoteCastLog) {
   }
 
   if (log.args.support === voteForSupport) {
-    proposal.votesFor += BigInt(log.args.support);
+    proposal.votesFor += BigInt(1);
     proposal.weightVotesFor += log.args.weight.toBigInt();
   } else if (log.args.support === voteAgainstSupport) {
-    proposal.votesAgainst += BigInt(log.args.support);
+    proposal.votesAgainst += BigInt(1);
     proposal.weightVotesAgainst += log.args.weight.toBigInt();
   }
 
