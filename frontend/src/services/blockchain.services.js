@@ -419,7 +419,7 @@ export async function daoQueue({ targets, calldatas, description }) {
 export async function daoExecute({ targets, calldatas, description }) {
   try {
     const governor = await getGovernorContract();
-    console.log({ targets, calldatas, description });
+
     const tx = await governor.execute(
       targets,
       [0],
@@ -430,6 +430,7 @@ export async function daoExecute({ targets, calldatas, description }) {
     return `queued proposal ${description}`;
   } catch (error) {
     console.log(error.data);
+    // 0x37b51e4d
     const errorInfo = parseContractError(error, governorAbiInterface);
 
     return `${FAILED_KEY} to queue proposal: ${
