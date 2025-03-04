@@ -347,10 +347,12 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
                 <span className="font-semibold">Targets:</span>{" "}
                 {targets.join(", ")}
               </p>
-              <p>
-                <span className="font-semibold">Time Left:</span>{" "}
-                {formatTime(timeLeft)}
-              </p>
+              {timeLeft > 0 && (
+                <p>
+                  <span className="font-semibold">Time Left:</span>{" "}
+                  {formatTime(timeLeft)}
+                </p>
+              )}
 
               {/* Votes Section */}
               <div className="mt-4 space-y-2">
