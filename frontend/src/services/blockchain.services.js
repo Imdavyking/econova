@@ -630,8 +630,13 @@ export const getAllCharities = async () => {
 
     const results = await batchMulticall(queries);
 
-    const charities = results.map((data) =>
-      managerAbiInterface.decodeFunctionResult("charityOrganizations", data)
+    const charities = results.map(({ success, returnData }) =>
+      success
+        ? ecoNovaManagerInterface.decodeFunctionResult(
+            "charityOrganizations",
+            returnData
+          )[0]
+        : "0x00"
     );
 
     return charities;

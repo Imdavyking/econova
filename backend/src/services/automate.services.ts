@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import logger from "../config/logger";
 import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
+import { MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
 
 dotenv.config();
 
@@ -22,11 +23,67 @@ const charityInterface = new ethers.Interface([
   "function checker() external view returns (bool canExec, bytes memory execPayload)",
 ]);
 
+const multicallAbiInterface = new ethers.Interface([
+  "function aggregate(tuple(address target, bytes callData)[] calls) payable returns (uint256 blockNumber, bytes[] returnData)",
+  "function aggregate3(tuple(address target, bool allowFailure, bytes callData)[] calls) payable returns (tuple(bool success, bytes returnData)[] returnData)",
+  "function aggregate3Value(tuple(address target, bool allowFailure, uint256 value, bytes callData)[] calls) payable returns (tuple(bool success, bytes returnData)[] returnData)",
+  "function blockAndAggregate(tuple(address target, bytes callData)[] calls) payable returns (uint256 blockNumber, bytes32 blockHash, tuple(bool success, bytes returnData)[] returnData)",
+  "function getBasefee() view returns (uint256 basefee)",
+  "function getBlockHash(uint256 blockNumber) view returns (bytes32 blockHash)",
+  "function getBlockNumber() view returns (uint256 blockNumber)",
+  "function getChainId() view returns (uint256 chainid)",
+  "function getCurrentBlockCoinbase() view returns (address coinbase)",
+  "function getCurrentBlockDifficulty() view returns (uint256 difficulty)",
+  "function getCurrentBlockGasLimit() view returns (uint256 gaslimit)",
+  "function getCurrentBlockTimestamp() view returns (uint256 timestamp)",
+  "function getEthBalance(address addr) view returns (uint256 balance)",
+  "function getLastBlockHash() view returns (bytes32 blockHash)",
+  "function tryAggregate(bool requireSuccess, tuple(address target, bytes callData)[] calls) payable returns (tuple(bool success, bytes returnData)[] returnData)",
+  "function tryBlockAndAggregate(bool requireSuccess, tuple(address target, bytes callData)[] calls) payable returns (uint256 blockNumber, bytes32 blockHash, tuple(bool success, bytes returnData)[] returnData)",
+]);
+
 const ecoNovaManagerContract = new ethers.Contract(
   CONTRACT_ADDRESS,
   ecoNovaManagerInterface,
   wallet
 );
+
+const batchMulticall = async (queries: any[]) => {
+  try {
+    if (!Array.isArray(queries) || queries.length === 0) {
+      throw new Error("Invalid queries array");
+    }
+
+    const multicall3 = await new ethers.Contract(
+      MULTICALL3_CONTRACT_ADDRESS,
+      multicallAbiInterface,
+      wallet
+    );
+
+    const { calls, totalValue } = queries.reduce(
+      (acc, query) => {
+        acc.totalValue += query.value ?? 0;
+        acc.calls.push({
+          target: query.target,
+          callData: query.callData,
+          value: query.value ?? 0,
+          allowFailure: query.allowFailure ?? false,
+        });
+        return acc;
+      },
+      { calls: [], totalValue: 0 }
+    );
+
+    const results = await multicall3.aggregate3Value.staticCall(calls, {
+      value: totalValue,
+    });
+
+    return results;
+  } catch (error) {
+    console.error("Batch query failed:", error);
+    throw error;
+  }
+};
 
 const decodeExecPayload = (data: string): string | null => {
   try {
@@ -101,11 +158,28 @@ export async function automateCharityFundDistribution() {
   try {
     const charityLength = await ecoNovaManagerContract.charityLength();
 
-    const charityCalls = Array.from({ length: Number(charityLength) }, (_, i) =>
-      ecoNovaManagerContract.charityOrganizations(i)
+    const charityCalls = Array.from(
+      { length: Number(charityLength) },
+      (_, i) => ({
+        target: CONTRACT_ADDRESS,
+        callData: ecoNovaManagerInterface.encodeFunctionData(
+          "charityOrganizations",
+          [i]
+        ),
+      })
     );
 
-    const charityAddresses = await Promise.all(charityCalls);
+    const results: any = await batchMulticall(charityCalls);
+
+    const charityAddresses: string[] = results.map(
+      ({ success, returnData }: { success: boolean; returnData: string }) =>
+        success
+          ? ecoNovaManagerInterface.decodeFunctionResult(
+              "charityOrganizations",
+              returnData
+            )[0]
+          : "0x00"
+    );
 
     const charityPromises = charityAddresses.map((charityAddress, index) =>
       handleCharityWithdrawal(index, charityAddress)
