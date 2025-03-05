@@ -60,6 +60,10 @@ const GET_PROPOSALS = gql`
         votesAgainst
         weightVotesFor
         weightVotesAgainst
+        createdTimeStamp
+        queuedTimeStamp
+        executedTimeStamp
+        canceledTimeStamp
       }
       totalCount
     }
