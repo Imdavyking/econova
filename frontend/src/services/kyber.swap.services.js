@@ -3,7 +3,6 @@ import { getERC20Contract, getSigner } from "./blockchain.services";
 
 export const KYBERSWAP_AGGREGATOR_API_URL =
   "https://aggregator-api.kyberswap.com";
-export const KYBERSWAP_ORDER_API_URL = "https://limit-order.kyberswap.com";
 
 export const KYBERSWAP_TOKENS_INFO = {
   BEETS: {
@@ -39,7 +38,9 @@ export const KYBERSWAP_TOKENS_INFO = {
 };
 
 class Kyberswap {
-  chainId = 333;
+  constructor(chainId) {
+    this.chainId = chainId;
+  }
 
   swap = async ({ sourceToken, destToken, sourceAmount, slippage = 0.5 }) => {
     const signer = await getSigner();

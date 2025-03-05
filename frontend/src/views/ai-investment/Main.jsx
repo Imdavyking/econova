@@ -10,6 +10,7 @@ import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import logoUrl from "@/assets/images/logo.png";
 import Kyberswap from "../../services/kyber.swap.services";
+import { sonic } from "viem/chains";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ export default function InvestmentAI() {
   const normalizeBalance = (balance, decimals) =>
     Number(balance) / 10 ** Number(decimals);
 
-  const kyberswap = new Kyberswap();
+  const kyberswap = new Kyberswap(sonic.id);
 
   useEffect(() => {
     async function fetchData() {
@@ -119,20 +120,55 @@ export default function InvestmentAI() {
 
   const handleRebalance = async () => {
     if (!strategy) return;
+
     setRebalancing(true);
+    toast.info("Calculating optimal rebalancing strategy...");
 
-    const rebalanceOrders = strategy.assets.map((asset) => ({
-      name: asset.name,
-      action: asset.allocation < 50 ? "Buy" : "Sell",
-      amount: Math.abs(asset.allocation - 50),
-    }));
+    try {
+      const rebalanceOrders = strategy.assets.map((asset) => {
+        const currentAllocation = asset.allocation;
+        const targetAllocation = 50;
 
-    console.log("Rebalancing Orders:", rebalanceOrders);
+        const action = currentAllocation < targetAllocation ? "Buy" : "Sell";
+        const amountToAdjust = Math.abs(currentAllocation - targetAllocation);
 
-    setTimeout(() => {
+        return {
+          name: asset.name,
+          action,
+          amount: amountToAdjust,
+          tokenAddress: portfolio[asset.coingeckoId]?.address || ETH_ADDRESS,
+        };
+      });
+
+      console.log("Rebalancing Orders:", rebalanceOrders);
+
+      for (const order of rebalanceOrders) {
+        const { action, amount, tokenAddress, name } = order;
+
+        if (amount === 0) continue; // Skip if already balanced
+
+        toast.info(`Executing ${action} order for ${name}...`);
+
+        const swapResult = await kyberswap.swap({
+          sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
+          destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
+          sourceAmount: amount,
+        });
+
+        if (swapResult?.success) {
+          toast.success(`Successfully rebalanced ${name}.`);
+        } else {
+          toast.error(`Failed to rebalance ${name}.`);
+        }
+      }
+
       toast.success("Portfolio rebalanced successfully!");
+    } catch (error) {
+      console.error("Rebalance error:", error);
+      toast.error("Failed to rebalance portfolio. Please try again.");
+    } finally {
       setRebalancing(false);
-    }, 2000);
+    }
   };
 
   return (
