@@ -263,7 +263,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         <div className="mt-4">
           {hasVoted ? (
             <p className="text-gray-500">
-              {support === 1
+              {support
                 ? "✅ You voted for this proposal"
                 : "❌ You voted against this proposal"}
             </p>

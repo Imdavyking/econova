@@ -21,7 +21,8 @@ contract EcoNovaGovernor is
 {
     struct Receipt {
         bool hasVoted;
-        uint8 support;
+        bool support;
+        uint256 votes;
     }
 
     mapping(uint256 => mapping(address => Receipt)) private _receipts;
@@ -71,7 +72,8 @@ contract EcoNovaGovernor is
 
         Receipt storage receipt = _receipts[proposalId][account];
         receipt.hasVoted = true;
-        receipt.support = support;
+        receipt.support = support != 0;
+        receipt.votes = weight;
 
         return weight;
     }

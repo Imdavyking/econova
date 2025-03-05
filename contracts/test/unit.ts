@@ -227,7 +227,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
                       const [hasVoted, support] = votingReceipt
                       expect(hasVoted).to.equal(false)
-                      expect(support).to.equal(0)
+                      expect(support).to.equal(false)
 
                       const voteTx = await ecoNovaGovernorDeployer.castVoteWithReason(
                           proposalId,
@@ -243,7 +243,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
                       const [hasVotedAfter, supportAfter] = votingReceipt
                       expect(hasVotedAfter).to.equal(true)
-                      expect(supportAfter).to.equal(1)
+                      expect(supportAfter).to.equal(true)
 
                       proposalState = await ecoNovaGovernorDeployer.state(proposalId)
 
