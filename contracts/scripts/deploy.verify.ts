@@ -71,7 +71,7 @@ async function main() {
 
     const ecoNovaGovernorDeployer = await GovernorFactory.deploy(
         tokenAddress,
-        governorTimeLock!,
+        governorTimeLockAddress,
         QUORUM_PERCENTAGE,
         VOTING_PERIOD,
         VOTING_DELAY,
@@ -91,6 +91,7 @@ async function main() {
         QUORUM_PERCENTAGE,
         VOTING_PERIOD,
         VOTING_DELAY,
+        PROPOSAL_THRESHOLD,
     ])
 
     console.log(`TimeLock deployed to: ${governorTimeLockAddress}`)
