@@ -325,8 +325,14 @@ export async function daoDelegate({ tokenAddress }) {
   try {
     const contract = await getERC20Contract(tokenAddress);
     const signer = await getSigner();
-    const tx = await contract.delegate(signer.address);
-    await tx.wait(1);
+
+    const currentVotes = await contract.getVotes(signer.address);
+
+    if (currentVotes <= 0) {
+      const tx = await contract.delegate(signer.address);
+      await tx.wait(1);
+    }
+
     return `delegated governance of ${tokenAddress} to ${signer.address}`;
   } catch (error) {
     const errorInfo = parseContractError(error, erc20AbiInterface);
