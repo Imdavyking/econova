@@ -9,6 +9,7 @@ import { APP_NAME, CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import logoUrl from "@/assets/images/logo.png";
+import Kyberswap from "../../services/kyber.swap.services";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,8 @@ export default function InvestmentAI() {
 
   const normalizeBalance = (balance, decimals) =>
     Number(balance) / 10 ** Number(decimals);
+
+  const kyberswap = new Kyberswap();
 
   useEffect(() => {
     async function fetchData() {
