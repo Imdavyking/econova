@@ -29,47 +29,49 @@ export default function InvestmentAI() {
   const kyberswap = new Kyberswap(chainId);
   const [targetAllocations, setTargetAllocations] = useState({});
 
+  const coinDetails = KYBERSWAP_TOKENS_INFO.USDC;
+
+  const assetsInfo = [
+    {
+      coingeckoId: "sonic-3",
+      name: "Sonic Token",
+      symbol: "SONIC",
+      address: ETH_ADDRESS,
+    },
+    {
+      coingeckoId: "usd-coin",
+      name: coinDetails.name,
+      symbol: coinDetails.symbol,
+      address: coinDetails.address,
+    },
+  ];
+
   useEffect(() => {
     async function fetchData() {
       try {
         setError(null);
         setLoading(true);
 
-        const coinDetails = KYBERSWAP_TOKENS_INFO.USDC;
-
-        const assetsInfo = [
-          {
-            coingeckoId: "sonic-3",
-            name: "Sonic Token",
-            symbol: "SONIC",
-            address: ETH_ADDRESS,
-          },
-          {
-            coingeckoId: "usd-coin",
-            name: coinDetails.name,
-            symbol: coinDetails.symbol,
-            address: coinDetails.address,
-          },
-        ];
+        const updatedAssetsInfo = [...assetsInfo];
 
         if (isTesting) {
           const { tokenAddress, name } = await getProjectTokenDetails();
-          const usdcTestIndex = assetsInfo.findIndex(
+          const usdcTestIndex = updatedAssetsInfo.findIndex(
             (asset) => asset.coingeckoId === "usd-coin"
           );
 
           if (usdcTestIndex !== -1) {
-            assetsInfo[usdcTestIndex] = {
-              ...assetsInfo[usdcTestIndex],
+            updatedAssetsInfo[usdcTestIndex] = {
+              ...updatedAssetsInfo[usdcTestIndex],
               address: tokenAddress,
-              name: name,
+              name,
               symbol: name,
             };
           }
         }
 
         const results = await Promise.all(
-          assetsInfo.map(async (asset) => {
+          updatedAssetsInfo.map(async (asset) => {
             try {
               const [{ data: marketData }, balance] = await Promise.all([
                 fetchMarketDataCoingecko({
@@ -78,12 +80,9 @@ export default function InvestmentAI() {
                 }),
                 getTokenBalance(asset.address, chainId),
               ]);
-              return {
-                asset,
-                price: marketData?.prices?.[0]?.[1] || 0,
-                balance,
-                coingeckoId: asset.coingeckoId,
-              };
+
+              const price = marketData?.prices?.[0]?.[1] || 0;
+              return { asset, price, balance };
             } catch (err) {
               console.error(`Failed to fetch data for ${asset.name}:`, err);
               return {
@@ -97,12 +96,11 @@ export default function InvestmentAI() {
 
         console.log("Fetched data:", results);
 
-        // Process fetched data
         const updatedPrices = {};
         const updatedPortfolio = {};
         let totalBalance = 0;
 
-        results.forEach(({ asset, price, balance }) => {
+        for (const { asset, price, balance } of results) {
           const tokenBalance = normalizeBalance(
             balance.balance,
             balance.decimals
@@ -110,22 +108,29 @@ export default function InvestmentAI() {
           updatedPrices[asset.coingeckoId] = price;
           updatedPortfolio[asset.coingeckoId] = tokenBalance;
           totalBalance += tokenBalance * price;
-        });
+        }
 
         setPortfolio(updatedPortfolio);
 
         if (totalBalance > 0) {
-          setStrategy({
-            assets: results.map(({ asset }) => ({
-              name: asset.name,
-              allocation:
-                ((updatedPortfolio[asset.coingeckoId] *
-                  updatedPrices[asset.coingeckoId]) /
-                  totalBalance) *
-                100,
-              coingeckoId: asset.coingeckoId,
-            })),
-          });
+          const strategyAssets = results.map(({ asset }) => ({
+            name: asset.name,
+            coingeckoId: asset.coingeckoId,
+            allocation:
+              ((updatedPortfolio[asset.coingeckoId] *
+                updatedPrices[asset.coingeckoId]) /
+                totalBalance) *
+              100,
+          }));
+
+          setStrategy({ assets: strategyAssets });
+
+          setTargetAllocations(
+            strategyAssets.reduce((acc, { coingeckoId, allocation }) => {
+              acc[coingeckoId] = allocation;
+              return acc;
+            }, {})
+          );
         }
       } catch (err) {
         console.error("Error fetching market data:", err);
