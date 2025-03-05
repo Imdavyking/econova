@@ -35,6 +35,12 @@ export const KYBERSWAP_TOKENS_INFO = {
     symbol: "wS",
     name: "Wrapped Sonic",
   },
+  USDC: {
+    address: "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+    decimals: 6,
+    symbol: "USDC.e",
+    name: "USDC.e",
+  },
 };
 
 class Kyberswap {

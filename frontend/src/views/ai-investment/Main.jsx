@@ -9,7 +9,9 @@ import { APP_NAME, CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import logoUrl from "@/assets/images/logo.png";
-import Kyberswap from "../../services/kyber.swap.services";
+import Kyberswap, {
+  KYBERSWAP_TOKENS_INFO,
+} from "../../services/kyber.swap.services";
 import { sonic } from "viem/chains";
 
 export default function InvestmentAI() {
@@ -18,12 +20,12 @@ export default function InvestmentAI() {
   const [strategy, setStrategy] = useState(null);
   const [rebalancing, setRebalancing] = useState(false);
   const [portfolio, setPortfolio] = useState({});
-  const [prices, setPrices] = useState({});
 
   const normalizeBalance = (balance, decimals) =>
     Number(balance) / 10 ** Number(decimals);
+  const chainId = sonic.id;
 
-  const kyberswap = new Kyberswap(sonic.id);
+  const kyberswap = new Kyberswap(chainId);
 
   useEffect(() => {
     async function fetchData() {
@@ -31,7 +33,7 @@ export default function InvestmentAI() {
         setError(null);
         setLoading(true);
 
-        const { tokenAddress, decimals, name } = await getProjectTokenDetails();
+        const coinDetails = KYBERSWAP_TOKENS_INFO.USDC;
 
         const assetsInfo = [
           {
@@ -42,13 +44,12 @@ export default function InvestmentAI() {
           },
           {
             coingeckoId: "usd-coin",
-            name,
-            symbol: name,
-            address: tokenAddress,
+            name: coinDetails.name,
+            symbol: coinDetails.symbol,
+            address: coinDetails.address,
           },
         ];
 
-        // Fetch market data and token balances in parallel
         const results = await Promise.all(
           assetsInfo.map(async (asset) => {
             try {
@@ -57,7 +58,7 @@ export default function InvestmentAI() {
                   path: `/coins/${asset.coingeckoId}/market_chart`,
                   queryParams: { vs_currency: "usd", days: 7 },
                 }),
-                getTokenBalance(asset.address, CHAIN_ID),
+                getTokenBalance(asset.address, chainId),
               ]);
               return {
                 asset,
@@ -90,7 +91,6 @@ export default function InvestmentAI() {
           totalBalance += tokenBalance * price;
         });
 
-        setPrices(updatedPrices);
         setPortfolio(updatedPortfolio);
 
         if (totalBalance > 0) {
@@ -197,7 +197,7 @@ export default function InvestmentAI() {
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : strategy ? (
-        <div className="p-4 border border-gray-300 rounded-lg">
+        <div className="p-4 border  rounded-lg">
           <h2 className="text-xl font-semibold text-gray-800">
             Risk Level: {strategy.riskLevel}
           </h2>
