@@ -59,11 +59,9 @@ async function main() {
 
     for (let i = 0; i < Number(charityLength); i++) {
         const charity = await contract.charityOrganizations(i)
-        if (typeof governorTimeLock === "undefined") {
-            const charityContract = await ethers.getContractAt("Charity", charity)
-            const ownerTx = await charityContract.transferOwnership(governorTimeLock)
-            await ownerTx.wait(1)
-        }
+        const charityContract = await ethers.getContractAt("Charity", charity)
+        const ownerTx = await charityContract.transferOwnership(governorTimeLock)
+        await ownerTx.wait(1)
         console.log(`Charity(${i}):deployed to: ${charity}`)
         await verify(charity, [i, governorTimeLock])
         charities.push(charity)
