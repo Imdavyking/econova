@@ -10,10 +10,10 @@ import {
   charityAbiInterface,
   daoDelegate,
   daoPropose,
-  getCharityCategoryAddressService,
   getProjectTokenDetails,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
+import { getAllCharities } from "../../services/blockchain.services";
 import { ellipsify } from "../../utils/ellipsify";
 import { APP_NAME } from "../../utils/constants";
 
@@ -30,18 +30,16 @@ export default function DAOProposalForm() {
 
   const extractSignatures = () => {
     try {
-      const governorFunctions = [
-        "addWhitelistedToken",
-        "removeWhitelistedToken",
-        "addOrganization",
-        "removeOrganization",
-      ];
+      // const governorFunctions = [
+      //   "addWhitelistedToken",
+      //   "removeWhitelistedToken",
+      //   "addOrganization",
+      //   "removeOrganization",
+      // ];
       const functionSignatures = charityAbi
         .filter(
           (item) =>
-            item.type === "function" &&
-            item.stateMutability === "nonpayable" &&
-            governorFunctions.includes(item.name)
+            item.type === "function" && item.stateMutability === "nonpayable"
         )
         .map((item) => ({
           name: item.name,

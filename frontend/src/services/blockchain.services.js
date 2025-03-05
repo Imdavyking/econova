@@ -641,8 +641,9 @@ export const getAllCharities = async () => {
 
     return charities;
   } catch (error) {
+    console.log(error);
     const errorInfo = parseContractError(error, managerAbiInterface);
-    return `${FAILED_KEY} to get ${charityCatogory} address: ${
+    return `${FAILED_KEY} to get addresses: ${
       errorInfo ? errorInfo.name : error.message
     }`;
   }

@@ -1,24 +1,12 @@
 import { useEffect, useState } from "react";
-import { getCharityCategoryAddressService } from "../../services/blockchain.services";
 import { ellipsify } from "../../utils/ellipsify";
 import { toast } from "react-toastify";
 import { FaCopy } from "react-icons/fa";
-export default function CharityCategory({ categoryName, charityCategory }) {
+export default function CharityCategory({ categoryName, charityAddress }) {
   const handleCopy = async (text) => {
     await navigator.clipboard.writeText(text);
     toast.info("Copied to clipboard!", { autoClose: 2000 });
   };
-  const [charityAddress, setCharityAddress] = useState("");
-  useEffect(() => {
-    getCharityCategoryAddressService({ charityCatogory: charityCategory })
-      .then((address) => {
-        console.log(address);
-        setCharityAddress(address);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [charityCategory]);
   return (
     <li
       key={categoryName}

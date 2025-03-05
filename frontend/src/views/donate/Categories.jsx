@@ -1,9 +1,20 @@
+import { useEffect, useState } from "react";
 import { charityCategories } from "../../utils/charity.categories";
 import { APP_NAME } from "../../utils/constants";
 import CharityCategory from "./Category";
 import logoUrl from "@/assets/images/logo.png";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import { getAllCharities } from "../../services/blockchain.services";
+
 export default function CharityCategories() {
+  const [charities, setCharities] = useState([]);
+  useEffect(() => {
+    const getCharitiesAddress = async () => {
+      const charitiesAddr = await getAllCharities();
+      setCharities(charitiesAddr);
+    };
+    getCharitiesAddress();
+  }, []);
   return (
     <>
       {" "}
@@ -18,16 +29,19 @@ export default function CharityCategories() {
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Charity Categories
         </h2>
-        <ul className="space-y-3">
-          {Object.entries(charityCategories).map(
-            ([categoryName, charityCategory]) => (
-              <CharityCategory
-                categoryName={categoryName}
-                charityCategory={charityCategory}
-              />
-            )
-          )}
-        </ul>
+        {charities.length > 0 && (
+          <ul className="space-y-3">
+            {Object.entries(charityCategories).map(
+              ([categoryName, charityCategory]) => (
+                <CharityCategory
+                  categoryName={categoryName}
+                  charityAddress={charities[charityCategory]}
+                  key={charities[charityCategory]}
+                />
+              )
+            )}
+          </ul>
+        )}
       </div>
     </>
   );
