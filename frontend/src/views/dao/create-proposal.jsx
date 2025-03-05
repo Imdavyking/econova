@@ -30,12 +30,6 @@ export default function DAOProposalForm() {
 
   const extractSignatures = () => {
     try {
-      // const governorFunctions = [
-      //   "addWhitelistedToken",
-      //   "removeWhitelistedToken",
-      //   "addOrganization",
-      //   "removeOrganization",
-      // ];
       const functionSignatures = charityAbi
         .filter(
           (item) =>
@@ -60,12 +54,11 @@ export default function DAOProposalForm() {
 
     const getCharityCategoryWithAddress = async () => {
       try {
+        const charities = await getAllCharities();
         const charityCategoryWithAddress = await Promise.all(
           Object.entries(charityCategories).map(
             async ([categoryName, index]) => {
-              const address = await getCharityCategoryAddressService({
-                charityCatogory: index,
-              });
+              const address = charities[index];
               return { categoryName, index, address };
             }
           )

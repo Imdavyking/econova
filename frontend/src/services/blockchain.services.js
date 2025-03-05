@@ -615,7 +615,8 @@ export const getAllCharities = async () => {
   try {
     const manager = await getContract();
     const charityLength = await manager.charityLength();
-    const length = charityLength.toNumber();
+    console.log({ charityLength });
+    const length = Number(charityLength);
     const queries = [];
 
     for (let i = 0; i < length; i++) {
@@ -632,7 +633,7 @@ export const getAllCharities = async () => {
 
     const charities = results.map(({ success, returnData }) =>
       success
-        ? ecoNovaManagerInterface.decodeFunctionResult(
+        ? managerAbiInterface.decodeFunctionResult(
             "charityOrganizations",
             returnData
           )[0]
