@@ -160,7 +160,7 @@ export default function InvestmentAI() {
         return {
           name: asset.name,
           action,
-          amount: amountToAdjust,
+          amountPercent: amountToAdjust,
           tokenAddress: asset.tokenAddress,
         };
       });
@@ -175,11 +175,18 @@ export default function InvestmentAI() {
       const kyberswap = new Kyberswap(chainId);
 
       const swapPromises = validOrders.map(async (order) => {
-        const { action, amount, tokenAddress, name } = order;
+        const { action, amountPercent, tokenAddress, name } = order;
 
         toast.info(`Executing ${action} order for ${name}...`);
 
         try {
+          const tokenBalance = await getTokenBalance(tokenAddress, chainId);
+          const amount = (tokenBalance.balance * amountPercent) / 100;
+          console.log({
+            sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
+            destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
+            sourceAmount: amount,
+          });
           const swapResult = await kyberswap.swap({
             sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
             destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
