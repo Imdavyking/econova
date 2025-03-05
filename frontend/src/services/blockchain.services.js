@@ -615,7 +615,6 @@ export const getAllCharities = async () => {
   try {
     const manager = await getContract();
     const charityLength = await manager.charityLength();
-    console.log({ charityLength });
     const length = Number(charityLength);
     const queries = [];
 
