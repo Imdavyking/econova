@@ -19,9 +19,9 @@ jobs:
     env:
       SUBQL_ACCESS_TOKEN: ${{ secrets.SUBQL_ACCESS_TOKEN }}
       CHAIN_ID: ${{ secrets.CHAIN_ID }}
-      CONTRACT_ADDRESS: ${{ secrets.CONTRACT_ADDRESS }}
-      GOVERNOR_CONTRACT_ADDRESS: ${{ secrets.GOVERNOR_CONTRACT_ADDRESS }}
-      BLOCK_NUMBER: ${{ secrets.BLOCK_NUMBER }}
+      CONTRACT_ADDRESS: ${{ vars.CONTRACT_ADDRESS }}
+      GOVERNOR_CONTRACT_ADDRESS: ${{ vars.GOVERNOR_CONTRACT_ADDRESS }}
+      BLOCK_NUMBER: ${{ vars.BLOCK_NUMBER }}
       RPC_URL: ${{ secrets.RPC_URL }}
     steps:
       - uses: actions/checkout@v2

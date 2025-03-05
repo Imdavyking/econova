@@ -25,7 +25,7 @@ jobs:
       PORT: ${{secrets.PORT}}
       PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
       RPC_URL: ${{secrets.RPC_URL}}
-      CONTRACT_ADDRESS: ${{secrets.CONTRACT_ADDRESS}}
+      CONTRACT_ADDRESS: ${{vars.CONTRACT_ADDRESS}}
       FRONTEND_URL: ${{secrets.FRONTEND_URL}}
       CHAIN_ID: ${{secrets.CHAIN_ID}}
       LIGHTHOUSE_API_KEY: ${{secrets.LIGHTHOUSE_API_KEY}}
