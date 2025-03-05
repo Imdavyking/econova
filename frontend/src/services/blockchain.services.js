@@ -327,8 +327,9 @@ export async function daoDelegate({ tokenAddress }) {
     const signer = await getSigner();
 
     const currentVotes = await contract.getVotes(signer.address);
+    const tokenBalance = await contract.balanceOf(signer.address);
 
-    if (currentVotes <= 0) {
+    if (currentVotes <= 0 && tokenBalance > 0) {
       const tx = await contract.delegate(signer.address);
       await tx.wait(1);
     }
