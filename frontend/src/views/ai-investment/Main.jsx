@@ -26,7 +26,6 @@ export default function InvestmentAI() {
     Number(balance) / 10 ** Number(decimals);
   const chainId = isTesting ? CHAIN_ID : sonic.id;
 
-  const kyberswap = new Kyberswap(chainId);
   const [targetAllocations, setTargetAllocations] = useState({});
 
   const coinDetails = KYBERSWAP_TOKENS_INFO.USDC;
@@ -168,6 +167,8 @@ export default function InvestmentAI() {
       console.log("Rebalancing Orders:", rebalanceOrders);
 
       const validOrders = rebalanceOrders.filter((order) => order.amount > 0);
+
+      const kyberswap = new Kyberswap(chainId);
 
       const swapPromises = validOrders.map(async (order) => {
         const { action, amount, tokenAddress, name } = order;
