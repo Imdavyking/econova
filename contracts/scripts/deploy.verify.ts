@@ -57,10 +57,12 @@ async function main() {
     const charities = []
     const governorTimeLock = await TimeLockFactory.deploy(MIN_DELAY, [], [], wallet)
 
+    const governorTimeLockAddress = await governorTimeLock.getAddress()
+
     for (let i = 0; i < Number(charityLength); i++) {
         const charity = await contract.charityOrganizations(i)
         const charityContract = await ethers.getContractAt("Charity", charity)
-        const ownerTx = await charityContract.transferOwnership(governorTimeLock)
+        const ownerTx = await charityContract.transferOwnership(governorTimeLockAddress)
         await ownerTx.wait(1)
         console.log(`Charity(${i}):deployed to: ${charity}`)
         await verify(charity, [i, wallet.address])
@@ -82,8 +84,6 @@ async function main() {
 
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
         process.env.ORACLE_ADDRESS!
-
-    const governorTimeLockAddress = await governorTimeLock.getAddress()
 
     await verify(ecoNovaGovernorAddress, [
         tokenAddress,
