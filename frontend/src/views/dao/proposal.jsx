@@ -62,6 +62,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [timeUntilExecution, setTimeUntilExecution] = useState(null);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
+  const [support, setSupport] = useState(null);
 
   useEffect(() => {
     if (!etaSecondsQueue || etaSecondsQueue.toString() === "0") return;
@@ -146,7 +147,9 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   };
 
   const checkIfUserHasVoted = async () => {
-    setHasVoted(await daoUserHasVoted({ proposalId }));
+    const { hasVoted, support } = await daoUserHasVoted({ proposalId });
+    setHasVoted(hasVoted);
+    setSupport(support);
   };
 
   useEffect(() => {
@@ -260,7 +263,9 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         <div className="mt-4">
           {hasVoted ? (
             <p className="text-gray-500">
-              ✅ You have already voted on this proposal.
+              {support === 1
+                ? "✅ You voted for this proposal"
+                : "❌ You voted against this proposal"}
             </p>
           ) : (
             <div className="flex space-x-4">
