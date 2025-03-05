@@ -39,6 +39,8 @@ async function main() {
     console.log(`EcoNovaCourseNFT deployed to: ${ecoCourseNFTAddress}`)
     const GovernorFactory = await hre.ethers.getContractFactory("EcoNovaGovernor")
 
+    const TimeLockFactory = await hre.ethers.getContractFactory("TimeLock")
+
     const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
 
     const verifier = await contract.i_groth16VerifierP3()
@@ -53,13 +55,13 @@ async function main() {
     const charityLength = await contract.charityLength()
 
     const charities = []
-    let governorTimeLock
+    const governorTimeLock = await TimeLockFactory.deploy(MIN_DELAY, [], [], wallet)
 
     for (let i = 0; i < Number(charityLength); i++) {
         const charity = await contract.charityOrganizations(i)
         if (typeof governorTimeLock === "undefined") {
             const charityContract = await ethers.getContractAt("Charity", charity)
-            governorTimeLock = await charityContract.governorTimeLock()
+            charityContract.transferOwnership(governorTimeLock)
         }
         console.log(`Charity(${i}):deployed to: ${charity}`)
         await verify(charity, [i, governorTimeLock])

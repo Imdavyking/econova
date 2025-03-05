@@ -50,8 +50,11 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
               const charityDeployer = await CharityDeployer.deploy(
                   charityCategories.Education,
-                  timeLockDeployer
+                  owner
               )
+
+              const ownerTx = await charityDeployer.transferOwnership(timeLockDeployer)
+              await ownerTx.wait(1)
 
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
               const endpointV2Mock = await EndpointV2Mock.deploy(1)
@@ -136,11 +139,17 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       )
                       await expect(
                           charityDeployer.addOrganization(testCharityOrganization)
-                      ).to.be.revertedWithCustomError(charityDeployer, "Charity__OnlyGovernor()")
+                      ).to.be.revertedWithCustomError(
+                          charityDeployer,
+                          "OwnableUnauthorizedAccount"
+                      )
 
                       await expect(
                           charityDeployer.removeOrganization(testCharityOrganization)
-                      ).to.be.revertedWithCustomError(charityDeployer, "Charity__OnlyGovernor()")
+                      ).to.be.revertedWithCustomError(
+                          charityDeployer,
+                          "OwnableUnauthorizedAccount"
+                      )
                   })
 
                   it("proposes, votes, waits, queues, and then executes", async () => {

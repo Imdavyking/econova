@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "hardhat/console.sol";
 import "./CustomToken.sol";
 import "./Charity.sol";
@@ -15,6 +16,7 @@ import "./interfaces/IGroth16VerifierP3.sol";
 import "./mocks/EndpointV2Mock.sol";
 
 contract EcoNovaManager is Ownable, ReentrancyGuard {
+    using SafeERC20 for IERC20;
     /**
      * mappings
      */
@@ -335,11 +337,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
             IERC20 erc20 = IERC20(token);
             uint256 balanceBefore = erc20.balanceOf(charityAddress);
 
-            bool transferSuccess = erc20.transferFrom(msg.sender, charityAddress, amountToSend);
-
-            if (!transferSuccess) {
-                revert EcoNovaManager__SendingFailed();
-            }
+            erc20.safeTransferFrom(msg.sender, charityAddress, amountToSend);
 
             uint256 balanceAfter = erc20.balanceOf(charityAddress);
 

@@ -4,18 +4,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IGelatoChecker} from "./interfaces/IGelatoChecker.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ICharity} from "./interfaces/ICharity.sol";
 
-contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
-    /** state variables */
-    bool public canWithdrawFunds = true;
-    Category public charityCategory;
-    address public automationBot = address(0);
-    address public immutable governorTimeLock;
-
-    /** constants */
-    address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
-
+interface ICharityDao {
     /** errors */
     error Charity__InsufficientBalance();
     error Charity__SendingFailed();
@@ -27,6 +19,27 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     error Charity__OrganizationNotFound();
     error Charity__OnlyGovernor();
     error Charity__GovernorCanNotBeZeroAddress();
+
+    /** functions */
+
+    function addWhitelistedToken(address token) external;
+
+    function removeWhitelistedToken(address token) external;
+
+    function addOrganization(address organization) external;
+
+    function removeOrganization(address organization) external;
+}
+
+contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharityDao {
+    using SafeERC20 for IERC20;
+    /** state variables */
+    bool public canWithdrawFunds = true;
+    Category public charityCategory;
+    address public automationBot = address(0);
+
+    /** constants */
+    address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
     /**
      * mappings
@@ -50,16 +63,9 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
         Other
     }
 
-    modifier onlyAutomationOrOwner() {
+    modifier onlyAutomationBot() {
         if (msg.sender != automationBot && msg.sender != owner()) {
             revert Charity__MustBeAutomatedOrOwner(msg.sender);
-        }
-        _;
-    }
-
-    modifier onlyGovernor() {
-        if (msg.sender != governorTimeLock) {
-            revert Charity__OnlyGovernor();
         }
         _;
     }
@@ -71,10 +77,10 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
     event OrganizationAdded(address indexed organization);
     event OrganizationRemoved(address indexed organization);
 
-    constructor(Category _category, address _newGovernorTimeLock) Ownable(msg.sender) {
+    constructor(Category _category, address _automationBot) Ownable(msg.sender) {
         charityCategory = _category;
-        governorTimeLock = _newGovernorTimeLock;
-        if (_newGovernorTimeLock == address(0)) {
+        automationBot = _automationBot;
+        if (automationBot == address(0)) {
             revert Charity__GovernorCanNotBeZeroAddress();
         }
     }
@@ -83,7 +89,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Set the automation bot address.
      * @param _automation address of the automation bot
      */
-    function setAutomationBot(address _automation) external onlyOwner {
+    function setAutomationBot(address _automation) external onlyAutomationBot {
         automationBot = _automation;
     }
 
@@ -99,7 +105,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @param status The status to set.
      */
 
-    function setCanWithdraw(bool status) external onlyOwner {
+    function setCanWithdraw(bool status) external onlyAutomationBot {
         canWithdrawFunds = status;
     }
 
@@ -107,7 +113,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Adds a token to the whitelist.
      * @param token The address of the token to add.
      */
-    function addWhitelistedToken(address token) external onlyGovernor {
+    function addWhitelistedToken(address token) external onlyOwner {
         if (whitelistedTokens[token]) {
             revert Charity__TokenAlreadyWhitelisted();
         }
@@ -122,7 +128,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Removes a token from the whitelist.
      * @param token The address of the token to remove.
      */
-    function removeWhitelistedToken(address token) external onlyGovernor {
+    function removeWhitelistedToken(address token) external onlyOwner {
         if (!whitelistedTokens[token]) {
             revert Charity__TokenNotWhitelisted();
         }
@@ -151,7 +157,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Adds an organization to the list of organizations.
      * @param organization The address of the organization to add.
      */
-    function addOrganization(address organization) external onlyGovernor {
+    function addOrganization(address organization) external onlyOwner {
         if (organizationExists[organization]) {
             revert Charity__OrganizationAlreadyExists();
         }
@@ -164,7 +170,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
      * @dev Removes an organization from the list of organizations.
      * @param organization The address of the organization to remove.
      */
-    function removeOrganization(address organization) external onlyGovernor {
+    function removeOrganization(address organization) external onlyOwner {
         if (!organizationExists[organization]) {
             revert Charity__OrganizationNotFound();
         }
@@ -251,7 +257,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
         address token,
         uint256 amount,
         address[] memory orgs
-    ) external onlyAutomationOrOwner nonReentrant {
+    ) external onlyAutomationBot nonReentrant {
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
         }
@@ -270,10 +276,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity {
                 if (!whitelistedTokens[token]) {
                     revert Charity__TokenNotWhitelisted();
                 }
-                bool sendSuccess = IERC20(token).transfer(orgs[i], share);
-                if (!sendSuccess) {
-                    revert Charity__SendingFailed();
-                }
+                IERC20(token).safeTransfer(orgs[i], share);
             }
             emit DonationWithdrawn(orgs[i], token, share);
         }

@@ -27,14 +27,13 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
     }
 
     const charityContracts = []
-    const timeLock = m.contract("TimeLock", [MIN_DELAY, [], [], wallet])
 
     for (const categoryKey of Object.keys(
         charityCategories
     ) as (keyof typeof charityCategories)[]) {
         const category = charityCategories[categoryKey]
 
-        charityContracts.push(m.contract(`Charity`, [category, timeLock], { id: categoryKey }))
+        charityContracts.push(m.contract(`Charity`, [category, wallet], { id: categoryKey }))
     }
 
     const groth16Verifier = m.contract("Groth16Verifier")
