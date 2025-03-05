@@ -224,15 +224,17 @@ export default function DAOProposalForm() {
             ))}
           </div>
         )}
-        {/* <div className="mb-4">
-          <input
-            className="intro-x login__input form-control py-3 px-4 block"
-            type="number"
-            value={ethValue}
-            onChange={(e) => setEthValue(e.target.value)}
-            placeholder="0.0ETH"
-          />
-        </div> */}
+        {ethValue && (
+          <div className="mb-4">
+            <input
+              className="intro-x login__input form-control py-3 px-4 block"
+              type="number"
+              value={ethValue}
+              onChange={(e) => setEthValue(e.target.value)}
+              placeholder="0.0ETH"
+            />
+          </div>
+        )}
         <button
           className="btn btn-primary py-3 px-4 w-full xl:mr-3 align-top"
           onClick={sendProposal}
