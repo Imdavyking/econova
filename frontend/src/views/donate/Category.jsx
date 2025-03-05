@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { ellipsify } from "../../utils/ellipsify";
 import { toast } from "react-toastify";
 import { FaCopy } from "react-icons/fa";

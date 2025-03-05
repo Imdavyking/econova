@@ -3,15 +3,22 @@ import { charityCategories } from "../../utils/charity.categories";
 import { APP_NAME } from "../../utils/constants";
 import CharityCategory from "./Category";
 import logoUrl from "@/assets/images/logo.png";
+import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { getAllCharities } from "../../services/blockchain.services";
 
 export default function CharityCategories() {
   const [charities, setCharities] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const getCharitiesAddress = async () => {
-      const charitiesAddr = await getAllCharities();
-      setCharities(charitiesAddr);
+      try {
+        const charitiesAddr = await getAllCharities();
+        setCharities(charitiesAddr);
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
     };
     getCharitiesAddress();
   }, []);
@@ -29,7 +36,11 @@ export default function CharityCategories() {
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Charity Categories
         </h2>
-        {charities.length > 0 && (
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <FaSpinner className="animate-spin text-gray-600 text-3xl" />
+          </div>
+        ) : charities.length > 0 ? (
           <ul className="space-y-3">
             {Object.entries(charityCategories).map(
               ([categoryName, charityCategory]) => (
@@ -41,6 +52,8 @@ export default function CharityCategories() {
               )
             )}
           </ul>
+        ) : (
+          <p className="text-center text-gray-600">No charities available.</p>
         )}
       </div>
     </>
