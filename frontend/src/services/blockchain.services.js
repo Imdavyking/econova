@@ -200,7 +200,7 @@ const getOFTContract = async (tokenAddress, sourceChainId) => {
   };
 };
 
-const getERC20Contract = async (address) => {
+export const getERC20Contract = async (address, chainId = CHAIN_ID) => {
   if (!window.ethereum) {
     console.log(
       "MetaMask is not installed. Please install it to use this feature."
@@ -209,7 +209,7 @@ const getERC20Contract = async (address) => {
   }
   const signer = await getSigner();
 
-  await switchOrAddChain(signer.provider, CHAIN_ID);
+  await switchOrAddChain(signer.provider, chainId);
   return new ethers.Contract(address, erc20AbiInterface, signer);
 };
 
