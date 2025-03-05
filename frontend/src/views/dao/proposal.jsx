@@ -17,6 +17,7 @@ import {
   daoCancel,
   rethrowFailedResponse,
   getSigner,
+  daoUserHasVoted,
 } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
@@ -60,6 +61,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [signer, setSigner] = useState(null);
   const [timeUntilExecution, setTimeUntilExecution] = useState(null);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasVoted, setHasVoted] = useState(false);
 
   useEffect(() => {
     if (!etaSecondsQueue || etaSecondsQueue.toString() === "0") return;
@@ -136,14 +138,22 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
     try {
       const currentState = await daoProposalState({ proposalId });
       setProposalState(currentState);
-      setHasLoaded(true);
+
+      if (!hasLoaded) {
+        setHasLoaded(true);
+      }
     } catch (error) {}
+  };
+
+  const checkIfUserHasVoted = async () => {
+    setHasVoted(await daoUserHasVoted({ proposalId }));
   };
 
   useEffect(() => {
     const updateTimer = () => setTimeLeft(calculateTimeLeft());
     updateTimer();
     getProposalState();
+    checkIfUserHasVoted();
 
     const timer = setInterval(updateTimer, 1000);
     return () => clearInterval(timer);
@@ -246,33 +256,40 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
           Cancel Proposal
         </button>
       )}
-
       {proposalState.toString() === "1" && (
-        <div className="mt-4 flex space-x-4">
-          <button
-            disabled={isVotingFor}
-            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition disabled:opacity-50"
-            onClick={() => handleVote(1)}
-          >
-            {isVotingFor ? (
-              <FaSpinner className="w-4 h-4 animate-spin" />
-            ) : (
-              <FaThumbsUp className="mr-2" />
-            )}
-            Vote For
-          </button>
-          <button
-            disabled={isVotingAgainst}
-            className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition disabled:opacity-50"
-            onClick={() => handleVote(0)}
-          >
-            {isVotingAgainst ? (
-              <FaSpinner className="w-4 h-4 animate-spin" />
-            ) : (
-              <FaThumbsDown className="mr-2" />
-            )}
-            Vote Against
-          </button>
+        <div className="mt-4">
+          {hasVoted ? (
+            <p className="text-gray-500">
+              ✅ You have already voted on this proposal.
+            </p>
+          ) : (
+            <div className="flex space-x-4">
+              <button
+                disabled={isVotingFor}
+                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition disabled:opacity-50"
+                onClick={() => handleVote(1)}
+              >
+                {isVotingFor ? (
+                  <FaSpinner className="w-4 h-4 animate-spin" />
+                ) : (
+                  <FaThumbsUp className="mr-2" />
+                )}
+                Vote For
+              </button>
+              <button
+                disabled={isVotingAgainst}
+                className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition disabled:opacity-50"
+                onClick={() => handleVote(0)}
+              >
+                {isVotingAgainst ? (
+                  <FaSpinner className="w-4 h-4 animate-spin" />
+                ) : (
+                  <FaThumbsDown className="mr-2" />
+                )}
+                Vote Against
+              </button>
+            </div>
+          )}
         </div>
       )}
 

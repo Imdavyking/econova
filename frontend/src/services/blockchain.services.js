@@ -368,6 +368,22 @@ export async function daoPropose({
   }
 }
 
+export async function daoUserHasVoted({ proposalId }) {
+  try {
+    const signer = await getSigner();
+    const governor = await getGovernorContract();
+
+    const userAddress = await signer.getAddress();
+
+    const proposalVote = await governor.proposalVotes(proposalId);
+    const hasVoted = await proposalVote.hasVoted(userAddress);
+
+    return hasVoted;
+  } catch (error) {
+    return false;
+  }
+}
+
 export async function daoVote({ proposalId, voteWay, reason = "" }) {
   try {
     const governor = await getGovernorContract();
