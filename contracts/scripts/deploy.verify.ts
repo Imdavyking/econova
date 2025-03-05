@@ -106,17 +106,15 @@ async function main() {
     ])
     await verify(ecoCourseNFTAddress, [wallet.address])
 
-    const timeLockDeployer = await ethers.getContractAt("TimeLock", governorTimeLock!)
+    const proposerRole = await governorTimeLock.PROPOSER_ROLE()
+    const executorRole = await governorTimeLock.EXECUTOR_ROLE()
+    const adminRole = await governorTimeLock.DEFAULT_ADMIN_ROLE()
 
-    const proposerRole = await timeLockDeployer.PROPOSER_ROLE()
-    const executorRole = await timeLockDeployer.EXECUTOR_ROLE()
-    const adminRole = await timeLockDeployer.DEFAULT_ADMIN_ROLE()
-
-    const proposerTx = await timeLockDeployer.grantRole(proposerRole, ecoNovaGovernorDeployer)
+    const proposerTx = await governorTimeLock.grantRole(proposerRole, ecoNovaGovernorDeployer)
     await proposerTx.wait(1)
-    const executorTx = await timeLockDeployer.grantRole(executorRole, ethers.ZeroAddress)
+    const executorTx = await governorTimeLock.grantRole(executorRole, ethers.ZeroAddress)
     await executorTx.wait(1)
-    const revokeTx = await timeLockDeployer.revokeRole(adminRole, owner)
+    const revokeTx = await governorTimeLock.revokeRole(adminRole, owner)
     await revokeTx.wait(1)
 
     if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
