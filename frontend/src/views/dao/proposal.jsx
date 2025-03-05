@@ -19,6 +19,7 @@ import {
   getSigner,
 } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
+import { ethers } from "ethers";
 
 const ProposalState = {
   0: "Pending",
@@ -360,7 +361,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
                   <p className="text-sm text-green-400">
                     Votes For: {votesFor}{" "}
                     <span className="text-gray-400">
-                      ({weightVotesFor} weighted)
+                      ({ethers.formatEther(weightVotesFor)} weighted)
                     </span>
                   </p>
                 )}
@@ -368,7 +369,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
                   <p className="text-sm text-red-400">
                     Votes Against: {votesAgainst}{" "}
                     <span className="text-gray-400">
-                      ({weightVotesAgainst} weighted)
+                      ({ethers.formatEther(weightVotesAgainst)} weighted)
                     </span>
                   </p>
                 )}
