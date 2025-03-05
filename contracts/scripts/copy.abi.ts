@@ -1,11 +1,19 @@
 import fs from "fs"
 import path from "path"
 
-export function copyABI(contractName: string, destinationFolder: string, abiName: string | null) {
+export function copyABI(
+    contractName: string,
+    destinationFolder: string,
+    abiName: string | null,
+    isInterface: boolean = false
+) {
     try {
         const abiPath = path.join(
             __dirname,
-            `../artifacts/contracts/${contractName}.sol/${contractName}.json`
+            "../artifacts/contracts",
+            isInterface ? "interfaces" : "",
+            `${contractName}.sol`,
+            `${contractName}.json`
         )
         const destPath = path.join(
             __dirname,

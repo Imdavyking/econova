@@ -53,12 +53,18 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   owner
               )
 
+              await charityDeployer.waitForDeployment()
+
               const ownerTx = await charityDeployer.transferOwnership(timeLockDeployer)
               await ownerTx.wait(1)
 
               const mockPythPriceFeedDeployer = await MockPythPriceFeed.deploy()
+
+              await mockPythPriceFeedDeployer.waitForDeployment()
               const endpointV2Mock = await EndpointV2Mock.deploy(1)
+              await endpointV2Mock.waitForDeployment()
               const groth16Deployer = await Groth16Verifier.deploy()
+              await groth16Deployer.waitForDeployment()
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(
                   mockPythPriceFeedDeployer,
@@ -68,7 +74,10 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   endpointV2Mock
               )
 
+              await ecoNDeployer.waitForDeployment()
+
               const ecoNovaCourseNFTDeployer = await EcoNovaCourseNFTDeployer.deploy(owner)
+              await ecoNovaCourseNFTDeployer.waitForDeployment()
 
               const ecoNDeployerAddress = await ecoNDeployer.getAddress()
 
@@ -83,6 +92,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   PROPOSAL_THRESHOLD
               )
 
+              await ecoNovaGovernorDeployer.waitForDeployment()
               const proposerRole = await timeLockDeployer.PROPOSER_ROLE()
               const executorRole = await timeLockDeployer.EXECUTOR_ROLE()
               const adminRole = await timeLockDeployer.DEFAULT_ADMIN_ROLE()

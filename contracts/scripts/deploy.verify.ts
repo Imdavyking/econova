@@ -57,6 +57,8 @@ async function main() {
     const charities = []
     const governorTimeLock = await TimeLockFactory.deploy(MIN_DELAY, [], [], wallet)
 
+    await governorTimeLock.waitForDeployment()
+
     const governorTimeLockAddress = await governorTimeLock.getAddress()
 
     for (let i = 0; i < Number(charityLength); i++) {
@@ -77,6 +79,8 @@ async function main() {
         VOTING_DELAY,
         PROPOSAL_THRESHOLD
     )
+
+    await ecoNovaGovernorDeployer.waitForDeployment()
 
     const ecoNovaGovernorAddress = await ecoNovaGovernorDeployer.getAddress()
 
@@ -156,7 +160,7 @@ async function main() {
 
     copyABI("EcoNovaManager", "frontend/src/assets/json", null)
     copyABI("EcoNovaGovernor", "frontend/src/assets/json", "governor")
-    copyABI("Charity", "frontend/src/assets/json", "charity")
+    copyABI("ICharityDao", "frontend/src/assets/json", "charity", true)
     copyABI("EcoNovaCourseNFT", "frontend/src/assets/json", "course-nft")
     copyABI("EcoNovaToken", "frontend/src/assets/json", "erc20")
     copyABI("EcoNovaManager", "indexer/abis", null)
