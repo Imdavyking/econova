@@ -116,8 +116,6 @@ export default function InvestmentAI() {
 
         if (totalBalance > 0) {
           setStrategy({
-            riskLevel: "Moderate",
-            projectedGrowth: "12% annually",
             assets: results.map(({ asset }) => ({
               name: asset.name,
               allocation:
@@ -226,13 +224,7 @@ export default function InvestmentAI() {
         <p className="text-red-500">{error}</p>
       ) : strategy ? (
         <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
-          <h2 className="text-xl font-semibold ">
-            Risk Level: {strategy.riskLevel}
-          </h2>
-          <p className="">Projected Growth: {strategy.projectedGrowth}</p>
-
           <div className="mt-4 space-y-6">
-            {/* Asset Allocation Progress Bars */}
             <div className="space-y-3">
               {strategy.assets.map((asset, index) => (
                 <div key={index} className="mb-2">
@@ -252,7 +244,6 @@ export default function InvestmentAI() {
               ))}
             </div>
 
-            {/* Target Allocation Sliders */}
             <div className="space-y-3">
               {Object.keys(portfolio).map((id) => {
                 const asset = strategy.assets.find((a) => a.coingeckoId === id);
@@ -265,7 +256,8 @@ export default function InvestmentAI() {
                       type="range"
                       min="0"
                       max="100"
-                      value={targetAllocations[id]}
+                      step="0.01"
+                      value={targetAllocations[id].toFixed(2)}
                       onChange={(e) =>
                         handleSliderChange(id, Number(e.target.value))
                       }
