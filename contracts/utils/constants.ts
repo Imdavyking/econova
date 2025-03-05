@@ -5,6 +5,6 @@ const BLOCKS_PER_MINUTE = 60 * BLOCKS_PER_SECOND
 const BLOCKS_PER_HOUR = 60 * BLOCKS_PER_MINUTE
 export const VOTING_PERIOD = BLOCKS_PER_HOUR // 1 hour - How long a proposal vote is open for
 export const VOTING_DELAY = 1 // 1 Block - How many blocks till a proposal vote becomes active
-export const PROPOSAL_THRESHOLD = 1 // the user voting power needed to create a proposal (1 token)
+export const PROPOSAL_THRESHOLD = 1e18 // the user voting power needed to create a proposal (1 token)
 export const PROPOSAL_DESCRIPTION = "Proposal #1 Add this organization!"
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
