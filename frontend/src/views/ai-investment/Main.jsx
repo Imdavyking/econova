@@ -12,7 +12,7 @@ import logoUrl from "@/assets/images/logo.png";
 import Kyberswap, {
   KYBERSWAP_TOKENS_INFO,
 } from "../../services/kyber.swap.services";
-import { sonic } from "viem/chains";
+import { sonic, sonicTestnet } from "viem/chains";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -20,10 +20,11 @@ export default function InvestmentAI() {
   const [strategy, setStrategy] = useState(null);
   const [rebalancing, setRebalancing] = useState(false);
   const [portfolio, setPortfolio] = useState({});
+  const isTesting = true;
 
   const normalizeBalance = (balance, decimals) =>
     Number(balance) / 10 ** Number(decimals);
-  const chainId = sonic.id;
+  const chainId = isTesting ? sonicTestnet.id : sonic.id;
 
   const kyberswap = new Kyberswap(chainId);
 
@@ -50,6 +51,22 @@ export default function InvestmentAI() {
           },
         ];
 
+        if (isTesting) {
+          const { tokenAddress, name } = await getProjectTokenDetails();
+          const usdcTestIndex = assetsInfo.findIndex(
+            (asset) => asset.coingeckoId === "usd-coin"
+          );
+
+          if (usdcTestIndex !== -1) {
+            assetsInfo[usdcTestIndex] = {
+              ...assetsInfo[usdcTestIndex],
+              address: tokenAddress,
+              name: name,
+              symbol: name,
+            };
+          }
+        }
+
         const results = await Promise.all(
           assetsInfo.map(async (asset) => {
             try {
@@ -75,6 +92,8 @@ export default function InvestmentAI() {
             }
           })
         );
+
+        console.log("Fetched data:", results);
 
         // Process fetched data
         const updatedPrices = {};
