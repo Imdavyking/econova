@@ -120,6 +120,7 @@ export default function InvestmentAI() {
                 updatedPrices[asset.coingeckoId]) /
                 totalBalance) *
               100,
+            tokenAddress: asset.address,
           }));
 
           setStrategy({ assets: strategyAssets });
@@ -160,11 +161,14 @@ export default function InvestmentAI() {
           name: asset.name,
           action,
           amount: amountToAdjust,
-          tokenAddress: portfolio[asset.coingeckoId]?.address || ETH_ADDRESS,
+          tokenAddress: asset.tokenAddress,
         };
       });
 
-      console.log("Rebalancing Orders:", rebalanceOrders);
+      console.log("Rebalancing Orders:", {
+        rebalanceOrders,
+        targetAllocations,
+      });
 
       const validOrders = rebalanceOrders.filter((order) => order.amount > 0);
 
