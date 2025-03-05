@@ -12,7 +12,7 @@ import logoUrl from "@/assets/images/logo.png";
 import Kyberswap, {
   KYBERSWAP_TOKENS_INFO,
 } from "../../services/kyber.swap.services";
-import { sonic } from "viem/chains";
+import { sonic, fantomSonicTestnet } from "viem/chains";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -27,6 +27,7 @@ export default function InvestmentAI() {
   const chainId = isTesting ? CHAIN_ID : sonic.id;
 
   const kyberswap = new Kyberswap(chainId);
+  const [targetAllocations, setTargetAllocations] = useState({});
 
   useEffect(() => {
     async function fetchData() {
@@ -81,6 +82,7 @@ export default function InvestmentAI() {
                 asset,
                 price: marketData?.prices?.[0]?.[1] || 0,
                 balance,
+                coingeckoId: asset.coingeckoId,
               };
             } catch (err) {
               console.error(`Failed to fetch data for ${asset.name}:`, err);
@@ -123,7 +125,7 @@ export default function InvestmentAI() {
                   updatedPrices[asset.coingeckoId]) /
                   totalBalance) *
                 100,
-              targetAllocation: 50,
+              coingeckoId: asset.coingeckoId,
             })),
           });
         }
@@ -147,7 +149,7 @@ export default function InvestmentAI() {
     try {
       const rebalanceOrders = strategy.assets.map((asset) => {
         const currentAllocation = asset.allocation;
-        const targetAllocation = asset.targetAllocation;
+        const targetAllocation = targetAllocations[asset.coingeckoId];
 
         const action = currentAllocation < targetAllocation ? "Buy" : "Sell";
         const amountToAdjust = Math.abs(currentAllocation - targetAllocation);
@@ -198,6 +200,13 @@ export default function InvestmentAI() {
     }
   };
 
+  const handleSliderChange = (coingeckoId, value) => {
+    const otherAsset = Object.keys(targetAllocations).find(
+      (id) => id !== coingeckoId
+    );
+    setTargetAllocations({ [coingeckoId]: value, [otherAsset]: 100 - value });
+  };
+
   return (
     <div className="p-6 max-w-lg mx-auto">
       <DarkModeSwitcher />
@@ -222,20 +231,57 @@ export default function InvestmentAI() {
           </h2>
           <p className="">Projected Growth: {strategy.projectedGrowth}</p>
 
-          <div className="mt-4">
-            {strategy.assets.map((asset, index) => (
-              <div key={index} className="mb-2">
-                <p className="text-sm font-medium ">
-                  {asset.name}: {asset.allocation.toFixed(2)}%
-                </p>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div
-                    className=" h-2.5 rounded-full"
-                    style={{ width: `${asset.allocation}%` }}
-                  ></div>
+          <div className="mt-4 space-y-6">
+            {/* Asset Allocation Progress Bars */}
+            <div className="space-y-3">
+              {strategy.assets.map((asset, index) => (
+                <div key={index} className="mb-2">
+                  <p className="text-sm font-medium ">
+                    {asset.name}:{" "}
+                    <span className="font-semibold">
+                      {asset.allocation.toFixed(2)}%
+                    </span>
+                  </p>
+                  <div className="relative w-full bg-gray-200 rounded-full h-3">
+                    <div
+                      className="bg-blue-600 h-3 rounded-full transition-all"
+                      style={{ width: `${asset.allocation}%` }}
+                    ></div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Target Allocation Sliders */}
+            <div className="space-y-3">
+              {Object.keys(portfolio).map((id) => {
+                const asset = strategy.assets.find((a) => a.coingeckoId === id);
+                if (!asset) return null;
+
+                return (
+                  <div key={id} className="mb-2">
+                    <p className="text-sm font-medium ">{asset.name}</p>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={targetAllocations[id]}
+                      onChange={(e) =>
+                        handleSliderChange(id, Number(e.target.value))
+                      }
+                      className="w-full cursor-pointer transition-all"
+                      aria-label={`Set target allocation for ${asset.name}`}
+                    />
+                    <p className="text-xs ">
+                      Target Allocation:{" "}
+                      <span className="font-semibold">
+                        {targetAllocations[id]}%
+                      </span>
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <button
