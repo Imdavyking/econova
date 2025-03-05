@@ -68,6 +68,10 @@ type ProposalCreated @entity {
   votesAgainst: BigInt!
   weightVotesFor: BigInt!
   weightVotesAgainst: BigInt!
+  createdTimeStamp: BigInt!
+  queuedTimeStamp: BigInt!
+  executedTimeStamp: BigInt!
+  canceledTimeStamp: BigInt!
 }
 
 type ProposalCanceled @entity {

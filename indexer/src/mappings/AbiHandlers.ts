@@ -108,6 +108,7 @@ export async function handleProposalCanceledAbiLog(
   }
 
   proposal.state = BigInt(ProposalState.Canceled);
+  proposal.canceledTimeStamp = log.block.timestamp;
   await proposal.save();
 }
 
@@ -126,6 +127,7 @@ export async function handleProposalExecutedAbiLog(
   }
 
   proposal.state = BigInt(ProposalState.Executed);
+  proposal.executedTimeStamp = log.block.timestamp;
   await proposal.save();
 }
 
@@ -143,6 +145,7 @@ export async function handleProposalQueuedAbiLog(
 
   proposal.state = BigInt(ProposalState.Queued);
   proposal.etaSecondsQueue = log.args.etaSeconds.toBigInt();
+  proposal.queuedTimeStamp = log.block.timestamp;
   await proposal.save();
 
   const transaction = ProposalQueued.create({
@@ -181,6 +184,10 @@ export async function handleProposalCreatedAbiLog(
     votesFor: BigInt(0),
     weightVotesAgainst: BigInt(0),
     weightVotesFor: BigInt(0),
+    createdTimeStamp: log.block.timestamp,
+    queuedTimeStamp: BigInt(0),
+    executedTimeStamp: BigInt(0),
+    canceledTimeStamp: BigInt(0),
   });
   await transaction.save();
 }
