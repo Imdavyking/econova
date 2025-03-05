@@ -61,7 +61,8 @@ async function main() {
         const charity = await contract.charityOrganizations(i)
         if (typeof governorTimeLock === "undefined") {
             const charityContract = await ethers.getContractAt("Charity", charity)
-            charityContract.transferOwnership(governorTimeLock)
+            const ownerTx = await charityContract.transferOwnership(governorTimeLock)
+            await ownerTx.wait(1)
         }
         console.log(`Charity(${i}):deployed to: ${charity}`)
         await verify(charity, [i, governorTimeLock])
@@ -96,11 +97,7 @@ async function main() {
 
     console.log(`TimeLock deployed to: ${governorTimeLockAddress}`)
 
-    await verify(
-        governorTimeLock,
-        [MIN_DELAY, [], [], wallet.address],
-        "contracts/dao/TimeLock.sol:TimeLock"
-    )
+    await verify(governorTimeLock, [MIN_DELAY, [], [], wallet.address])
 
     await verify(ecoAddress, [
         oracle,
