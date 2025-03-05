@@ -96,7 +96,7 @@ async function main() {
 
     console.log(`TimeLock deployed to: ${governorTimeLockAddress}`)
 
-    await verify(governorTimeLock, [MIN_DELAY, [], [], wallet.address])
+    await verify(governorTimeLockAddress, [MIN_DELAY, [], [], wallet.address])
 
     await verify(ecoAddress, [
         oracle,

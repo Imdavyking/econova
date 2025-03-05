@@ -1,19 +1,16 @@
 import { run, network } from "hardhat"
 import { localHardhat } from "./localhardhat.chainid"
 
-export const verify = async (contractAddress: any, args: any, contract: string | null = null) => {
+export const verify = async (contractAddress: any, args: any) => {
     try {
         const chainId = network.config.chainId
 
         if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
-        const verifyArgs: any = {
+
+        await run("verify:verify", {
             address: contractAddress,
             constructorArguments: args,
-        }
-        if (contract) {
-            verifyArgs["contract"] = contract
-        }
-        await run("verify:verify", verifyArgs)
+        })
     } catch (e: any) {
         if (e.message.toLowerCase().includes("already verified")) {
             console.log("Already verified!")
