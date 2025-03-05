@@ -19,6 +19,13 @@ contract EcoNovaGovernor is
     GovernorVotesQuorumFraction,
     GovernorTimelockControl
 {
+    struct Receipt {
+        bool hasVoted;
+        uint8 support;
+    }
+
+    mapping(uint256 => mapping(address => Receipt)) private _receipts;
+
     constructor(
         IVotes _token,
         TimelockController _timelock,
@@ -42,6 +49,35 @@ contract EcoNovaGovernor is
 
     function votingPeriod() public view override(Governor, GovernorSettings) returns (uint256) {
         return super.votingPeriod();
+    }
+
+    //    function getReceipt(uint256 proposalId, address voter) external view returns (Receipt memory) {
+    //     Proposal storage proposal = _proposals[proposalId];
+
+    //     Receipt memory receipt = proposal.receipts[voter];
+    //     receipt.votes = internalGetVotingPower(voter, proposal.endBlock);
+
+    //     return receipt;
+    // }
+
+    function _castVote(
+        uint256 proposalId,
+        address account,
+        uint8 support,
+        string memory reason,
+        bytes memory params
+    ) internal override returns (uint256) {
+        uint256 weight = super._castVote(proposalId, account, support, reason, params);
+
+        Receipt storage receipt = _receipts[proposalId][account];
+        receipt.hasVoted = true;
+        receipt.support = support;
+
+        return weight;
+    }
+
+    function getReceipt(uint256 proposalId, address voter) external view returns (Receipt memory) {
+        return _receipts[proposalId][voter];
     }
 
     function quorum(

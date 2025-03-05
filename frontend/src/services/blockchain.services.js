@@ -374,7 +374,7 @@ export async function daoUserHasVoted({ proposalId }) {
     const governor = await getGovernorContract();
 
     const userAddress = await signer.getAddress();
-    // function getReceipt(uint256 proposalId, address voter) external view returns (struct IGovernorCompatibilityBravo.Receipt)
+    // 
 
     const hasVoted = await governor.hasVoted(proposalId, userAddress);
     return hasVoted;

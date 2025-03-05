@@ -220,12 +220,30 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const voteWay = 1 // for (1) against (0) abstain (2)
                       const reason = "Organization is a good fit for the charity category"
 
+                      let votingReceipt = await ecoNovaGovernorDeployer.getReceipt(
+                          proposalId,
+                          owner.address
+                      )
+
+                      const [hasVoted, support] = votingReceipt
+                      expect(hasVoted).to.equal(false)
+                      expect(support).to.equal(0)
+
                       const voteTx = await ecoNovaGovernorDeployer.castVoteWithReason(
                           proposalId,
                           voteWay,
                           reason
                       )
                       await voteTx.wait(1)
+
+                      votingReceipt = await ecoNovaGovernorDeployer.getReceipt(
+                          proposalId,
+                          owner.address
+                      )
+
+                      const [hasVotedAfter, supportAfter] = votingReceipt
+                      expect(hasVotedAfter).to.equal(true)
+                      expect(supportAfter).to.equal(1)
 
                       proposalState = await ecoNovaGovernorDeployer.state(proposalId)
 
