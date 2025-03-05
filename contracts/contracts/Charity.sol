@@ -6,30 +6,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IGelatoChecker} from "./interfaces/IGelatoChecker.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ICharity} from "./interfaces/ICharity.sol";
-
-interface ICharityDao {
-    /** errors */
-    error Charity__InsufficientBalance();
-    error Charity__SendingFailed();
-    error Charity__WithdrawalDisabled();
-    error Charity__TokenAlreadyWhitelisted();
-    error Charity__TokenNotWhitelisted();
-    error Charity__MustBeAutomatedOrOwner(address caller);
-    error Charity__OrganizationAlreadyExists();
-    error Charity__OrganizationNotFound();
-    error Charity__OnlyGovernor();
-    error Charity__GovernorCanNotBeZeroAddress();
-
-    /** functions */
-
-    function addWhitelistedToken(address token) external;
-
-    function removeWhitelistedToken(address token) external;
-
-    function addOrganization(address organization) external;
-
-    function removeOrganization(address organization) external;
-}
+import {ICharityDao} from "./interfaces/ICharityDao.sol";
 
 contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharityDao {
     using SafeERC20 for IERC20;
