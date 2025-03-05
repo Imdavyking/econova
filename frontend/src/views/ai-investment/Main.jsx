@@ -12,7 +12,7 @@ import logoUrl from "@/assets/images/logo.png";
 import Kyberswap, {
   KYBERSWAP_TOKENS_INFO,
 } from "../../services/kyber.swap.services";
-import { sonic, fantomSonicTestnet } from "viem/chains";
+import { sonic } from "viem/chains";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -209,7 +209,7 @@ export default function InvestmentAI() {
       </h2>
 
       {loading ? (
-        <div className="flex items-center space-x-2 text-gray-500">
+        <div className="flex items-center space-x-2 ">
           <FaSpinner className="animate-spin" />
           <span>Loading market data...</span>
         </div>
@@ -217,22 +217,20 @@ export default function InvestmentAI() {
         <p className="text-red-500">{error}</p>
       ) : strategy ? (
         <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold ">
             Risk Level: {strategy.riskLevel}
           </h2>
-          <p className="text-gray-600">
-            Projected Growth: {strategy.projectedGrowth}
-          </p>
+          <p className="">Projected Growth: {strategy.projectedGrowth}</p>
 
           <div className="mt-4">
             {strategy.assets.map((asset, index) => (
               <div key={index} className="mb-2">
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium ">
                   {asset.name}: {asset.allocation.toFixed(2)}%
                 </p>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
-                    className="bg-blue-600 h-2.5 rounded-full"
+                    className=" h-2.5 rounded-full"
                     style={{ width: `${asset.allocation}%` }}
                   ></div>
                 </div>
