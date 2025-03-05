@@ -942,9 +942,14 @@
             "type": "bool"
           },
           {
-            "internalType": "uint8",
+            "internalType": "bool",
             "name": "support",
-            "type": "uint8"
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "votes",
+            "type": "uint256"
           }
         ],
         "internalType": "struct EcoNovaGovernor.Receipt",
