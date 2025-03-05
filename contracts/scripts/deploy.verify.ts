@@ -63,7 +63,7 @@ async function main() {
         const ownerTx = await charityContract.transferOwnership(governorTimeLock)
         await ownerTx.wait(1)
         console.log(`Charity(${i}):deployed to: ${charity}`)
-        await verify(charity, [i, wallet])
+        await verify(charity, [i, wallet.address])
         charities.push(charity)
     }
 
@@ -83,15 +83,15 @@ async function main() {
     let oracle: NamedArtifactContractDeploymentFuture<"MockOracleAggregator"> | string =
         process.env.ORACLE_ADDRESS!
 
+    const governorTimeLockAddress = await governorTimeLock.getAddress()
+
     await verify(ecoNovaGovernorAddress, [
         tokenAddress,
-        governorTimeLock,
+        governorTimeLockAddress,
         QUORUM_PERCENTAGE,
         VOTING_PERIOD,
         VOTING_DELAY,
     ])
-
-    const governorTimeLockAddress = await governorTimeLock.getAddress()
 
     console.log(`TimeLock deployed to: ${governorTimeLockAddress}`)
 
