@@ -92,7 +92,9 @@ async function main() {
         VOTING_DELAY,
     ])
 
-    console.log(`TimeLock deployed to: ${governorTimeLock}`)
+    const governorTimeLockAddress = await governorTimeLock.getAddress()
+
+    console.log(`TimeLock deployed to: ${governorTimeLockAddress}`)
 
     await verify(
         governorTimeLock,
