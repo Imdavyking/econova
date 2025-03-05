@@ -372,9 +372,7 @@ export async function daoUserHasVoted({ proposalId }) {
   try {
     const signer = await getSigner();
     const governor = await getGovernorContract();
-
     const userAddress = await signer.getAddress();
-
     const [hasVoted, support] = await governor.getReceipt(
       proposalId,
       userAddress
