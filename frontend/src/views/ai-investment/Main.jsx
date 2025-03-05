@@ -197,7 +197,7 @@ export default function InvestmentAI() {
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : strategy ? (
-        <div className="p-4 border  rounded-lg">
+        <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
           <h2 className="text-xl font-semibold text-gray-800">
             Risk Level: {strategy.riskLevel}
           </h2>
