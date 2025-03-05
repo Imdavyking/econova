@@ -63,7 +63,7 @@ async function main() {
         const ownerTx = await charityContract.transferOwnership(governorTimeLock)
         await ownerTx.wait(1)
         console.log(`Charity(${i}):deployed to: ${charity}`)
-        await verify(charity, [i, governorTimeLock])
+        await verify(charity, [i, wallet])
         charities.push(charity)
     }
 
