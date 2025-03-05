@@ -12,7 +12,7 @@ import logoUrl from "@/assets/images/logo.png";
 import Kyberswap, {
   KYBERSWAP_TOKENS_INFO,
 } from "../../services/kyber.swap.services";
-import { sonic, sonicTestnet } from "viem/chains";
+import { sonic, fantomSonicTestnet } from "viem/chains";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ export default function InvestmentAI() {
 
   const normalizeBalance = (balance, decimals) =>
     Number(balance) / 10 ** Number(decimals);
-  const chainId = isTesting ? sonicTestnet.id : sonic.id;
+  const chainId = isTesting ? CHAIN_ID : sonic.id;
 
   const kyberswap = new Kyberswap(chainId);
 
