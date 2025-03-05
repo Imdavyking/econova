@@ -759,7 +759,7 @@ export const getTokenBalance = async (tokenAddress, switchChainId) => {
       return { balance, decimals: 18 };
     }
 
-    const token = await getERC20Contract(tokenAddress);
+    const token = await getERC20Contract(tokenAddress, switchChainId);
 
     const [balance, decimals] = await Promise.all([
       token.balanceOf(address),
