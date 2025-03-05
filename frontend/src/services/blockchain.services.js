@@ -611,11 +611,30 @@ export const donateToFoundationService = async ({
   }
 };
 
-export const getCharityCategoryAddressService = async ({ charityCatogory }) => {
+export const getAllCharities = async () => {
   try {
     const manager = await getContract();
-    const charityAddress = await manager.charityOrganizations(charityCatogory);
-    return `${charityAddress}`;
+    const charityLength = await manager.charityLength();
+    const length = charityLength.toNumber();
+    const queries = [];
+
+    for (let i = 0; i < length; i++) {
+      queries.push({
+        target: CONTRACT_ADDRESS,
+        callData: managerAbiInterface.encodeFunctionData(
+          "charityOrganizations",
+          [i]
+        ),
+      });
+    }
+
+    const results = await batchMulticall(queries);
+
+    const charities = results.map((data) =>
+      managerAbiInterface.decodeFunctionResult("charityOrganizations", data)
+    );
+
+    return charities;
   } catch (error) {
     const errorInfo = parseContractError(error, managerAbiInterface);
     return `${FAILED_KEY} to get ${charityCatogory} address: ${
