@@ -104,6 +104,7 @@ export default function InvestmentAI() {
                   updatedPrices[asset.coingeckoId]) /
                   totalBalance) *
                 100,
+              targetAllocation: 50,
             })),
           });
         }
@@ -127,7 +128,7 @@ export default function InvestmentAI() {
     try {
       const rebalanceOrders = strategy.assets.map((asset) => {
         const currentAllocation = asset.allocation;
-        const targetAllocation = 50;
+        const targetAllocation = asset.targetAllocation;
 
         const action = currentAllocation < targetAllocation ? "Buy" : "Sell";
         const amountToAdjust = Math.abs(currentAllocation - targetAllocation);
@@ -142,25 +143,32 @@ export default function InvestmentAI() {
 
       console.log("Rebalancing Orders:", rebalanceOrders);
 
-      for (const order of rebalanceOrders) {
-        const { action, amount, tokenAddress, name } = order;
+      const validOrders = rebalanceOrders.filter((order) => order.amount > 0);
 
-        if (amount === 0) continue; // Skip if already balanced
+      const swapPromises = validOrders.map(async (order) => {
+        const { action, amount, tokenAddress, name } = order;
 
         toast.info(`Executing ${action} order for ${name}...`);
 
-        const swapResult = await kyberswap.swap({
-          sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
-          destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
-          sourceAmount: amount,
-        });
+        try {
+          const swapResult = await kyberswap.swap({
+            sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
+            destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
+            sourceAmount: amount,
+          });
 
-        if (swapResult?.success) {
-          toast.success(`Successfully rebalanced ${name}.`);
-        } else {
+          if (swapResult?.success) {
+            toast.success(`Successfully rebalanced ${name}.`);
+          } else {
+            throw new Error(`Swap failed for ${name}`);
+          }
+        } catch (error) {
+          console.error(`Error rebalancing ${name}:`, error);
           toast.error(`Failed to rebalance ${name}.`);
         }
-      }
+      });
+
+      await Promise.all(swapPromises);
 
       toast.success("Portfolio rebalanced successfully!");
     } catch (error) {
