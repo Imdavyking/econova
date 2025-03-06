@@ -39,16 +39,16 @@ const Footer = () => {
         <ul className="space-y-2">
           <li className="font-semibold">AI Tools</li>
           <li>
-            <Link to="/ai-health">AI Health Advisor</Link>
+            <Link to="/ai-health">Health Advisor</Link>
           </li>
           <li>
-            <Link to="/ai-tutor">AI Tutor</Link>
+            <Link to="/ai-tutor">Tutor</Link>
           </li>
           <li>
-            <Link to="/ai-audit">AI Audit</Link>
+            <Link to="/ai-audit">Smart Contract Audit</Link>
           </li>
           <li>
-            <Link to="/ai-investment">AI Investment</Link>
+            <Link to="/ai-portfolio-manager">Portfolio Manager</Link>
           </li>
         </ul>
 
