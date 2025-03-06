@@ -156,16 +156,14 @@ export default function InvestmentAI() {
     try {
       // totalUsdBalance
       const rebalanceOrders = strategy.assets.map((asset) => {
-        const currentAllocation = asset.allocation; // in percent
-        const targetAllocation = targetAllocations[asset.coingeckoId]; // in percent
+        const currentAllocation = asset.allocation;
+        const targetAllocation = targetAllocations[asset.coingeckoId];
 
         const action = currentAllocation < targetAllocation ? "Buy" : "Sell";
         const amountPercent = Math.abs(currentAllocation - targetAllocation);
 
-        // Convert allocation difference to actual amount in USD
         const amountInUsd = (amountPercent / 100) * totalUsdBalance;
 
-        // Convert USD amount to token amount
         const amountInTokens = amountInUsd / asset.price;
 
         return {
@@ -210,8 +208,6 @@ export default function InvestmentAI() {
       });
 
       await Promise.all(swapPromises);
-
-      toast.success("Portfolio rebalanced successfully!");
     } catch (error) {
       console.error("Rebalance error:", error);
       toast.error("Failed to rebalance portfolio. Please try again.");

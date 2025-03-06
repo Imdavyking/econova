@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { getERC20Contract, getSigner } from "./blockchain.services";
+import { ETH_ADDRESS } from "../utils/constants";
 
 export const KYBERSWAP_AGGREGATOR_API_URL =
   "https://aggregator-api.kyberswap.com";
@@ -49,23 +50,18 @@ class Kyberswap {
   }
 
   swap = async ({ sourceToken, destToken, sourceAmount, slippage = 0.5 }) => {
+    this.chainId = 146;
+    sourceToken = ETH_ADDRESS;
+    destToken = "0x2D0E0814E62D80056181F5cd932274405966e4f0";
     const signer = await getSigner();
     const isNativeToken =
       sourceToken.toLowerCase() === KYBERSWAP_TOKENS_INFO.S.address;
     let amountRaw;
 
-    const routeData = await this.getSwapRoute(
-      sourceToken,
-      destToken,
-      amountRaw
-    );
-
-    const routerAddress = routeData.routerAddress;
-
     if (isNativeToken) {
       amountRaw = ethers.formatEther(sourceAmount.toString());
     } else {
-      const tokenContract = getERC20Contract(sourceToken, this.chainId);
+      const tokenContract = await getERC20Contract(sourceToken, this.chainId);
       const decimals = await tokenContract.decimals();
       amountRaw = ethers.formatUnits(
         sourceAmount.toString(),
@@ -79,6 +75,14 @@ class Kyberswap {
 
       await this.handleTokenApproval(sourceToken, routerAddress, amountRaw);
     }
+
+    const routeData = await this.getSwapRoute(
+      sourceToken,
+      destToken,
+      amountRaw
+    );
+
+    const routerAddress = routeData.routerAddress;
 
     const encodedData = await this.getEncodedSwapData(
       routeData.routeSummary,
@@ -137,7 +141,7 @@ class Kyberswap {
   handleTokenApproval = async (tokenAddress, spenderAddress, amount) => {
     try {
       const signer = await getSigner();
-      const tokenContract = getERC20Contract(tokenAddress, this.chainId);
+      const tokenContract = await getERC20Contract(tokenAddress, this.chainId);
 
       const currentAllowance = await tokenContract.allowance(
         signer.address,
