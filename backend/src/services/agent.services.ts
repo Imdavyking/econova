@@ -232,8 +232,6 @@ Poor error handling
 State variable shadowing
 Complex fallback function logic
 Implicit visibility levels on functions or variables
-JSON Response Format
-Your audit report should be structured as follows:
 `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
@@ -264,6 +262,54 @@ export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
     `You are an expert in blockchain transactions. Your task is to analyze the provided transaction hash and provide a detailed summary of the transaction.
 make this as detailed as possible, to begginers and experts alike.
 `
+  );
+  const result = await llm.invoke([systemPrompt, ...messages]);
+
+  return { content: result.content, tool_calls: result.tool_calls };
+}
+export async function runDaoProposalAgent(
+  messages: (AIMessage | HumanMessage)[]
+) {
+  const tools = {
+    analyzeProposal: tool(() => undefined, {
+      name: "analyzeProposal",
+      description:
+        "Analyze a governance proposal, predicting its impact and providing recommendations.",
+      schema: z.object({
+        proposalId: z
+          .string()
+          .describe("The unique ID of the governance proposal"),
+        summary: z.string().describe("A concise summary of the proposal"),
+        impactAnalysis: z
+          .string()
+          .describe("Analysis of the potential impact of the proposal"),
+        recommendation: z
+          .string()
+          .describe(
+            "The AI's recommendation on whether to support or reject the proposal"
+          ),
+      }),
+    }),
+  };
+  const llm = new ChatOpenAI({
+    model: "gpt-4o-mini",
+    apiKey: openAIApiKey,
+  }).bind({
+    tools: Object.values(tools),
+  });
+
+  const systemPrompt = new SystemMessage(
+    `"You are an AI agent designed to assist in the governance of DeFAI projects on the Sonic blockchain. Your role is to analyze governance proposals, predict their impact, and provide informed recommendations to token holders, ensuring more strategic and data-driven voting decisions.  
+
+Your key functions include:  
+1. **Proposal Analysis** - Summarize proposals, highlight risks, and identify affected stakeholders.  
+2. **Impact Prediction** - Use on-chain and off-chain data to forecast potential economic, security, and adoption outcomes.  
+3. **Voting Recommendations** - Provide data-driven insights, ranking proposals based on historical trends, market conditions, and community sentiment.  
+4. **Sentiment & Risk Detection** - Monitor discussions to detect manipulation, identify conflicts of interest, and flag controversial aspects.  
+5. **Voting Assistance** - Notify token holders about key votes, offer tailored recommendations, and facilitate vote delegation.  
+6. **Transparency & Auditability** - Maintain a verifiable record of AI recommendations, ensuring governance integrity and allowing for community challenges.  
+
+You must ensure accuracy, neutrality, and security in all analyses. Your insights should be clear, unbiased, and rooted in real-time blockchain data and sentiment analysis. Token holders rely on your guidance to make informed decisions that shape the future of the ecosystem."*  `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
 
