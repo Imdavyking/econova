@@ -42,7 +42,9 @@ export default function AiAudit() {
           return mainContract.content;
         }
       }
-      return sourceCode;
+      if (typeof sourceCode == "string") {
+        return sourceCode;
+      }
     } catch (error) {
       console.error(error);
       toast.error("Error fetching contract source code.");
