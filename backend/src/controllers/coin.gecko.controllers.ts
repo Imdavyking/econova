@@ -31,7 +31,8 @@ export const getPriceFromCoinGecko = async (req: Request, res: Response) => {
     if (!data) {
       const cachedData = await redis.get(cacheKey);
       if (cachedData) {
-        return res.json({ data: JSON.parse(cachedData) });
+        res.json({ data: JSON.parse(cachedData) });
+        return;
       }
     }
     res.json({ data });
