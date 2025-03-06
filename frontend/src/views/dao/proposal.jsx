@@ -4,10 +4,12 @@ import {
   FaThumbsDown,
   FaEye,
   FaSpinner,
+  FaRobot,
   FaClock,
   FaPlay,
   FaTimes,
 } from "react-icons/fa";
+import { AiOutlineRobot } from "react-icons/ai";
 import {
   charityAbiInterface,
   daoExecute,
@@ -21,6 +23,7 @@ import {
 } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
+import { callDaoAnalysisApi } from "../../services/openai.services";
 
 const ProposalState = {
   0: "Pending",
@@ -60,6 +63,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [isCanceling, setIsCanceling] = useState(false);
   const [signer, setSigner] = useState(null);
   const [timeUntilExecution, setTimeUntilExecution] = useState(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
   const [support, setSupport] = useState(null);
@@ -223,16 +227,40 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
     }
   };
 
+  const handleAIInsights = async () => {
+    try {
+      const daoAnalysis = await callDaoAnalysisApi({
+        ...proposal,
+        decodedData: decodedData.length > 0 ? decodedData : null,
+      });
+
+      console.log(daoAnalysis);
+    } catch (error) {
+      toast.error(`Error fetching AI insights: ${error.message}`);
+    }
+  };
+
   return (
     <div className="p-4 bg-gray-800 rounded-lg shadow-md">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold text-white">{description}</h2>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="text-gray-400 hover:text-white"
-        >
-          <FaEye size={20} />
-        </button>
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center text-gray-400 hover:text-white space-x-2"
+          >
+            <FaEye size={20} />
+            <span className="hidden sm:inline">View Proposal</span>
+          </button>
+
+          <button
+            onClick={() => handleAIInsights()}
+            className="flex items-center text-gray-400 hover:text-blue-400 space-x-2"
+          >
+            <FaRobot size={20} />
+            <span className="hidden sm:inline">AI Insights</span>
+          </button>
+        </div>
       </div>
       <p className="text-sm text-gray-400 mb-2">Proposed by: {proposer}</p>
       <p className="text-sm text-gray-400 mb-2">
@@ -341,6 +369,34 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
             </div>
           )}
         </div>
+      )}
+
+      <div
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform ${
+          isPanelOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out`}
+      >
+        {/* Panel Header */}
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-lg font-semibold">AI Insights</h2>
+          <button onClick={() => setIsPanelOpen(false)}>
+            <FaTimes size={20} className="text-gray-500 hover:text-gray-800" />
+          </button>
+        </div>
+
+        {/* Panel Content */}
+        <div className="p-4">
+          <p>Here are the AI-generated insights for this proposal...</p>
+          {/* Additional insights can go here */}
+        </div>
+      </div>
+
+      {/* Overlay (click to close panel) */}
+      {isPanelOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50"
+          onClick={() => setIsPanelOpen(false)}
+        ></div>
       )}
 
       {/* Modal */}

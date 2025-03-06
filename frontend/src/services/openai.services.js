@@ -43,3 +43,20 @@ export const callLLMTxHashApi = async ({ txInfo }) => {
   }
   return await response.json();
 };
+
+export const callDaoAnalysisApi = async (proposal) => {
+  const response = await fetch(`${SERVER_URL}/api/llm/dao_analysis`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify(proposal, (_, v) =>
+      typeof v === "bigint" ? v.toString() : v
+    ),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch transaction analysis");
+  }
+  return await response.json();
+};
