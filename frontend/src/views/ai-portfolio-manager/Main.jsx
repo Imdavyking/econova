@@ -45,101 +45,100 @@ export default function InvestmentAI() {
     },
   ];
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setError(null);
-        setLoading(true);
+  async function fetchData() {
+    try {
+      setError(null);
+      setLoading(true);
 
-        const updatedAssetsInfo = [...assetsInfo];
+      let updatedAssetsInfo = await updateAssetsInfo();
+      const results = await fetchAssetData(updatedAssetsInfo);
+      processFetchedData(results);
+    } catch (err) {
+      console.error("Error fetching market data:", err);
+      setError("Failed to load market data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
-        if (isTesting) {
-          const { tokenAddress, name } = await getProjectTokenDetails();
-          const usdcTestIndex = updatedAssetsInfo.findIndex(
-            (asset) => asset.coingeckoId === "usd-coin"
-          );
-
-          if (usdcTestIndex !== -1) {
-            updatedAssetsInfo[usdcTestIndex] = {
-              ...updatedAssetsInfo[usdcTestIndex],
-              address: tokenAddress,
-              name,
-              symbol: name,
-            };
-          }
-        }
-
-        const results = await Promise.all(
-          updatedAssetsInfo.map(async (asset) => {
-            try {
-              const [{ data: marketData }, balance] = await Promise.all([
-                fetchMarketDataCoingecko({
-                  path: `/coins/${asset.coingeckoId}/market_chart`,
-                  queryParams: { vs_currency: "usd", days: 7 },
-                }),
-                getTokenBalance(asset.address, chainId),
-              ]);
-
-              const price = marketData?.prices?.[0]?.[1] || 0;
-              return { asset, price, balance };
-            } catch (err) {
-              console.error(`Failed to fetch data for ${asset.name}:`, err);
-              return {
-                asset,
-                price: 0,
-                balance: { balance: "0", decimals: "18" },
-              };
-            }
-          })
-        );
-
-        console.log("Fetched data:", results);
-
-        const updatedPrices = {};
-        const updatedPortfolio = {};
-        let totalBalance = 0;
-
-        for (const { asset, price, balance } of results) {
-          const tokenBalance = normalizeBalance(
-            balance.balance,
-            balance.decimals
-          );
-          updatedPrices[asset.coingeckoId] = price;
-          updatedPortfolio[asset.coingeckoId] = tokenBalance;
-          totalBalance += tokenBalance * price;
-        }
-
-        setPortfolio(updatedPortfolio);
-
-        if (totalBalance > 0) {
-          const strategyAssets = results.map(({ asset }) => ({
-            name: asset.name,
-            coingeckoId: asset.coingeckoId,
-            allocation:
-              ((updatedPortfolio[asset.coingeckoId] *
-                updatedPrices[asset.coingeckoId]) /
-                totalBalance) *
-              100,
-            tokenAddress: asset.address,
-          }));
-
-          setStrategy({ assets: strategyAssets });
-
-          setTargetAllocations(
-            strategyAssets.reduce((acc, { coingeckoId, allocation }) => {
-              acc[coingeckoId] = allocation;
-              return acc;
-            }, {})
-          );
-        }
-      } catch (err) {
-        console.error("Error fetching market data:", err);
-        setError("Failed to load market data. Please try again.");
-      } finally {
-        setLoading(false);
+  async function updateAssetsInfo() {
+    let updatedAssetsInfo = [...assetsInfo];
+    if (isTesting) {
+      const { tokenAddress, name } = await getProjectTokenDetails();
+      const usdcTestIndex = updatedAssetsInfo.findIndex(
+        (asset) => asset.coingeckoId === "usd-coin"
+      );
+      if (usdcTestIndex !== -1) {
+        updatedAssetsInfo[usdcTestIndex] = {
+          ...updatedAssetsInfo[usdcTestIndex],
+          address: tokenAddress,
+          name,
+          symbol: name,
+        };
       }
     }
+    return updatedAssetsInfo;
+  }
 
+  async function fetchAssetData(updatedAssetsInfo) {
+    return Promise.all(
+      updatedAssetsInfo.map(async (asset) => {
+        try {
+          const [{ data: marketData }, balance] = await Promise.all([
+            fetchMarketDataCoingecko({
+              path: `/coins/${asset.coingeckoId}/market_chart`,
+              queryParams: { vs_currency: "usd", days: 7 },
+            }),
+            getTokenBalance(asset.address, chainId),
+          ]);
+
+          const price = marketData?.prices?.[0]?.[1] || 0;
+          return { asset, price, balance };
+        } catch (err) {
+          console.error(`Failed to fetch data for ${asset.name}:`, err);
+          return { asset, price: 0, balance: { balance: "0", decimals: "18" } };
+        }
+      })
+    );
+  }
+
+  function processFetchedData(results) {
+    const updatedPrices = {};
+    const updatedPortfolio = {};
+    let totalBalance = 0;
+
+    for (const { asset, price, balance } of results) {
+      const tokenBalance = normalizeBalance(balance.balance, balance.decimals);
+      updatedPrices[asset.coingeckoId] = price;
+      updatedPortfolio[asset.coingeckoId] = tokenBalance;
+      totalBalance += tokenBalance * price;
+    }
+
+    setPortfolio(updatedPortfolio);
+
+    if (totalBalance > 0) {
+      const strategyAssets = results.map(({ asset }) => ({
+        name: asset.name,
+        coingeckoId: asset.coingeckoId,
+        allocation:
+          ((updatedPortfolio[asset.coingeckoId] *
+            updatedPrices[asset.coingeckoId]) /
+            totalBalance) *
+          100,
+        tokenAddress: asset.address,
+      }));
+
+      setStrategy({ assets: strategyAssets });
+      setTargetAllocations(
+        strategyAssets.reduce((acc, { coingeckoId, allocation }) => {
+          acc[coingeckoId] = allocation;
+          return acc;
+        }, {})
+      );
+    }
+  }
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -150,61 +149,61 @@ export default function InvestmentAI() {
     toast.info("Calculating optimal rebalancing strategy...");
 
     try {
-      const rebalanceOrders = strategy.assets.map((asset) => {
-        const currentAllocation = asset.allocation;
-        const targetAllocation = targetAllocations[asset.coingeckoId];
+      // const rebalanceOrders = strategy.assets.map((asset) => {
+      //   const currentAllocation = asset.allocation;
+      //   const targetAllocation = targetAllocations[asset.coingeckoId];
 
-        const action = currentAllocation < targetAllocation ? "Buy" : "Sell";
-        const amountToAdjust = Math.abs(currentAllocation - targetAllocation);
+      //   const action = currentAllocation < targetAllocation ? "Buy" : "Sell";
+      //   const amountToAdjust = Math.abs(currentAllocation - targetAllocation);
 
-        return {
-          name: asset.name,
-          action,
-          amountPercent: amountToAdjust,
-          tokenAddress: asset.tokenAddress,
-        };
-      });
+      //   return {
+      //     name: asset.name,
+      //     action,
+      //     amountPercent: amountToAdjust,
+      //     tokenAddress: asset.tokenAddress,
+      //   };
+      // });
 
-      console.log("Rebalancing Orders:", {
-        rebalanceOrders,
-        targetAllocations,
-      });
+      // console.log("Rebalancing Orders:", {
+      //   rebalanceOrders,
+      //   targetAllocations,
+      // });
 
-      const validOrders = rebalanceOrders.filter((order) => order.amount > 0);
+      // const validOrders = rebalanceOrders.filter((order) => order.amount > 0);
 
-      const kyberswap = new Kyberswap(chainId);
+      // const kyberswap = new Kyberswap(chainId);
 
-      const swapPromises = validOrders.map(async (order) => {
-        const { action, amountPercent, tokenAddress, name } = order;
+      // const swapPromises = validOrders.map(async (order) => {
+      //   const { action, amountPercent, tokenAddress, name } = order;
 
-        toast.info(`Executing ${action} order for ${name}...`);
+      //   toast.info(`Executing ${action} order for ${name}...`);
 
-        try {
-          const tokenBalance = await getTokenBalance(tokenAddress, chainId);
-          const amount = (tokenBalance.balance * amountPercent) / 100;
-          console.log({
-            sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
-            destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
-            sourceAmount: amount,
-          });
-          const swapResult = await kyberswap.swap({
-            sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
-            destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
-            sourceAmount: amount,
-          });
+      //   try {
+      //     const tokenBalance = await getTokenBalance(tokenAddress, chainId);
+      //     const amount = (tokenBalance.balance * amountPercent) / 100;
+      //     console.log({
+      //       sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
+      //       destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
+      //       sourceAmount: amount,
+      //     });
+      //     const swapResult = await kyberswap.swap({
+      //       sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
+      //       destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
+      //       sourceAmount: amount,
+      //     });
 
-          if (swapResult?.success) {
-            toast.success(`Successfully rebalanced ${name}.`);
-          } else {
-            throw new Error(`Swap failed for ${name}`);
-          }
-        } catch (error) {
-          console.error(`Error rebalancing ${name}:`, error);
-          toast.error(`Failed to rebalance ${name}.`);
-        }
-      });
+      //     if (swapResult?.success) {
+      //       toast.success(`Successfully rebalanced ${name}.`);
+      //     } else {
+      //       throw new Error(`Swap failed for ${name}`);
+      //     }
+      //   } catch (error) {
+      //     console.error(`Error rebalancing ${name}:`, error);
+      //     toast.error(`Failed to rebalance ${name}.`);
+      //   }
+      // });
 
-      await Promise.all(swapPromises);
+      // await Promise.all(swapPromises);
 
       toast.success("Portfolio rebalanced successfully!");
     } catch (error) {
