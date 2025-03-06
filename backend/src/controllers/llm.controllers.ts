@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   runAIAgent,
   runAIAuditAgent,
+  runDaoProposalAgent,
   runTxHashAgent,
 } from "../services/agent.services";
 import dotenv from "dotenv";
@@ -120,7 +121,7 @@ export const processDaoAnalysisRequest = async (
       return;
     }
 
-    const generateActions = await runTxHashAgent([
+    const generateActions = await runDaoProposalAgent([
       new HumanMessage(JSON.stringify(req.body)),
     ]);
 
