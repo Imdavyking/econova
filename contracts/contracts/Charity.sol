@@ -244,6 +244,9 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
         }
         uint256 share = amount / orgCount;
         for (uint256 i = 0; i < orgCount; i++) {
+            if (!organizationExists[orgs[i]]) {
+                revert Charity__OrganizationNotFound();
+            }
             if (token == ETH_ADDRESS) {
                 (bool success, ) = orgs[i].call{value: share}("");
                 if (!success) {
