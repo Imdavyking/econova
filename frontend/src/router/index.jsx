@@ -10,7 +10,7 @@ import LeaderBoard from "../views/leaderboard/Main";
 import AIHealth from "../views/ai-health/Main";
 import AITutor from "../views/ai-tutor/Main";
 import AiAudit from "../views/ai-audit/Main";
-import AiInvestment from "../views/ai-investment/Main";
+import AiPortfolioManager from "../views/ai-portfolio-manager/Main";
 import Bridge from "../views/bridge/Main";
 import Dao from "../views/dao/Main";
 import CreateProposal from "../views/dao/create-proposal";
@@ -67,8 +67,8 @@ function Router() {
       element: <AiAudit />,
     },
     {
-      path: "/ai-investment",
-      element: <AiInvestment />,
+      path: "/ai-portfolio-manager",
+      element: <AiPortfolioManager />,
     },
     {
       path: "/tx-analysis",
