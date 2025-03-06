@@ -254,8 +254,11 @@ export default function AiAudit() {
             </div>
 
             <p className="mb-4 text-gray-300">{auditResult.overview}</p>
+
             {auditResult.issues_detected &&
-              auditResult.issues_detected.length > 0 && (
+              Object.keys(auditResult.issues_detected).some(
+                (key) => auditResult.issues_detected[key].length > 0
+              ) && (
                 <div className="mb-4">
                   <h4 className="font-semibold text-red-400">
                     Issues Detected:
@@ -263,9 +266,9 @@ export default function AiAudit() {
                   <ul className="list-disc ml-5 text-gray-300">
                     {Object.entries(auditResult.issues_detected).map(
                       ([severity, issues]) =>
-                        issues.length > 0 ? (
-                          <li key={severity}>
-                            <span className="font-semibold capitalize">
+                        issues.length > 0 && (
+                          <li key={severity} className="mb-2">
+                            <span className="font-semibold capitalize text-red-300">
                               {severity}:
                             </span>
                             <ul className="ml-4 list-disc">
@@ -276,7 +279,7 @@ export default function AiAudit() {
                               ))}
                             </ul>
                           </li>
-                        ) : null
+                        )
                     )}
                   </ul>
                 </div>
