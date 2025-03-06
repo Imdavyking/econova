@@ -205,6 +205,7 @@ export async function runAIAuditAgent(messages: (AIMessage | HumanMessage)[]) {
   const systemPrompt = new SystemMessage(
     `You are an expert smart contract security auditor. 
     Your task is to conduct a strict and thorough review of the provided Solidity smart contract, ensuring it meets the highest security and efficiency standards. Any security issue, no matter how minor, must be identified.
+    also show line numbers where the issues are found.
 
 Strict Rating System
 ⭐ 5 Stars: Awarded only if the contract has zero vulnerabilities, follows all security best practices, uses gas optimally, and implements the latest Solidity features correctly.

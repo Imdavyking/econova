@@ -55,15 +55,17 @@ class Kyberswap {
     destToken = "0x2D0E0814E62D80056181F5cd932274405966e4f0";
     const signer = await getSigner();
     const isNativeToken =
-      sourceToken.toLowerCase() === KYBERSWAP_TOKENS_INFO.S.address;
+      sourceToken.toLowerCase() ===
+      KYBERSWAP_TOKENS_INFO.S.address.toLowerCase();
     let amountRaw;
 
     if (isNativeToken) {
-      amountRaw = ethers.formatEther(sourceAmount.toString());
+      amountRaw = ethers.parseEther(sourceAmount.toString());
     } else {
       const tokenContract = await getERC20Contract(sourceToken, this.chainId);
+
       const decimals = await tokenContract.decimals();
-      amountRaw = ethers.formatUnits(
+      amountRaw = ethers.parseUnits(
         sourceAmount.toString(),
         decimals.toString()
       );
@@ -111,15 +113,16 @@ class Kyberswap {
   getSwapRoute = async (sourceToken, destToken, amount) => {
     try {
       const url = `${KYBERSWAP_AGGREGATOR_API_URL}/routes`;
-      const response = await fetch(url, {
+      const params = new URLSearchParams({
+        tokenIn: sourceToken,
+        tokenOut: destToken,
+        amountIn: amount.toString(),
+        gasInclude: "true",
+      });
+
+      const response = await fetch(`${url}?${params.toString()}`, {
         method: "GET",
         headers: { "x-client-id": "EconovaBot" },
-        body: JSON.stringify({
-          tokenIn: sourceToken,
-          tokenOut: destToken,
-          amountIn: amount.toString(),
-          gasInclude: "true",
-        }),
       });
 
       if (!response.ok) {
