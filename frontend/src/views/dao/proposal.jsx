@@ -24,6 +24,7 @@ import {
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
 import { callDaoAnalysisApi } from "../../services/openai.services";
+import AiPanel from "./ai-panel";
 
 const ProposalState = {
   0: "Pending",
@@ -67,6 +68,8 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
   const [support, setSupport] = useState(null);
+  const [aiInsights, setAiInsights] = useState(null);
+  const [isThinking, setIsThinking] = useState(false);
 
   useEffect(() => {
     if (!etaSecondsQueue || etaSecondsQueue.toString() === "0") return;
@@ -229,17 +232,35 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
 
   const handleAIInsights = async () => {
     try {
+      setIsThinking(true);
       const daoAnalysis = await callDaoAnalysisApi({
         ...proposal,
         decodedData: decodedData.length > 0 ? decodedData : null,
       });
 
-      console.log(JSON.stringify(daoAnalysis));
-      setIsPanelOpen(true);
+      if (daoAnalysis === null) {
+        toast.error("No AI insights available for this proposal.");
+        return;
+      }
 
-      console.log(daoAnalysis);
+      const toolCall = daoAnalysis.tool_calls.find(
+        (call) => call.name === "analyzeProposal"
+      );
+
+      if (!toolCall) {
+        toast.error("No AI insights available for this proposal.");
+        return;
+      }
+
+      const { summary, impactAnalysis, recommendation } = toolCall.args;
+
+      setAiInsights({ summary, impactAnalysis, recommendation });
+
+      setIsPanelOpen(true);
     } catch (error) {
       toast.error(`Error fetching AI insights: ${error.message}`);
+    } finally {
+      setIsThinking(false);
     }
   };
 
@@ -260,7 +281,12 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
             onClick={() => handleAIInsights()}
             className="flex items-center text-gray-400 hover:text-blue-400 space-x-2"
           >
-            <FaRobot size={20} />
+            <FaRobot
+              size={20}
+              className={`transition-transform ${
+                isThinking ? "animate-spin" : ""
+              }`}
+            />
             <span className="hidden sm:inline">AI Insights</span>
           </button>
         </div>
@@ -374,33 +400,11 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         </div>
       )}
 
-      <div
-        className={`fixed top-0 right-0 h-full w-80 bg-gray-900 shadow-lg transform ${
-          isPanelOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
-      >
-        {/* Panel Header */}
-        <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-lg font-semibold">AI Insights</h2>
-          <button onClick={() => setIsPanelOpen(false)}>
-            <FaTimes size={20} className="text-gray-500 hover:text-gray-800" />
-          </button>
-        </div>
-
-        {/* Panel Content */}
-        <div className="p-4">
-          <p>Here are the AI-generated insights for this proposal...</p>
-          {/* Additional insights can go here */}
-        </div>
-      </div>
-
-      {/* Overlay (click to close panel) */}
-      {isPanelOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50"
-          onClick={() => setIsPanelOpen(false)}
-        ></div>
-      )}
+      <AiPanel
+        isPanelOpen={isPanelOpen}
+        setIsPanelOpen={setIsPanelOpen}
+        aiInsights={aiInsights}
+      />
 
       {/* Modal */}
       {isModalOpen && (
