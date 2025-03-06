@@ -47,7 +47,7 @@ app.use(
     origin: function (origin, callback) {
       const allowedOrigins = [
         new URL(FRONTEND_URL!).origin,
-        new URL("http://localhost:3000").href,
+        new URL("http://localhost:3000").origin,
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
