@@ -55,7 +55,7 @@ export const processLLMAuditRequest = async (req: Request, res: Response) => {
     res.json(generateActions);
   } catch (error: any) {
     console.error("LLM Controller Error:", error);
-    res.status(500).json({ error: `Internal server error ${error.message}` });
+    res.status(200).json({ error: `Internal server error ${error.message}` });
   }
 };
 
