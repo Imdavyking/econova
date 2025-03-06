@@ -31,10 +31,8 @@ export default function AiAudit() {
       if (sourceCode.startsWith("{{") && sourceCode.endsWith("}}")) {
         sourceCode = sourceCode.slice(1, -1).trim();
 
-        console.log({ sourceCode });
         const contractInfo = JSON.parse(sourceCode);
 
-        console.log({ contractInfo });
         const sources = contractInfo.sources;
 
         const mainContract = Object.values(sources).find((source) =>
