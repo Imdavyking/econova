@@ -20,6 +20,7 @@ export default function InvestmentAI() {
   const [strategy, setStrategy] = useState(null);
   const [rebalancing, setRebalancing] = useState(false);
   const [portfolio, setPortfolio] = useState({});
+  const [totalUsdBalance, setTotalUsdBalance] = useState(0);
   const isTesting = true;
 
   const normalizeBalance = (balance, decimals) =>
@@ -114,12 +115,16 @@ export default function InvestmentAI() {
       totalBalance += tokenBalance * price;
     }
 
+    setTotalUsdBalance(totalBalance);
+
     setPortfolio(updatedPortfolio);
 
     if (totalBalance > 0) {
       const strategyAssets = results.map(({ asset }) => ({
         name: asset.name,
         coingeckoId: asset.coingeckoId,
+        balance: updatedPortfolio[asset.coingeckoId],
+        price: updatedPrices[asset.coingeckoId],
         allocation:
           ((updatedPortfolio[asset.coingeckoId] *
             updatedPrices[asset.coingeckoId]) /
@@ -149,61 +154,62 @@ export default function InvestmentAI() {
     toast.info("Calculating optimal rebalancing strategy...");
 
     try {
-      // const rebalanceOrders = strategy.assets.map((asset) => {
-      //   const currentAllocation = asset.allocation;
-      //   const targetAllocation = targetAllocations[asset.coingeckoId];
+      // totalUsdBalance
+      const rebalanceOrders = strategy.assets.map((asset) => {
+        const currentAllocation = asset.allocation; // in percent
+        const targetAllocation = targetAllocations[asset.coingeckoId]; // in percent
 
-      //   const action = currentAllocation < targetAllocation ? "Buy" : "Sell";
-      //   const amountToAdjust = Math.abs(currentAllocation - targetAllocation);
+        const action = currentAllocation < targetAllocation ? "Buy" : "Sell";
+        const amountPercent = Math.abs(currentAllocation - targetAllocation);
 
-      //   return {
-      //     name: asset.name,
-      //     action,
-      //     amountPercent: amountToAdjust,
-      //     tokenAddress: asset.tokenAddress,
-      //   };
-      // });
+        // Convert allocation difference to actual amount in USD
+        const amountInUsd = (amountPercent / 100) * totalUsdBalance;
 
-      // console.log("Rebalancing Orders:", {
-      //   rebalanceOrders,
-      //   targetAllocations,
-      // });
+        // Convert USD amount to token amount
+        const amountInTokens = amountInUsd / asset.price;
 
-      // const validOrders = rebalanceOrders.filter((order) => order.amount > 0);
+        return {
+          name: asset.name,
+          balance: asset.balance,
+          price: asset.price,
+          action,
+          amountPercent,
+          amountInUsd,
+          amountInTokens,
+          tokenAddress: asset.tokenAddress,
+        };
+      });
 
-      // const kyberswap = new Kyberswap(chainId);
+      const validOrders = rebalanceOrders.filter(
+        (order) => order.amountInTokens > 0
+      );
 
-      // const swapPromises = validOrders.map(async (order) => {
-      //   const { action, amountPercent, tokenAddress, name } = order;
+      const kyberswap = new Kyberswap(chainId);
 
-      //   toast.info(`Executing ${action} order for ${name}...`);
+      const swapPromises = validOrders.map(async (order) => {
+        const { action, amountInTokens, tokenAddress, name } = order;
 
-      //   try {
-      //     const tokenBalance = await getTokenBalance(tokenAddress, chainId);
-      //     const amount = (tokenBalance.balance * amountPercent) / 100;
-      //     console.log({
-      //       sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
-      //       destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
-      //       sourceAmount: amount,
-      //     });
-      //     const swapResult = await kyberswap.swap({
-      //       sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
-      //       destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
-      //       sourceAmount: amount,
-      //     });
+        toast.info(`Executing ${action} order for ${name}...`);
 
-      //     if (swapResult?.success) {
-      //       toast.success(`Successfully rebalanced ${name}.`);
-      //     } else {
-      //       throw new Error(`Swap failed for ${name}`);
-      //     }
-      //   } catch (error) {
-      //     console.error(`Error rebalancing ${name}:`, error);
-      //     toast.error(`Failed to rebalance ${name}.`);
-      //   }
-      // });
+        try {
+          const swapResult = await kyberswap.swap({
+            sourceToken: action === "Sell" ? tokenAddress : ETH_ADDRESS,
+            destToken: action === "Buy" ? tokenAddress : ETH_ADDRESS,
+            sourceAmount: amountInTokens,
+          });
 
-      // await Promise.all(swapPromises);
+          if (swapResult?.success) {
+            toast.success(`Successfully rebalanced ${name}.`);
+          } else {
+            throw new Error(`Swap failed for ${name}`);
+          }
+        } catch (error) {
+          console.error(`Error rebalancing ${name}:`, error);
+          toast.error(`Failed to rebalance ${name}.`);
+        }
+      });
+
+      await Promise.all(swapPromises);
 
       toast.success("Portfolio rebalanced successfully!");
     } catch (error) {
