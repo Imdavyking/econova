@@ -44,7 +44,17 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: new URL(FRONTEND_URL!).origin,
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        new URL(FRONTEND_URL!).origin,
+        new URL("http://localhost:3000").href,
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );

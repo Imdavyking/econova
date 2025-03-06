@@ -63,7 +63,7 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
   const [isCanceling, setIsCanceling] = useState(false);
   const [signer, setSigner] = useState(null);
   const [timeUntilExecution, setTimeUntilExecution] = useState(null);
-  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
   const [support, setSupport] = useState(null);
@@ -234,6 +234,9 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
         decodedData: decodedData.length > 0 ? decodedData : null,
       });
 
+      console.log(JSON.stringify(daoAnalysis));
+      setIsPanelOpen(true);
+
       console.log(daoAnalysis);
     } catch (error) {
       toast.error(`Error fetching AI insights: ${error.message}`);
@@ -372,9 +375,9 @@ export default function Proposal({ proposal, currentBlock, blockTime = 0.3 }) {
       )}
 
       <div
-        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform ${
+        className={`fixed top-0 right-0 h-full w-80 bg-gray-900 shadow-lg transform ${
           isPanelOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out`}
+        } transition-transform duration-300 ease-in-out z-50`}
       >
         {/* Panel Header */}
         <div className="flex justify-between items-center p-4 border-b">
