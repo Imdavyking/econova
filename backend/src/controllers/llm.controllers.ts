@@ -60,8 +60,8 @@ export const processLLMAuditRequest = async (req: Request, res: Response) => {
 };
 
 /**
- * Handles LLM Audit API requests
- * @route POST /api/llm/audit
+ * Handles LLM Transaction Hash API requests
+ * @route POST /api/llm/tx_hash
  */
 export const processTxHashRequest = async (req: Request, res: Response) => {
   try {
