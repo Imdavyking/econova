@@ -42,7 +42,7 @@ export default function AiAudit() {
           return mainContract.content;
         }
       }
-      if (typeof sourceCode == "string") {
+      if (typeof sourceCode === "string") {
         return sourceCode;
       }
     } catch (error) {
