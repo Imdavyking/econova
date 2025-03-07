@@ -88,5 +88,29 @@ curl -X POST http://localhost:5100/graphql -H "Content-Type: application/json" -
          contractAddress
        }
      }
+     proposalCreateds(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
+      nodes {
+        contractAddress
+        proposalId
+        proposer
+        state
+        etaSecondsQueue
+        targets
+        voteEnd
+        voteStart
+        description
+        id
+        calldatas
+        votesFor
+        votesAgainst
+        weightVotesFor
+        weightVotesAgainst
+        createdTimeStamp
+        queuedTimeStamp
+        executedTimeStamp
+        canceledTimeStamp
+      }
+      totalCount
+    }
    }
    ```
