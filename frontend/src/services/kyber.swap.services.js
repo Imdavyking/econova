@@ -107,7 +107,10 @@ class Kyberswap {
       tx.gasLimit = 500000;
     }
 
-    return await signer.sendTransaction(tx);
+    const sentTx = await signer.sendTransaction(tx);
+    sentTx.wait(1);
+
+    return sentTx;
   };
 
   getSwapRoute = async (sourceToken, destToken, amount) => {
