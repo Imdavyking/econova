@@ -190,8 +190,6 @@ export default function InvestmentAI() {
         return;
       }
 
-      console.log("Rebalance Orders:", rebalanceOrders);
-
       const kyberswap = new Kyberswap(chainId);
 
       for (const sellOrder of rebalanceOrders.filter(
