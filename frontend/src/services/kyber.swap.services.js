@@ -50,9 +50,6 @@ class Kyberswap {
   }
 
   swap = async ({ sourceToken, destToken, sourceAmount, slippage = 0.5 }) => {
-    this.chainId = 146;
-    sourceToken = ETH_ADDRESS;
-    destToken = "0x2D0E0814E62D80056181F5cd932274405966e4f0";
     const signer = await getSigner();
     const isNativeToken =
       sourceToken.toLowerCase() ===
@@ -83,6 +80,8 @@ class Kyberswap {
       destToken,
       amountRaw
     );
+
+    console.log(routeData);
 
     const routerAddress = routeData.routerAddress;
 
