@@ -258,9 +258,7 @@ export default function AiAudit() {
             <p className="mb-4 text-gray-300">{auditResult.overview}</p>
 
             {auditResult.issues_detected &&
-              Object.keys(auditResult.issues_detected).some(
-                (key) => auditResult.issues_detected[key].length > 0
-              ) && (
+              Object.values(auditResult.issues_detected).flat().length > 0 && (
                 <div className="mb-4">
                   <h4 className="font-semibold text-red-400">
                     Issues Detected:
@@ -270,12 +268,33 @@ export default function AiAudit() {
                       ([severity, issues]) =>
                         issues.length > 0 && (
                           <li key={severity} className="mb-2">
-                            <span className="font-semibold capitalize text-red-300">
+                            <span
+                              className={`font-semibold capitalize ${
+                                severity === "severe"
+                                  ? "text-red-500"
+                                  : severity === "major"
+                                  ? "text-orange-400"
+                                  : severity === "moderate"
+                                  ? "text-yellow-400"
+                                  : "text-gray-400"
+                              }`}
+                            >
                               {severity}:
                             </span>
                             <ul className="ml-4 list-disc">
                               {issues.map((issue, index) => (
-                                <li key={index} className="text-gray-400">
+                                <li
+                                  key={index}
+                                  className={`${
+                                    severity === "severe"
+                                      ? "text-red-300"
+                                      : severity === "major"
+                                      ? "text-orange-300"
+                                      : severity === "moderate"
+                                      ? "text-yellow-300"
+                                      : "text-gray-300"
+                                  }`}
+                                >
                                   {issue}
                                 </li>
                               ))}
