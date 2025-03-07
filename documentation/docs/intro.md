@@ -1,6 +1,15 @@
 # EcoNova
 
-EcoNova is a decentralized platform that integrates blockchain technology, AI, and Zero-Knowledge Proofs (ZKPs) to enable **private health verification, automated donations, AI-powered tutoring, and cross-chain transactions**. It focuses on **trustless and efficient charitable giving** while maintaining user privacy and security.  
+EcoNova is a decentralized platform integrating **blockchain technology, AI, and Zero-Knowledge Proofs (ZKPs)** to enable:
+
+- **Private health verification**
+- **Automated donations**
+- **AI-powered tutoring**
+- **Cross-chain transactions**
+
+It focuses on **trustless and efficient charitable giving** while maintaining user privacy and security.
+
+---
 
 ## 🌍 **Key Integrations**
 
@@ -44,6 +53,8 @@ EcoNova features an **AI-powered tutor** to educate users on:
 - **Decentralized Finance (DeFi)** 💱
 - **Smart contract security** 🔐
 
+Users can take quizzes to earn rewards, including NFTs.
+
 ---
 
 ## 🔹 **Cross-Chain Transfers**
@@ -56,7 +67,7 @@ EcoNova enables **secure & cost-efficient cross-chain transfers** using:
 
 - **Fast & cost-effective transfers** ⚡
 - **Improved liquidity across chains** 🔄
-- **Elimination of reliance on centralized bridges** 💡
+- **Decentralization over centralized bridges** 💡
 
 ### 🔀 **LayerZero for EcoNovaToken Transfers**
 
@@ -121,7 +132,7 @@ EcoNova integrates **AI-powered smart contract auditing** using:
 
 - **[SonicScan Testnet API](https://api-testnet.sonicscan.org)** for verified contract address checks
 - **GitHub Solidity file analysis** to detect vulnerabilities
-- **File input support** for manual Solidity audits
+- **Manual Solidity audit support** via file input
 - **Gas optimization suggestions** to reduce transaction costs
 - **Security compliance checks** to enhance contract safety
 
@@ -164,27 +175,19 @@ Want to help? Submit a PR or report issues via our **[GitHub](https://github.com
 
 🚀 **Join us in revolutionizing decentralized charity!**
 
+---
 
-pages
+## 📌 **Pages**
 
-/bridge -> brigde sonic to bsc mainnet with debrigde
- -> bridge econova token to bsc testnet with layerzero
+- **/bridge** → Bridge Sonic to BSC Mainnet with deBridge  
+  → Bridge EcoNovaToken to BSC Testnet with LayerZero
 
-
-/donate -> donate to a charity cause
-
-/dao -> defiAI goverance
-
-/tx-analysis -> analyze transaction hash
-
-/ai-health -> use zk proof to verify you are in a healthy bmi and store on sonic blockchain
-
-/ai-tutor -> learn about Defi and AI, and answer quiz to claim an NFT
-
-/ai-audit -> audit verified smart contracts,github solidity files and local files
-
-/ai-portfolio-manager -> analyze your sonic and econova balance, set a goal and rebalance your portfolio.
-
-/leaderboard - see ranking users based on points,also see their token balance
-
-/earn-points - earn points by liking and retweeting post made by bot
+- **/donate** → Donate to a charity cause
+- **/dao** → DeFiAI governance
+- **/tx-analysis** → Analyze transaction hash
+- **/ai-health** → Use ZK proof to verify BMI and store on Sonic blockchain
+- **/ai-tutor** → Learn about DeFi and AI, take quizzes, and claim an NFT
+- **/ai-audit** → Audit verified smart contracts, GitHub Solidity files, and local files
+- **/ai-portfolio-manager** → Analyze Sonic and EcoNova balances, set goals, and rebalance portfolios
+- **/leaderboard** → View ranked users based on points and token balances
+- **/earn-points** → Earn points by liking and retweeting posts made by the bot
