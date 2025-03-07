@@ -20,12 +20,12 @@
         KEYSTORE_FILE=./keystore.json
         KEYSTORE_PASSWORD=
         MONGO_URI=
-        TWITTER_CONSUMER_KEY=           
-        TWITTER_CONSUMER_SECRET=          
-        TWITTER_ACCESS_TOKEN=      
+        TWITTER_CONSUMER_KEY=
+        TWITTER_CONSUMER_SECRET=
+        TWITTER_ACCESS_TOKEN=
         TWITTER_ACCESS_TOKEN_SECRET=
         TWITTER_USER_ID=
-        TWITTER_BEARER_TOKEN= 
+        TWITTER_BEARER_TOKEN=
         REDIS_HOST=
         REDIS_PORT=
         REDIS_PASSWORD=
@@ -185,7 +185,7 @@ curl -X GET http://localhost:3100/api/tweets/1883180110297120857/retweeters
 
 ```json
 {
-  "content": "Blockchain technology trends include Layer 2 scaling solutions, modular blockchains, zk-rollups, and increasing institutional adoption.",
+  "content": "...",
   "tools_calls": {
     "name": "sendSonic",
     "args": {
