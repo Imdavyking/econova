@@ -317,15 +317,3 @@ export default function InvestmentAI() {
     </div>
   );
 }
-
-// get the price and market data of sonic token
-// get the price and market data of stablecoin
-// analyze the data to determine the best investment strategy
-// get user current portfolio balance of each asset
-// calculate the optimal allocation of each asset
-// return the new investment strategy with the optimal allocation
-// return the projected growth of the new investment strategy
-// return the risk level of the new investment strategy
-// determine the amount of each asset to buy/sell to rebalance the portfolio
-// ask the user to confirm the rebalance
-// execute the rebalance
