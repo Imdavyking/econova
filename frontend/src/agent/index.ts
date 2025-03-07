@@ -28,6 +28,8 @@ export class AIAgent {
 
   constructor() {
     this.tools = {
+      bridge: bridgeCoin,
+      alloraPredict: alloraPredictService,
       donate: donateToFoundationService,
       redeemPoints: redeemPointsService,
       deployToken: deployTokenService,
@@ -36,10 +38,11 @@ export class AIAgent {
       sendERC20Token: sendERC20TokenService,
       wrapSonic: wrapSonicService,
       unwrapSonic: unwrapSonicService,
-      bridge: bridgeCoin,
-      alloraPredict: alloraPredictService,
     };
     this.toolsInfo = {
+      bridge:
+        "Only Mainnet Bridges are Supported: Example - Bridge 10 SONIC to BSC",
+      alloraPredict: "Example: What is the price of ETH in 5 minutes?.",
       donate: `Example: Donate 100 USD to a cause. e.g ${Object.keys(
         charityCategories
       ).join(", ")}`,
@@ -52,9 +55,6 @@ export class AIAgent {
         "Example: Send 10 wSonic to 0x1CE05Bf474802D49a77b3829c566a9AABbfb8C6d",
       wrapSonic: "Example: Wrap 10 SONIC",
       unwrapSonic: "Example: Unwrap 10 wrappedSonic",
-      bridge:
-        "Only Mainnet Bridges are Supported: Example - Bridge 10 SONIC to BSC",
-      alloraPredict: "Example: What is the price of ETH in 5 minutes?.",
     };
   }
 
