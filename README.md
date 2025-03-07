@@ -177,6 +177,15 @@ Want to help? Submit a PR or report issues via our **[GitHub](https://github.com
 
 ---
 
+## 🎥 **Watch EcoNova in Action**
+
+Learn more about EcoNova by watching our demo videos:
+
+- [EcoNova Overview](https://www.youtube.com/watch?v=LpmLjRnaPVc)  
+- [EcoNova Features & Walkthrough](https://www.youtube.com/watch?v=i0hpdPyZt6Q)  
+
+---
+
 ## 📌 **Pages**
 
 - **/bridge** → Bridge Sonic to BSC Mainnet with deBridge  
