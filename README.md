@@ -163,3 +163,28 @@ Want to help? Submit a PR or report issues via our **[GitHub](https://github.com
 - **GitHub:** [EcoNova](https://github.com/Imdavyking/econova/)
 
 🚀 **Join us in revolutionizing decentralized charity!**
+
+
+pages
+
+/bridge -> brigde sonic to bsc mainnet with debrigde
+ -> bridge econova token to bsc testnet with layerzero
+
+
+/donate -> donate to a charity cause
+
+/dao -> defiAI goverance
+
+/tx-analysis -> analyze transaction hash
+
+/ai-health -> use zk proof to verify you are in a healthy bmi and store on sonic blockchain
+
+/ai-tutor -> learn about Defi and AI, and answer quiz to claim an NFT
+
+/ai-audit -> audit verified smart contracts,github solidity files and local files
+
+/ai-portfolio-manager -> analyze your sonic and econova balance, set a goal and rebalance your portfolio.
+
+/leaderboard - see ranking users based on points,also see their token balance
+
+/earn-points - earn points by liking and retweeting post made by bot

@@ -22,24 +22,20 @@
     - Calculate interaction points for each action:
       - Like: 100 point
       - Retweet: 200 points
-      - Quote-tweet: 300 points
   - Maintain a record of actions already counted to avoid duplicate points.
-- **Storage**:
-  - Store user interaction data (tweet IDs, timestamps, and action type) in a database to track progress.
 
 #### **4. Assign Points**
 
 - **Backend Actions**:
   - Based on the retrieved interactions, calculate the user's total points.
-  - Store points in the user's profile in the database.
   - Provide an endpoint for the frontend to fetch user points.
 
 #### **5. User Redeems Points**
 
 - **Frontend Actions**:
 
-  - Provide an interface showing the user's current points and a "Redeem" button.
-  - On clicking "Redeem," send a request to the backend.
+  - Provide an interface showing the "Check" and a "Claim" button.
+  - On clicking "Claim," send a request to the backend.
 
 - **Backend Actions**:
   - Deduct redeemed points from the user's balance.
@@ -82,7 +78,7 @@
 
 #### **Smart Contract**
 
-- **Blockchain**: Ethereum or any EVM-compatible chain.
+- **Blockchain**: Sonic BlockChain.
 - **ERC20 Contract**:
   - Define functions for minting tokens:
     ```solidity
@@ -95,9 +91,9 @@
 #### **Integration**
 
 - **Twitter API**:
-  - Use the v2 API or Twitter Developer tools to fetch likes, retweets, and quote-tweets.
+  - Use the v2 API or Twitter Developer tools to fetch likes and retweets.
 - **Web3**:
-  - Use libraries like `ethers.js` or `web3.js` for smart contract interaction.
+  - Use `ethers.js` for smart contract interaction.
 - **Authentication**:
   - Use OAuth for Twitter and wallet connection (e.g., MetaMask).
 
@@ -105,7 +101,7 @@
 
 1. User connects their Twitter account.
 2. Website retrieves their past interactions with the bot.
-3. Points are calculated and displayed on the user's dashboard.
+3. Points are calculated and displayed for users to claim.
 4. User redeems points to mint ERC20 tokens.
 5. Tokens are sent to the user's wallet.
 
