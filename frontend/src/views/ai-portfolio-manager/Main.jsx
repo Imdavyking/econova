@@ -154,7 +154,6 @@ export default function InvestmentAI() {
     toast.info("Calculating optimal rebalancing strategy...");
 
     try {
-      // totalUsdBalance
       const rebalanceOrders = strategy.assets.map((asset) => {
         const currentAllocation = asset.allocation;
         const targetAllocation = targetAllocations[asset.coingeckoId];
@@ -178,6 +177,8 @@ export default function InvestmentAI() {
         };
       });
 
+      console.log(rebalanceOrders);
+
       const validOrders = rebalanceOrders.filter(
         (order) => order.amountInTokens > 0
       );
@@ -186,6 +187,16 @@ export default function InvestmentAI() {
 
       const swapPromises = validOrders.map(async (order) => {
         const { action, amountInTokens, tokenAddress, name } = order;
+
+        // Avoid swapping ETH for ETH
+        // if (action === "Buy" && tokenAddress === ETH_ADDRESS) {
+        //   console.warn(`Skipping redundant Buy order for ETH`);
+        //   return;
+        // }
+        // if (action === "Sell" && tokenAddress === ETH_ADDRESS) {
+        //   console.warn(`Skipping redundant Sell order for ETH`);
+        //   return;
+        // }
 
         toast.info(`Executing ${action} order for ${name}...`);
 
