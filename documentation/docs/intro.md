@@ -132,12 +132,6 @@ EcoNova integrates **AI-powered smart contract auditing** using:
 
 ---
 
-## 📜 **Documentation**
-
-For detailed guides, visit our **[documentation](https://econovadocs.vercel.app/)**.
-
----
-
 ## 🚀 **Start the Application**
 
 ### 1️⃣ **Start with Docker**
@@ -190,6 +184,12 @@ Learn more about EcoNova by watching our demo videos:
 ## 🤝 **Contribute**
 
 Want to help? Submit a PR or report issues via our **[GitHub](https://github.com/Imdavyking/econova/)**.
+
+---
+
+## 📜 **Documentation**
+
+For detailed guides, visit our **[documentation](https://econovadocs.vercel.app/)**.
 
 ---
 
