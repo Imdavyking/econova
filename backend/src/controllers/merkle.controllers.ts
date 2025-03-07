@@ -4,9 +4,10 @@ import {
   signUserLevelWithRoot,
 } from "../services/merkle.proof.services";
 import { ethers } from "ethers";
-import { uploadToIPFS } from "../services/lighthouse.services";
+import { uploadToIPFS as uploadToLighthouse } from "../services/lighthouse.services";
 import fs from "fs";
 import path from "path";
+import { uploadToPinata } from "../services/pinata.services";
 
 enum Level {
   Beginner,
@@ -64,7 +65,16 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
     }
 
     const imageBuffer = fs.readFileSync(imageSrc);
-    const imageHash = await uploadToIPFS(imageBuffer);
+    const imageBlob = new Blob([imageBuffer], { type: "image/webp" });
+    const imageFile = new File([imageBlob], "certificate.webp", {
+      type: "image/webp",
+    });
+
+    let imageHash = await uploadToPinata(imageFile);
+
+    if (!imageHash) {
+      imageHash = await uploadToLighthouse(imageBuffer);
+    }
 
     if (!imageHash) {
       res.status(500).json({ error: "Failed to upload image to IPFS" });
@@ -95,10 +105,27 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
       ],
     };
 
-    const jsonBuffer = Buffer.from(JSON.stringify(userNFTMetaData, null, 2));
+    const nftMetaJsonBuffer = Buffer.from(
+      JSON.stringify(userNFTMetaData, null, 2)
+    );
+    const nftMetaJsonBlob = new Blob([nftMetaJsonBuffer], {
+      type: "application/json",
+    });
+    const nftMetaJsonFile = new File(
+      [nftMetaJsonBlob],
+      "userNFTMetaData.json",
+      {
+        type: "application/json",
+      }
+    );
 
-    const [tokenURI, { root, proof }] = await Promise.all([
-      uploadToIPFS(jsonBuffer),
+    let tokenURI = await uploadToPinata(nftMetaJsonFile);
+
+    if (!tokenURI) {
+      tokenURI = await uploadToLighthouse(nftMetaJsonBuffer);
+    }
+
+    const [{ root, proof }] = await Promise.all([
       saveMerkleRoot(address, +level),
     ]);
 

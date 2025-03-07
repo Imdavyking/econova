@@ -45,6 +45,7 @@ export const secret: {
       "ALLORA_NETWORK",
       "API_SCAN_VERIFIER_KEY",
       "COINGECKO_DEMO_API_KEY",
+      "PINATA_JWT",
     ];
 
     const loadedSecrets: Record<string, string> = {};
