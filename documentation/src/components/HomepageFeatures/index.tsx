@@ -11,32 +11,53 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: "Transparent & Secure",
+    title: "Private & Secure",
     Svg: require("@site/static/img/undraw_secure_data.svg").default,
     description: (
       <>
-        EcoNova leverages blockchain technology to ensure all donations are
-        transparent, traceable, and secure.
+        EcoNova utilizes Zero-Knowledge Proofs (ZKPs) and blockchain security to
+        ensure user data remains private while enabling trustless verification.
       </>
     ),
   },
   {
-    title: "Impactful Giving",
+    title: "Automated & Trustless Donations",
     Svg: require("@site/static/img/undraw_impactful_donation.svg").default,
     description: (
       <>
-        Every donation directly supports verified causes, maximizing the impact
-        and ensuring funds reach the right hands.
+        With Gelato-powered automation, donations are executed seamlessly,
+        eliminating manual interventions and ensuring funds reach verified
+        causes.
       </>
     ),
   },
   {
-    title: "Built for the Future",
-    Svg: require("@site/static/img/undraw_blockchain_future.svg").default,
+    title: "AI-Powered Insights",
+    Svg: require("@site/static/img/undraw_ai_future.svg").default,
     description: (
       <>
-        EcoNova integrates decentralized finance (DeFi) and smart contracts to
-        revolutionize the way charitable contributions work.
+        From AI-driven price predictions to intelligent portfolio management,
+        EcoNova empowers users with real-time insights for informed decisions.
+      </>
+    ),
+  },
+  {
+    title: "Seamless Cross-Chain Transfers",
+    Svg: require("@site/static/img/undraw_cross_chain.svg").default,
+    description: (
+      <>
+        EcoNova enables cost-efficient, decentralized cross-chain transactions
+        via deBridge and LayerZero, ensuring seamless asset movement.
+      </>
+    ),
+  },
+  {
+    title: "AI-Powered Tutoring & Audits",
+    Svg: require("@site/static/img/undraw_teaching_ai.svg").default,
+    description: (
+      <>
+        Learn about DeFi, AI, and blockchain security with an AI tutor, and
+        audit smart contracts using SonicScan and GitHub Solidity analysis.
       </>
     ),
   },
