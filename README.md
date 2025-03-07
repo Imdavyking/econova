@@ -161,22 +161,6 @@ For detailed guides, visit our **[documentation](https://econovadocs.vercel.app/
 
 ---
 
-## 🤝 **Contribute**
-
-Want to help? Submit a PR or report issues via our **[GitHub](https://github.com/Imdavyking/econova/)**.
-
----
-
-## 📬 **Stay Connected**
-
-- **Twitter:** [@EcoNova_Bot](https://x.com/EcoNova_Bot)
-- **Docs:** [Read the Docs](https://econovadocs.vercel.app/)
-- **GitHub:** [EcoNova](https://github.com/Imdavyking/econova/)
-
-🚀 **Join us in revolutionizing decentralized charity!**
-
----
-
 ## 🎥 **Watch EcoNova in Action**
 
 Learn more about EcoNova by watching our demo videos:
@@ -200,3 +184,19 @@ Learn more about EcoNova by watching our demo videos:
 - **/ai-portfolio-manager** → Analyze Sonic and EcoNova balances, set goals, and rebalance portfolios
 - **/leaderboard** → View ranked users based on points and token balances
 - **/earn-points** → Earn points by liking and retweeting posts made by the bot
+
+---
+
+## 🤝 **Contribute**
+
+Want to help? Submit a PR or report issues via our **[GitHub](https://github.com/Imdavyking/econova/)**.
+
+---
+
+## 📬 **Stay Connected**
+
+- **Twitter:** [@EcoNova_Bot](https://x.com/EcoNova_Bot)
+- **Docs:** [Read the Docs](https://econovadocs.vercel.app/)
+- **GitHub:** [EcoNova](https://github.com/Imdavyking/econova/)
+
+🚀 **Join us in revolutionizing decentralized charity!**
