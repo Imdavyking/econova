@@ -101,12 +101,6 @@ EcoNova’s **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
 
 ---
 
-## 📜 **Documentation**
-
-For detailed guides, visit our **[documentation](https://econovadocs.vercel.app/)**.
-
----
-
 ## 📡 **Smart Contract Infrastructure**
 
 EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
@@ -135,6 +129,12 @@ EcoNova integrates **AI-powered smart contract auditing** using:
 - **Manual Solidity audit support** via file input
 - **Gas optimization suggestions** to reduce transaction costs
 - **Security compliance checks** to enhance contract safety
+
+---
+
+## 📜 **Documentation**
+
+For detailed guides, visit our **[documentation](https://econovadocs.vercel.app/)**.
 
 ---
 
@@ -181,8 +181,8 @@ Want to help? Submit a PR or report issues via our **[GitHub](https://github.com
 
 Learn more about EcoNova by watching our demo videos:
 
-- [EcoNova Overview](https://www.youtube.com/watch?v=LpmLjRnaPVc)  
-- [EcoNova Features & Walkthrough](https://www.youtube.com/watch?v=i0hpdPyZt6Q)  
+- [EcoNova Overview](https://www.youtube.com/watch?v=LpmLjRnaPVc)
+- [EcoNova Features & Walkthrough](https://www.youtube.com/watch?v=i0hpdPyZt6Q)
 
 ---
 
