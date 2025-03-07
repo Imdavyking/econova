@@ -8,6 +8,7 @@ import {
   rethrowFailedResponse,
   sendOFTTokens,
 } from "../../services/blockchain.services";
+import { HiArrowNarrowRight, HiArrowNarrowLeft } from "react-icons/hi";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
@@ -279,7 +280,7 @@ export default function Bridge() {
           >
             {Object.values(LZ_CHAINS).map((chain) => (
               <option key={chain.chainId} value={chain.chainId}>
-                {camelToPascalWithSpace(chain.name)}
+                (From) {camelToPascalWithSpace(chain.name)}
               </option>
             ))}
           </select>
@@ -291,7 +292,7 @@ export default function Bridge() {
           >
             {Object.values(LZ_CHAINS).map((chain) => (
               <option key={chain.chainId} value={chain.chainId}>
-                {camelToPascalWithSpace(chain.name)}
+                (To) {camelToPascalWithSpace(chain.name)}
               </option>
             ))}
           </select>
