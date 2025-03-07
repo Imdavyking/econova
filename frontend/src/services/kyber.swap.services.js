@@ -3,7 +3,7 @@ import { getERC20Contract, getSigner } from "./blockchain.services";
 import { ETH_ADDRESS } from "../utils/constants";
 
 export const KYBERSWAP_AGGREGATOR_API_URL =
-  "https://aggregator-api.kyberswap.com";
+  "https://aggregator-api.kyberswap.com/sonic/api/v1";
 
 export const KYBERSWAP_TOKENS_INFO = {
   BEETS: {
