@@ -35,6 +35,9 @@
         PORT=
         FRONTEND_URL=
         CHAIN_ID=
+        PINATA_JWT=
+        LIGHTHOUSE_API_KEY=
+        RPC_URL=
         WRAPPED_SONIC_CONTRACT_ADDRESS=
         ALLORA_API_KEY=
         ALLORA_NETWORK=
