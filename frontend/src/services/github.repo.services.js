@@ -9,7 +9,7 @@ export const fetchContractFileFromGitHub = async (githubUrl) => {
     // Convert GitHub URL to raw URL
     const rawUrl = githubUrl
       .replace("github.com", "raw.githubusercontent.com")
-      .replace("/blob", "");
+      .replace("/blob", "/refs/heads");
 
     console.log(rawUrl);
 
