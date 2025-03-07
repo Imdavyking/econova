@@ -6,14 +6,10 @@ export const fetchContractFileFromGitHub = async (githubUrl) => {
       throw new Error("Invalid GitHub URL. Please provide a valid file URL.");
     }
 
-    // Convert GitHub URL to raw URL
     const rawUrl = githubUrl
       .replace("github.com", "raw.githubusercontent.com")
-      .replace("/blob", "/refs/heads");
+      .replace("/blob", "");
 
-    console.log(rawUrl);
-
-    // Fetch the file content
     const response = await fetch(rawUrl);
 
     if (!response.ok) {
