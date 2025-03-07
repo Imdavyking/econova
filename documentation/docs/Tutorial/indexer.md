@@ -42,6 +42,7 @@ Create a `.env` file in the project root and add the following variables:
   CONTRACT_ADDRESS=
   BLOCK_NUMBER=
   SUBQL_ACCESS_TOKEN=
+  GOVERNOR_CONTRACT_ADDRESS=
 ```
 
 ## **GraphQL Query Examples**

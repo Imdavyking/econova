@@ -161,6 +161,143 @@ curl -X GET http://localhost:3100/api/tweets/1883180110297120857/retweeters
 }
 ```
 
+---
+
+## LLM API
+
+### Process LLM Request
+
+**Endpoint:** `POST /api/llm`
+
+**Example Request:**
+
+```json
+{
+  "task": "Send 10 sonic to 0x1383...9393"
+}
+```
+
+**Example Response:**
+
+```json
+{
+  "content": "Blockchain technology trends include Layer 2 scaling solutions, modular blockchains, zk-rollups, and increasing institutional adoption.",
+  "tools_calls": {
+    "name": "sendSonic",
+    "args": {
+      "recipientAddress": "0x1383...9393",
+      "amount": "10"
+    }
+  }
+}
+```
+
+### Process LLM Audit Request
+
+**Endpoint:** `POST /api/llm/audit`
+
+**Example Request:**
+
+```json
+{
+  "contractCode": "pragma solidity ^0.8.0; contract Simple { uint256 public value; function setValue(uint256 _value) public { value = _value; }}"
+}
+```
+
+**Example Response:**
+
+```json
+{
+  "content": "...",
+  "tools_calls": {
+    "name": "auditResponse",
+    "args": {
+      "rating": 3,
+      "overview": "...",
+      "issues_detected": {},
+      "fix_recommendations": ["..."],
+      "efficiency_tips": ["..."]
+    }
+  }
+}
+```
+
+### Process Transaction Hash Request
+
+**Endpoint:** `POST /api/llm/tx_hash`
+
+**Example Request:**
+
+```json
+{
+  "txInfo": {
+    "hash": "0xabc123...",
+    "from": "0x123...",
+    "to": "0x456...",
+    "value": "1 ETH"
+  }
+}
+```
+
+**Example Response:**
+
+```json
+{
+  "content": "...",
+  "tools_calls": {
+    "name": "txHashSummary",
+    "args": {
+      "hash": "...",
+      "summary": "...",
+      "legalAdvice": "..."
+    }
+  }
+}
+```
+
+### Process DAO Proposal Request
+
+**Endpoint:** `POST /api/llm/dao_analysis`
+
+**Example Request:**
+
+```json
+{
+  "contractAddress": "0xdao123...",
+  "proposalId": "42",
+  "proposer": "0xabc...",
+  "state": "Active",
+  "etaSecondsQueue": "86400",
+  "targets": ["0xdef..."],
+  "voteEnd": "1712345678",
+  "voteStart": "1712330000",
+  "description": "Increase treasury funds for ecosystem development.",
+  "id": "42",
+  "calldatas": ["0x..."],
+  "votesFor": "100000",
+  "votesAgainst": "5000",
+  "weightVotesFor": "0.9",
+  "weightVotesAgainst": "0.1"
+}
+```
+
+### **Example Response:**
+
+```json
+{
+  "content": "...",
+  "tools_calls": {
+    "name": "analyzeProposal",
+    "args": {
+      "proposalId": "...",
+      "summary": "...",
+      "impactAnalysis": "...",
+      "recommendation": "..."
+    }
+  }
+}
+```
+
 ## Contributing
 
 Contributions to the EcoNova Backend System are welcome! If you have any suggestions, bug reports, or feature requests, please create an issue in the GitHub repository. If you would like to contribute code, please fork the repository and submit a pull request.
