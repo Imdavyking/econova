@@ -19,6 +19,7 @@ const AIHealth = () => {
         toast.info("Please fill in weight and height");
         return;
       }
+      setSuggestion("");
       setIsLoading(true);
       const response = await saveHealthyBMIProofService({
         weightInKg: weight,
