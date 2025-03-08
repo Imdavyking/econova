@@ -125,6 +125,11 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
       tokenURI = await uploadToLighthouse(nftMetaJsonBuffer);
     }
 
+    if (!tokenURI) {
+      res.status(500).json({ error: "Failed to upload metadata to IPFS" });
+      return;
+    }
+
     const [{ root, proof }] = await Promise.all([
       saveMerkleRoot(address, +level),
     ]);
