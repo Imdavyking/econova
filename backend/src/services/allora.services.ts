@@ -8,14 +8,17 @@ import dotenv from "dotenv";
 import { environment } from "../utils/config";
 dotenv.config();
 
+const ALLORA_API_KEY =
+  environment.ALLORA_API_KEY || "UP-8cbc632a67a84ac1b4078661";
+
 const alloraClientTestnet = new AlloraAPIClient({
   chainSlug: ChainSlug.TESTNET,
-  apiKey: environment.ALLORA_API_KEY || "UP-8cbc632a67a84ac1b4078661",
+  apiKey: ALLORA_API_KEY,
 });
 
 const alloraClientMainnet = new AlloraAPIClient({
   chainSlug: ChainSlug.MAINNET,
-  apiKey: environment.ALLORA_API_KEY || "UP-8cbc632a67a84ac1b4078661",
+  apiKey: ALLORA_API_KEY,
 });
 
 /**
