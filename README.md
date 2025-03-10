@@ -61,9 +61,9 @@ Users can take quizzes to earn rewards, including NFTs.
 
 EcoNova enables **secure & cost-efficient cross-chain transfers** using:
 
-### 🔀 **deBridge for Sonic-to-BSC Transfers**
+### 🔀 **deBridge for Sonic-to-Polygon Transfers**
 
-💱 **deBridge** allows seamless asset transfers from **Sonic to BSC**, ensuring:
+💱 **deBridge** allows seamless asset transfers from **Sonic to Polygon**, ensuring:
 
 - **Fast & cost-effective transfers** ⚡
 - **Improved liquidity across chains** 🔄
@@ -124,7 +124,7 @@ EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
 
 EcoNova integrates **AI-powered smart contract auditing** using:
 
-- **[SonicScan Testnet API](https://api-testnet.sonicscan.org)** for verified contract address checks
+- **[SonicScan API](https://api.sonicscan.org)** for verified contract address checks
 - **GitHub Solidity file analysis** to detect vulnerabilities
 - **Manual Solidity audit support** via file input
 - **Gas optimization suggestions** to reduce transaction costs
@@ -159,31 +159,36 @@ EcoNova integrates **AI-powered smart contract auditing** using:
 
 Learn more about EcoNova by watching our demo videos:
 
-- [EcoNova Overview](https://www.youtube.com/watch?v=LpmLjRnaPVc)
-- [EcoNova Features & Walkthrough](https://www.youtube.com/watch?v=i0hpdPyZt6Q)
+- [EcoNova Overview](https://www.youtube.com/watch?v=I0GPMudkcus)
 
 ---
 
 ## 📌 **Pages**
 
-- **/bridge** → Bridge Sonic to BSC Mainnet with deBridge  
-  → Bridge EcoNovaToken to BSC Testnet with LayerZero
+- **/bridge** → Bridge Sonic to Polygon with deBridge  
+  → Bridge EcoNovaToken to Polygon with LayerZero
 
-- **/donate** → Donate to a charity cause
+- **/donate** → Donate to a charity cause and earn points
 - **/dao** → DeFiAI governance
 - **/tx-analysis** → Analyze transaction hash
 - **/ai-health** → Use ZK proof to verify BMI and store on Sonic blockchain
 - **/ai-tutor** → Learn about DeFi and AI, take quizzes, and claim an NFT
 - **/ai-audit** → Audit verified smart contracts, GitHub Solidity files, and local files
-- **/ai-portfolio-manager** → Analyze Sonic and EcoNova balances, set goals, and rebalance portfolios
+- **/ai-portfolio-manager** → Analyze Sonic and USD.e balances, set goals, and rebalance portfolios
 - **/leaderboard** → View ranked users based on points and token balances
-- **/earn-points** → Earn points by liking and retweeting posts made by the bot
+- **/earn-points** → Earn points by liking and retweeting posts made by the bot.
 
 ---
 
 ## 🤝 **Contribute**
 
 Want to help? Submit a PR or report issues via our **[GitHub](https://github.com/Imdavyking/econova/)**.
+
+---
+
+## 📷 **Images**
+
+![Help](images/help.png) ![Chat](images/chat.png)
 
 ---
 

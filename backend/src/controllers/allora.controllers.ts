@@ -4,8 +4,13 @@ import { Request, Response } from "express";
 export const getPriceInference = async (req: Request, res: Response) => {
   try {
     const { topicId, topicName } = req.query;
-    if (!topicId || !topicName) {
-      res.status(400).json({ error: "Missing topic ID or topic name" });
+    if (!topicId) {
+      res.status(400).json({ error: "Missing topic ID" });
+      return;
+    }
+
+    if (!topicName) {
+      res.status(400).json({ error: "Missing topic name" });
       return;
     }
     const inference = await fetchInferenceByTopicID(

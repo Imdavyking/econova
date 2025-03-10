@@ -28,7 +28,7 @@ export async function deployCrossChainOFT({
 
         const [wallet] = await ethers.getSigners()
 
-        console.log("🔐 Deploying EcoNovaToken contract..." + wallet.address)
+        console.log("🔐 Deploying EcoNovaToken contract with " + wallet.address)
 
         if (!chainId) {
             throw new Error("❌ Chain ID is undefined. Ensure Hardhat is configured correctly.")

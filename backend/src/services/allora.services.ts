@@ -8,12 +8,17 @@ import dotenv from "dotenv";
 import { environment } from "../utils/config";
 dotenv.config();
 
-const alloraClient = new AlloraAPIClient({
-  chainSlug:
-    environment.ALLORA_NETWORK === "mainnet"
-      ? ChainSlug.MAINNET
-      : ChainSlug.TESTNET,
-  apiKey: environment.ALLORA_API_KEY || "UP-8cbc632a67a84ac1b4078661",
+const ALLORA_API_KEY =
+  environment.ALLORA_API_KEY || "UP-8cbc632a67a84ac1b4078661";
+
+const alloraClientTestnet = new AlloraAPIClient({
+  chainSlug: ChainSlug.TESTNET,
+  apiKey: ALLORA_API_KEY,
+});
+
+const alloraClientMainnet = new AlloraAPIClient({
+  chainSlug: ChainSlug.MAINNET,
+  apiKey: ALLORA_API_KEY,
 });
 
 /**
@@ -22,7 +27,11 @@ const alloraClient = new AlloraAPIClient({
  */
 export const fetchAlloraTopics = async () => {
   try {
-    const alloraTopics = await alloraClient.getAllTopics();
+    let alloraTopics = await alloraClientTestnet.getAllTopics();
+
+    if (alloraTopics.length === 0) {
+      alloraTopics = await alloraClientMainnet.getAllTopics();
+    }
 
     let output = "Allora Network Topics: \n";
     for (const topic of alloraTopics) {
@@ -55,7 +64,9 @@ export const fetchInferenceByTopicID = async (
       const topics = await fetchAlloraTopics();
       return `error trying to get allora prediction.\nTopics: ${topics}`;
     }
-    const inferenceRes = await alloraClient.getInferenceByTopicID(topicId);
+    const inferenceRes = await alloraClientTestnet.getInferenceByTopicID(
+      topicId
+    );
 
     const inferenceValue =
       inferenceRes.inference_data.network_inference_normalized;
@@ -77,7 +88,7 @@ export const fetchPriceInference = async (
   timeframe: PriceInferenceTimeframe
 ) => {
   try {
-    return await alloraClient.getPriceInference(token, timeframe);
+    return await alloraClientTestnet.getPriceInference(token, timeframe);
   } catch (error) {
     console.error(`Error fetching price inference for ${token}:`, error);
     throw error;

@@ -97,22 +97,15 @@ yarn test
 
 ---
 
-## **Deployment to Testnet**
+## **Deployment to Mainnet**
 
 ### **1. Setup Environment Variables**
+
 -   **Keystore Password**: Instead of storing `KEYSTORE_PASSWORD` in `.env`, export it before running any commands:
 
     ```bash
     export KEYSTORE_PASSWORD="your-secure-password"
     ```
-
----
-
-### **2. Get Testnet S**
-
-Obtain **testnet S** from a faucet to fund your deployments:
-
--   [Sonic Faucet](https://testnet.soniclabs.com/account)
 
 ---
 
@@ -123,7 +116,6 @@ yarn deploy
 ```
 
 ---
-
 
 ## **Need Help?**
 

@@ -89,7 +89,7 @@ const config: HardhatUserConfig = {
         localhost: {
             chainId: 31337,
         },
-        testNetwork: {
+        sonicNetwork: {
             url: process.env.RPC_URL,
             accounts: [wallet.privateKey],
             chainId: +CHAIN_ID!,
@@ -124,12 +124,12 @@ const config: HardhatUserConfig = {
     },
     etherscan: {
         apiKey: {
-            testNetwork: API_SCAN_VERIFIER_KEY,
+            sonicNetwork: API_SCAN_VERIFIER_KEY,
             ...crossChainVerifierKeys,
         },
         customChains: [
             {
-                network: "testNetwork",
+                network: "sonicNetwork",
                 chainId: +CHAIN_ID!,
                 urls: {
                     apiURL: API_URL,

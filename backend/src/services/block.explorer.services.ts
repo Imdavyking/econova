@@ -10,7 +10,7 @@ export const getVerifiedContractCode = async (
   abi: string;
 }> => {
   const response = await fetch(
-    `https://api-testnet.sonicscan.org/api?module=contract&action=getsourcecode&address=${address}&apikey=${environment.API_SCAN_VERIFIER_KEY}`
+    `https://api.sonicscan.org/api?module=contract&action=getsourcecode&address=${address}&apikey=${environment.API_SCAN_VERIFIER_KEY}`
   );
   if (!response.ok) {
     throw new Error("Failed to fetch contract code");

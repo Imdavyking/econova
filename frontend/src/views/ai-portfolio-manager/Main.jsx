@@ -21,7 +21,7 @@ export default function InvestmentAI() {
   const [rebalancing, setRebalancing] = useState(false);
   const [portfolio, setPortfolio] = useState({});
   const [totalUsdBalance, setTotalUsdBalance] = useState(0);
-  const isTesting = true;
+  const isTesting = false;
 
   const normalizeBalance = (balance, decimals) =>
     Number(balance) / 10 ** Number(decimals);
