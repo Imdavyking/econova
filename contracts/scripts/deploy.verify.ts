@@ -34,7 +34,6 @@ async function main() {
     const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
     const chainSymbol = process.env.CHAIN_SYMBOL!
     const layerZeroChainInfo = LZ_CHAINS[+chainId]
-    const [owner] = await ethers.getSigners()
     console.log(`EcoNovaManager deployed to: ${ecoAddress}`)
     console.log(`EcoNovaCourseNFT deployed to: ${ecoCourseNFTAddress}`)
     const GovernorFactory = await hre.ethers.getContractFactory("EcoNovaGovernor")
@@ -48,7 +47,7 @@ async function main() {
 
     const tokenAddress = await contract.i_ecoNovaToken()
     console.log(`EcoNovaToken deployed to: ${tokenAddress}`)
-    await verify(tokenAddress, [layerZeroChainInfo.endpointV2, owner.address])
+    await verify(tokenAddress, [layerZeroChainInfo.endpointV2, wallet.address])
 
     console.log(`Groth16VerifierP3 deployed to: ${verifier}`)
 
@@ -123,7 +122,7 @@ async function main() {
     await proposerTx.wait(1)
     const executorTx = await governorTimeLock.grantRole(executorRole, ethers.ZeroAddress)
     await executorTx.wait(1)
-    const revokeTx = await governorTimeLock.revokeRole(adminRole, owner)
+    const revokeTx = await governorTimeLock.revokeRole(adminRole, wallet)
     await revokeTx.wait(1)
 
     if (typeof chainId !== "undefined" && localHardhat.includes(chainId)) return
@@ -215,7 +214,7 @@ async function main() {
 
         await hre.changeNetwork(crossChainLzInfo.name)
 
-        await verify(crossChainTokenAddress, [crossChainLzInfo.endpointV2, owner.address])
+        await verify(crossChainTokenAddress, [crossChainLzInfo.endpointV2, wallet.address])
 
         updateEnv(crossChainTokenAddress, "frontend", "VITE_CROSS_CHAIN_TOKEN_ADDRESS")
         updateEnv(crossChainLzInfo.rpcUrl!, "frontend", "VITE_CROSS_CHAIN_RPC_URL")

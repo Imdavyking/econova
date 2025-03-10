@@ -47,6 +47,13 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
         rpcUrl: "https://rpc.soniclabs.com",
         chainId: 146,
     },
+    137: {
+        endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
+        endpointIdV2: EndpointId.POLYGON_V2_MAINNET,
+        name: "polygon",
+        rpcUrl: "https://rpc.ankr.com/polygon",
+        chainId: 137,
+    },
 }
 
 export const crossChainLzInfo: LayerZeroChainInfo | null = process.env.CROSS_CHAIN_ID
