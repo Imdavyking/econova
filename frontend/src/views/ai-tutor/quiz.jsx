@@ -39,7 +39,7 @@ const QuizPage = () => {
         const level = Levels[levelStr];
         const topics = tutorData[levelStr]?.Topics || [];
 
-        const [hasClaimed, tokenURI] = await Promise.all([
+        let [hasClaimed, tokenURI] = await Promise.all([
           getUserClaimedNFT({ level: level }),
           getUserNFT({ level: level }),
         ]);
@@ -57,7 +57,21 @@ const QuizPage = () => {
           return;
         }
 
+        if (tokenURI.startsWith("ipfs://")) {
+          tokenURI = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
+        }
+
+        const pinataGateWayUrl = "https://emerald-odd-bee-965.mypinata.cloud";
+
+        if (tokenURI.startsWith(pinataGateWayUrl)) {
+          tokenURI = tokenURI.replace(
+            `${pinataGateWayUrl}/files/`,
+            `${SERVER_URL}/pinata/`
+          );
+        }
+
         const response = await fetch(tokenURI);
+
         const data = await response.json();
 
         if (data?.attributes) {
