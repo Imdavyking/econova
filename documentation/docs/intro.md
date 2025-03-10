@@ -61,9 +61,9 @@ Users can take quizzes to earn rewards, including NFTs.
 
 EcoNova enables **secure & cost-efficient cross-chain transfers** using:
 
-### 🔀 **deBridge for Sonic-to-BSC Transfers**
+### 🔀 **deBridge for Sonic-to-Polygon Transfers**
 
-💱 **deBridge** allows seamless asset transfers from **Sonic to BSC**, ensuring:
+💱 **deBridge** allows seamless asset transfers from **Sonic to Polygon**, ensuring:
 
 - **Fast & cost-effective transfers** ⚡
 - **Improved liquidity across chains** 🔄
@@ -166,8 +166,8 @@ Learn more about EcoNova by watching our demo videos:
 
 ## 📌 **Pages**
 
-- **/bridge** → Bridge Sonic to BSC Mainnet with deBridge  
-  → Bridge EcoNovaToken to BSC Testnet with LayerZero
+- **/bridge** → Bridge Sonic to Polygon with deBridge  
+  → Bridge EcoNovaToken to Polygon with LayerZero
 
 - **/donate** → Donate to a charity cause
 - **/dao** → DeFiAI governance
