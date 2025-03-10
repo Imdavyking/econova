@@ -100,7 +100,11 @@ async function main() {
 
     console.log(`TimeLock deployed to: ${governorTimeLockAddress}`)
 
-    await verify(governorTimeLockAddress, [MIN_DELAY, [], [], wallet.address])
+    await verify(
+        governorTimeLockAddress,
+        [MIN_DELAY, [], [], wallet.address],
+        "contracts/dao/TimeLock.sol:TimeLock"
+    )
 
     await verify(ecoAddress, [
         oracle,
