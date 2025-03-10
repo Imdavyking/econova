@@ -66,7 +66,7 @@ const QuizPage = () => {
         if (tokenURI.startsWith(pinataGateWayUrl)) {
           tokenURI = tokenURI.replace(
             `${pinataGateWayUrl}/files/`,
-            `${SERVER_URL}/pinata/`
+            `${SERVER_URL}/pinata/files/`
           );
         }
 
