@@ -8,8 +8,8 @@
         "format": "prettier --write .",
         "coverage": "hardhat coverage",
         "test": "yarn hardhat test",
-        "test-staging": "yarn hardhat test --network testNetwork",
-        "deploy": "yarn hardhat clean && npx hardhat run scripts/deploy.verify.ts --network testNetwork"
+        "test-staging": "yarn hardhat test --network sonicNetwork",
+        "deploy": "yarn hardhat clean && npx hardhat run scripts/deploy.verify.ts --network sonicNetwork"
     },
     "devDependencies": {
         "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
