@@ -159,8 +159,7 @@ EcoNova integrates **AI-powered smart contract auditing** using:
 
 Learn more about EcoNova by watching our demo videos:
 
-- [EcoNova Overview](https://www.youtube.com/watch?v=LpmLjRnaPVc)
-- [EcoNova Features & Walkthrough](https://www.youtube.com/watch?v=i0hpdPyZt6Q)
+- [EcoNova Overview](https://www.youtube.com/watch?v=I0GPMudkcus)
 
 ---
 
