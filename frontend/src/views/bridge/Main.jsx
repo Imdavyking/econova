@@ -18,20 +18,27 @@ import { FaSpinner } from "react-icons/fa";
 import { bridgeCoin, getBridgeFee } from "../../services/debridge.services";
 import { sonic } from "viem/chains";
 export const LZ_CHAINS = {
-  97: {
-    endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
-    endpointIdV2: EndpointId.BSC_V2_TESTNET,
-    name: "bscTestnet",
-    rpcUrl: "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
-    chainId: 97,
-  },
-  57054: {
-    endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
-    endpointIdV2: EndpointId.SONIC_V2_TESTNET,
-    name: "Sonic Blaze",
-    rpcUrl: "https://rpc.blaze.soniclabs.com",
-    chainId: 57054,
-  },
+  // 97: {
+  //   endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
+  //   endpointIdV2: EndpointId.BSC_V2_TESTNET,
+  //   name: "bscTestnet",
+  //   rpcUrl: "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
+  //   chainId: 97,
+  // },
+  // 57054: {
+  //   endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
+  //   endpointIdV2: EndpointId.SONIC_V2_TESTNET,
+  //   name: "Sonic Blaze",
+  //   rpcUrl: "https://rpc.blaze.soniclabs.com",
+  //   chainId: 57054,
+  // },
+  // 56: {
+  //   endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
+  //   endpointIdV2: EndpointId.BSC_V2_MAINNET,
+  //   name: "bscMainnet",
+  //   rpcUrl: "https://rpc.ankr.com/bsc",
+  //   chainId: 56,
+  // },
   146: {
     endpointV2: "0x6F475642a6e85809B1c36Fa62763669b1b48DD5B",
     endpointIdV2: EndpointId.SONIC_V2_MAINNET,
@@ -39,13 +46,7 @@ export const LZ_CHAINS = {
     rpcUrl: "https://rpc.soniclabs.com",
     chainId: 146,
   },
-  56: {
-    endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
-    endpointIdV2: EndpointId.BSC_V2_MAINNET,
-    name: "bscMainnet",
-    rpcUrl: "https://rpc.ankr.com/bsc",
-    chainId: 56,
-  },
+
   137: {
     endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
     endpointIdV2: EndpointId.POLYGON_V2_MAINNET,
