@@ -159,8 +159,7 @@ EcoNova integrates **AI-powered smart contract auditing** using:
 
 Learn more about EcoNova by watching our demo videos:
 
-- [EcoNova Overview](https://www.youtube.com/watch?v=LpmLjRnaPVc)
-- [EcoNova Features & Walkthrough](https://www.youtube.com/watch?v=i0hpdPyZt6Q)
+- [EcoNova Overview](https://www.youtube.com/watch?v=I0GPMudkcus)
 
 ---
 
@@ -169,15 +168,15 @@ Learn more about EcoNova by watching our demo videos:
 - **/bridge** → Bridge Sonic to Polygon with deBridge  
   → Bridge EcoNovaToken to Polygon with LayerZero
 
-- **/donate** → Donate to a charity cause
+- **/donate** → Donate to a charity cause and earn points
 - **/dao** → DeFiAI governance
 - **/tx-analysis** → Analyze transaction hash
 - **/ai-health** → Use ZK proof to verify BMI and store on Sonic blockchain
 - **/ai-tutor** → Learn about DeFi and AI, take quizzes, and claim an NFT
 - **/ai-audit** → Audit verified smart contracts, GitHub Solidity files, and local files
-- **/ai-portfolio-manager** → Analyze Sonic and EcoNova balances, set goals, and rebalance portfolios
+- **/ai-portfolio-manager** → Analyze Sonic and USD.e balances, set goals, and rebalance portfolios
 - **/leaderboard** → View ranked users based on points and token balances
-- **/earn-points** → Earn points by liking and retweeting posts made by the bot
+- **/earn-points** → Earn points by liking and retweeting posts made by the bot.
 
 ---
 
