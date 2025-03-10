@@ -61,11 +61,12 @@ const QuizPage = () => {
           tokenURI = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
         }
 
-        const pinataGateWayUrl = "https://emerald-odd-bee-965.mypinata.cloud";
+        const pinataGateWayUrl =
+          "https://emerald-odd-bee-965.mypinata.cloud/files/";
 
         if (tokenURI.startsWith(pinataGateWayUrl)) {
           tokenURI = tokenURI.replace(
-            `${pinataGateWayUrl}/files/`,
+            pinataGateWayUrl,
             `${SERVER_URL}/pinata/files/`
           );
         }
