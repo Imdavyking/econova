@@ -268,7 +268,7 @@ export default function Bridge() {
           >
             {filteredTokens.map((token) => (
               <option key={token.tokenAddress} value={token.tokenAddress}>
-                {token.name} ({token.symbol})
+                {token.name}
               </option>
             ))}
           </select>
@@ -288,7 +288,7 @@ export default function Bridge() {
           >
             {Object.values(LZ_CHAINS).map((chain) => (
               <option key={chain.chainId} value={chain.chainId}>
-                (From) {camelToPascalWithSpace(chain.name)}
+                From {camelToPascalWithSpace(chain.name)}
               </option>
             ))}
           </select>
@@ -300,7 +300,7 @@ export default function Bridge() {
           >
             {Object.values(LZ_CHAINS).map((chain) => (
               <option key={chain.chainId} value={chain.chainId}>
-                (To) {camelToPascalWithSpace(chain.name)}
+                To {camelToPascalWithSpace(chain.name)}
               </option>
             ))}
           </select>
