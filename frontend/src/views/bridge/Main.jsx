@@ -46,6 +46,13 @@ export const LZ_CHAINS = {
     rpcUrl: "https://rpc.ankr.com/bsc",
     chainId: 56,
   },
+  137: {
+    endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
+    endpointIdV2: EndpointId.POLYGON_V2_MAINNET,
+    name: "polygon",
+    rpcUrl: "https://rpc.ankr.com/polygon",
+    chainId: 137,
+  },
 };
 
 export default function Bridge() {
@@ -64,8 +71,8 @@ export default function Bridge() {
     },
   ]);
   const [userBalance, setUserBalance] = useState("---");
-  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[57054]); // Default to sonicBlaze
-  const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[97]); // Default to baseSepolia
+  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[146]); // Default to sonicBlaze
+  const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[137]); // Default to baseSepolia
   const [otherTokenAddress, setOtherTokenAddress] = useState("");
 
   const [selectedToken, setSelectedToken] = useState({
