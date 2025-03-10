@@ -124,7 +124,7 @@ EcoNova is deployed on **Ethereum-compatible chains** and utilizes:
 
 EcoNova integrates **AI-powered smart contract auditing** using:
 
-- **[SonicScan Testnet API](https://api-testnet.sonicscan.org)** for verified contract address checks
+- **[SonicScan API](https://api.sonicscan.org)** for verified contract address checks
 - **GitHub Solidity file analysis** to detect vulnerabilities
 - **Manual Solidity audit support** via file input
 - **Gas optimization suggestions** to reduce transaction costs
@@ -166,8 +166,8 @@ Learn more about EcoNova by watching our demo videos:
 
 ## 📌 **Pages**
 
-- **/bridge** → Bridge Sonic to BSC Mainnet with deBridge  
-  → Bridge EcoNovaToken to BSC Testnet with LayerZero
+- **/bridge** → Bridge Sonic to Polygon with deBridge  
+  → Bridge EcoNovaToken to Polygon with LayerZero
 
 - **/donate** → Donate to a charity cause
 - **/dao** → DeFiAI governance
