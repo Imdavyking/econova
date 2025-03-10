@@ -3,9 +3,9 @@ import { ethers } from "ethers";
 import { getBridgeContract, getSigner } from "./blockchain.services";
 import { Flags } from "@debridge-finance/desdk/lib/evm";
 import { FAILED_KEY } from "../utils/constants";
-import { sonic, bsc } from "viem/chains";
+import { sonic, bsc, polygon } from "viem/chains";
 
-const supportedChains = [sonic, bsc];
+const supportedChains = [sonic, bsc, polygon];
 const TX_HASH_LOCAL_STORAGE_KEY = "debridgeTransactionInfoKey";
 
 const getProviderByChainId = (chainId) =>
