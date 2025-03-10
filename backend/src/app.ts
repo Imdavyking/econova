@@ -20,9 +20,11 @@ automateCharityFundDistribution();
 
 // Start the server
 const PORT = environment.PORT || 3000;
+
 app.use(
   "/pinata",
   createProxyMiddleware({
+    logger: logger,
     target: "https://emerald-odd-bee-965.mypinata.cloud",
     changeOrigin: true,
     pathRewrite: { "^/pinata": "/files" },
