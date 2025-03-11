@@ -1,0 +1,1 @@
+export const formatChainId = (id) => `0x${Number(id).toString(16)}`;
