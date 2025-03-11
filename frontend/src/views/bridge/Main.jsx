@@ -72,9 +72,9 @@ export default function Bridge() {
     },
   ]);
   const [userBalance, setUserBalance] = useState("---");
-  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[CHAIN_ID]);
+  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[Number(CHAIN_ID)]);
   const [destinationChain, setDestinationChain] = useState(
-    LZ_CHAINS[CROSS_CHAIN_ID]
+    LZ_CHAINS[Number(CROSS_CHAIN_ID)]
   );
   const [otherTokenAddress, setOtherTokenAddress] = useState("");
 
