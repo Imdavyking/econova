@@ -72,8 +72,8 @@ export default function Bridge() {
     },
   ]);
   const [userBalance, setUserBalance] = useState("---");
-  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[146]); // Default to sonicBlaze
-  const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[137]); // Default to baseSepolia
+  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[CHAIN_ID]); // Default to sonicBlaze
+  const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[CROSS_CHAIN_ID]); // Default to baseSepolia
   const [otherTokenAddress, setOtherTokenAddress] = useState("");
 
   const [selectedToken, setSelectedToken] = useState({

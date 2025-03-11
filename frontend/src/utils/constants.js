@@ -2,12 +2,18 @@ export const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 export const SERVER_URL_TWITTER_LOGIN = `${SERVER_URL}/twitter/login`;
 export const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 let chain_id = import.meta.env.VITE_CHAIN_ID;
+let cross_chain_id = import.meta.env.VITE_CROSS_CHAIN_ID;
 
 chain_id = Number(+chain_id).toString(16);
+cross_chain_id = Number(+cross_chain_id).toString(16);
+if (!String(cross_chain_id).startsWith("0x")) {
+  cross_chain_id = "0x" + cross_chain_id;
+}
 if (!String(chain_id).startsWith("0x")) {
   chain_id = "0x" + chain_id;
 }
 export const CHAIN_ID = chain_id;
+export const CROSS_CHAIN_ID = cross_chain_id;
 export const MULTICALL3_CONTRACT_ADDRESS =
   "0xcA11bde05977b3631167028862bE2a173976CA11";
 export const CHAIN_NAME = import.meta.env.VITE_CHAIN_NAME;
