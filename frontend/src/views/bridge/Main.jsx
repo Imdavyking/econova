@@ -12,7 +12,7 @@ import { HiArrowNarrowRight, HiArrowNarrowLeft } from "react-icons/hi";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
-import { APP_NAME, CHAIN_ID } from "../../utils/constants";
+import { APP_NAME, CHAIN_ID, CROSS_CHAIN_ID } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
 import { bridgeCoin, getBridgeFee } from "../../services/debridge.services";
@@ -72,8 +72,10 @@ export default function Bridge() {
     },
   ]);
   const [userBalance, setUserBalance] = useState("---");
-  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[CHAIN_ID]); // Default to sonicBlaze
-  const [destinationChain, setDestinationChain] = useState(LZ_CHAINS[CROSS_CHAIN_ID]); // Default to baseSepolia
+  const [sourceChain, setSourceChain] = useState(LZ_CHAINS[CHAIN_ID]);
+  const [destinationChain, setDestinationChain] = useState(
+    LZ_CHAINS[CROSS_CHAIN_ID]
+  );
   const [otherTokenAddress, setOtherTokenAddress] = useState("");
 
   const [selectedToken, setSelectedToken] = useState({
