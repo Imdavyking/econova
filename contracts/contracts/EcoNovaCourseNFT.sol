@@ -77,6 +77,7 @@ contract EcoNovaCourseNFT is
     error EcoNovaCourseNFT__NativeSenderBadRole(bytes nativeSender, uint256 chainIdFrom);
     error EcoNovaCourseNFT__ChainNotSupported(uint256 chainId);
     error EcoNovaCourseNFT__CrossChainTransferToSameChain();
+    error EcoNovaCourseNFT__NotOwner();
 
     /** modifiers */
     modifier onlyAdmin() {
