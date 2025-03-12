@@ -3,6 +3,7 @@ import { AIAgent } from "../../agent/index";
 import { toast } from "react-toastify";
 import { FaSpinner, FaQuestionCircle, FaComment } from "react-icons/fa";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const ChatWithAdminBot = () => {
   const [isChatboxOpen, setIsChatboxOpen] = useState(false);
@@ -175,7 +176,9 @@ const ChatWithAdminBot = () => {
                         : "bg-gray-200 text-gray-700"
                     } rounded-lg py-2 px-4 inline-block`}
                   >
-                    <Markdown>{message.text}</Markdown>
+                    <Markdown remarkPlugins={[remarkGfm]}>
+                      {message.text}
+                    </Markdown>
                   </p>
                 </div>
               ))}
