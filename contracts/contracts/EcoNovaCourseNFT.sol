@@ -192,7 +192,9 @@ contract EcoNovaCourseNFT is
             revert EcoNovaCourseNFT__ChainNotSupported(dstChain_);
         }
         string memory tokenURI_ = tokenURI(tokenId);
-        //NOTE: check if msg.sender is owner of nft
+        if (ownerOf(tokenId) != msg.sender) {
+            revert EcoNovaCourseNFT__NotOwner();
+        }
         _burn(tokenId);
         bytes memory dstTxCall = abi.encodeCall(
             IEcoNovaCourseNFT.receiveNFT,
