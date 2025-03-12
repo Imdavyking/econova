@@ -169,7 +169,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param token The address of the token.
      */
     function getTokenDecimals(address token) internal view returns (uint8) {
-        if (!isContract(token)) {
+        if (token == ETH_ADDRESS) {
             return 18;
         }
 
