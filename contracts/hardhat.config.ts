@@ -5,7 +5,6 @@ import "@nomicfoundation/hardhat-verify"
 import { HardhatEthersProvider } from "@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider"
 import dotenv from "dotenv"
 import { CROSS_CHAIN_ID_API_SCAN_VERIFIER_KEY, crossChainLzInfo } from "./utils/lzendpoints.help"
-import { EthereumProvider } from "hardhat/types"
 import { initKeystore } from "./utils/init.keystore"
 
 dotenv.config()
