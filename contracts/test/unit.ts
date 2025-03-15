@@ -60,7 +60,9 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               await BoxV1Proxy.store(42)
               const version = await BoxV1Proxy.version()
               const newOwner = await BoxV1Proxy.owner()
-              console.log({ version, newOwner })
+
+              expect(version).to.equal("V1")
+              expect(newOwner).to.equal(owner.address)
 
               const BoxV2 = await hre.ethers.getContractFactory("BoxV2")
               const boxV2Deployer = await BoxV2.deploy()
@@ -69,7 +71,10 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const version2 = await BoxV1Proxy.version()
               const owner2 = await BoxV1Proxy.owner()
               const value = await BoxV1Proxy.retrieve()
-              console.log({ version2, owner2, value })
+
+              expect(version2).to.equal("V2")
+              expect(owner2).to.equal(owner.address)
+              expect(value).to.equal(42)
 
               const charityDeployer = await CharityDeployer.deploy(
                   charityCategories.Education,
