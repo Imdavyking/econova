@@ -47,6 +47,30 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
               const timeLockDeployer = await TimeLock.deploy(MIN_DELAY, [], [], owner.address)
 
+              const BoxV1 = await hre.ethers.getContractFactory("BoxV1")
+              const boxV1Deployer = await BoxV1.deploy()
+              await boxV1Deployer.waitForDeployment()
+
+              const proxy1967 = await hre.ethers.getContractFactory("ERC1967Proxy")
+              const data = boxV1Deployer.interface.encodeFunctionData("initialize")
+              const proxyDeployer = await proxy1967.deploy(boxV1Deployer, data)
+              await proxyDeployer.waitForDeployment()
+
+              const BoxV1Proxy = await hre.ethers.getContractAt("BoxV1", proxyDeployer)
+              await BoxV1Proxy.store(42)
+              const version = await BoxV1Proxy.version()
+              const newOwner = await BoxV1Proxy.owner()
+              console.log({ version, newOwner })
+
+              const BoxV2 = await hre.ethers.getContractFactory("BoxV2")
+              const boxV2Deployer = await BoxV2.deploy()
+              await boxV2Deployer.waitForDeployment()
+              await BoxV1Proxy.upgradeToAndCall(boxV2Deployer, "0x")
+              const version2 = await BoxV1Proxy.version()
+              const owner2 = await BoxV1Proxy.owner()
+              const value = await BoxV1Proxy.retrieve()
+              console.log({ version2, owner2, value })
+
               const charityDeployer = await CharityDeployer.deploy(
                   charityCategories.Education,
                   owner
