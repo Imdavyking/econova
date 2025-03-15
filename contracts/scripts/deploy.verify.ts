@@ -19,6 +19,7 @@ import {
     VOTING_DELAY,
     VOTING_PERIOD,
 } from "../utils/constants"
+import { setLayerZeroDVN } from "./layerzero.dvn"
 dotenv.config()
 
 async function main() {
@@ -225,6 +226,18 @@ async function main() {
             "VITE_CROSS_CHAIN_ENDPOINT_V2_ID"
         )
         updateEnv(crossChainLzInfo.endpointV2, "frontend", "VITE_CROSS_CHAIN_ENDPOINT_V2_ADDRESS")
+        await setLayerZeroDVN(
+            {
+                eid: layerZeroChainInfo.endpointIdV2,
+                contractName: "EcoNovaToken",
+                address: tokenAddress,
+            },
+            {
+                eid: crossChainLzInfo.endpointIdV2,
+                contractName: "EcoNovaToken",
+                address: crossChainTokenAddress,
+            }
+        )
     }
 }
 
