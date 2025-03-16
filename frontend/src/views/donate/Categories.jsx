@@ -6,7 +6,7 @@ import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { getAllCharities } from "../../services/blockchain.services";
-
+import { Link } from "react-router-dom";
 export default function CharityCategories() {
   const [charities, setCharities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,10 +26,10 @@ export default function CharityCategories() {
     <>
       {" "}
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} charity</span>
-        </a>
+        </Link>
       </h2>
       <div className="max-w-2xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
         <DarkModeSwitcher />

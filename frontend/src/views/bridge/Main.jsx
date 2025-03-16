@@ -17,6 +17,7 @@ import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
 import { bridgeCoin, getBridgeFee } from "../../services/debridge.services";
 import { sonic } from "viem/chains";
+import { Link } from "react-router-dom";
 export const LZ_CHAINS = {
   // 97: {
   //   endpointV2: "0x6EDCE65403992e310A62460808c4b910D972f10f",
@@ -249,10 +250,10 @@ export default function Bridge() {
 
   return (
     <div className="container sm:px-10">
-      <a href="/" className="-intro-x flex items-center pt-5 justify-center">
+      <Link to="/" className="-intro-x flex items-center pt-5 justify-center">
         <img alt="EcoNova" className="w-10" src={logoUrl} />
         <span className=" text-lg ml-3"> {APP_NAME} Bridge</span>
-      </a>
+      </Link>
 
       <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-8 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
         <DarkModeSwitcher />

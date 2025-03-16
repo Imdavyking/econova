@@ -13,7 +13,7 @@ import {
 } from "../../services/blockchain.services";
 import { APP_NAME, ETH_ADDRESS } from "../../utils/constants";
 import { charityCategories } from "../../utils/charity.categories";
-
+import { Link } from "react-router-dom";
 function Main() {
   useEffect(() => {
     dom("body").removeClass("main").removeClass("error-page").addClass("login");
@@ -65,10 +65,10 @@ function Main() {
         <div className="container sm:px-10">
           <div className="block xl:grid grid-cols-2 gap-4">
             <div className="hidden xl:flex flex-col min-h-screen">
-              <a href="/" className="-intro-x flex items-center pt-5">
+              <Link to="/" className="-intro-x flex items-center pt-5">
                 <img alt="EcoNova" className="w-10" src={logoUrl} />
                 <span className="text-white text-lg ml-3"> {APP_NAME} </span>
-              </a>
+              </Link>
               <div className="my-auto">
                 <img
                   alt="EcoNova"

@@ -16,7 +16,7 @@ import {
 } from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
 import { APP_NAME } from "../../utils/constants";
-
+import { Link } from "react-router-dom";
 function Main() {
   useEffect(() => {
     dom("body").removeClass("main").removeClass("error-page").addClass("login");
@@ -81,10 +81,10 @@ function Main() {
           <div className="block xl:grid grid-cols-2 gap-4">
             {/* BEGIN: Register Info */}
             <div className="hidden xl:flex flex-col min-h-screen">
-              <a href="/" className="-intro-x flex items-center pt-5">
+              <Link to="/" className="-intro-x flex items-center pt-5">
                 <img alt={APP_NAME} className="w-10" src={logoUrl} />
                 <span className="text-white text-lg ml-3"> {APP_NAME} </span>
-              </a>
+              </Link>
               <div className="my-auto">
                 <img
                   alt={APP_NAME}

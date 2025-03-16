@@ -6,6 +6,7 @@ import { saveHealthyBMIProofService } from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { AIAgent } from "../../agent";
+import { Link } from "react-router-dom";
 
 const AIHealth = () => {
   const [weight, setWeight] = useState("");
@@ -43,10 +44,10 @@ const AIHealth = () => {
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} AI Health Advisor</span>
-        </a>
+        </Link>
       </h2>
 
       <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">

@@ -14,6 +14,7 @@ import {
 import { FaSpinner } from "react-icons/fa";
 import tutorData from "@/assets/json/ai_tutor.json";
 import { callLLMApi } from "../../services/openai.services";
+import { Link } from "react-router-dom";
 
 const QuizPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -167,10 +168,10 @@ const QuizPage = () => {
     <div className="p-6 max-w-3xl mx-auto">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} AI Tutor</span>
-        </a>
+        </Link>
       </h2>
 
       {loading ? (

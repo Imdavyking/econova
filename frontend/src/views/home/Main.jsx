@@ -18,7 +18,7 @@ import { FaUserCircle, FaCrown, FaCoins } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveTwitterAuth } from "../../services/twitter.auth.services";
 import { wrapSonicService } from "../../services/blockchain.services";
-
+import { Link } from "react-router-dom";
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
@@ -63,12 +63,12 @@ const Home = () => {
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-center w-full py-5">
             {/* Logo */}
-            <a href="/" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <img alt={APP_NAME} className="w-10 md:w-12" src={logoUrl} />
               <span className="text-white text-lg md:text-xl ml-3">
                 {APP_NAME}
               </span>
-            </a>
+            </Link>
 
             {/* Action Buttons */}
             <div className="flex items-center space-x-4 mt-3 md:mt-0">

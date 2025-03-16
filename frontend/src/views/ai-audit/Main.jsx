@@ -8,6 +8,7 @@ import { fetchContractFileFromGitHub } from "../../services/github.repo.services
 import { detectContractLanguage } from "../../services/contract.detect.services";
 import { callLLMAuditApi } from "../../services/openai.services";
 import { getVerifiedSourceCode } from "../../services/source.code.services";
+import { Link } from "react-router-dom";
 
 export default function AiAudit() {
   const [file, setFile] = useState(null);
@@ -157,10 +158,10 @@ export default function AiAudit() {
     <div className="p-6 max-w-3xl mx-auto flex flex-col items-center">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 ">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} AI Audit</span>
-        </a>
+        </Link>
       </h2>
       <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
         {/* Verified Contract Address Input */}

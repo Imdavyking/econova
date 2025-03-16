@@ -13,6 +13,7 @@ import Kyberswap, {
   KYBERSWAP_TOKENS_INFO,
 } from "../../services/kyber.swap.services";
 import { sonic, fantomSonicTestnet } from "viem/chains";
+import { Link } from "react-router-dom";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -231,10 +232,10 @@ export default function InvestmentAI() {
     <div className="p-6 max-w-lg mx-auto">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} Portfolio</span>
-        </a>
+        </Link>
       </h2>
 
       {loading ? (
