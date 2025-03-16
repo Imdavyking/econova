@@ -21,6 +21,10 @@ const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
+  useEffect(() => {
+    dom("body").removeClass("error-page").removeClass("login").addClass("main");
+  }, []);
+
   const handleLogout = () => {
     console.log("User logged out");
     setTwitterHandle("");
@@ -46,10 +50,6 @@ const Home = () => {
         console.log(error);
       });
   }, [location, navigate]);
-
-  useEffect(() => {
-    dom("body").removeClass("error-page").removeClass("login").addClass("main");
-  }, []);
 
   return (
     <>
