@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { getAllTweets } from "../../services/tweets.services";
 import { Tweet } from "../../components/tweet";
+import { FaSpinner } from "react-icons/fa";
 
 const TweetList = ({ tweets }) => {
   if (!tweets.length) {
@@ -27,11 +27,13 @@ const TweetList = ({ tweets }) => {
 
 const EarnPoints = () => {
   const [tweets, setTweets] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getAllTweets()
       .then((data) => setTweets(data))
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -44,7 +46,13 @@ const EarnPoints = () => {
         </a>
       </h2>
 
-      <TweetList tweets={tweets} />
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <FaSpinner className="animate-spin text-white text-4xl" />
+        </div>
+      ) : (
+        <TweetList tweets={tweets} />
+      )}
     </div>
   );
 };
