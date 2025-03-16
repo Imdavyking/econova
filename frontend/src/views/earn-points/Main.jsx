@@ -5,6 +5,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { getAllTweets } from "../../services/tweets.services";
 import { Tweet } from "../../components/tweet";
 import { FaSpinner } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const TweetList = ({ tweets }) => {
   if (!tweets.length) {
@@ -32,7 +33,7 @@ const EarnPoints = () => {
   useEffect(() => {
     getAllTweets()
       .then((data) => setTweets(data))
-      .catch((error) => console.log(error))
+      .catch((error) => toast.error(error?.message))
       .finally(() => setLoading(false));
   }, []);
 
