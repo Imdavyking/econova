@@ -109,8 +109,8 @@ const Home = () => {
                   {twitterHandle ? (
                     <MenuItem>
                       {({ isactive }) => (
-                        <a
-                          href="/earn-points"
+                        <Link
+                          to="/earn-points"
                           className={`flex items-center  px-4 py-2 text-gray-700 w-full text-left ${
                             isactive ? "bg-gray-200" : ""
                           }`}
@@ -120,7 +120,7 @@ const Home = () => {
                             className="ml-2 text-xl cursor-pointer"
                             style={{ color: "gold" }}
                           />
-                        </a>
+                        </Link>
                       )}
                     </MenuItem>
                   ) : (
@@ -128,8 +128,8 @@ const Home = () => {
                   )}
                   <MenuItem>
                     {({ isactive }) => (
-                      <a
-                        href="/leaderboard"
+                      <Link
+                        to="/leaderboard"
                         className={`flex items-center px-4 py-2 text-gray-700 w-full text-left ${
                           isactive ? "bg-gray-200" : ""
                         }`}
@@ -139,7 +139,7 @@ const Home = () => {
                           className="ml-2 text-xl cursor-pointer"
                           style={{ color: "gold" }}
                         />
-                      </a>
+                      </Link>
                     )}
                   </MenuItem>
                 </MenuItems>
