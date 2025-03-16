@@ -128,6 +128,11 @@ const config: Config = {
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Econova, Inc. Built with Docusaurus.`,
     },
+    colorMode: {
+      defaultMode: "dark",
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
+    },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
