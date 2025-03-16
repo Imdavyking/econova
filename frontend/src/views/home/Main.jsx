@@ -17,8 +17,6 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaUserCircle, FaCrown, FaCoins } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveTwitterAuth } from "../../services/twitter.auth.services";
-import { wrapSonicService } from "../../services/blockchain.services";
-import { Link } from "react-router-dom";
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);

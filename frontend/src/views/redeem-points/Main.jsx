@@ -16,7 +16,6 @@ import {
 } from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
 import { APP_NAME } from "../../utils/constants";
-import { Link } from "react-router-dom";
 function Main() {
   useEffect(() => {
     dom("body").removeClass("main").removeClass("error-page").addClass("login");
