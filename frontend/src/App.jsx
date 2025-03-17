@@ -12,7 +12,7 @@ const WalletContext = createContext();
 
 function App() {
   useEffect(() => {
-    document.title = `${APP_NAME} | Blockchain powered recycling solution`;
+    document.title = `${APP_NAME} | Blockchain powered AI solution`;
   }, []);
   return (
     <WalletContext.Provider value={{}}>
