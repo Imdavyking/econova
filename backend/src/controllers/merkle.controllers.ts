@@ -4,7 +4,7 @@ import {
   signUserLevelWithRoot,
 } from "../services/merkle.proof.services";
 import { ethers } from "ethers";
-import { uploadToIPFS as uploadToLighthouse } from "../services/lighthouse.services";
+import { uploadToLighthouse } from "../services/lighthouse.services";
 import fs from "fs";
 import path from "path";
 import { uploadToPinata } from "../services/pinata.services";
