@@ -14,7 +14,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
     bool public canWithdrawFunds = true;
     Category public charityCategory;
     address public automationBot = address(0);
-    uint256 public hardHatChainId = 31337;
+    uint256 public constant HARD_HAT_CHAIN_ID = 31337;
 
     /** constants */
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
@@ -245,7 +245,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
         }
         uint256 share = amount / orgCount;
         for (uint256 i = 0; i < orgCount; i++) {
-            if (block.chainid != hardHatChainId) {
+            if (block.chainid != HARD_HAT_CHAIN_ID) {
                 if (!organizationExists[orgs[i]]) {
                     revert Charity__OrganizationNotFound();
                 }
