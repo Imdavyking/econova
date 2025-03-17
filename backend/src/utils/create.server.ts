@@ -15,6 +15,7 @@ import alloraRoutes from "../routes/allora.routes";
 import sourceCodeRoutes from "../routes/source.code.routes";
 import { environment } from "./config";
 import coinGeckoPriceRoutes from "../routes/coin.gecko.routes";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 dotenv.config();
 const app = express();
@@ -59,6 +60,18 @@ app.use(
   })
 );
 
+// Proxy for Pinata Cors
+app.use(
+  "/pinata",
+  createProxyMiddleware({
+    logger: logger,
+    target: "https://emerald-odd-bee-965.mypinata.cloud",
+    changeOrigin: true,
+    pathRewrite: { "^/pinata": "/files" },
+  })
+);
+
+// Api home
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
