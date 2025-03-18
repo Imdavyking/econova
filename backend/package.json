@@ -59,6 +59,7 @@
     "openai": "^4.80.1",
     "pinata": "^2.0.1",
     "simple-get": "^4.0.1",
+    "socket.io": "^4.8.1",
     "supertest": "^7.0.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
