@@ -116,9 +116,9 @@ const decodeExecPayload = (data: string): any | null => {
     );
 
     return {
-      token: decodedData[0], // Token address
-      amount: decodedData[1].toString(), // Amount in string format
-      organizations: decodedData[2], // Array of organization addresses
+      token: decodedData[0],
+      amount: decodedData[1].toString(),
+      organizations: decodedData[2],
     };
   } catch (error: any) {
     logger.error(`Failed to decode execPayload: ${error.message}`);
@@ -126,10 +126,10 @@ const decodeExecPayload = (data: string): any | null => {
   }
 };
 
-async function getTokenDetails(
+const getTokenDetails = async (
   token: string,
   rawAmount: bigint
-): Promise<{ amount: string; name: string }> {
+): Promise<{ amount: string; name: string }> => {
   if (token === ETH_ADDRESS) {
     return {
       amount: ethers.formatEther(rawAmount),
@@ -150,7 +150,7 @@ async function getTokenDetails(
     console.error(`Failed to fetch token details: ${error.message}`);
     return { amount: rawAmount.toString(), name: "Unknown Token" };
   }
-}
+};
 
 async function handleCharityWithdrawal(index: number, charityAddress: string) {
   try {
