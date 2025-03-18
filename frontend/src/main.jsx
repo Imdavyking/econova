@@ -23,8 +23,6 @@ import {
   WALLET_CONNECT_PROJECT_ID,
 } from "./utils/constants";
 import { sonic, bsc, bscTestnet } from "viem/chains";
-import { io } from "socket.io-client";
-import { toast } from "react-toastify";
 
 export const chainInfo = defineChain({
   id: Number(CHAIN_ID),
@@ -44,13 +42,6 @@ export const chainInfo = defineChain({
     },
   },
   testnet: true,
-});
-
-const socket = io(SERVER_URL);
-
-socket.on("charity:update", (data) => {
-  toast.info(data);
-  console.log("Charity Update:", data);
 });
 
 const config = getDefaultConfig({

@@ -156,7 +156,11 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
   try {
     if (charityAddress === ethers.ZeroAddress) {
       logger.info(`Charity ${index} does not exist.`);
-      io.emit("charity:update", { index, status: "Charity does not exist" });
+      io.emit("charity:update", {
+        index,
+        shouldToast: false,
+        message: "Charity does not exist",
+      });
       return;
     }
 
@@ -177,7 +181,8 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       logger.info(`Charity ${index} (${charityAddress}) - ${logMessage}`);
       io.emit("charity:update", {
         index,
-        status: logMessage,
+        shouldToast: false,
+        message: logMessage,
       });
       return;
     }
@@ -203,7 +208,8 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
 
     io.emit("charity:update", {
       index,
-      status: `Withdrawing ${tokenAmount} ${name} to ${
+      shouldToast: true,
+      message: `Withdrawing ${tokenAmount} ${name} to ${
         organizations.length
       } organization${organizations.length > 1 ? "s" : ""}, tx: ${tx.hash}`,
     });

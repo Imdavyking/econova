@@ -4,10 +4,8 @@ import { RecoilRoot } from "recoil";
 import Router from "./router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ethers } from "ethers";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { APP_NAME } from "./utils/constants";
-
 const WalletContext = createContext();
 
 function App() {

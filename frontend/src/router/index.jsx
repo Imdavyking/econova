@@ -18,8 +18,20 @@ import NotFound from "../views/not-found/Main";
 import AiTxAnalysis from "../views/ai-tx-analysis/Main";
 import AITutorQuiz from "../views/ai-tutor/quiz";
 import TermsAndCondition from "../views/terms-and-condition/Main";
-
+import { io } from "socket.io-client";
+import { SERVER_URL } from "../utils/constants";
+import { toast } from "react-toastify";
 function Router() {
+  const socket = io(SERVER_URL);
+
+  socket.on("charity:update", (data) => {
+    const { message, shouldToast } = data;
+    if (shouldToast) {
+      toast.success(message);
+    } else {
+      console.log(message);
+    }
+  });
   const routes = [
     {
       path: "/",
