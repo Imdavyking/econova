@@ -32,7 +32,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  logger.info("user connected", socket.id);
+  logger.info(`user connected ${socket.id}`);
   socket.on("disconnect", () => {
     logger.info("user disconnected");
   });
