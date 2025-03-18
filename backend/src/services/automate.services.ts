@@ -4,6 +4,7 @@ import logger from "../config/logger";
 import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
 import { MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
+import { io } from "../app";
 
 dotenv.config();
 
@@ -100,6 +101,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
   try {
     if (charityAddress === ethers.ZeroAddress) {
       logger.info(`Charity ${index} does not exist.`);
+      io.emit("charity:update", { index, status: "Charity does not exist" });
       return;
     }
 
@@ -113,17 +115,16 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
 
     if (!canExec) {
       const message = decodeExecPayload(execPayload);
-      if (message) {
-        logger.info(
-          `Charity ${index} (${charityAddress}) - Reason: ${message}`
-        );
-      } else {
-        logger.info(
-          `Charity ${index} (${charityAddress}) execPayload (hex): ${ethers.hexlify(
-            execPayload
-          )}`
-        );
-      }
+      const logMessage = message
+        ? `Reason: ${message}`
+        : `execPayload (hex): ${ethers.hexlify(execPayload)}`;
+
+      logger.info(`Charity ${index} (${charityAddress}) - ${logMessage}`);
+      io.emit("charity:update", {
+        index,
+        status: "Execution not possible",
+        message,
+      });
       return;
     }
 
@@ -142,6 +143,12 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
     logger.info(
       `Transaction sent for Charity ${index} (${charityAddress}): ${tx.hash}`
     );
+
+    io.emit("charity:update", {
+      index,
+      status: "Transaction Sent",
+      txHash: tx.hash,
+    });
 
     await tx.wait();
     logger.info(

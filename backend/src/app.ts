@@ -5,6 +5,8 @@ import { automateCharityFundDistribution } from "./services/automate.services";
 import app from "./utils/create.server";
 import { environment } from "./utils/config";
 import initializeRedis from "./utils/redis.app";
+import { Server } from "socket.io";
+import { createServer } from "http";
 
 dotenv.config();
 
@@ -20,4 +22,21 @@ automateCharityFundDistribution();
 // Start the server
 const PORT = environment.PORT || 3000;
 
-app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("user connected", socket.id);
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
+
+export { io };
+
+server.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
