@@ -23,25 +23,6 @@ import { SERVER_URL } from "../utils/constants";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 function Router() {
-  const socket = io(SERVER_URL);
-
-  useEffect(() => {
-    socket.on("charity:update", (data) => {
-      const { message, shouldToast } = data;
-      if (shouldToast) {
-        toast.success(message, {
-          closeButton: true,
-        });
-      } else {
-        console.log(message);
-      }
-    });
-
-    return () => {
-      socket.off("charity:update");
-      console.log("unmounting");
-    };
-  }, []);
   const routes = [
     {
       path: "/",

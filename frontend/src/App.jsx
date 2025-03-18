@@ -5,15 +5,35 @@ import Router from "./router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createContext, useContext, useEffect } from "react";
-import { APP_NAME } from "./utils/constants";
-const WalletContext = createContext();
+import { APP_NAME, SERVER_URL } from "./utils/constants";
+import { io } from "socket.io-client";
+
+const AppContext = createContext();
 
 function App() {
+  const socket = io(SERVER_URL);
+
   useEffect(() => {
     document.title = `${APP_NAME} | Blockchain powered AI solution`;
+    socket.on("charity:update", (data) => {
+      const { message, shouldToast } = data;
+      if (shouldToast) {
+        toast.success(message, {
+          closeButton: true,
+        });
+      } else {
+        console.log(message);
+      }
+    });
+
+    return () => {
+      socket.off("charity:update");
+      socket.disconnect();
+      console.log("unmounting");
+    };
   }, []);
   return (
-    <WalletContext.Provider value={{}}>
+    <AppContext.Provider value={{}}>
       <RecoilRoot>
         <ToastContainer />
         <BrowserRouter>
@@ -21,12 +41,12 @@ function App() {
           <ScrollToTop />
         </BrowserRouter>
       </RecoilRoot>
-    </WalletContext.Provider>
+    </AppContext.Provider>
   );
 }
 
 export const useWallet = () => {
-  return useContext(WalletContext);
+  return useContext(AppContext);
 };
 
 export function getFirstAndLast4Chars(str) {
