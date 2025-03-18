@@ -5,6 +5,7 @@ import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
 import { ETH_ADDRESS, MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
 import { io } from "../app";
+import { log } from "console";
 
 dotenv.config();
 
@@ -166,7 +167,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       wallet
     );
 
-    const [canExec, execPayload] = await charityInstance.checker();
+    let [canExec, execPayload] = await charityInstance.checker();
 
     if (!canExec) {
       const message = decodeNonExecPayload(execPayload);
@@ -177,13 +178,17 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       logger.info(`Charity ${index} (${charityAddress}) - ${logMessage}`);
       io.emit("charity:update", {
         index,
-        status: "Execution not possible",
-        message,
+        status: logMessage,
       });
       return;
     }
 
     const { token, amount, organizations } = decodeExecPayload(execPayload);
+
+    const { amount: tokenAmount, name } = await getTokenDetails(
+      token,
+      BigInt(amount)
+    );
 
     const gasEstimate = await provider.estimateGas({
       from: wallet.address,
@@ -197,20 +202,16 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       gasLimit: (gasEstimate * 12n) / 10n,
     });
 
+    io.emit("charity:update", {
+      index,
+      status: `Withdrawing ${tokenAmount} ${name} to ${
+        organizations.length
+      } organization${organizations.length > 1 ? "s" : ""}, tx: ${tx.hash}`,
+    });
+
     logger.info(
       `Transaction sent for Charity ${index} (${charityAddress}): ${tx.hash}`
     );
-
-    io.emit("charity:update", {
-      index,
-      status: `✅ Charity ${index} withdrawal initiated: ${ethers.formatEther(
-        amount
-      )} of token ${token} sent to ${
-        organizations.length
-      } organization(s). Tx: ${tx.hash}`,
-
-      txHash: tx.hash,
-    });
 
     await tx.wait();
     logger.info(
