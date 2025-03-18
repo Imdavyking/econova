@@ -18,10 +18,6 @@ import NotFound from "../views/not-found/Main";
 import AiTxAnalysis from "../views/ai-tx-analysis/Main";
 import AITutorQuiz from "../views/ai-tutor/quiz";
 import TermsAndCondition from "../views/terms-and-condition/Main";
-import { io } from "socket.io-client";
-import { SERVER_URL } from "../utils/constants";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
 function Router() {
   const routes = [
     {
