@@ -7,6 +7,7 @@ import { environment } from "./utils/config";
 import initializeRedis from "./utils/redis.app";
 import { Server } from "socket.io";
 import { createServer } from "http";
+import { allowedOrigins } from "./utils/constants";
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ const PORT = environment.PORT || 3000;
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
   },
 });

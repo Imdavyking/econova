@@ -9,7 +9,7 @@ import session from "express-session";
 import twitterRoutes from "../routes/twitter.routes";
 import userRoutes from "../routes/user.routes";
 import cookieParser from "cookie-parser";
-import { FRONTEND_URL } from "../utils/constants";
+import { allowedOrigins, FRONTEND_URL } from "../utils/constants";
 import merkleRoutes from "../routes/merkle.routes";
 import alloraRoutes from "../routes/allora.routes";
 import sourceCodeRoutes from "../routes/source.code.routes";
@@ -46,10 +46,6 @@ app.use(
   cors({
     credentials: true,
     origin: function (origin, callback) {
-      const allowedOrigins = [
-        new URL(FRONTEND_URL!).origin,
-        new URL("http://localhost:3000").origin,
-      ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
