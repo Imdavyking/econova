@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import logger from "../config/logger";
 import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
-import { MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
+import { ETH_ADDRESS, MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
 import { io } from "../app";
 
 dotenv.config();
@@ -19,6 +19,11 @@ const ecoNovaManagerInterface = new ethers.Interface([
   "function charityLength() external view returns (uint256)",
   "function charityOrganizations(uint8) external view returns (address)",
 ]);
+
+const erc20Abi = [
+  "function name() view returns (string)",
+  "function decimals() view returns (uint8)",
+];
 
 const charityInterface = new ethers.Interface([
   "function checker() external view returns (bool canExec, bytes memory execPayload)",
@@ -86,7 +91,7 @@ const batchMulticall = async (queries: any[]) => {
   }
 };
 
-const decodeExecPayload = (data: string): string | null => {
+const decodeNonExecPayload = (data: string): string | null => {
   try {
     const abiCoder = new ethers.AbiCoder();
     const decodedData = abiCoder.decode(["string"], data);
@@ -96,6 +101,56 @@ const decodeExecPayload = (data: string): string | null => {
     return null;
   }
 };
+
+const decodeExecPayload = (data: string): any | null => {
+  try {
+    const abi = [
+      "function withdrawToOrganization(address token, uint256 amount, address[] organizations)",
+    ];
+
+    const iface = new ethers.Interface(abi);
+
+    const decodedData = iface.decodeFunctionData(
+      "withdrawToOrganization",
+      data
+    );
+
+    return {
+      token: decodedData[0], // Token address
+      amount: decodedData[1].toString(), // Amount in string format
+      organizations: decodedData[2], // Array of organization addresses
+    };
+  } catch (error: any) {
+    logger.error(`Failed to decode execPayload: ${error.message}`);
+    return null;
+  }
+};
+
+async function getTokenDetails(
+  token: string,
+  rawAmount: bigint
+): Promise<{ amount: string; name: string }> {
+  if (token === ETH_ADDRESS) {
+    return {
+      amount: ethers.formatEther(rawAmount),
+      name: "ETH",
+    };
+  }
+
+  try {
+    const tokenContract = new ethers.Contract(token, erc20Abi, provider);
+    const [name, decimals] = await Promise.all([
+      tokenContract.name(),
+      tokenContract.decimals(),
+    ]);
+
+    const amount = ethers.formatUnits(rawAmount, decimals);
+    return { amount, name };
+  } catch (error: any) {
+    console.error(`Failed to fetch token details: ${error.message}`);
+    return { amount: rawAmount.toString(), name: "Unknown Token" };
+  }
+}
 
 async function handleCharityWithdrawal(index: number, charityAddress: string) {
   try {
@@ -114,7 +169,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
     const [canExec, execPayload] = await charityInstance.checker();
 
     if (!canExec) {
-      const message = decodeExecPayload(execPayload);
+      const message = decodeNonExecPayload(execPayload);
       const logMessage = message
         ? `Reason: ${message}`
         : `execPayload (hex): ${ethers.hexlify(execPayload)}`;
@@ -127,6 +182,8 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       });
       return;
     }
+
+    const { token, amount, organizations } = decodeExecPayload(execPayload);
 
     const gasEstimate = await provider.estimateGas({
       from: wallet.address,
@@ -146,7 +203,12 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
 
     io.emit("charity:update", {
       index,
-      status: "Transaction Sent",
+      status: `✅ Charity ${index} withdrawal initiated: ${ethers.formatEther(
+        amount
+      )} of token ${token} sent to ${
+        organizations.length
+      } organization(s). Tx: ${tx.hash}`,
+
       txHash: tx.hash,
     });
 
