@@ -31,9 +31,9 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("user connected", socket.id);
+  logger.info("user connected", socket.id);
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    logger.info("user disconnected");
   });
 });
 
