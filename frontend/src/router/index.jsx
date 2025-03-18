@@ -27,7 +27,9 @@ function Router() {
   socket.on("charity:update", (data) => {
     const { message, shouldToast } = data;
     if (shouldToast) {
-      toast.success(message);
+      toast.success(message, {
+        closeButton: true,
+      });
     } else {
       console.log(message);
     }

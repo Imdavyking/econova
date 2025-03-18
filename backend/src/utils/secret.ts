@@ -46,6 +46,7 @@ export const secret: {
       "API_SCAN_VERIFIER_KEY",
       "COINGECKO_DEMO_API_KEY",
       "PINATA_JWT",
+      "API_BROWSER_URL",
     ];
 
     const loadedSecrets: Record<string, string> = {};

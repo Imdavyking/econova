@@ -10,6 +10,7 @@ dotenv.config();
 
 const RPC_URL = environment.RPC_URL!;
 const CONTRACT_ADDRESS = environment.CONTRACT_ADDRESS!;
+const API_BROWSER_URL = environment.API_BROWSER_URL!;
 
 const provider = new ethers.JsonRpcProvider(RPC_URL);
 const wallet = initKeystore(provider);
@@ -209,9 +210,10 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
     io.emit("charity:update", {
       index,
       shouldToast: true,
-      message: `Withdrawing ${tokenAmount} ${name} to ${
-        organizations.length
-      } organization${organizations.length > 1 ? "s" : ""}, tx: ${tx.hash}`,
+      message: `Withdrawing ${tokenAmount} ${name} to ${organizations.length} 
+        organization${organizations.length > 1 ? "s" : ""}.
+        Transaction: ${API_BROWSER_URL}/tx/${tx.hash}.
+        Charity Address: ${API_BROWSER_URL}/address/${charityAddress}.`,
     });
 
     logger.info(
