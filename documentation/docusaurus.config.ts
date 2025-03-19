@@ -13,7 +13,7 @@ const config: Config = {
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: "https://econovadocs.vercel.app/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
@@ -62,11 +62,11 @@ const config: Config = {
   themeConfig: {
     image: "img/docusaurus-social-card.jpg",
     algolia: {
-      appId: "YOUR APP ID",
+      appId: "5EMRO43EQ6",
 
-      apiKey: "YOUR API KEY",
+      apiKey: "7a0a88417ab3d3458d835535ed1c3252",
 
-      indexName: "The Index name for your site",
+      indexName: "econovavercel",
 
       contextualSearch: false,
 
