@@ -4,7 +4,7 @@ import logger from "../config/logger";
 import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
 import { ETH_ADDRESS, MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
-import { io } from "../app";
+import io from "../utils/create.websocket";
 
 dotenv.config();
 
