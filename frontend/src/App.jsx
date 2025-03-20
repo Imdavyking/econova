@@ -15,7 +15,8 @@ function App() {
 
   useEffect(() => {
     document.title = `${APP_NAME} | Blockchain powered AI solution`;
-    socket.on("charity:update", (data) => {
+    const CHARITY_UPDATE = "charity:update";
+    socket.on(CHARITY_UPDATE, (data) => {
       const { message, shouldToast } = data;
       if (shouldToast) {
         toast.success(message, {
@@ -25,7 +26,7 @@ function App() {
     });
 
     return () => {
-      socket.off("charity:update");
+      socket.off(CHARITY_UPDATE);
       socket.disconnect();
       console.log("unmounting");
     };
