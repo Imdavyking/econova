@@ -198,9 +198,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param token The address of the token.
      */
     function getPriceFeedFromToken(address token) public pure returns (bytes32) {
-        if (token == NATIVE_TOKEN) {
-            return 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d;
-        } else if (token == WRAPPED_SONIC) {
+        if (token == NATIVE_TOKEN || token == WRAPPED_SONIC) {
             return 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d;
         } else if (token == WETH) {
             return 0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6;
