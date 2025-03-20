@@ -59,7 +59,7 @@ export const Tweet = ({ tweet }) => {
 
       if (data.retweetError) {
         errors.push(
-          `RETWEET INFO ERROR: ${rateLimitError} ${data.retweetsError}`
+          `RETWEET INFO ERROR: ${rateLimitError} ${data.retweetError}`
         );
       }
 
