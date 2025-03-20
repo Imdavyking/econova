@@ -213,7 +213,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
     io.emit("charity:update", {
       index,
       shouldToast: true,
-      message: `Withdrawing ${tokenAmount} ${name} to 
+      message: `Withdrawing ${tokenAmount} ${name} with
         Transaction: ${API_BROWSER_URL}/tx/${tx.hash}.
         Charity Address: ${API_BROWSER_URL}/address/${charityAddress}.`,
     });
