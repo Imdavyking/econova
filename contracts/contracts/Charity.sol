@@ -14,7 +14,6 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
     bool public canWithdrawFunds = true;
     Category public charityCategory;
     address public automationBot = address(0);
-    uint256 public constant HARD_HAT_CHAIN_ID = 31337;
 
     /** constants */
     address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
@@ -180,7 +179,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
     function checker() external view returns (bool canExec, bytes memory execPayload) {
         uint256 orgCount = organizations.length;
         if (orgCount == 0) {
-            return (false, abi.encode("No Organizations Available "));
+            return (false, abi.encode("No Organizations Available"));
         }
 
         if (!canWithdrawFunds) {
