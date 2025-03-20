@@ -39,7 +39,6 @@
         LIGHTHOUSE_API_KEY=
         RPC_URL=
         CONTRACT_ADDRESS=
-        WRAPPED_SONIC_CONTRACT_ADDRESS=
         ALLORA_API_KEY=
         ALLORA_NETWORK=mainnet # testnet
         API_SCAN_VERIFIER_KEY=
