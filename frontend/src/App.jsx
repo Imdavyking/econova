@@ -21,8 +21,6 @@ function App() {
         toast.success(message, {
           closeButton: true,
         });
-      } else {
-        console.log(message);
       }
     });
 
