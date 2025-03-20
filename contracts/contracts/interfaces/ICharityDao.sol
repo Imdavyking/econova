@@ -10,7 +10,7 @@ interface ICharityDao {
     error Charity__TokenNotWhitelisted();
     error Charity__MustBeAutomatedOrOwner(address caller);
     error Charity__OrganizationAlreadyExists();
-    error Charity__OrganizationNotFound();
+    error Charity__OrganizationNotFound(address organization);
     error Charity__OnlyGovernor();
     error Charity__GovernorCanNotBeZeroAddress();
     error Charity__NoOrganizationsYet();

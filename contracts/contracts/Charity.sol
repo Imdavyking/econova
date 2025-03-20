@@ -149,7 +149,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
      */
     function removeOrganization(address organization) external onlyOwner {
         if (!organizationExists[organization]) {
-            revert Charity__OrganizationNotFound();
+            revert Charity__OrganizationNotFound(organization);
         }
         organizationExists[organization] = false;
         uint256 length = organizations.length;
@@ -248,7 +248,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
         uint256 share = amount / orgCount;
         for (uint256 i = 0; i < orgCount; i++) {
             if (!organizationExists[orgs[i]]) {
-                revert Charity__OrganizationNotFound();
+                revert Charity__OrganizationNotFound(orgs[i]);
             }
         }
         for (uint256 i = 0; i < orgCount; i++) {
