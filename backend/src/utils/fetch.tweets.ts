@@ -39,6 +39,8 @@ const fetchAndCache = async (
             ...JSON.parse(cachedData),
             fromCache: true,
           };
+        } else {
+          return { error: extractMessageFrom429(error, "").message };
         }
       }
       throw new Error(`Rate limit exceeded and no cached data available`);
