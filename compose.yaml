@@ -37,6 +37,9 @@ services:
       - REDIS_PASSWORD
       - KEYSTORE_FILE
       - KEYSTORE_PASSWORD
+      - API_BROWSER_URL
+      - COINGECKO_DEMO_API_KEY
+      - PINATA_JWT
     environment:
       - MONGO_URI=${MONGO_URI:-mongodb://mongodb:27017/ai-bot}
       - REDIS_HOST=${REDIS_HOST:-redis}
@@ -151,6 +154,12 @@ secrets:
     file: ./backend/secrets/KEYSTORE_FILE
   KEYSTORE_PASSWORD:
     file: ./backend/secrets/KEYSTORE_PASSWORD
+  COINGECKO_DEMO_API_KEY:
+    file: ./backend/secrets/COINGECKO_DEMO_API_KEY
+  PINATA_JWT:
+    file: ./backend/secrets/PINATA_JWT
+  API_BROWSER_URL:
+    file: ./backend/secrets/API_BROWSER_URL
 
 volumes:
   mongodb-data:
