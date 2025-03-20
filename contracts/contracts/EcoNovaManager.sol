@@ -193,6 +193,10 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         );
     }
 
+    /**
+     * @dev Get price feed from token
+     * @param token The address of the token.
+     */
     function getPriceFeedFromToken(address token) public pure returns (bytes32) {
         if (token == NATIVE_TOKEN) {
             return 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d;
