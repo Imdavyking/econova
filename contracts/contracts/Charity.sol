@@ -238,7 +238,10 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
         }
-        uint256 orgCount = organizations.length;
+        if (token != ETH_ADDRESS && !whitelistedTokens[token]) {
+            revert Charity__TokenNotWhitelisted();
+        }
+        uint256 orgCount = orgs.length;
         if (orgCount == 0) {
             revert Charity__NoOrganizationsYet();
         }
@@ -247,15 +250,14 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
             if (!organizationExists[orgs[i]]) {
                 revert Charity__OrganizationNotFound();
             }
+        }
+        for (uint256 i = 0; i < orgCount; i++) {
             if (token == ETH_ADDRESS) {
                 (bool success, ) = orgs[i].call{value: share}("");
                 if (!success) {
                     revert Charity__SendingFailed();
                 }
             } else {
-                if (!whitelistedTokens[token]) {
-                    revert Charity__TokenNotWhitelisted();
-                }
                 IERC20(token).safeTransfer(orgs[i], share);
             }
             emit DonationWithdrawn(orgs[i], token, share);
