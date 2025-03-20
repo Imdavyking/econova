@@ -29,3 +29,4 @@ export const ECONOVA_GOVERNOR_CONTRACT_ADDRESS = import.meta.env
 export const TWITTER_PROFILE_URL = `https://x.com/${
   import.meta.env.VITE_TWITTER_NAME
 }`;
+export const CHARITY_UPDATE = "charity:update";

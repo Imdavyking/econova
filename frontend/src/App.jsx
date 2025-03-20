@@ -5,7 +5,7 @@ import Router from "./router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createContext, useContext, useEffect } from "react";
-import { APP_NAME, SERVER_URL } from "./utils/constants";
+import { APP_NAME, CHARITY_UPDATE, SERVER_URL } from "./utils/constants";
 import { io } from "socket.io-client";
 
 const AppContext = createContext();
@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     document.title = `${APP_NAME} | Blockchain powered AI solution`;
-    const CHARITY_UPDATE = "charity:update";
+
     socket.on(CHARITY_UPDATE, (data) => {
       const { message, shouldToast } = data;
       if (shouldToast) {

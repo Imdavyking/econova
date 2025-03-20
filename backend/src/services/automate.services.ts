@@ -3,7 +3,11 @@ import dotenv from "dotenv";
 import logger from "../config/logger";
 import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
-import { NATIVE_TOKEN, MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
+import {
+  NATIVE_TOKEN,
+  MULTICALL3_CONTRACT_ADDRESS,
+  CHARITY_UPDATE,
+} from "../utils/constants";
 import io from "../utils/create.websocket";
 
 dotenv.config();
@@ -161,7 +165,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
   try {
     if (charityAddress === ethers.ZeroAddress) {
       logger.info(`Charity ${index} does not exist.`);
-      io.emit("charity:update", {
+      io.emit(CHARITY_UPDATE, {
         index,
         shouldToast: false,
         message: "Charity does not exist",
@@ -184,7 +188,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
         : `execPayload (hex): ${ethers.hexlify(execPayload)}`;
 
       logger.info(`Charity ${index} (${charityAddress}) - ${logMessage}`);
-      io.emit("charity:update", {
+      io.emit(CHARITY_UPDATE, {
         index,
         shouldToast: false,
         message: logMessage,
@@ -211,7 +215,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       gasLimit: (gasEstimate * 12n) / 10n,
     });
 
-    io.emit("charity:update", {
+    io.emit(CHARITY_UPDATE, {
       index,
       shouldToast: true,
       message: `Withdrawing ${tokenAmount} ${name} to ${organizations.length} 
