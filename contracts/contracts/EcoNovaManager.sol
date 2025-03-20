@@ -334,8 +334,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
                 revert EcoNovaManager__SendingFailed();
             }
         } else {
-            IERC20 erc20 = IERC20(token);
-            erc20.safeTransferFrom(msg.sender, charityAddress, amountToSend);
+            IERC20(token).safeTransferFrom(msg.sender, charityAddress, amountToSend);
         }
 
         emit PointsAdded(caller, userPoints[caller].points);
