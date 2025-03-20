@@ -30,7 +30,6 @@ services:
       - CONTRACT_ADDRESS
       - WRAPPED_SONIC_CONTRACT_ADDRESS
       - ALLORA_API_KEY
-      - ALLORA_NETWORK
       - API_SCAN_VERIFIER_KEY
       - MONGO_URI
       - REDIS_HOST
@@ -146,8 +145,6 @@ secrets:
     file: ./backend/secrets/WRAPPED_SONIC_CONTRACT_ADDRESS
   ALLORA_API_KEY:
     file: ./backend/secrets/ALLORA_API_KEY
-  ALLORA_NETWORK:
-    file: ./backend/secrets/ALLORA_NETWORK
   API_SCAN_VERIFIER_KEY:
     file: ./backend/secrets/API_SCAN_VERIFIER_KEY
   KEYSTORE_FILE:

@@ -42,7 +42,6 @@ export const secret: {
       "CONTRACT_ADDRESS",
       "WRAPPED_SONIC_CONTRACT_ADDRESS",
       "ALLORA_API_KEY",
-      "ALLORA_NETWORK",
       "API_SCAN_VERIFIER_KEY",
       "COINGECKO_DEMO_API_KEY",
       "PINATA_JWT",
