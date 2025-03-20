@@ -57,7 +57,7 @@ export const Tweet = ({ tweet }) => {
       const rateLimitError = "Rate limit exceeded. Using cached data.";
       const errors: string[] = [];
 
-      if (data.retweetsError) {
+      if (data.retweetError) {
         errors.push(
           `RETWEET INFO ERROR: ${rateLimitError} ${data.retweetsError}`
         );
