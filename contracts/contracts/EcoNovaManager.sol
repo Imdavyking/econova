@@ -38,7 +38,10 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     uint256 public constant FIAT_DECIMALS = 10 ** 2;
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
     uint256 public constant ONE_DAY = 60 * 60 * 60 * 24;
-    address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
+    address public constant NATIVE_TOKEN = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
+    address public constant WRAPPED_SONIC = address(0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38);
+    address public constant WETH = address(0x50c42dEAcD8Fc9773493ED674b675bE577f2634b);
+    address public constant USDC = address(0x29219dd400f2Bf60E5a23d13Be72B486D4038894);
 
     /**
      * variables
@@ -147,21 +150,18 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @return amountToSend The equivalent token amount.
      */
     function getUsdToTokenPrice(address token, uint256 amountInUsd) public view returns (uint256) {
-        if (token == ETH_ADDRESS) {
-            (uint256 priceOfTokenInUsd, uint8 priceDecimals) = getPricePyth();
+        (uint256 priceOfTokenInUsd, uint8 priceDecimals) = getPricePyth(token);
 
-            uint8 tokenDecimals = getTokenDecimals(token);
+        uint8 tokenDecimals = getTokenDecimals(token);
 
-            uint256 amountToSendNumerator = amountInUsd *
-                (10 ** tokenDecimals) *
-                (10 ** priceDecimals);
-            uint256 amountToSendDenominator = priceOfTokenInUsd;
+        uint256 amountToSendNumerator = amountInUsd *
+            (10 ** tokenDecimals) *
+            (10 ** priceDecimals);
+        uint256 amountToSendDenominator = priceOfTokenInUsd;
 
-            uint256 amountToSend = amountToSendNumerator / amountToSendDenominator;
+        uint256 amountToSend = amountToSendNumerator / amountToSendDenominator;
 
-            return amountToSend / FIAT_DECIMALS;
-        }
-        revert EcoNovaManager__ConversionNotAvailable();
+        return amountToSend / FIAT_DECIMALS;
     }
 
     /**
@@ -169,7 +169,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param token The address of the token.
      */
     function getTokenDecimals(address token) internal view returns (uint8) {
-        if (!isContract(token)) {
+        if (token == NATIVE_TOKEN) {
             return 18;
         }
 
@@ -184,14 +184,26 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @return price
      * @return decimals
      */
-    function getPricePyth() public view returns (uint256, uint8) {
-        bytes32 priceFeedId = 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d; // S/USD
+    function getPricePyth(address token) public view returns (uint256, uint8) {
+        bytes32 priceFeedId = getPriceFeedFromToken(token);
         PythStructs.Price memory price = i_pyth.getPriceNoOlderThan(priceFeedId, ONE_DAY);
-
         return (
             uint256(uint64(price.price < 0 ? -price.price : price.price)),
             uint8(uint32(price.expo < 0 ? -price.expo : price.expo))
         );
+    }
+
+    function getPriceFeedFromToken(address token) public pure returns (bytes32) {
+        if (token == NATIVE_TOKEN) {
+            return 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d;
+        } else if (token == WRAPPED_SONIC) {
+            return 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d;
+        } else if (token == WETH) {
+            return 0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6;
+        } else if (token == USDC) {
+            return 0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a;
+        }
+        revert EcoNovaManager__ConversionNotAvailable();
     }
 
     /**
@@ -324,7 +336,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         userDonations[caller][token] += amountToSend;
         userDonationsOrgs[caller][charityOrgIndex][token] += amountToSend;
 
-        if (token == ETH_ADDRESS) {
+        if (token == NATIVE_TOKEN) {
             if (msg.value < minTokenAmount || msg.value > maxTokenAmount) {
                 revert EcoNovaManager__IncorrectETHAmount();
             }
@@ -334,16 +346,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
                 revert EcoNovaManager__SendingFailed();
             }
         } else {
-            IERC20 erc20 = IERC20(token);
-            uint256 balanceBefore = erc20.balanceOf(charityAddress);
-
-            erc20.safeTransferFrom(msg.sender, charityAddress, amountToSend);
-
-            uint256 balanceAfter = erc20.balanceOf(charityAddress);
-
-            if (balanceAfter - balanceBefore != amountToSend) {
-                revert EcoNovaManager__IncorrectBalance();
-            }
+            IERC20(token).safeTransferFrom(msg.sender, charityAddress, amountToSend);
         }
 
         emit PointsAdded(caller, userPoints[caller].points);

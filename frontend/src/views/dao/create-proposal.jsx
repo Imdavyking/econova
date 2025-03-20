@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { ethers } from "ethers";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { FaSpinner } from "react-icons/fa";
 import charityAbi from "@/assets/json/charity.json";
@@ -13,6 +12,7 @@ import {
   getProjectTokenDetails,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
+import { Link } from "react-router-dom";
 import { getAllCharities } from "../../services/blockchain.services";
 import { ellipsify } from "../../utils/ellipsify";
 import { APP_NAME } from "../../utils/constants";
@@ -157,12 +157,12 @@ export default function DAOProposalForm() {
   return (
     <div className="flex justify-center items-center min-h-screen p-4 flex-col">
       <DarkModeSwitcher />
-      <a href="/" className="-intro-x flex items-center pt-5">
+      <Link to="/" className="-intro-x flex items-center pt-5">
         <img alt="EcoNova" className="w-10" src={logoUrl} />
         <span className="text-white text-lg ml-3">
           {APP_NAME} Create Proposal
         </span>
-      </a>
+      </Link>
 
       <div className="bg-white dark:bg-darkmode-600 p-6 rounded-md shadow-md w-full max-w-md mx-auto">
         <div className="mb-4">

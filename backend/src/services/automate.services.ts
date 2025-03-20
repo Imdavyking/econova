@@ -3,12 +3,14 @@ import dotenv from "dotenv";
 import logger from "../config/logger";
 import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
-import { MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
+import { NATIVE_TOKEN, MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
+import io from "../utils/create.websocket";
 
 dotenv.config();
 
 const RPC_URL = environment.RPC_URL!;
 const CONTRACT_ADDRESS = environment.CONTRACT_ADDRESS!;
+const API_BROWSER_URL = environment.API_BROWSER_URL!;
 
 const provider = new ethers.JsonRpcProvider(RPC_URL);
 const wallet = initKeystore(provider);
@@ -18,6 +20,11 @@ const ecoNovaManagerInterface = new ethers.Interface([
   "function charityLength() external view returns (uint256)",
   "function charityOrganizations(uint8) external view returns (address)",
 ]);
+
+const erc20Abi = [
+  "function name() view returns (string)",
+  "function decimals() view returns (uint8)",
+];
 
 const charityInterface = new ethers.Interface([
   "function checker() external view returns (bool canExec, bytes memory execPayload)",
@@ -54,7 +61,7 @@ const batchMulticall = async (queries: any[]) => {
       throw new Error("Invalid queries array");
     }
 
-    const multicall3 = await new ethers.Contract(
+    const multicall3 = new ethers.Contract(
       MULTICALL3_CONTRACT_ADDRESS,
       multicallAbiInterface,
       wallet
@@ -85,7 +92,7 @@ const batchMulticall = async (queries: any[]) => {
   }
 };
 
-const decodeExecPayload = (data: string): string | null => {
+const decodeNonExecPayload = (data: string): string | null => {
   try {
     const abiCoder = new ethers.AbiCoder();
     const decodedData = abiCoder.decode(["string"], data);
@@ -96,10 +103,69 @@ const decodeExecPayload = (data: string): string | null => {
   }
 };
 
+const decodeExecPayload = (
+  data: string
+): {
+  token: string;
+  amount: string;
+  organizations: string[];
+} | null => {
+  try {
+    const abi = [
+      "function withdrawToOrganization(address token, uint256 amount, address[] organizations)",
+    ];
+
+    const iface = new ethers.Interface(abi);
+
+    const decodedData = iface.decodeFunctionData(
+      "withdrawToOrganization",
+      data
+    );
+
+    const [token, amount, organizations] = decodedData;
+
+    return { token, amount: amount.toString(), organizations };
+  } catch (error: any) {
+    logger.error(`Failed to decode execPayload: ${error.message}`);
+    return null;
+  }
+};
+
+const getTokenDetails = async (
+  token: string,
+  rawAmount: bigint
+): Promise<{ amount: string; name: string }> => {
+  if (token === NATIVE_TOKEN) {
+    return {
+      amount: ethers.formatEther(rawAmount),
+      name: "ETH",
+    };
+  }
+
+  try {
+    const tokenContract = new ethers.Contract(token, erc20Abi, provider);
+    const [name, decimals] = await Promise.all([
+      tokenContract.name(),
+      tokenContract.decimals(),
+    ]);
+
+    const amount = ethers.formatUnits(rawAmount, decimals);
+    return { amount, name };
+  } catch (error: any) {
+    console.error(`Failed to fetch token details: ${error.message}`);
+    return { amount: rawAmount.toString(), name: "Unknown Token" };
+  }
+};
+
 async function handleCharityWithdrawal(index: number, charityAddress: string) {
   try {
     if (charityAddress === ethers.ZeroAddress) {
       logger.info(`Charity ${index} does not exist.`);
+      io.emit("charity:update", {
+        index,
+        shouldToast: false,
+        message: "Charity does not exist",
+      });
       return;
     }
 
@@ -109,23 +175,29 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       wallet
     );
 
-    const [canExec, execPayload] = await charityInstance.checker();
+    let [canExec, execPayload] = await charityInstance.checker();
 
     if (!canExec) {
-      const message = decodeExecPayload(execPayload);
-      if (message) {
-        logger.info(
-          `Charity ${index} (${charityAddress}) - Reason: ${message}`
-        );
-      } else {
-        logger.info(
-          `Charity ${index} (${charityAddress}) execPayload (hex): ${ethers.hexlify(
-            execPayload
-          )}`
-        );
-      }
+      const message = decodeNonExecPayload(execPayload);
+      const logMessage = message
+        ? `Reason: ${message}`
+        : `execPayload (hex): ${ethers.hexlify(execPayload)}`;
+
+      logger.info(`Charity ${index} (${charityAddress}) - ${logMessage}`);
+      io.emit("charity:update", {
+        index,
+        shouldToast: false,
+        message: logMessage,
+      });
       return;
     }
+
+    const { token, amount, organizations } = decodeExecPayload(execPayload)!;
+
+    const { amount: tokenAmount, name } = await getTokenDetails(
+      token,
+      BigInt(amount)
+    );
 
     const gasEstimate = await provider.estimateGas({
       from: wallet.address,
@@ -137,6 +209,15 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       to: charityAddress,
       data: execPayload,
       gasLimit: (gasEstimate * 12n) / 10n,
+    });
+
+    io.emit("charity:update", {
+      index,
+      shouldToast: true,
+      message: `Withdrawing ${tokenAmount} ${name} to ${organizations.length} 
+        organization${organizations.length > 1 ? "s" : ""}.
+        Transaction: ${API_BROWSER_URL}/tx/${tx.hash}.
+        Charity Address: ${API_BROWSER_URL}/address/${charityAddress}.`,
     });
 
     logger.info(

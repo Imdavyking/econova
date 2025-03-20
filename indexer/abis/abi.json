@@ -423,7 +423,7 @@
   },
   {
     "inputs": [],
-    "name": "ETH_ADDRESS",
+    "name": "NATIVE_TOKEN",
     "outputs": [
       {
         "internalType": "address",

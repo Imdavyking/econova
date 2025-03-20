@@ -6,7 +6,7 @@ import logoUrl from "@/assets/images/logo.png";
 import Proposal from "./proposal";
 import useCurrentBlock from "../../hooks/useCurrentBlock";
 import { useEffect, useState } from "react";
-
+import { Link } from "react-router-dom";
 // const GET_PROPOSALS = gql`
 //   query MyQuery($first: Int!, $offset: Int!, $equalTo: BigFloat) {
 //     proposalCreateds(
@@ -106,10 +106,10 @@ export default function DAO() {
 
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-          <a href="/" className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center space-x-3">
             <img alt={APP_NAME} className="w-10" src={logoUrl} />
             <span className="text-lg">{APP_NAME} DAO Proposals</span>
-          </a>
+          </Link>
         </h2>
         <button
           className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300"

@@ -12,4 +12,6 @@ type TwitterMeta = {
 export type TwitterResponse = {
   data: TwitterUser[] | undefined;
   meta: TwitterMeta;
+  error: string | undefined;
+  fromCache: boolean;
 };

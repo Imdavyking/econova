@@ -3,6 +3,7 @@ import { getRetweeters, getLikingUsers } from "../services/tweets.services";
 import logger from "../config/logger";
 import { extractMessageFrom429 } from "./";
 import { TwitterResponse } from "../types/tweet.like.retweet";
+import Redis from "ioredis";
 
 const REDIS_CACHE_TIME = 60 * 15; // 15 minutes
 
@@ -14,26 +15,39 @@ const fetchAndCache = async (
   fetchFunction: (tweetId: string) => Promise<any>,
   tweetId: string
 ) => {
+  const cacheKey = `${key}-${tweetId}`;
+  logger.info(`${key} data fetching from API`);
+
+  let redis: Redis | undefined;
+
   try {
-    const redis = await initializeRedis();
-    const cacheKey = `${key}-${tweetId}`;
-    const cachedData = await redis.get(cacheKey);
-
-    if (cachedData) {
-      logger.info(`${key} data fetched from cache`);
-      return JSON.parse(cachedData);
-    }
-
-    logger.info(`${key} data fetched from API`);
+    redis = await initializeRedis();
     const data = await fetchFunction(tweetId);
     await redis.set(cacheKey, JSON.stringify(data), "EX", REDIS_CACHE_TIME);
-
-    return data;
+    return { ...data, fromCache: false };
   } catch (error: any) {
+    if (error.response?.status === 429) {
+      logger.warn(
+        `${key} API rate limited (429), attempting to fetch from cache`
+      );
+
+      if (redis) {
+        const cachedData = await redis.get(cacheKey);
+        if (cachedData) {
+          return {
+            error: extractMessageFrom429(error, "").message,
+            ...JSON.parse(cachedData),
+            fromCache: true,
+          };
+        } else {
+          return { error: extractMessageFrom429(error, "").message };
+        }
+      }
+      throw new Error(`Rate limit exceeded and no cached data available`);
+    }
+
     logger.error(`Error fetching ${key}: ${error.message}`);
-    throw new Error(
-      extractMessageFrom429(error, `Failed to fetch ${key}`).message
-    );
+    throw error;
   }
 };
 

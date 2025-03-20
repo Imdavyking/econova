@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { GRAPH_QL_ENDPOINT } from "../utils/constants";
 
 const client = new ApolloClient({

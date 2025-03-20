@@ -6,6 +6,7 @@ import { APP_NAME, CHAIN_SYMBOL } from "../../utils/constants";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { toast } from "react-toastify";
 import logoUrl from "@/assets/images/logo.png";
+import { Link } from "react-router-dom";
 import { ethers } from "ethers";
 
 export default function TransactionAudit() {
@@ -51,10 +52,10 @@ export default function TransactionAudit() {
     <div className="min-h-screen flex items-center justify-center flex-col text-white p-6">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} Tx Analysis</span>
-        </a>
+        </Link>
       </h2>
 
       <div className="w-full max-w-lg bg-gray-800 p-6 rounded-xl shadow-lg">

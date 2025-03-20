@@ -1,11 +1,15 @@
 import { ellipsify } from "../../utils/ellipsify";
 import { toast } from "react-toastify";
 import { FaCopy } from "react-icons/fa";
+import { useEffect } from "react";
 export default function CharityCategory({ categoryName, charityAddress }) {
   const handleCopy = async (text) => {
     await navigator.clipboard.writeText(text);
     toast.info("Copied to clipboard!", { autoClose: 2000 });
   };
+  useEffect(() => {
+    dom("body").removeClass("error-page").removeClass("login").addClass("main");
+  }, []);
   return (
     <li
       key={categoryName}

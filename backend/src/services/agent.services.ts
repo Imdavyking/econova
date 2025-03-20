@@ -12,13 +12,13 @@ import { fetchAlloraTopics, fetchInferenceByTopicID } from "./allora.services";
 import { environment } from "../utils/config";
 dotenv.config();
 const openAIApiKey = environment.OPENAI_API_KEY!;
-const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+const NATIVE_TOKEN = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 const assets = [
   {
     name: "ETH",
     symbol: "ETH",
-    address: ETH_ADDRESS,
+    address: NATIVE_TOKEN,
     decimals: 18,
   },
 ];
@@ -261,7 +261,7 @@ export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const systemPrompt = new SystemMessage(
     `You are an expert in blockchain transactions. Your task is to analyze the provided transaction hash and provide a detailed summary of the transaction.
-make this as detailed as possible, to begginers and experts alike.
+make this as detailed as possible, to beginners and experts alike.
 `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);

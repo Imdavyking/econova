@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { environment } from "../utils/config";
 dotenv.config();
 
-export const uploadToIPFS = async (data: Buffer) => {
+export const uploadToLighthouse = async (data: Buffer) => {
   const uploadResponse = await lighthouse.uploadBuffer(
     data,
     environment.LIGHTHOUSE_API_KEY!

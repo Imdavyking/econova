@@ -10,7 +10,7 @@ import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import {
-    ETH_ADDRESS,
+    NATIVE_TOKEN,
     MIN_DELAY,
     PROPOSAL_DESCRIPTION,
     PROPOSAL_THRESHOLD,
@@ -20,11 +20,124 @@ import {
 } from "../utils/constants"
 import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
-import exp from "constants"
+import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers"
+import { Contract, ContractTransactionResponse } from "ethers"
+import { Charity, EcoNovaGovernor } from "../typechain-types"
 
 dotenv.config()
 
 const chainId = network.config.chainId
+
+const proposeAndExecute = async ({
+    charityDeployer,
+    testCharityOrganization,
+    ecoNovaGovernorDeployer,
+    ecoNovaToken,
+    owner,
+}: {
+    owner: HardhatEthersSigner
+    ecoNovaToken: Contract
+    testCharityOrganization: string
+    charityDeployer: Charity & {
+        deploymentTransaction(): ContractTransactionResponse
+    }
+    ecoNovaGovernorDeployer: EcoNovaGovernor & {
+        deploymentTransaction(): ContractTransactionResponse
+    }
+}) => {
+    let voterBalance = await ecoNovaToken.balanceOf(owner.address)
+
+    expect(voterBalance).to.equal(0)
+
+    const tokenMint = 10 * 10 ** 18
+
+    const mintTx = await ecoNovaToken.localMint(owner.address, tokenMint.toString())
+
+    await mintTx.wait(1)
+
+    voterBalance = await ecoNovaToken.balanceOf(owner.address)
+
+    expect(voterBalance).to.equal(tokenMint.toString())
+
+    const delegateUser = await ecoNovaToken.delegate(owner.address)
+    await delegateUser.wait(1)
+
+    // propose
+    const encodedFunctionCall = charityDeployer.interface.encodeFunctionData("addOrganization", [
+        testCharityOrganization,
+    ])
+
+    let organizationExist = await charityDeployer.organizationExists(testCharityOrganization)
+    expect(organizationExist).to.equal(false)
+    const proposeTx = await ecoNovaGovernorDeployer.propose(
+        [charityDeployer],
+        [0],
+        [encodedFunctionCall],
+        PROPOSAL_DESCRIPTION
+    )
+    const proposeReceipt = await proposeTx.wait(1)
+    const logs = proposeReceipt?.logs[0] as any
+
+    const proposalId = logs.args.at(0)
+
+    let proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+
+    expect(proposalState).to.equal(0)
+    await moveBlocks(VOTING_DELAY + 1)
+    // vote
+    const voteWay = 1 // for (1) against (0) abstain (2)
+    const reason = "Organization is a good fit for the charity category"
+
+    let votingReceipt = await ecoNovaGovernorDeployer.getReceipt(proposalId, owner.address)
+
+    const [hasVoted, support] = votingReceipt
+    expect(hasVoted).to.equal(false)
+    expect(support).to.equal(false)
+
+    const voteTx = await ecoNovaGovernorDeployer.castVoteWithReason(proposalId, voteWay, reason)
+    await voteTx.wait(1)
+
+    votingReceipt = await ecoNovaGovernorDeployer.getReceipt(proposalId, owner.address)
+
+    const [hasVotedAfter, supportAfter] = votingReceipt
+    expect(hasVotedAfter).to.equal(true)
+    expect(supportAfter).to.equal(true)
+
+    proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+
+    expect(proposalState).to.equal(1)
+    await moveBlocks(VOTING_PERIOD + 1)
+
+    // queue & execute
+
+    const descriptionHash = ethers.id(PROPOSAL_DESCRIPTION)
+    proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+
+    expect(proposalState).to.equal(4)
+
+    const queueTx = await ecoNovaGovernorDeployer.queue(
+        [charityDeployer],
+        [0],
+        [encodedFunctionCall],
+        descriptionHash
+    )
+    await queueTx.wait(1)
+    await moveTime(MIN_DELAY + 1)
+    await moveBlocks(1)
+    proposalState = await ecoNovaGovernorDeployer.state(proposalId)
+    expect(proposalState).to.equal(5)
+
+    const exTx = await ecoNovaGovernorDeployer.execute(
+        [charityDeployer],
+        [0],
+        [encodedFunctionCall],
+        descriptionHash
+    )
+    await exTx.wait(1)
+
+    organizationExist = await charityDeployer.organizationExists(testCharityOrganization)
+    expect(organizationExist).to.equal(true)
+}
 
 typeof chainId !== "undefined" && !localHardhat.includes(chainId)
     ? describe.skip
@@ -47,6 +160,35 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const TimeLock = await hre.ethers.getContractFactory("TimeLock")
               const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
               const timeLockDeployer = await TimeLock.deploy(MIN_DELAY, [], [], owner.address)
+
+              const BoxV1 = await hre.ethers.getContractFactory("BoxV1")
+              const boxV1Deployer = await BoxV1.deploy()
+              await boxV1Deployer.waitForDeployment()
+
+              const proxy1967 = await hre.ethers.getContractFactory("ERC1967Proxy")
+              const data = boxV1Deployer.interface.encodeFunctionData("initialize")
+              const proxyDeployer = await proxy1967.deploy(boxV1Deployer, data)
+              await proxyDeployer.waitForDeployment()
+
+              const BoxV1Proxy = await hre.ethers.getContractAt("BoxV1", proxyDeployer)
+              await BoxV1Proxy.store(42)
+              const version = await BoxV1Proxy.version()
+              const newOwner = await BoxV1Proxy.owner()
+
+              expect(version).to.equal("V1")
+              expect(newOwner).to.equal(owner.address)
+
+              const BoxV2 = await hre.ethers.getContractFactory("BoxV2")
+              const boxV2Deployer = await BoxV2.deploy()
+              await boxV2Deployer.waitForDeployment()
+              await BoxV1Proxy.upgradeToAndCall(boxV2Deployer, "0x")
+              const version2 = await BoxV1Proxy.version()
+              const owner2 = await BoxV1Proxy.owner()
+              const value = await BoxV1Proxy.retrieve()
+
+              expect(version2).to.equal("V2")
+              expect(owner2).to.equal(owner.address)
+              expect(value).to.equal(42)
 
               const charityDeployer = await CharityDeployer.deploy(
                   charityCategories.Education,
@@ -171,116 +313,13 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           owner,
                       } = await loadFixture(deployEcoNovaDeployerFixture)
 
-                      let voterBalance = await ecoNovaToken.balanceOf(owner.address)
-
-                      expect(voterBalance).to.equal(0)
-
-                      const tokenMint = 10 * 10 ** 18
-
-                      const mintTx = await ecoNovaToken.localMint(
-                          owner.address,
-                          tokenMint.toString()
-                      )
-
-                      await mintTx.wait(1)
-
-                      voterBalance = await ecoNovaToken.balanceOf(owner.address)
-
-                      expect(voterBalance).to.equal(tokenMint.toString())
-
-                      const delegateUser = await ecoNovaToken.delegate(owner.address)
-                      await delegateUser.wait(1)
-
-                      // propose
-                      const encodedFunctionCall = charityDeployer.interface.encodeFunctionData(
-                          "addOrganization",
-                          [testCharityOrganization]
-                      )
-
-                      let organizationExist = await charityDeployer.organizationExists(
-                          testCharityOrganization
-                      )
-                      expect(organizationExist).to.equal(false)
-                      const proposeTx = await ecoNovaGovernorDeployer.propose(
-                          [charityDeployer],
-                          [0],
-                          [encodedFunctionCall],
-                          PROPOSAL_DESCRIPTION
-                      )
-                      const proposeReceipt = await proposeTx.wait(1)
-                      const logs = proposeReceipt?.logs[0] as any
-
-                      const proposalId = logs.args.at(0)
-
-                      let proposalState = await ecoNovaGovernorDeployer.state(proposalId)
-
-                      expect(proposalState).to.equal(0)
-                      await moveBlocks(VOTING_DELAY + 1)
-                      // vote
-                      const voteWay = 1 // for (1) against (0) abstain (2)
-                      const reason = "Organization is a good fit for the charity category"
-
-                      let votingReceipt = await ecoNovaGovernorDeployer.getReceipt(
-                          proposalId,
-                          owner.address
-                      )
-
-                      const [hasVoted, support] = votingReceipt
-                      expect(hasVoted).to.equal(false)
-                      expect(support).to.equal(false)
-
-                      const voteTx = await ecoNovaGovernorDeployer.castVoteWithReason(
-                          proposalId,
-                          voteWay,
-                          reason
-                      )
-                      await voteTx.wait(1)
-
-                      votingReceipt = await ecoNovaGovernorDeployer.getReceipt(
-                          proposalId,
-                          owner.address
-                      )
-
-                      const [hasVotedAfter, supportAfter] = votingReceipt
-                      expect(hasVotedAfter).to.equal(true)
-                      expect(supportAfter).to.equal(true)
-
-                      proposalState = await ecoNovaGovernorDeployer.state(proposalId)
-
-                      expect(proposalState).to.equal(1)
-                      await moveBlocks(VOTING_PERIOD + 1)
-
-                      // queue & execute
-
-                      const descriptionHash = ethers.id(PROPOSAL_DESCRIPTION)
-                      proposalState = await ecoNovaGovernorDeployer.state(proposalId)
-
-                      expect(proposalState).to.equal(4)
-
-                      const queueTx = await ecoNovaGovernorDeployer.queue(
-                          [charityDeployer],
-                          [0],
-                          [encodedFunctionCall],
-                          descriptionHash
-                      )
-                      await queueTx.wait(1)
-                      await moveTime(MIN_DELAY + 1)
-                      await moveBlocks(1)
-                      proposalState = await ecoNovaGovernorDeployer.state(proposalId)
-                      expect(proposalState).to.equal(5)
-
-                      const exTx = await ecoNovaGovernorDeployer.execute(
-                          [charityDeployer],
-                          [0],
-                          [encodedFunctionCall],
-                          descriptionHash
-                      )
-                      await exTx.wait(1)
-
-                      organizationExist = await charityDeployer.organizationExists(
-                          testCharityOrganization
-                      )
-                      expect(organizationExist).to.equal(true)
+                      await proposeAndExecute({
+                          charityDeployer,
+                          testCharityOrganization,
+                          ecoNovaGovernorDeployer,
+                          ecoNovaToken,
+                          owner,
+                      })
                   })
               })
           })
@@ -566,25 +605,43 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   })
 
                   it("Can donate and withdraw accordingly.", async function () {
-                      const { ecoNDeployer, charityDeployer, otherAccount } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
+                      const {
+                          ecoNDeployer,
+                          charityDeployer,
+                          ecoNovaGovernorDeployer,
+                          testCharityOrganization,
+                          ecoNovaToken,
+                          owner,
+                      } = await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
 
-                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
+                      await ecoNDeployer.donateToFoundation(
+                          category,
+                          NATIVE_TOKEN,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
+
+                      await proposeAndExecute({
+                          charityDeployer,
+                          testCharityOrganization,
+                          ecoNovaGovernorDeployer,
+                          ecoNovaToken,
+                          owner,
                       })
 
-                      await charityDeployer.withdrawToOrganization(ETH_ADDRESS, DOLLAR_AMOUNT, [
-                          otherAccount,
+                      await charityDeployer.withdrawToOrganization(NATIVE_TOKEN, DOLLAR_AMOUNT, [
+                          testCharityOrganization,
                       ])
                   })
               })
@@ -626,19 +683,19 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
 
                       await expect(
-                          ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                          ecoNDeployer.donateToFoundation(category, NATIVE_TOKEN, DOLLAR_AMOUNT, {
                               value: ethAmountToDonate,
                           })
                       )
                           .to.emit(ecoNDeployer, "Donated")
-                          .withArgs(owner, ETH_ADDRESS, "271210873559917723", category)
+                          .withArgs(owner, NATIVE_TOKEN, "271210873559917723", category)
                   })
 
                   it("Should emit an BMIRecorded event on bmi verify", async function () {
@@ -671,30 +728,49 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       await expect(ecoD).to.emit(ecoNDeployer, "BMIRecorded").withArgs(owner, true)
                   })
                   it("Should emit an event on withdraw", async function () {
-                      const { ecoNDeployer, charityDeployer, otherAccount } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
+                      const {
+                          ecoNDeployer,
+                          charityDeployer,
+                          otherAccount,
+                          testCharityOrganization,
+                          ecoNovaGovernorDeployer,
+                          ecoNovaToken,
+                          owner,
+                      } = await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
 
-                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
+                      await ecoNDeployer.donateToFoundation(
+                          category,
+                          NATIVE_TOKEN,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
+
+                      await proposeAndExecute({
+                          charityDeployer,
+                          testCharityOrganization,
+                          ecoNovaGovernorDeployer,
+                          ecoNovaToken,
+                          owner,
                       })
 
                       await expect(
-                          charityDeployer.withdrawToOrganization(ETH_ADDRESS, ethAmountToDonate, [
-                              otherAccount,
+                          charityDeployer.withdrawToOrganization(NATIVE_TOKEN, ethAmountToDonate, [
+                              testCharityOrganization,
                           ])
                       )
                           .to.emit(charityDeployer, "DonationWithdrawn")
-                          .withArgs(otherAccount, ETH_ADDRESS, ethAmountToDonate)
+                          .withArgs(testCharityOrganization, NATIVE_TOKEN, ethAmountToDonate)
                   })
               })
 
@@ -707,13 +783,13 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
                       await expect(
-                          ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                          ecoNDeployer.donateToFoundation(category, NATIVE_TOKEN, DOLLAR_AMOUNT, {
                               value: ethAmountToDonate,
                           })
                       ).to.changeEtherBalances(
@@ -722,29 +798,47 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       )
                   })
                   it("Can withdraw with ether change.", async function () {
-                      const { ecoNDeployer, charityDeployer, otherAccount } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
+                      const {
+                          ecoNDeployer,
+                          charityDeployer,
+                          testCharityOrganization,
+                          ecoNovaGovernorDeployer,
+                          ecoNovaToken,
+                          owner,
+                      } = await loadFixture(deployEcoNovaDeployerFixture)
 
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
 
-                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
+                      await ecoNDeployer.donateToFoundation(
+                          category,
+                          NATIVE_TOKEN,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
+
+                      await proposeAndExecute({
+                          charityDeployer,
+                          testCharityOrganization,
+                          ecoNovaGovernorDeployer,
+                          ecoNovaToken,
+                          owner,
                       })
 
                       await expect(
-                          charityDeployer.withdrawToOrganization(ETH_ADDRESS, ethAmountToDonate, [
-                              otherAccount,
+                          charityDeployer.withdrawToOrganization(NATIVE_TOKEN, ethAmountToDonate, [
+                              testCharityOrganization,
                           ])
                       ).to.changeEtherBalances(
-                          [charityDeployer, otherAccount],
+                          [charityDeployer, testCharityOrganization],
                           ["-271210873559917723", "271210873559917723"]
                       )
                   })

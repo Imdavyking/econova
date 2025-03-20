@@ -34,15 +34,31 @@ export const extractMessageFrom429 = (
   defaultMessage: string
 ): { isLimitError: boolean; message: string } => {
   if (error.response && error.response.status === 429) {
-    // If the status is 429 (Rate Limit Exceeded)
+    // Get rate limit reset timestamp
     const resetTimestamp = error.response.headers["x-rate-limit-reset"];
 
-    // Calculate remaining time to reset the rate limit
+    // Calculate remaining time and format as hh:mm:ss
     const remainingTime = getRateLimitResetTime(parseInt(resetTimestamp));
-    const message = `Rate limit exceeded. Try again in ${remainingTime} seconds.`;
+    const formattedTime = formatTime(remainingTime);
+
+    const message = `Rate limit exceeded. Try again in ${formattedTime}.`;
     logger.info(message);
     return { isLimitError: true, message };
   }
-  return { isLimitError: false, message: defaultMessage };
+
+  return {
+    isLimitError: false,
+    message: defaultMessage.trim() === "" ? error?.message : defaultMessage,
+  };
 };
 
+// Utility function to format seconds into hh:mm:ss
+const formatTime = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  return `${String(hours).padStart(2, "0")}h:${String(minutes).padStart(
+    2,
+    "0"
+  )}m:${String(secs).padStart(2, "0")}s`;
+};

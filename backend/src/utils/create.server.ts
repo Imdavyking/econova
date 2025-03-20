@@ -9,12 +9,14 @@ import session from "express-session";
 import twitterRoutes from "../routes/twitter.routes";
 import userRoutes from "../routes/user.routes";
 import cookieParser from "cookie-parser";
-import { FRONTEND_URL } from "../utils/constants";
+import { allowedOrigins, FRONTEND_URL } from "../utils/constants";
 import merkleRoutes from "../routes/merkle.routes";
 import alloraRoutes from "../routes/allora.routes";
 import sourceCodeRoutes from "../routes/source.code.routes";
 import { environment } from "./config";
 import coinGeckoPriceRoutes from "../routes/coin.gecko.routes";
+import { createProxyMiddleware } from "http-proxy-middleware";
+import { createServer } from "http";
 
 dotenv.config();
 const app = express();
@@ -45,10 +47,6 @@ app.use(
   cors({
     credentials: true,
     origin: function (origin, callback) {
-      const allowedOrigins = [
-        new URL(FRONTEND_URL!).origin,
-        new URL("http://localhost:3000").origin,
-      ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -59,6 +57,18 @@ app.use(
   })
 );
 
+// Proxy for Pinata Cors
+app.use(
+  "/pinata",
+  createProxyMiddleware({
+    logger: logger,
+    target: "https://emerald-odd-bee-965.mypinata.cloud",
+    changeOrigin: true,
+    pathRewrite: { "^/pinata": "/files" },
+  })
+);
+
+// Api home
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
@@ -79,4 +89,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send("Something went wrong!");
 });
 
-export default app;
+const server = createServer(app);
+
+export default server;

@@ -103,6 +103,8 @@ export const getTweetPoints = async (req: Request, res: Response) => {
       points,
       tweetId,
       chainId,
+      retweetError: retweetsInfo?.error,
+      likeError: likesInfo?.error,
       twitter_id: userTokenData.twitter_id,
     });
   } catch (error: any) {

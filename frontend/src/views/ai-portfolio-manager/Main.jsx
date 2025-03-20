@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
 import { fetchMarketDataCoingecko } from "../../services/coin.gecko.services";
-import {
-  getProjectTokenDetails,
-  getTokenBalance,
-} from "../../services/blockchain.services";
+import { getTokenBalance } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
-import { APP_NAME, CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
+import { APP_NAME, CHAIN_ID, NATIVE_TOKEN } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import logoUrl from "@/assets/images/logo.png";
 import Kyberswap, {
   KYBERSWAP_TOKENS_INFO,
 } from "../../services/kyber.swap.services";
-import { sonic, fantomSonicTestnet } from "viem/chains";
+import { Link } from "react-router-dom";
 
 export default function InvestmentAI() {
   const [loading, setLoading] = useState(true);
@@ -21,11 +18,9 @@ export default function InvestmentAI() {
   const [rebalancing, setRebalancing] = useState(false);
   const [portfolio, setPortfolio] = useState({});
   const [totalUsdBalance, setTotalUsdBalance] = useState(0);
-  const isTesting = false;
 
   const normalizeBalance = (balance, decimals) =>
     Number(balance) / 10 ** Number(decimals);
-  const chainId = isTesting ? CHAIN_ID : sonic.id;
 
   const [targetAllocations, setTargetAllocations] = useState({});
 
@@ -36,7 +31,7 @@ export default function InvestmentAI() {
       coingeckoId: "sonic-3",
       name: "Sonic Token",
       symbol: "SONIC",
-      address: ETH_ADDRESS,
+      address: NATIVE_TOKEN,
     },
     {
       coingeckoId: "usd-coin",
@@ -63,22 +58,7 @@ export default function InvestmentAI() {
   }
 
   async function updateAssetsInfo() {
-    let updatedAssetsInfo = [...assetsInfo];
-    if (isTesting) {
-      const { tokenAddress, name } = await getProjectTokenDetails();
-      const usdcTestIndex = updatedAssetsInfo.findIndex(
-        (asset) => asset.coingeckoId === "usd-coin"
-      );
-      if (usdcTestIndex !== -1) {
-        updatedAssetsInfo[usdcTestIndex] = {
-          ...updatedAssetsInfo[usdcTestIndex],
-          address: tokenAddress,
-          name,
-          symbol: name,
-        };
-      }
-    }
-    return updatedAssetsInfo;
+    return [...assetsInfo];
   }
 
   async function fetchAssetData(updatedAssetsInfo) {
@@ -90,7 +70,7 @@ export default function InvestmentAI() {
               path: `/coins/${asset.coingeckoId}/market_chart`,
               queryParams: { vs_currency: "usd", days: 7 },
             }),
-            getTokenBalance(asset.address, chainId),
+            getTokenBalance(asset.address, CHAIN_ID),
           ]);
 
           const price = marketData?.prices?.[0]?.[1] || 0;
@@ -190,7 +170,7 @@ export default function InvestmentAI() {
         return;
       }
 
-      const kyberswap = new Kyberswap(chainId);
+      const kyberswap = new Kyberswap(CHAIN_ID);
 
       for (const sellOrder of rebalanceOrders.filter(
         (o) => o.action === "Sell"
@@ -231,10 +211,10 @@ export default function InvestmentAI() {
     <div className="p-6 max-w-lg mx-auto">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} Portfolio</span>
-        </a>
+        </Link>
       </h2>
 
       {loading ? (

@@ -48,7 +48,28 @@ export const Tweet = ({ tweet }) => {
           },
         }
       );
+
+      if (!response.ok) {
+        throw new Error("Error checking points");
+      }
       const data = await response.json();
+
+      const rateLimitError = "Rate limit exceeded. Using cached data.";
+      const errors: string[] = [];
+
+      if (data.retweetError) {
+        errors.push(
+          `RETWEET INFO ERROR: ${rateLimitError} ${data.retweetError}`
+        );
+      }
+
+      if (data.likeError) {
+        errors.push(`LIKE INFO ERROR: ${rateLimitError} ${data.likeError}`);
+      }
+
+      if (errors.length > 0) {
+        throw new Error(errors.join("\n"));
+      }
 
       setResults(data);
       saveToLocalStorage(tweetId.toString(), data);

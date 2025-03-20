@@ -77,6 +77,7 @@ contract EcoNovaCourseNFT is
     error EcoNovaCourseNFT__NativeSenderBadRole(bytes nativeSender, uint256 chainIdFrom);
     error EcoNovaCourseNFT__ChainNotSupported(uint256 chainId);
     error EcoNovaCourseNFT__CrossChainTransferToSameChain();
+    error EcoNovaCourseNFT__NotOwner();
 
     /** modifiers */
     modifier onlyAdmin() {
@@ -192,6 +193,9 @@ contract EcoNovaCourseNFT is
             revert EcoNovaCourseNFT__ChainNotSupported(dstChain_);
         }
         string memory tokenURI_ = tokenURI(tokenId);
+        if (ownerOf(tokenId) != msg.sender) {
+            revert EcoNovaCourseNFT__NotOwner();
+        }
         _burn(tokenId);
         bytes memory dstTxCall = abi.encodeCall(
             IEcoNovaCourseNFT.receiveNFT,

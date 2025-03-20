@@ -6,6 +6,7 @@ import logoUrl from "@/assets/images/logo.png";
 import data from "@/assets/json/ai_tutor.json";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ChatBot from "@/components/chat-bot/Main";
 const levels = ["Beginner", "Intermediate", "Advanced"];
 
@@ -51,10 +52,10 @@ const SonicBlockchainTutor = () => {
       <ChatBot />
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} AI Tutor</span>
-        </a>
+        </Link>
       </h2>
 
       {/* Level Selector */}

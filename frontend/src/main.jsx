@@ -19,6 +19,7 @@ import {
   CHAIN_NAME,
   CHAIN_RPC,
   CHAIN_SYMBOL,
+  SERVER_URL,
   WALLET_CONNECT_PROJECT_ID,
 } from "./utils/constants";
 import { sonic, bsc, bscTestnet } from "viem/chains";

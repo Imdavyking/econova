@@ -19,7 +19,7 @@ import {
   CHAIN_SYMBOL,
   CONTRACT_ADDRESS,
   ECONOVA_GOVERNOR_CONTRACT_ADDRESS,
-  ETH_ADDRESS,
+  NATIVE_TOKEN,
   FAILED_KEY,
   FIAT_DECIMALS,
   MULTICALL3_CONTRACT_ADDRESS,
@@ -194,10 +194,7 @@ const getOFTContract = async (tokenAddress, sourceChainId) => {
 
   await switchOrAddChain(signer.provider, sourceChainId);
 
-  return {
-    contract: new ethers.Contract(tokenAddress, oftAbiInterface, signer),
-    signer: signer,
-  };
+  return new ethers.Contract(tokenAddress, oftAbiInterface, signer);
 };
 
 export const getERC20Contract = async (address, chainId = CHAIN_ID) => {
@@ -266,9 +263,7 @@ export const getPeerTokenAddress = async ({
   sourceChainId,
 }) => {
   try {
-    const oftInfo = await getOFTContract(oftTokenAddress, sourceChainId);
-
-    const contract = oftInfo.contract;
+    const contract = await getOFTContract(oftTokenAddress, sourceChainId);
 
     const peers = await contract.peers(eidB);
 
@@ -287,9 +282,8 @@ export async function getOFTSendFee({
   sourceChainId,
 }) {
   try {
-    const oftInfo = await getOFTContract(oftTokenAddress, sourceChainId);
-
-    const contract = oftInfo.contract;
+    const contract = await getOFTContract(oftTokenAddress, sourceChainId);
+    const signer = await getSigner();
 
     const options = Options.newOptions()
       .addExecutorLzReceiveOption(200000, 0)
@@ -313,7 +307,7 @@ export async function getOFTSendFee({
       sendParam,
       lzTokenFee,
       contract,
-      signer: oftInfo.signer,
+      signer,
     };
   } catch (error) {
     console.error("❌ Error calculating send fee:", error);
@@ -551,12 +545,10 @@ export const saveHealthyBMIProofService = async ({
   heightInCm,
 }) => {
   try {
-    const { proof, publicSignals } = await getHealthyBMIProof({
+    const { proof, _pubSignals } = await getHealthyBMIProof({
       weightInKg,
       heightInCm,
     });
-
-    const _pubSignals = publicSignals;
 
     const _pA = [proof.pi_a[0], proof.pi_a[1]];
     const _pB = [
@@ -754,7 +746,7 @@ export const getTokenBalance = async (tokenAddress, switchChainId) => {
 
     const address = await signer.getAddress();
 
-    if (tokenAddress == ethers.ZeroAddress || tokenAddress == ETH_ADDRESS) {
+    if (tokenAddress == ethers.ZeroAddress || tokenAddress == NATIVE_TOKEN) {
       const balance = await signer.provider.getBalance(address);
       return { balance, decimals: 18 };
     }
@@ -791,7 +783,7 @@ export const getPythPriceFeed = async () => {
   try {
     const manager = await getContract();
 
-    const [price, exp] = await manager.getPricePyth();
+    const [price, exp] = await manager.getPricePyth(NATIVE_TOKEN);
     return [price, exp];
   } catch (error) {
     const _ = parseContractError(error, managerAbiInterface);

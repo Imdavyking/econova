@@ -31,7 +31,6 @@ jobs:
       LIGHTHOUSE_API_KEY: ${{secrets.LIGHTHOUSE_API_KEY}}
       WRAPPED_SONIC_CONTRACT_ADDRESS: ${{secrets.WRAPPED_SONIC_CONTRACT_ADDRESS}}
       ALLORA_API_KEY: ${{secrets.ALLORA_API_KEY}}
-      ALLORA_NETWORK: ${{secrets.ALLORA_NETWORK}}
       API_SCAN_VERIFIER_KEY: ${{secrets.API_SCAN_VERIFIER_KEY}}
       JWT_SECRET: ${{secrets.JWT_SECRET}}
       OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
@@ -41,6 +40,8 @@ jobs:
       TWITTER_ACCESS_TOKEN_SECRET: ${{secrets.TWITTER_ACCESS_TOKEN_SECRET}}
       TWITTER_USER_ID: ${{secrets.TWITTER_USER_ID}}
       TWITTER_BEARER_TOKEN: ${{secrets.TWITTER_BEARER_TOKEN}}
+      COINGECKO_DEMO_API_KEY: ${{secrets.COINGECKO_DEMO_API_KEY}}
+      PINATA_JWT: ${{secrets.PINATA_JWT}}
 
     steps:
       - name: Checkout code

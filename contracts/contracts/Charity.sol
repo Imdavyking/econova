@@ -14,10 +14,9 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
     bool public canWithdrawFunds = true;
     Category public charityCategory;
     address public automationBot = address(0);
-    uint256 public hardHatChainId = 31337;
 
     /** constants */
-    address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
+    address public constant NATIVE_TOKEN = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
     /**
      * mappings
@@ -150,7 +149,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
      */
     function removeOrganization(address organization) external onlyOwner {
         if (!organizationExists[organization]) {
-            revert Charity__OrganizationNotFound();
+            revert Charity__OrganizationNotFound(organization);
         }
         organizationExists[organization] = false;
         uint256 length = organizations.length;
@@ -180,7 +179,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
     function checker() external view returns (bool canExec, bytes memory execPayload) {
         uint256 orgCount = organizations.length;
         if (orgCount == 0) {
-            return (false, abi.encode("No Organizations Available "));
+            return (false, abi.encode("No Organizations Available"));
         }
 
         if (!canWithdrawFunds) {
@@ -195,7 +194,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
                 true,
                 abi.encodeCall(
                     ICharity.withdrawToOrganization,
-                    (ETH_ADDRESS, ethBalance, organizations)
+                    (NATIVE_TOKEN, ethBalance, organizations)
                 )
             );
         }
@@ -222,7 +221,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
      */
     function balanceOf(address token) external view returns (uint256) {
         return
-            token == ETH_ADDRESS ? address(this).balance : IERC20(token).balanceOf(address(this));
+            token == NATIVE_TOKEN ? address(this).balance : IERC20(token).balanceOf(address(this));
     }
 
     /**
@@ -239,27 +238,26 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
         }
+        if (token != NATIVE_TOKEN && !whitelistedTokens[token]) {
+            revert Charity__TokenNotWhitelisted();
+        }
         uint256 orgCount = orgs.length;
         if (orgCount == 0) {
-            revert Charity__OrganizationNotFound();
+            revert Charity__NoOrganizationsYet();
         }
         uint256 share = amount / orgCount;
         for (uint256 i = 0; i < orgCount; i++) {
-            if (block.chainid != hardHatChainId) {
-                if (!organizationExists[orgs[i]]) {
-                    revert Charity__OrganizationNotFound();
-                }
+            if (!organizationExists[orgs[i]]) {
+                revert Charity__OrganizationNotFound(orgs[i]);
             }
-
-            if (token == ETH_ADDRESS) {
+        }
+        for (uint256 i = 0; i < orgCount; i++) {
+            if (token == NATIVE_TOKEN) {
                 (bool success, ) = orgs[i].call{value: share}("");
                 if (!success) {
                     revert Charity__SendingFailed();
                 }
             } else {
-                if (!whitelistedTokens[token]) {
-                    revert Charity__TokenNotWhitelisted();
-                }
                 IERC20(token).safeTransfer(orgs[i], share);
             }
             emit DonationWithdrawn(orgs[i], token, share);

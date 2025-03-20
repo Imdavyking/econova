@@ -7,4 +7,4 @@ export const VOTING_PERIOD = BLOCKS_PER_HOUR // 1 hour - How long a proposal vot
 export const VOTING_DELAY = 1 // 1 Block - How many blocks till a proposal vote becomes active
 export const PROPOSAL_THRESHOLD = Number(1e18).toString() // the user voting power needed to create a proposal (1 token)
 export const PROPOSAL_DESCRIPTION = "Proposal #1 Add this organization!"
-export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+export const NATIVE_TOKEN = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"

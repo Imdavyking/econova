@@ -52,15 +52,6 @@ contract EcoNovaGovernor is
         return super.votingPeriod();
     }
 
-    //    function getReceipt(uint256 proposalId, address voter) external view returns (Receipt memory) {
-    //     Proposal storage proposal = _proposals[proposalId];
-
-    //     Receipt memory receipt = proposal.receipts[voter];
-    //     receipt.votes = internalGetVotingPower(voter, proposal.endBlock);
-
-    //     return receipt;
-    // }
-
     function _castVote(
         uint256 proposalId,
         address account,

@@ -17,11 +17,13 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaUserCircle, FaCrown, FaCoins } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveTwitterAuth } from "../../services/twitter.auth.services";
-import { wrapSonicService } from "../../services/blockchain.services";
-
 const Home = () => {
   const [twitterHandle, setTwitterHandle] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
+  useEffect(() => {
+    dom("body").removeClass("error-page").removeClass("login").addClass("main");
+  }, []);
 
   const handleLogout = () => {
     console.log("User logged out");
@@ -49,10 +51,6 @@ const Home = () => {
       });
   }, [location, navigate]);
 
-  useEffect(() => {
-    dom("body").removeClass("error-page").removeClass("login").addClass("main");
-  }, []);
-
   return (
     <>
       <div>
@@ -63,12 +61,12 @@ const Home = () => {
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-center w-full py-5">
             {/* Logo */}
-            <a href="/" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <img alt={APP_NAME} className="w-10 md:w-12" src={logoUrl} />
               <span className="text-white text-lg md:text-xl ml-3">
                 {APP_NAME}
               </span>
-            </a>
+            </Link>
 
             {/* Action Buttons */}
             <div className="flex items-center space-x-4 mt-3 md:mt-0">
@@ -109,8 +107,8 @@ const Home = () => {
                   {twitterHandle ? (
                     <MenuItem>
                       {({ isactive }) => (
-                        <a
-                          href="/earn-points"
+                        <Link
+                          to="/earn-points"
                           className={`flex items-center  px-4 py-2 text-gray-700 w-full text-left ${
                             isactive ? "bg-gray-200" : ""
                           }`}
@@ -120,7 +118,7 @@ const Home = () => {
                             className="ml-2 text-xl cursor-pointer"
                             style={{ color: "gold" }}
                           />
-                        </a>
+                        </Link>
                       )}
                     </MenuItem>
                   ) : (
@@ -128,8 +126,8 @@ const Home = () => {
                   )}
                   <MenuItem>
                     {({ isactive }) => (
-                      <a
-                        href="/leaderboard"
+                      <Link
+                        to="/leaderboard"
                         className={`flex items-center px-4 py-2 text-gray-700 w-full text-left ${
                           isactive ? "bg-gray-200" : ""
                         }`}
@@ -139,7 +137,7 @@ const Home = () => {
                           className="ml-2 text-xl cursor-pointer"
                           style={{ color: "gold" }}
                         />
-                      </a>
+                      </Link>
                     )}
                   </MenuItem>
                 </MenuItems>

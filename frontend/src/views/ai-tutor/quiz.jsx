@@ -14,6 +14,7 @@ import {
 import { FaSpinner } from "react-icons/fa";
 import tutorData from "@/assets/json/ai_tutor.json";
 import { callLLMApi } from "../../services/openai.services";
+import { Link } from "react-router-dom";
 
 const QuizPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -39,7 +40,7 @@ const QuizPage = () => {
         const level = Levels[levelStr];
         const topics = tutorData[levelStr]?.Topics || [];
 
-        const [hasClaimed, tokenURI] = await Promise.all([
+        let [hasClaimed, tokenURI] = await Promise.all([
           getUserClaimedNFT({ level: level }),
           getUserNFT({ level: level }),
         ]);
@@ -57,7 +58,26 @@ const QuizPage = () => {
           return;
         }
 
+        if (tokenURI.startsWith("ipfs://")) {
+          tokenURI = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
+        }
+
+        const pinataGateWayUrl =
+          "https://emerald-odd-bee-965.mypinata.cloud/files/";
+
+        if (tokenURI.startsWith(pinataGateWayUrl)) {
+          tokenURI = tokenURI.replace(
+            pinataGateWayUrl,
+            `${SERVER_URL}/pinata/files/`
+          );
+        }
+
         const response = await fetch(tokenURI);
+
+        if (!response.ok) {
+          throw Error("failed to fetch token uri");
+        }
+
         const data = await response.json();
 
         if (data?.attributes) {
@@ -152,10 +172,10 @@ const QuizPage = () => {
     <div className="p-6 max-w-3xl mx-auto">
       <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
-        <a href="/" className="flex items-center space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />
           <span className="text-lg">{APP_NAME} AI Tutor</span>
-        </a>
+        </Link>
       </h2>
 
       {loading ? (

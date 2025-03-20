@@ -142,7 +142,7 @@ EcoNova integrates **AI-powered smart contract auditing** using:
   sh create-secrets.sh
   ```
 
-📌 _Ensure the `.env` file exists and is configured in both the backend and frontend directories before running this script!_
+📌 _Ensure the `.env` file exists and is configured in both the backend, frontend  and indexer directories before running this script!_
 
 - **Ensure Docker is installed and running.**
 - **To start the backend and related services (MongoDB and Redis), run:**

@@ -6,7 +6,8 @@ import { processOauth } from "../utils/oauth";
 
 dotenv.config();
 
-export const getAllTweets = async () => await TweetSchemaModel.find();
+export const getAllTweets = async () =>
+  await TweetSchemaModel.find().sort({ created_at: -1 });
 export const getTweetByTweetId = async (id: string) =>
   await TweetSchemaModel.findOne({ id });
 

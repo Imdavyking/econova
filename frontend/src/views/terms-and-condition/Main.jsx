@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { APP_NAME } from "../../utils/constants";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import { Link } from "react-router-dom";
 export default function TermsAndConditions() {
   useEffect(() => {
     document.title = `Terms and Conditions | ${APP_NAME}`;
@@ -77,9 +78,9 @@ export default function TermsAndConditions() {
         </div>
 
         <div className="mt-6 text-center">
-          <a href="/" className="text-sm  hover:underline">
+          <Link to="/" className="text-sm  hover:underline">
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

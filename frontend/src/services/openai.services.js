@@ -9,6 +9,9 @@ export const callLLMApi = async ({ task }) => {
     },
     body: JSON.stringify({ task }),
   });
+  if (!response.ok) {
+    throw new Error("Failed to fetch llm response");
+  }
   return await response.json();
 };
 

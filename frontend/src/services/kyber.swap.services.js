@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { getERC20Contract, getSigner } from "./blockchain.services";
-import { ETH_ADDRESS } from "../utils/constants";
+import { NATIVE_TOKEN } from "../utils/constants";
 
 export const KYBERSWAP_AGGREGATOR_API_URL =
   "https://aggregator-api.kyberswap.com/sonic/api/v1";
@@ -81,8 +81,6 @@ class Kyberswap {
       amountRaw
     );
 
-    console.log(routeData);
-
     const routerAddress = routeData.routerAddress;
 
     const encodedData = await this.getEncodedSwapData(
@@ -153,7 +151,7 @@ class Kyberswap {
         spenderAddress
       );
 
-      if (currentAllowance.lt(amount)) {
+      if (currentAllowance < amount) {
         const approveTx = await tokenContract.approve(spenderAddress, amount);
         await approveTx.wait(1);
       }
