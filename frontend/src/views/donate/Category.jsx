@@ -7,9 +7,7 @@ export default function CharityCategory({ categoryName, charityAddress }) {
     await navigator.clipboard.writeText(text);
     toast.info("Copied to clipboard!", { autoClose: 2000 });
   };
-  useEffect(() => {
-    dom("body").removeClass("error-page").removeClass("login").addClass("main");
-  }, []);
+
   return (
     <li
       key={categoryName}

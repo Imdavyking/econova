@@ -11,6 +11,9 @@ export default function CharityCategories() {
   const [charities, setCharities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    dom("body").removeClass("error-page").removeClass("login").addClass("main");
+  }, []);
+  useEffect(() => {
     const getCharitiesAddress = async () => {
       try {
         const charitiesAddr = await getAllCharities();
