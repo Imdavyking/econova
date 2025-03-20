@@ -31,7 +31,7 @@ import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { getVerifiedSourceCode } from "./source.code.services";
-import Kyberswap from "./kyber.swap.services";
+import Kyberswap, { KYBERSWAP_TOKENS_INFO } from "./kyber.swap.services";
 
 const governorAbiInterface = new ethers.Interface(governorAbi);
 const nftCourseAbiInterface = new ethers.Interface(nftCourseAbi);
@@ -699,14 +699,22 @@ export const sendERC20TokenService = async ({
 }) => {
   try {
     const contract = await getERC20Contract(tokenAddress);
+
     const decimals = await contract.decimals();
+
     const tx = await contract.transfer(
       recipientAddress,
-      getWholeNumber(Number(amount) * 10 ** decimals)
+      getWholeNumber(Number(amount) * 10 ** Number(decimals))
     );
     await tx.wait(1);
 
-    return `sent ${amount} ${tokenAddress} to ${recipientAddress}`;
+    const tokenInfo = Object.values(KYBERSWAP_TOKENS_INFO).find(
+      (token) => token.address.toLowerCase() === tokenAddress.toLowerCase()
+    );
+
+    return `sent ${amount} ${
+      tokenInfo ? tokenInfo.name : tokenAddress
+    } to ${recipientAddress}`;
   } catch (error) {
     const errorInfo = parseContractError(error, erc20AbiInterface);
     return `${FAILED_KEY} to send ${amount} ${tokenAddress} to ${recipientAddress}: ${
