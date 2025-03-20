@@ -526,7 +526,11 @@ export const wrapSonicService = async ({ amount }) => {
   }
 };
 
-export const swapTokenService = async ({}) => {
+export const swapTokenService = async ({
+  sourceToken,
+  destToken,
+  sourceAmount,
+}) => {
   const kyberswap = new Kyberswap(CHAIN_ID);
   try {
     await kyberswap.swap({
