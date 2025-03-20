@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { ethers } from "ethers";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { FaSpinner } from "react-icons/fa";
 import charityAbi from "@/assets/json/charity.json";

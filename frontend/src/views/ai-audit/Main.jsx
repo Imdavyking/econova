@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-import { FaStar, FaSpinner } from "react-icons/fa";
-import { APP_NAME, CONTRACT_ADDRESS } from "../../utils/constants";
+import { FaSpinner } from "react-icons/fa";
+import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { toast } from "react-toastify";
 import { fetchContractFileFromGitHub } from "../../services/github.repo.services";

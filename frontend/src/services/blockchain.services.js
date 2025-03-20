@@ -194,10 +194,7 @@ const getOFTContract = async (tokenAddress, sourceChainId) => {
 
   await switchOrAddChain(signer.provider, sourceChainId);
 
-  return {
-    contract: new ethers.Contract(tokenAddress, oftAbiInterface, signer),
-    signer: signer,
-  };
+  return new ethers.Contract(tokenAddress, oftAbiInterface, signer);
 };
 
 export const getERC20Contract = async (address, chainId = CHAIN_ID) => {
@@ -266,9 +263,7 @@ export const getPeerTokenAddress = async ({
   sourceChainId,
 }) => {
   try {
-    const oftInfo = await getOFTContract(oftTokenAddress, sourceChainId);
-
-    const contract = oftInfo.contract;
+    const contract = await getOFTContract(oftTokenAddress, sourceChainId);
 
     const peers = await contract.peers(eidB);
 
@@ -287,9 +282,8 @@ export async function getOFTSendFee({
   sourceChainId,
 }) {
   try {
-    const oftInfo = await getOFTContract(oftTokenAddress, sourceChainId);
-
-    const contract = oftInfo.contract;
+    const contract = await getOFTContract(oftTokenAddress, sourceChainId);
+    const signer = await getSigner();
 
     const options = Options.newOptions()
       .addExecutorLzReceiveOption(200000, 0)
@@ -313,7 +307,7 @@ export async function getOFTSendFee({
       sendParam,
       lzTokenFee,
       contract,
-      signer: oftInfo.signer,
+      signer,
     };
   } catch (error) {
     console.error("❌ Error calculating send fee:", error);
@@ -551,12 +545,10 @@ export const saveHealthyBMIProofService = async ({
   heightInCm,
 }) => {
   try {
-    const { proof, publicSignals } = await getHealthyBMIProof({
+    const { proof, _pubSignals } = await getHealthyBMIProof({
       weightInKg,
       heightInCm,
     });
-
-    const _pubSignals = publicSignals;
 
     const _pA = [proof.pi_a[0], proof.pi_a[1]];
     const _pB = [

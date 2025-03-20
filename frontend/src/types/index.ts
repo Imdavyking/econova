@@ -1,5 +1,5 @@
 export type ToolCall = {
-  name: "addPoints" | "redeemPoints" | "donate";
+  name: string;
   args: {
     weight?: number;
     points?: number;

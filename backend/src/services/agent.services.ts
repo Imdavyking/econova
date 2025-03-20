@@ -261,7 +261,7 @@ export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const systemPrompt = new SystemMessage(
     `You are an expert in blockchain transactions. Your task is to analyze the provided transaction hash and provide a detailed summary of the transaction.
-make this as detailed as possible, to begginers and experts alike.
+make this as detailed as possible, to beginners and experts alike.
 `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);

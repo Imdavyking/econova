@@ -10,7 +10,11 @@ export const alloraPredictService = async ({ topicId, topicName }) => {
     }
     const url = `${SERVER_URL}/api/allora/price-inference?${urlParams.toString()}`;
     const response = await fetch(url);
+    if (!response.ok) {
+      throw Error(`failed to fetch ${topicId} with ${topicName} on allora`);
+    }
     const data = await response.json();
+
     return data.data;
   } catch (error) {
     return `${FAILED_KEY}: ${error.message}`;

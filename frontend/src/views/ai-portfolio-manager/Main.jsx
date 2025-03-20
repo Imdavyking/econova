@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchMarketDataCoingecko } from "../../services/coin.gecko.services";
 import {
-  getProjectTokenDetails,
   getTokenBalance,
 } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
@@ -12,7 +11,6 @@ import logoUrl from "@/assets/images/logo.png";
 import Kyberswap, {
   KYBERSWAP_TOKENS_INFO,
 } from "../../services/kyber.swap.services";
-import { sonic, fantomSonicTestnet } from "viem/chains";
 import { Link } from "react-router-dom";
 
 export default function InvestmentAI() {
@@ -22,11 +20,9 @@ export default function InvestmentAI() {
   const [rebalancing, setRebalancing] = useState(false);
   const [portfolio, setPortfolio] = useState({});
   const [totalUsdBalance, setTotalUsdBalance] = useState(0);
-  const isTesting = false;
 
   const normalizeBalance = (balance, decimals) =>
     Number(balance) / 10 ** Number(decimals);
-  const chainId = isTesting ? CHAIN_ID : sonic.id;
 
   const [targetAllocations, setTargetAllocations] = useState({});
 
@@ -64,22 +60,7 @@ export default function InvestmentAI() {
   }
 
   async function updateAssetsInfo() {
-    let updatedAssetsInfo = [...assetsInfo];
-    if (isTesting) {
-      const { tokenAddress, name } = await getProjectTokenDetails();
-      const usdcTestIndex = updatedAssetsInfo.findIndex(
-        (asset) => asset.coingeckoId === "usd-coin"
-      );
-      if (usdcTestIndex !== -1) {
-        updatedAssetsInfo[usdcTestIndex] = {
-          ...updatedAssetsInfo[usdcTestIndex],
-          address: tokenAddress,
-          name,
-          symbol: name,
-        };
-      }
-    }
-    return updatedAssetsInfo;
+    return [...assetsInfo];
   }
 
   async function fetchAssetData(updatedAssetsInfo) {
@@ -91,7 +72,7 @@ export default function InvestmentAI() {
               path: `/coins/${asset.coingeckoId}/market_chart`,
               queryParams: { vs_currency: "usd", days: 7 },
             }),
-            getTokenBalance(asset.address, chainId),
+            getTokenBalance(asset.address, CHAIN_ID),
           ]);
 
           const price = marketData?.prices?.[0]?.[1] || 0;
@@ -191,7 +172,7 @@ export default function InvestmentAI() {
         return;
       }
 
-      const kyberswap = new Kyberswap(chainId);
+      const kyberswap = new Kyberswap(CHAIN_ID);
 
       for (const sellOrder of rebalanceOrders.filter(
         (o) => o.action === "Sell"

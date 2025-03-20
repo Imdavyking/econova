@@ -74,6 +74,10 @@ const QuizPage = () => {
 
         const response = await fetch(tokenURI);
 
+        if (!response.ok) {
+          throw Error("failed to fetch token uri");
+        }
+
         const data = await response.json();
 
         if (data?.attributes) {

@@ -61,7 +61,7 @@ const batchMulticall = async (queries: any[]) => {
       throw new Error("Invalid queries array");
     }
 
-    const multicall3 = await new ethers.Contract(
+    const multicall3 = new ethers.Contract(
       MULTICALL3_CONTRACT_ADDRESS,
       multicallAbiInterface,
       wallet
@@ -103,7 +103,13 @@ const decodeNonExecPayload = (data: string): string | null => {
   }
 };
 
-const decodeExecPayload = (data: string): any | null => {
+const decodeExecPayload = (
+  data: string
+): {
+  token: string;
+  amount: string;
+  organizations: any[];
+} | null => {
   try {
     const abi = [
       "function withdrawToOrganization(address token, uint256 amount, address[] organizations)",
@@ -116,11 +122,9 @@ const decodeExecPayload = (data: string): any | null => {
       data
     );
 
-    return {
-      token: decodedData[0],
-      amount: decodedData[1].toString(),
-      organizations: decodedData[2],
-    };
+    const [token, amount, organizations] = decodedData;
+
+    return { token, amount: amount.toString(), organizations };
   } catch (error: any) {
     logger.error(`Failed to decode execPayload: ${error.message}`);
     return null;
@@ -188,7 +192,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       return;
     }
 
-    const { token, amount, organizations } = decodeExecPayload(execPayload);
+    const { token, amount, organizations } = decodeExecPayload(execPayload)!;
 
     const { amount: tokenAmount, name } = await getTokenDetails(
       token,

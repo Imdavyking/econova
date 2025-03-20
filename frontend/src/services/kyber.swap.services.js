@@ -81,8 +81,6 @@ class Kyberswap {
       amountRaw
     );
 
-    console.log(routeData);
-
     const routerAddress = routeData.routerAddress;
 
     const encodedData = await this.getEncodedSwapData(
@@ -153,7 +151,7 @@ class Kyberswap {
         spenderAddress
       );
 
-      if (currentAllowance.lt(amount)) {
+      if (currentAllowance < amount) {
         const approveTx = await tokenContract.approve(spenderAddress, amount);
         await approveTx.wait(1);
       }
