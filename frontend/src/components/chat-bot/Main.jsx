@@ -169,17 +169,22 @@ const ChatWithAdminBot = () => {
                     message.sender === "user" ? "text-right" : ""
                   }`}
                 >
-                  <p
+                  <div
                     className={`${
                       message.sender === "user"
                         ? "bg-blue-500 text-white"
                         : "bg-gray-200 text-gray-700"
                     } rounded-lg py-2 px-4 inline-block`}
                   >
-                    <Markdown remarkPlugins={[remarkGfm]}>
+                    <Markdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        p: ({ node, ...props }) => <span {...props} />,
+                      }}
+                    >
                       {message.text}
                     </Markdown>
-                  </p>
+                  </div>
                 </div>
               ))}
             </div>
