@@ -700,7 +700,10 @@ export const sendERC20TokenService = async ({
   try {
     const contract = await getERC20Contract(tokenAddress);
 
-    const decimals = await contract.decimals();
+    const [decimals, name] = await Promise.all([
+      contract.decimals(),
+      contract.name(),
+    ]);
 
     const tx = await contract.transfer(
       recipientAddress,
@@ -708,12 +711,8 @@ export const sendERC20TokenService = async ({
     );
     await tx.wait(1);
 
-    const tokenInfo = Object.values(KYBERSWAP_TOKENS_INFO).find(
-      (token) => token.address.toLowerCase() === tokenAddress.toLowerCase()
-    );
-
     return `sent ${amount} ${
-      tokenInfo ? tokenInfo.name : tokenAddress
+      name ? name : tokenAddress
     } to ${recipientAddress}`;
   } catch (error) {
     const errorInfo = parseContractError(error, erc20AbiInterface);
