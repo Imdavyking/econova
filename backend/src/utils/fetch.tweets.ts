@@ -15,10 +15,11 @@ const fetchAndCache = async (
   fetchFunction: (tweetId: string) => Promise<any>,
   tweetId: string
 ) => {
-  let redis: Redis | undefined;
   const cacheKey = `${key}-${tweetId}`;
-
   logger.info(`${key} data fetching from API`);
+
+  let redis: Redis | undefined;
+
   try {
     redis = await initializeRedis();
     const data = await fetchFunction(tweetId);
@@ -29,17 +30,21 @@ const fetchAndCache = async (
       logger.warn(
         `${key} API rate limited (429), attempting to fetch from cache`
       );
-      const cachedData = await redis!.get(cacheKey);
-      if (cachedData) {
-        return {
-          error: extractMessageFrom429(error, "").message,
-          ...JSON.parse(cachedData),
-          fromCache: true,
-        };
-      } else {
-        throw new Error(`Rate limit exceeded and no cached data available`);
+
+      if (redis) {
+        const cachedData = await redis.get(cacheKey);
+        if (cachedData) {
+          return {
+            error: extractMessageFrom429(error, "").message,
+            ...JSON.parse(cachedData),
+            fromCache: true,
+          };
+        }
       }
+      throw new Error(`Rate limit exceeded and no cached data available`);
     }
+
+    logger.error(`Error fetching ${key}: ${error.message}`);
     throw error;
   }
 };
