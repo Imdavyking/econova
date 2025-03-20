@@ -69,11 +69,6 @@ const config: Config = {
       indexName: "econovavercel",
 
       contextualSearch: false,
-
-      replaceSearchResultPathname: {
-        from: "/docs/", // or as RegExp: /\/docs\//
-        to: "/",
-      },
     },
     navbar: {
       title: "Econova",
