@@ -10,7 +10,6 @@ This project specifically indexes the following:
 ✅ **ProposalCancelled** - Logging when a proposal is canceled.  
 ✅ **ProposalQueued** - Logging when a proposal is queued.
 
-
 ## **Getting Started**
 
 ### **1. Install SubQuery CLI**
@@ -50,15 +49,24 @@ Create a `.env` file in the project root and add the following variables:
   GOVERNOR_CONTRACT_ADDRESS=
 ```
 
+### **4. Start the application locally**
+
+```sh
+yarn dev # or npm run dev
+```
+
 ## **GraphQL Query Examples**
+
 ### **Query via cURL**
+
 ```sh
 curl -X POST http://localhost:5100/graphql -H "Content-Type: application/json" --data '{"query":"{ pointsAddeds(first: 5, orderBy: BLOCK_HEIGHT_DESC) { nodes { id blockHeight user points contractAddress } } donations(first: 5, orderBy: BLOCK_HEIGHT_DESC) { nodes { id user token amount blockHeight contractAddress } } ownershipTransfers(first: 5, orderBy: BLOCK_HEIGHT_DESC) { nodes { id previousOwner newOwner blockHeight contractAddress } } }"}'
 ```
 
 ### **Query via GraphiQL / Postman**
+
 1. Open **Postman** or **GraphiQL**.
-2. Set the **GraphQL Endpoint**:  
+2. Set the **GraphQL Endpoint**:
    ```
    http://localhost:5100/graphql
    ```
@@ -94,28 +102,28 @@ curl -X POST http://localhost:5100/graphql -H "Content-Type: application/json" -
        }
      }
      proposalCreateds(first: 5, orderBy: BLOCK_HEIGHT_DESC) {
-      nodes {
-        contractAddress
-        proposalId
-        proposer
-        state
-        etaSecondsQueue
-        targets
-        voteEnd
-        voteStart
-        description
-        id
-        calldatas
-        votesFor
-        votesAgainst
-        weightVotesFor
-        weightVotesAgainst
-        createdTimeStamp
-        queuedTimeStamp
-        executedTimeStamp
-        canceledTimeStamp
-      }
-      totalCount
-    }
+       nodes {
+         contractAddress
+         proposalId
+         proposer
+         state
+         etaSecondsQueue
+         targets
+         voteEnd
+         voteStart
+         description
+         id
+         calldatas
+         votesFor
+         votesAgainst
+         weightVotesFor
+         weightVotesAgainst
+         createdTimeStamp
+         queuedTimeStamp
+         executedTimeStamp
+         canceledTimeStamp
+       }
+       totalCount
+     }
    }
    ```
