@@ -31,7 +31,7 @@ const getRateLimitResetTime = (resetTimestamp: number): number => {
  */
 export const extractMessageFrom429 = (
   error: any,
-  defaultMessage: string
+  defaultMessage: string | undefined
 ): { isLimitError: boolean; message: string } => {
   if (error.response && error.response.status === 429) {
     // Get rate limit reset timestamp
@@ -46,7 +46,7 @@ export const extractMessageFrom429 = (
     return { isLimitError: true, message };
   }
 
-  return { isLimitError: false, message: defaultMessage };
+  return { isLimitError: false, message: defaultMessage ?? error.message };
 };
 
 // Utility function to format seconds into hh:mm:ss
