@@ -131,7 +131,6 @@ async function main() {
     const blockNumber = await ethers.provider.getBlockNumber()
     const rpcUrl = (network.config as any).url
     const blockExplorerUrl = network.config.ignition.explorerUrl!
-    const WRAPPED_SONIC_CONTRACT_ADDRESS = "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38"
     /** contract address */
     updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoCourseNFTAddress, "frontend", "VITE_NFT_COURSE_CONTRACT_ADDRESS")
