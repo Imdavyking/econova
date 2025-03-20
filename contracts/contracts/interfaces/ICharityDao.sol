@@ -13,6 +13,7 @@ interface ICharityDao {
     error Charity__OrganizationNotFound();
     error Charity__OnlyGovernor();
     error Charity__GovernorCanNotBeZeroAddress();
+    error Charity__NoOrganizationsYet();
 
     /** functions */
 

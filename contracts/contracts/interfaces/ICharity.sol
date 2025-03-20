@@ -2,9 +2,5 @@
 pragma solidity >=0.8.0;
 
 interface ICharity {
-    function withdrawToOrganization(
-        address token,
-        uint256 amount,
-        address[] memory organization
-    ) external;
+    function withdrawToOrganization(address token, uint256 amount) external;
 }

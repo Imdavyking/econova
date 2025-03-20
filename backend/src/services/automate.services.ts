@@ -108,11 +108,10 @@ const decodeExecPayload = (
 ): {
   token: string;
   amount: string;
-  organizations: any[];
 } | null => {
   try {
     const abi = [
-      "function withdrawToOrganization(address token, uint256 amount, address[] organizations)",
+      "function withdrawToOrganization(address token, uint256 amount)",
     ];
 
     const iface = new ethers.Interface(abi);
@@ -122,9 +121,9 @@ const decodeExecPayload = (
       data
     );
 
-    const [token, amount, organizations] = decodedData;
+    const [token, amount] = decodedData;
 
-    return { token, amount: amount.toString(), organizations };
+    return { token, amount: amount.toString() };
   } catch (error: any) {
     logger.error(`Failed to decode execPayload: ${error.message}`);
     return null;
@@ -192,7 +191,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
       return;
     }
 
-    const { token, amount, organizations } = decodeExecPayload(execPayload)!;
+    const { token, amount } = decodeExecPayload(execPayload)!;
 
     const { amount: tokenAmount, name } = await getTokenDetails(
       token,
@@ -214,8 +213,7 @@ async function handleCharityWithdrawal(index: number, charityAddress: string) {
     io.emit("charity:update", {
       index,
       shouldToast: true,
-      message: `Withdrawing ${tokenAmount} ${name} to ${organizations.length} 
-        organization${organizations.length > 1 ? "s" : ""}.
+      message: `Withdrawing ${tokenAmount} ${name} to 
         Transaction: ${API_BROWSER_URL}/tx/${tx.hash}.
         Charity Address: ${API_BROWSER_URL}/address/${charityAddress}.`,
     });

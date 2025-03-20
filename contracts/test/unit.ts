@@ -611,9 +611,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           value: ethAmountToDonate,
                       })
 
-                      await charityDeployer.withdrawToOrganization(ETH_ADDRESS, DOLLAR_AMOUNT, [
-                          otherAccount,
-                      ])
+                      await charityDeployer.withdrawToOrganization(ETH_ADDRESS, DOLLAR_AMOUNT)
                   })
               })
 
@@ -717,9 +715,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       })
 
                       await expect(
-                          charityDeployer.withdrawToOrganization(ETH_ADDRESS, ethAmountToDonate, [
-                              otherAccount,
-                          ])
+                          charityDeployer.withdrawToOrganization(ETH_ADDRESS, ethAmountToDonate)
                       )
                           .to.emit(charityDeployer, "DonationWithdrawn")
                           .withArgs(otherAccount, ETH_ADDRESS, ethAmountToDonate)
@@ -768,9 +764,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       })
 
                       await expect(
-                          charityDeployer.withdrawToOrganization(ETH_ADDRESS, ethAmountToDonate, [
-                              otherAccount,
-                          ])
+                          charityDeployer.withdrawToOrganization(ETH_ADDRESS, ethAmountToDonate)
                       ).to.changeEtherBalances(
                           [charityDeployer, otherAccount],
                           ["-271210873559917723", "271210873559917723"]
