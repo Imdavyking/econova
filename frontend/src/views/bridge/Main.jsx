@@ -11,7 +11,7 @@ import {
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
-import { APP_NAME, CHAIN_ID } from "../../utils/constants";
+import { APP_NAME, CHAIN_ID, CROSS_CHAIN_ID } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
 import { bridgeCoin, getBridgeFee } from "../../services/debridge.services";

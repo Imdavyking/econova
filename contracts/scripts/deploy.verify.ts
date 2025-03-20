@@ -213,6 +213,8 @@ async function main() {
 
         await verify(crossChainTokenAddress, [crossChainLzInfo.endpointV2, wallet.address])
 
+        updateEnv(crossChainLzInfo.chainId.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
+
         await setLayerZeroDVN(
             {
                 eid: layerZeroChainInfo.endpointIdV2,

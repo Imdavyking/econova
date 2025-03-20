@@ -28,6 +28,7 @@ Create a `.env` file in the project root and add the following variables:
   VITE_SERVER_URL=
   VITE_CONTRACT_ADDRESS=
   VITE_CHAIN_ID=
+  VITE_CROSS_CHAIN_ID=
   VITE_CHAIN_NAME=
   VITE_CHAIN_CURRENCY_NAME=
   VITE_CHAIN_SYMBOL=

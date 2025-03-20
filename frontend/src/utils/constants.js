@@ -4,6 +4,7 @@ export const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 export const SERVER_URL_TWITTER_LOGIN = `${SERVER_URL}/twitter/login`;
 export const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 export const CHAIN_ID = formatChainId(import.meta.env.VITE_CHAIN_ID);
+export const CROSS_CHAIN_ID = formatChainId(import.meta.env.VITE_CROSS_CHAIN_ID);
 export const CHAIN_NAME = import.meta.env.VITE_CHAIN_NAME;
 export const CHAIN_CURRENCY_NAME = import.meta.env.VITE_CHAIN_CURRENCY_NAME;
 export const CHAIN_SYMBOL = import.meta.env.VITE_CHAIN_SYMBOL;
