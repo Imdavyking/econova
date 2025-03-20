@@ -48,7 +48,19 @@ export const Tweet = ({ tweet }) => {
           },
         }
       );
+
+      if (!response.ok) {
+        throw new Error("Error checking points");
+      }
       const data = await response.json();
+
+      if (data.retweetsError) {
+        throw new Error(`RETWEET INFO ERROR: ${data.retweetsError}`);
+      }
+
+      if (data.likeError) {
+        throw new Error(`LIKE INFO ERROR: ${data.likeError}`);
+      }
 
       setResults(data);
       saveToLocalStorage(tweetId.toString(), data);
