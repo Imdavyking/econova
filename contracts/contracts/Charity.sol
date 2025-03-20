@@ -16,7 +16,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
     address public automationBot = address(0);
 
     /** constants */
-    address public constant ETH_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
+    address public constant NATIVE_TOKEN = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
     /**
      * mappings
@@ -194,7 +194,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
                 true,
                 abi.encodeCall(
                     ICharity.withdrawToOrganization,
-                    (ETH_ADDRESS, ethBalance, organizations)
+                    (NATIVE_TOKEN, ethBalance, organizations)
                 )
             );
         }
@@ -221,7 +221,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
      */
     function balanceOf(address token) external view returns (uint256) {
         return
-            token == ETH_ADDRESS ? address(this).balance : IERC20(token).balanceOf(address(this));
+            token == NATIVE_TOKEN ? address(this).balance : IERC20(token).balanceOf(address(this));
     }
 
     /**
@@ -238,7 +238,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
         }
-        if (token != ETH_ADDRESS && !whitelistedTokens[token]) {
+        if (token != NATIVE_TOKEN && !whitelistedTokens[token]) {
             revert Charity__TokenNotWhitelisted();
         }
         uint256 orgCount = orgs.length;
@@ -252,7 +252,7 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
             }
         }
         for (uint256 i = 0; i < orgCount; i++) {
-            if (token == ETH_ADDRESS) {
+            if (token == NATIVE_TOKEN) {
                 (bool success, ) = orgs[i].call{value: share}("");
                 if (!success) {
                     revert Charity__SendingFailed();

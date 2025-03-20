@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { fetchMarketDataCoingecko } from "../../services/coin.gecko.services";
-import {
-  getTokenBalance,
-} from "../../services/blockchain.services";
+import { getTokenBalance } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
-import { APP_NAME, CHAIN_ID, ETH_ADDRESS } from "../../utils/constants";
+import { APP_NAME, CHAIN_ID, NATIVE_TOKEN } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import logoUrl from "@/assets/images/logo.png";
@@ -33,7 +31,7 @@ export default function InvestmentAI() {
       coingeckoId: "sonic-3",
       name: "Sonic Token",
       symbol: "SONIC",
-      address: ETH_ADDRESS,
+      address: NATIVE_TOKEN,
     },
     {
       coingeckoId: "usd-coin",

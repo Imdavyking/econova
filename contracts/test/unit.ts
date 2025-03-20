@@ -10,7 +10,7 @@ import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
 import { HexString } from "@openzeppelin/merkle-tree/dist/bytes"
 import { localHardhat } from "../utils/localhardhat.chainid"
 import {
-    ETH_ADDRESS,
+    NATIVE_TOKEN,
     MIN_DELAY,
     PROPOSAL_DESCRIPTION,
     PROPOSAL_THRESHOLD,
@@ -617,15 +617,20 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
 
-                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
-                      })
+                      await ecoNDeployer.donateToFoundation(
+                          category,
+                          NATIVE_TOKEN,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
 
                       await proposeAndExecute({
                           charityDeployer,
@@ -635,7 +640,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           owner,
                       })
 
-                      await charityDeployer.withdrawToOrganization(ETH_ADDRESS, DOLLAR_AMOUNT, [
+                      await charityDeployer.withdrawToOrganization(NATIVE_TOKEN, DOLLAR_AMOUNT, [
                           testCharityOrganization,
                       ])
                   })
@@ -678,19 +683,19 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
 
                       await expect(
-                          ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                          ecoNDeployer.donateToFoundation(category, NATIVE_TOKEN, DOLLAR_AMOUNT, {
                               value: ethAmountToDonate,
                           })
                       )
                           .to.emit(ecoNDeployer, "Donated")
-                          .withArgs(owner, ETH_ADDRESS, "271210873559917723", category)
+                          .withArgs(owner, NATIVE_TOKEN, "271210873559917723", category)
                   })
 
                   it("Should emit an BMIRecorded event on bmi verify", async function () {
@@ -736,15 +741,20 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
 
-                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
-                      })
+                      await ecoNDeployer.donateToFoundation(
+                          category,
+                          NATIVE_TOKEN,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
 
                       await proposeAndExecute({
                           charityDeployer,
@@ -755,12 +765,12 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       })
 
                       await expect(
-                          charityDeployer.withdrawToOrganization(ETH_ADDRESS, ethAmountToDonate, [
+                          charityDeployer.withdrawToOrganization(NATIVE_TOKEN, ethAmountToDonate, [
                               testCharityOrganization,
                           ])
                       )
                           .to.emit(charityDeployer, "DonationWithdrawn")
-                          .withArgs(testCharityOrganization, ETH_ADDRESS, ethAmountToDonate)
+                          .withArgs(testCharityOrganization, NATIVE_TOKEN, ethAmountToDonate)
                   })
               })
 
@@ -773,13 +783,13 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
                       await expect(
-                          ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
+                          ecoNDeployer.donateToFoundation(category, NATIVE_TOKEN, DOLLAR_AMOUNT, {
                               value: ethAmountToDonate,
                           })
                       ).to.changeEtherBalances(
@@ -800,15 +810,20 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       const DOLLAR_AMOUNT = 10
 
                       const ethAmountToDonate = await ecoNDeployer.getUsdToTokenPrice(
-                          ETH_ADDRESS,
+                          NATIVE_TOKEN,
                           DOLLAR_AMOUNT
                       )
 
                       const category = await charityDeployer.charityCategory()
 
-                      await ecoNDeployer.donateToFoundation(category, ETH_ADDRESS, DOLLAR_AMOUNT, {
-                          value: ethAmountToDonate,
-                      })
+                      await ecoNDeployer.donateToFoundation(
+                          category,
+                          NATIVE_TOKEN,
+                          DOLLAR_AMOUNT,
+                          {
+                              value: ethAmountToDonate,
+                          }
+                      )
 
                       await proposeAndExecute({
                           charityDeployer,
@@ -819,7 +834,7 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                       })
 
                       await expect(
-                          charityDeployer.withdrawToOrganization(ETH_ADDRESS, ethAmountToDonate, [
+                          charityDeployer.withdrawToOrganization(NATIVE_TOKEN, ethAmountToDonate, [
                               testCharityOrganization,
                           ])
                       ).to.changeEtherBalances(

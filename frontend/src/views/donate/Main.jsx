@@ -11,7 +11,7 @@ import {
   donateToFoundationService,
   rethrowFailedResponse,
 } from "../../services/blockchain.services";
-import { APP_NAME, ETH_ADDRESS } from "../../utils/constants";
+import { APP_NAME, NATIVE_TOKEN } from "../../utils/constants";
 import { charityCategories } from "../../utils/charity.categories";
 import { Link } from "react-router-dom";
 function Main() {
@@ -36,12 +36,12 @@ function Main() {
     try {
       setIsDonating(true);
       console.log({
-        tokenAddress: ETH_ADDRESS,
+        tokenAddress: NATIVE_TOKEN,
         amountInUsd,
         category: selectedCategory, // Include category in the donation request
       });
       const response = await donateToFoundationService({
-        tokenAddress: ETH_ADDRESS,
+        tokenAddress: NATIVE_TOKEN,
         amountInUsd,
         category: selectedCategory, // Include category in the donation request
       });

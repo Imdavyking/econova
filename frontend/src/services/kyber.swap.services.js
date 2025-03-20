@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { getERC20Contract, getSigner } from "./blockchain.services";
-import { ETH_ADDRESS } from "../utils/constants";
+import { NATIVE_TOKEN } from "../utils/constants";
 
 export const KYBERSWAP_AGGREGATOR_API_URL =
   "https://aggregator-api.kyberswap.com/sonic/api/v1";

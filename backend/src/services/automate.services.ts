@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import logger from "../config/logger";
 import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
-import { ETH_ADDRESS, MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
+import { NATIVE_TOKEN, MULTICALL3_CONTRACT_ADDRESS } from "../utils/constants";
 import io from "../utils/create.websocket";
 
 dotenv.config();
@@ -135,7 +135,7 @@ const getTokenDetails = async (
   token: string,
   rawAmount: bigint
 ): Promise<{ amount: string; name: string }> => {
-  if (token === ETH_ADDRESS) {
+  if (token === NATIVE_TOKEN) {
     return {
       amount: ethers.formatEther(rawAmount),
       name: "ETH",

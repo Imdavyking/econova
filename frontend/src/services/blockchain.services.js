@@ -19,7 +19,7 @@ import {
   CHAIN_SYMBOL,
   CONTRACT_ADDRESS,
   ECONOVA_GOVERNOR_CONTRACT_ADDRESS,
-  ETH_ADDRESS,
+  NATIVE_TOKEN,
   FAILED_KEY,
   FIAT_DECIMALS,
   MULTICALL3_CONTRACT_ADDRESS,
@@ -746,7 +746,7 @@ export const getTokenBalance = async (tokenAddress, switchChainId) => {
 
     const address = await signer.getAddress();
 
-    if (tokenAddress == ethers.ZeroAddress || tokenAddress == ETH_ADDRESS) {
+    if (tokenAddress == ethers.ZeroAddress || tokenAddress == NATIVE_TOKEN) {
       const balance = await signer.provider.getBalance(address);
       return { balance, decimals: 18 };
     }
@@ -783,7 +783,7 @@ export const getPythPriceFeed = async () => {
   try {
     const manager = await getContract();
 
-    const [price, exp] = await manager.getPricePyth();
+    const [price, exp] = await manager.getPricePyth(NATIVE_TOKEN);
     return [price, exp];
   } catch (error) {
     const _ = parseContractError(error, managerAbiInterface);
