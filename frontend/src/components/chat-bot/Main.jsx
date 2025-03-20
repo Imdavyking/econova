@@ -177,7 +177,6 @@ const ChatWithAdminBot = () => {
                     } rounded-lg py-2 px-4 inline-block max-w-full break-words overflow-hidden`}
                   >
                     <Markdown
-                      className="whitespace-pre-wrap"
                       remarkPlugins={[remarkGfm]}
                       components={{
                         p: ({ node, ...props }) => <span {...props} />,
