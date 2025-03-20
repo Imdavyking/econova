@@ -192,7 +192,10 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
         if (ethBalance > 0) {
             return (
                 true,
-                abi.encodeCall(ICharity.withdrawToOrganization, (ETH_ADDRESS, ethBalance))
+                abi.encodeCall(
+                    ICharity.withdrawToOrganization,
+                    (ETH_ADDRESS, ethBalance, organizations)
+                )
             );
         }
 
@@ -201,7 +204,10 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
             if (tokenBalance > 0) {
                 return (
                     true,
-                    abi.encodeCall(ICharity.withdrawToOrganization, (tokens[i], tokenBalance))
+                    abi.encodeCall(
+                        ICharity.withdrawToOrganization,
+                        (tokens[i], tokenBalance, organizations)
+                    )
                 );
             }
         }
@@ -222,10 +228,12 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
      * @dev Withdraw the donation from the contract.
      * @param token The address of the token to withdraw.
      * @param amount The amount to withdraw.
+     * @param orgs The list of organizations to withdraw to.
      */
     function withdrawToOrganization(
         address token,
-        uint256 amount
+        uint256 amount,
+        address[] memory orgs
     ) external onlyAutomationBot nonReentrant {
         if (!canWithdrawFunds) {
             revert Charity__WithdrawalDisabled();
@@ -236,8 +244,11 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
         }
         uint256 share = amount / orgCount;
         for (uint256 i = 0; i < orgCount; i++) {
+            if (!organizationExists[orgs[i]]) {
+                revert Charity__OrganizationNotFound();
+            }
             if (token == ETH_ADDRESS) {
-                (bool success, ) = organizations[i].call{value: share}("");
+                (bool success, ) = orgs[i].call{value: share}("");
                 if (!success) {
                     revert Charity__SendingFailed();
                 }
@@ -245,9 +256,9 @@ contract Charity is Ownable, ReentrancyGuard, IGelatoChecker, ICharity, ICharity
                 if (!whitelistedTokens[token]) {
                     revert Charity__TokenNotWhitelisted();
                 }
-                IERC20(token).safeTransfer(organizations[i], share);
+                IERC20(token).safeTransfer(orgs[i], share);
             }
-            emit DonationWithdrawn(organizations[i], token, share);
+            emit DonationWithdrawn(orgs[i], token, share);
         }
     }
 
