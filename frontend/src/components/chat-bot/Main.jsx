@@ -174,9 +174,10 @@ const ChatWithAdminBot = () => {
                       message.sender === "user"
                         ? "bg-blue-500 text-white"
                         : "bg-gray-200 text-gray-700"
-                    } rounded-lg py-2 px-4 inline-block`}
+                    } rounded-lg py-2 px-4 inline-block max-w-full break-words overflow-hidden`}
                   >
                     <Markdown
+                      className="whitespace-pre-wrap"
                       remarkPlugins={[remarkGfm]}
                       components={{
                         p: ({ node, ...props }) => <span {...props} />,
