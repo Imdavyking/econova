@@ -204,4 +204,4 @@ For detailed guides, visit our **[documentation](https://econovadocs.vercel.app/
 - **Docs:** [Read the Docs](https://econovadocs.vercel.app/)
 - **GitHub:** [EcoNova](https://github.com/Imdavyking/econova/)
 
-🚀 **Join us in revolutionizing decentralized charity!**
+🚀 **Join us in revolutionizing DeFiAi!**
