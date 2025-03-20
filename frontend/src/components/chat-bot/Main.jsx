@@ -176,12 +176,7 @@ const ChatWithAdminBot = () => {
                         : "bg-gray-200 text-gray-700"
                     } rounded-lg py-2 px-4 inline-block max-w-full break-words overflow-hidden`}
                   >
-                    <Markdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        p: ({ node, ...props }) => <span {...props} />,
-                      }}
-                    >
+                    <Markdown remarkPlugins={[remarkGfm]}>
                       {message.text}
                     </Markdown>
                   </div>
