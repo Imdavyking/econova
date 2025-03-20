@@ -31,7 +31,7 @@ import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { getVerifiedSourceCode } from "./source.code.services";
-import Kyberswap, { KYBERSWAP_TOKENS_INFO } from "./kyber.swap.services";
+import Kyberswap from "./kyber.swap.services";
 
 const governorAbiInterface = new ethers.Interface(governorAbi);
 const nftCourseAbiInterface = new ethers.Interface(nftCourseAbi);
