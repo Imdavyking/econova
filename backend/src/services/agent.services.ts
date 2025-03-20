@@ -10,7 +10,10 @@ import dotenv from "dotenv";
 import { charityCategories } from "../utils/charity.categories";
 import { fetchAlloraTopics } from "./allora.services";
 import { environment } from "../utils/config";
-import { WRAPPED_SONIC_CONTRACT_ADDRESS } from "../utils/constants";
+import {
+  WRAPPED_SONIC_CONTRACT_ADDRESS,
+  KYBERSWAP_TOKENS_INFO,
+} from "../utils/constants";
 dotenv.config();
 const openAIApiKey = environment.OPENAI_API_KEY!;
 const NATIVE_TOKEN = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
@@ -39,6 +42,15 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
       schema: z.object({
         topicId: z.number().nullable(),
         topicName: z.string().nullable(),
+      }),
+    }),
+    swapToken: tool(() => undefined, {
+      name: "swapToken",
+      description: "Swap tokens on a decentralized exchange.",
+      schema: z.object({
+        sourceToken: tokenSchema.describe("The token to swap from"),
+        destToken: tokenSchema.describe("The token to swap to"),
+        sourceAmount: z.number().describe("The amount to swap"),
       }),
     }),
     bridge: tool(() => undefined, {
@@ -144,6 +156,9 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const systemPrompt = new SystemMessage(
     `You are an assistant that converts user prompts into structured formats.
+    ============ TOKEN SWAPS ============
+    ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
+    ============ End of Token Swaps ============
     ============ ALLORA NETWORK ============
     ======== Topics on Allora Network ========
     ${alloraTopics}

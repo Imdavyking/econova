@@ -31,6 +31,7 @@ import { charityCategories } from "../utils/charity.categories";
 import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { getVerifiedSourceCode } from "./source.code.services";
+import Kyberswap from "./kyber.swap.services";
 
 const governorAbiInterface = new ethers.Interface(governorAbi);
 const nftCourseAbiInterface = new ethers.Interface(nftCourseAbi);
@@ -525,6 +526,19 @@ export const wrapSonicService = async ({ amount }) => {
   }
 };
 
+export const swapTokenService = async ({}) => {
+  const kyberswap = new Kyberswap(CHAIN_ID);
+  try {
+    await kyberswap.swap({
+      sourceToken,
+      destToken,
+      sourceAmount,
+    });
+    return `swapped ${sourceAmount} ${sourceToken} to ${destToken}`;
+  } catch (error) {
+    return `${FAILED_KEY} to swap tokens: ${error.message}`;
+  }
+};
 export const unwrapSonicService = async ({ amount }) => {
   try {
     const contract = await getIWSonicContract();

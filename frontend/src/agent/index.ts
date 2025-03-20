@@ -15,6 +15,7 @@ import {
   wrapSonicService,
   unwrapSonicService,
   getTransactionInfo,
+  swapTokenService,
 } from "../services/blockchain.services";
 import { AiResponseType, SolveTaskResult, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
@@ -38,6 +39,7 @@ export class AIAgent {
       sendERC20Token: sendERC20TokenService,
       wrapSonic: wrapSonicService,
       unwrapSonic: unwrapSonicService,
+      swapTokens: swapTokenService,
     };
     this.toolsInfo = {
       bridge:
@@ -55,6 +57,7 @@ export class AIAgent {
         "Example: Send 10 wSonic to 0x1CE05Bf474802D49a77b3829c566a9AABbfb8C6d",
       wrapSonic: "Example: Wrap 10 SONIC",
       unwrapSonic: "Example: Unwrap 10 wrappedSonic",
+      swapTokens: "Example: Swap 10 SONIC for USDC",
     };
   }
 
