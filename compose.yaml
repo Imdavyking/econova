@@ -28,7 +28,6 @@ services:
       - LIGHTHOUSE_API_KEY
       - RPC_URL
       - CONTRACT_ADDRESS
-      - WRAPPED_SONIC_CONTRACT_ADDRESS
       - ALLORA_API_KEY
       - API_SCAN_VERIFIER_KEY
       - MONGO_URI
@@ -144,8 +143,6 @@ secrets:
     file: ./backend/secrets/RPC_URL
   CONTRACT_ADDRESS:
     file: ./backend/secrets/CONTRACT_ADDRESS
-  WRAPPED_SONIC_CONTRACT_ADDRESS:
-    file: ./backend/secrets/WRAPPED_SONIC_CONTRACT_ADDRESS
   ALLORA_API_KEY:
     file: ./backend/secrets/ALLORA_API_KEY
   API_SCAN_VERIFIER_KEY:

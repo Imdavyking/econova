@@ -8,8 +8,9 @@ import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import dotenv from "dotenv";
 import { charityCategories } from "../utils/charity.categories";
-import { fetchAlloraTopics, fetchInferenceByTopicID } from "./allora.services";
+import { fetchAlloraTopics } from "./allora.services";
 import { environment } from "../utils/config";
+import { WRAPPED_SONIC_CONTRACT_ADDRESS } from "../utils/constants";
 dotenv.config();
 const openAIApiKey = environment.OPENAI_API_KEY!;
 const NATIVE_TOKEN = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
@@ -148,9 +149,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     ${alloraTopics}
     ======== End of Allora Network Topics ========
     For sending:
-    WRAPPED_SONIC_CONTRACT_ADDRESS: ${
-      environment.WRAPPED_SONIC_CONTRACT_ADDRESS
-    }
+    WRAPPED_SONIC_CONTRACT_ADDRESS: ${WRAPPED_SONIC_CONTRACT_ADDRESS}
     if you don't know the token address, ask the user to provide it.
     SONIC_CHAIN_ID: 146
     BSC_CHAIN_ID: 56
