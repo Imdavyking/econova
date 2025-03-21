@@ -55,7 +55,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     }),
     walletAddress: tool(() => undefined, {
       name: "walletAddress",
-      description: "Get the balance of a token in a wallet.",
+      description: "Get the wallet address of the user.",
       schema: z.object({}),
     }),
     swapToken: tool(() => undefined, {
