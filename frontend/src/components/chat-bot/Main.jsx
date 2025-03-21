@@ -45,8 +45,9 @@ const ChatWithAdminBot = () => {
 
   const handleSend = async () => {
     if (userInput.trim() !== "") {
+      const separator = " | --- | "; // Unique divider
       const currentMessage = lastUserInput
-        ? `${lastUserInput} ${userInput}`
+        ? `${lastUserInput}${separator}${userInput}`
         : userInput;
 
       setMessages((prevMessages) => [
