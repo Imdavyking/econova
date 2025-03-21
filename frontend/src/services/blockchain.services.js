@@ -795,7 +795,7 @@ export const getTokenBalance = async ({
       token.decimals(),
       token.name(),
     ]);
-    return { balance, decimals };
+    return { balance, decimals, name };
   } catch (error) {
     console.log(error.message);
     throw error;
