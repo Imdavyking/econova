@@ -808,7 +808,7 @@ export const getTokenBalanceService = async ({
 }) => {
   let tokenName;
   try {
-    const { balance, decimals, name } = getTokenBalance({
+    const { balance, decimals, name } = await getTokenBalance({
       tokenAddress,
       switchChainId,
     });
