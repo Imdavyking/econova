@@ -154,8 +154,11 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const alloraTopics = await fetchAlloraTopics();
 
+  const separator = " | --- | ";
+
   const systemPrompt = new SystemMessage(
     `You are an assistant that converts user prompts into structured formats.
+    Respond primarily to the last message after the separator ('${separator}'). Use the previous message only if additional context is needed for a meaningful response.
     ============ TOKEN SWAPS ============
     ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
     ============ End of Token Swaps ============
