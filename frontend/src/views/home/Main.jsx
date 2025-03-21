@@ -1,8 +1,6 @@
 /** @format */
 
 import React, { useEffect, useState } from "react";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
-import ChatBot from "@/components/chat-bot/Main";
 import { Link } from "react-router-dom";
 import Footer from "@/base-components/footer";
 import logoUrl from "@/assets/images/logo.png";
@@ -54,9 +52,6 @@ const Home = () => {
   return (
     <>
       <div>
-        <DarkModeSwitcher />
-        <ChatBot />
-
         <div className="w-full px-4 md:px-8 lg:px-16">
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-center w-full py-5">

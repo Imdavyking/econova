@@ -4,7 +4,7 @@ import { getTokenBalance } from "../../services/blockchain.services";
 import { toast } from "react-toastify";
 import { APP_NAME, CHAIN_ID, NATIVE_TOKEN } from "../../utils/constants";
 import { FaSpinner } from "react-icons/fa";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import logoUrl from "@/assets/images/logo.png";
 import Kyberswap, {
   KYBERSWAP_TOKENS_INFO,
@@ -209,7 +209,6 @@ export default function InvestmentAI() {
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />

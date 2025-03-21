@@ -11,7 +11,6 @@ import classnames from "classnames";
 import TopBar from "@/components/top-bar/Main";
 import MobileMenu from "@/components/mobile-menu/Main";
 import MainColorSwitcher from "@/components/main-color-switcher/Main";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { APP_NAME } from "../../utils/constants";
 
 function Main() {
@@ -28,7 +27,6 @@ function Main() {
 
   return (
     <div className="py-2">
-      <DarkModeSwitcher />
       <MainColorSwitcher />
       <MobileMenu />
       <div className="flex mt-[4.7rem] md:mt-0">

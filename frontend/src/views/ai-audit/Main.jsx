@@ -1,5 +1,4 @@
 import { useState } from "react";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { FaSpinner } from "react-icons/fa";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
@@ -156,7 +155,6 @@ export default function AiAudit() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto flex flex-col items-center">
-      <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 ">
         <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />

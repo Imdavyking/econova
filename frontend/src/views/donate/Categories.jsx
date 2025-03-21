@@ -4,7 +4,7 @@ import { APP_NAME } from "../../utils/constants";
 import CharityCategory from "./Category";
 import logoUrl from "@/assets/images/logo.png";
 import { FaSpinner } from "react-icons/fa";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import { getAllCharities } from "../../services/blockchain.services";
 import { Link } from "react-router-dom";
 export default function CharityCategories() {
@@ -35,7 +35,6 @@ export default function CharityCategories() {
         </Link>
       </h2>
       <div className="max-w-2xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
-        <DarkModeSwitcher />
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Charity Categories
         </h2>

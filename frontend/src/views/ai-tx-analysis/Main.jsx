@@ -3,7 +3,7 @@ import { FaSpinner } from "react-icons/fa";
 import { getTransactionInfo } from "../../services/blockchain.services";
 import { callLLMTxHashApi } from "../../services/openai.services";
 import { APP_NAME, CHAIN_SYMBOL } from "../../utils/constants";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import { toast } from "react-toastify";
 import logoUrl from "@/assets/images/logo.png";
 import { Link } from "react-router-dom";
@@ -50,7 +50,6 @@ export default function TransactionAudit() {
 
   return (
     <div className="min-h-screen flex items-center justify-center flex-col text-white p-6">
-      <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />

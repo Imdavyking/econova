@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import { FaSpinner } from "react-icons/fa";
 import charityAbi from "@/assets/json/charity.json";
 import { charityCategories } from "../../utils/charity.categories";
@@ -156,7 +156,6 @@ export default function DAOProposalForm() {
 
   return (
     <div className="flex justify-center items-center min-h-screen p-4 flex-col">
-      <DarkModeSwitcher />
       <Link to="/" className="-intro-x flex items-center pt-5">
         <img alt="EcoNova" className="w-10" src={logoUrl} />
         <span className="text-white text-lg ml-3">

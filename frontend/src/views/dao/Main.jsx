@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import Proposal from "./proposal";
@@ -102,8 +102,6 @@ export default function DAO() {
 
   return (
     <div className="p-6 min-h-screen ">
-      <DarkModeSwitcher />
-
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
           <Link to="/" className="flex items-center space-x-3">

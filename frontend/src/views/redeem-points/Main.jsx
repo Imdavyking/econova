@@ -1,6 +1,5 @@
 /** @format */
 
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { Link } from "react-router-dom";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import logoUrl from "@/assets/images/logo.png";
@@ -36,7 +35,6 @@ function Main() {
       })
       .catch((err) => toast.error(err));
   }, []);
-
 
   const [points, setPoints] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("");
@@ -74,7 +72,6 @@ function Main() {
   return (
     <>
       <div>
-        <DarkModeSwitcher />
         <div className="container sm:px-10">
           <div className="block xl:grid grid-cols-2 gap-4">
             {/* BEGIN: Register Info */}

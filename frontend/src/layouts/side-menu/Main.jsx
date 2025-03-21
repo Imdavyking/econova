@@ -10,7 +10,6 @@ import logoUrl from "@/assets/images/logo.png";
 import classnames from "classnames";
 import TopBar from "@/components/top-bar/Main";
 import MobileMenu from "@/components/mobile-menu/Main";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import SideMenuTooltip from "@/components/side-menu-tooltip/Main";
 import { APP_NAME } from "../../utils/constants";
 
@@ -29,8 +28,6 @@ function Main() {
 
   return (
     <div className="py-2">
-      <DarkModeSwitcher />
-      {/* <MainColorSwitcher /> */}
       <MobileMenu />
       <div className="flex mt-[4.7rem] md:mt-0">
         {/* BEGIN: Side Menu */}

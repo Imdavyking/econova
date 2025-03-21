@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import { saveHealthyBMIProofService } from "../../services/blockchain.services";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -42,7 +42,6 @@ const AIHealth = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
-      <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />

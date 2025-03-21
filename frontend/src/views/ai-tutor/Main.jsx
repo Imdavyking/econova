@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import { APP_NAME } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
 import data from "@/assets/json/ai_tutor.json";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import ChatBot from "@/components/chat-bot/Main";
 const levels = ["Beginner", "Intermediate", "Advanced"];
 
 const SonicBlockchainTutor = () => {
@@ -49,8 +47,6 @@ const SonicBlockchainTutor = () => {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <ChatBot />
-      <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />

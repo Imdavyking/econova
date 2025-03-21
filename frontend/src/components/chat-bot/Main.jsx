@@ -95,7 +95,7 @@ const ChatWithAdminBot = () => {
   return (
     <div>
       {/* Chatbot Button */}
-      <div className="fixed bottom-24 right-4 mb-4 mr-10">
+      <div className="fixed bottom-24 right-4 mb-4 mr-10 z-50">
         <button
           onClick={toggleChatbox}
           className="bg-[#28334e] text-white py-2 px-4 rounded-full hover:bg-[#1f2937] transition duration-300 flex items-center h-12 cursor-pointer"

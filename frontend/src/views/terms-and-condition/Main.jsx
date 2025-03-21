@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { APP_NAME } from "../../utils/constants";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import { Link } from "react-router-dom";
 export default function TermsAndConditions() {
   useEffect(() => {
@@ -9,7 +9,6 @@ export default function TermsAndConditions() {
 
   return (
     <div className="min-h-screen  text-gray-200 p-6 flex items-center justify-center">
-      <DarkModeSwitcher />
       <div className="w-full max-w-4xl bg-gray-800 p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-center mb-6">
           Terms and Conditions

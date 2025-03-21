@@ -8,7 +8,7 @@ import {
   rethrowFailedResponse,
   sendOFTTokens,
 } from "../../services/blockchain.services";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { toast } from "react-toastify";
 import { APP_NAME, CHAIN_ID, CROSS_CHAIN_ID } from "../../utils/constants";
@@ -234,8 +234,6 @@ export default function Bridge() {
       </Link>
 
       <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-8 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
-        <DarkModeSwitcher />
-
         <div className="space-y-4">
           <select
             className="intro-x form-control py-3 px-4 block w-full mb-3"

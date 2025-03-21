@@ -1,6 +1,5 @@
 /** @format */
 
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import logoUrl from "@/assets/images/logo.png";
 import donateHeart from "@/assets/images/donate-heart.svg";
@@ -61,7 +60,6 @@ function Main() {
   return (
     <>
       <div>
-        <DarkModeSwitcher />
         <div className="container sm:px-10">
           <div className="block xl:grid grid-cols-2 gap-4">
             <div className="hidden xl:flex flex-col min-h-screen">

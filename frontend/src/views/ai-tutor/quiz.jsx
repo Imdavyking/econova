@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+
 import { useParams } from "react-router-dom";
 import { APP_NAME, SERVER_URL } from "../../utils/constants";
 import logoUrl from "@/assets/images/logo.png";
@@ -170,7 +170,6 @@ const QuizPage = () => {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <DarkModeSwitcher />
       <h2 className="text-3xl font-bold text-white mb-4 flex flex-col items-center">
         <Link to="/" className="flex items-center space-x-3">
           <img alt={APP_NAME} className="w-10" src={logoUrl} />

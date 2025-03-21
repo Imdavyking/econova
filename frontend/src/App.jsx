@@ -7,7 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { createContext, useContext, useEffect } from "react";
 import { APP_NAME, CHARITY_UPDATE, SERVER_URL } from "./utils/constants";
 import { io } from "socket.io-client";
-
+import ChatBot from "@/components/chat-bot/Main";
+import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 const AppContext = createContext();
 
 function App() {
@@ -36,6 +37,8 @@ function App() {
       <RecoilRoot>
         <ToastContainer />
         <BrowserRouter>
+          <ChatBot />
+          <DarkModeSwitcher />
           <Router />
           <ScrollToTop />
         </BrowserRouter>

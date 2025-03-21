@@ -19,8 +19,6 @@ import {
 import logoUrl from "@/assets/images/logo.png";
 import classnames from "classnames";
 import MobileMenu from "@/components/mobile-menu/Main";
-import MainColorSwitcher from "@/components/main-color-switcher/Main";
-import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 
 function Main() {
   const [searchDropdown, setSearchDropdown] = useState(false);
@@ -37,7 +35,6 @@ function Main() {
 
   return (
     <div className="py-2">
-      <DarkModeSwitcher />
       {/* <MainColorSwitcher /> */}
       <MobileMenu />
       {/* BEGIN: Top Bar */}
