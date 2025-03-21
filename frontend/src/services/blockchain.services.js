@@ -813,11 +813,6 @@ export const getTokenBalanceService = async ({
       switchChainId,
     });
     tokenName = name;
-    console.log({
-      balance,
-      decimals,
-      name,
-    });
     return `${Number(balance) / 10 ** Number(decimals)} ${name}`;
   } catch (error) {
     return `${FAILED_KEY} to get ${tokenName} balance`;
