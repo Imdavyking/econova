@@ -21,7 +21,7 @@ function Main(props) {
   setDarkModeClass();
   return (
     <div
-      className="border-slate-700 dark:border-slate-700 dark-mode-switcher cursor-pointer shadow-md fixed bottom-0 right-4 box border rounded-full w-auto md:w-40 h-12 flex items-center justify-center z-50 mb-10 mr-10"
+      className="border-slate-300 dark:border-slate-700 dark-mode-switcher cursor-pointer shadow-md fixed bottom-0 right-4 box border rounded-full w-auto md:w-40 h-12 flex items-center justify-center z-50 mb-10 mr-10"
       onClick={switchMode}
     >
       <div className="mr-4 text-slate-600 dark:text-slate-200 hidden md:block">
