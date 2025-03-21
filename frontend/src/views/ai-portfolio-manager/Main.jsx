@@ -70,7 +70,10 @@ export default function InvestmentAI() {
               path: `/coins/${asset.coingeckoId}/market_chart`,
               queryParams: { vs_currency: "usd", days: 7 },
             }),
-            getTokenBalance(asset.address, CHAIN_ID),
+            getTokenBalance({
+              tokenAddress: asset.address,
+              switchChainId: CHAIN_ID,
+            }),
           ]);
 
           const price = marketData?.prices?.[0]?.[1] || 0;

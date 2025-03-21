@@ -70,11 +70,12 @@ export default function Bridge() {
 
   useEffect(() => {
     console.log("selectedToken", selectedToken);
-    getTokenBalance(selectedToken.tokenAddress, sourceChain.chainId).then(
-      ({ balance, decimals }) => {
-        setUserBalance(Number(balance) / 10 ** Number(decimals));
-      }
-    );
+    getTokenBalance({
+      tokenAddress: selectedToken.tokenAddress,
+      switchChainId: sourceChain.chainId,
+    }).then(({ balance, decimals }) => {
+      setUserBalance(Number(balance) / 10 ** Number(decimals));
+    });
   }, [selectedToken, loading]);
 
   useEffect(() => {

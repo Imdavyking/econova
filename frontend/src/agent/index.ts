@@ -16,6 +16,8 @@ import {
   unwrapSonicService,
   getTransactionInfo,
   swapTokenService,
+  getWalletAddressService,
+  getTokenBalanceService,
 } from "../services/blockchain.services";
 import { AiResponseType, SolveTaskResult, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
@@ -40,6 +42,8 @@ export class AIAgent {
       wrapSonic: wrapSonicService,
       unwrapSonic: unwrapSonicService,
       swapToken: swapTokenService,
+      getTokenBalance: getTokenBalanceService,
+      getWalletAddress: getWalletAddressService,
     };
     this.toolsInfo = {
       bridge:
@@ -58,6 +62,8 @@ export class AIAgent {
       wrapSonic: "Example: Wrap 10 SONIC",
       unwrapSonic: "Example: Unwrap 10 wrappedSonic",
       swapToken: "Example: Swap 10 SONIC for USDC",
+      getTokenBalance: "Example: Get balance of SONIC",
+      getWalletAddress: "Example: Get wallet address",
     };
   }
 

@@ -44,6 +44,20 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
         topicName: z.string().nullable(),
       }),
     }),
+    getTokenBalance: tool(() => undefined, {
+      name: "getTokenBalance",
+      description: "Get the balance of a token in a wallet.",
+      schema: z.object({
+        tokenAddress: tokenSchema
+          .describe("The token to check")
+          .default(KYBERSWAP_TOKENS_INFO.S.address),
+      }),
+    }),
+    getWalletAddress: tool(() => undefined, {
+      name: "getWalletBalance",
+      description: "Get the balance of a token in a wallet.",
+      schema: z.object({}),
+    }),
     swapToken: tool(() => undefined, {
       name: "swapToken",
       description: "Swap tokens on a decentralized exchange.",

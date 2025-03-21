@@ -763,7 +763,19 @@ export const getProjectTokenDetails = async () => {
   }
 };
 
-export const getTokenBalance = async (tokenAddress, switchChainId) => {
+export const getWalletAddressService = async () => {
+  try {
+    const signer = await getSigner();
+    return signer.address;
+  } catch (error) {
+    return `${FAILED_KEY} to get wallet address`;
+  }
+};
+
+export const getTokenBalance = async ({
+  tokenAddress,
+  switchChainId = CHAIN_ID,
+}) => {
   try {
     const signer = await getSigner();
 
@@ -787,6 +799,18 @@ export const getTokenBalance = async (tokenAddress, switchChainId) => {
     console.log(error.message);
     throw error;
   }
+};
+
+export const getTokenBalanceService = async ({
+  tokenAddress,
+  switchChainId = CHAIN_ID,
+}) => {
+  try {
+    const { balance, decimals } = getTokenBalance({
+      tokenAddress,
+      switchChainId,
+    });
+  } catch (error) {}
 };
 
 export const getPointsService = async () => {
