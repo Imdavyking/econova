@@ -42,8 +42,8 @@ export class AIAgent {
       wrapSonic: wrapSonicService,
       unwrapSonic: unwrapSonicService,
       swapToken: swapTokenService,
-      getTokenBalance: getTokenBalanceService,
-      getWalletAddress: getWalletAddressService,
+      tokenBalance: getTokenBalanceService,
+      walletAddress: getWalletAddressService,
     };
     this.toolsInfo = {
       bridge:
@@ -62,8 +62,8 @@ export class AIAgent {
       wrapSonic: "Example: Wrap 10 SONIC",
       unwrapSonic: "Example: Unwrap 10 wrappedSonic",
       swapToken: "Example: Swap 10 SONIC for USDC",
-      getTokenBalance: "Example: Get balance of SONIC",
-      getWalletAddress: "Example: Get wallet address",
+      tokenBalance: "Example: Get balance of SONIC",
+      walletAddress: "Example: Get wallet address",
     };
   }
 
