@@ -785,14 +785,15 @@ export const getTokenBalance = async ({
 
     if (tokenAddress == ethers.ZeroAddress || tokenAddress == NATIVE_TOKEN) {
       const balance = await signer.provider.getBalance(address);
-      return { balance, decimals: 18 };
+      return { balance, decimals: 18, name: "ETH" };
     }
 
     const token = await getERC20Contract(tokenAddress, switchChainId);
 
-    const [balance, decimals] = await Promise.all([
+    const [balance, decimals, name] = await Promise.all([
       token.balanceOf(address),
       token.decimals(),
+      token.name(),
     ]);
     return { balance, decimals };
   } catch (error) {
@@ -805,12 +806,17 @@ export const getTokenBalanceService = async ({
   tokenAddress,
   switchChainId = CHAIN_ID,
 }) => {
+  let tokenName;
   try {
-    const { balance, decimals } = getTokenBalance({
+    const { balance, decimals, name } = getTokenBalance({
       tokenAddress,
       switchChainId,
     });
-  } catch (error) {}
+    tokenName = name;
+    return Number(balance) / 10 ** Number(decimals);
+  } catch (error) {
+    return `${FAILED_KEY} to get ${tokenName} balance`;
+  }
 };
 
 export const getPointsService = async () => {
