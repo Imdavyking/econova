@@ -785,7 +785,7 @@ export const getTokenBalance = async ({
 
     if (tokenAddress == ethers.ZeroAddress || tokenAddress == NATIVE_TOKEN) {
       const balance = await signer.provider.getBalance(address);
-      return { balance, decimals: 18, name: "ETH" };
+      return { balance, decimals: 18, name: CHAIN_CURRENCY_NAME };
     }
 
     const token = await getERC20Contract(tokenAddress, switchChainId);
