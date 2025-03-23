@@ -50,7 +50,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
       schema: z.object({
         tokenAddress: tokenSchema
           .describe("The token to check")
-          .default(KYBERSWAP_TOKENS_INFO.S.address),
+          // .default(KYBERSWAP_TOKENS_INFO.S.address),
       }),
     }),
     walletAddress: tool(() => undefined, {
