@@ -161,35 +161,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
               const timeLockDeployer = await TimeLock.deploy(MIN_DELAY, [], [], owner.address)
 
-              const BoxV1 = await hre.ethers.getContractFactory("BoxV1")
-              const boxV1Deployer = await BoxV1.deploy()
-              await boxV1Deployer.waitForDeployment()
-
-              const proxy1967 = await hre.ethers.getContractFactory("ERC1967Proxy")
-              const data = boxV1Deployer.interface.encodeFunctionData("initialize")
-              const proxyDeployer = await proxy1967.deploy(boxV1Deployer, data)
-              await proxyDeployer.waitForDeployment()
-
-              const BoxV1Proxy = await hre.ethers.getContractAt("BoxV1", proxyDeployer)
-              await BoxV1Proxy.store(42)
-              const version = await BoxV1Proxy.version()
-              const newOwner = await BoxV1Proxy.owner()
-
-              expect(version).to.equal("V1")
-              expect(newOwner).to.equal(owner.address)
-
-              const BoxV2 = await hre.ethers.getContractFactory("BoxV2")
-              const boxV2Deployer = await BoxV2.deploy()
-              await boxV2Deployer.waitForDeployment()
-              await BoxV1Proxy.upgradeToAndCall(boxV2Deployer, "0x")
-              const version2 = await BoxV1Proxy.version()
-              const owner2 = await BoxV1Proxy.owner()
-              const value = await BoxV1Proxy.retrieve()
-
-              expect(version2).to.equal("V2")
-              expect(owner2).to.equal(owner.address)
-              expect(value).to.equal(42)
-
               const charityDeployer = await CharityDeployer.deploy(
                   charityCategories.Education,
                   owner
@@ -280,6 +251,78 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                   expect(await ecoNovaToken.name()).to.equal("EcoNovaToken")
                   expect(await ecoNovaToken.symbol()).to.equal("ENT")
                   expect(await ecoNovaToken.decimals()).to.equal(18)
+              })
+          })
+
+          describe("CarbonCreditProxy", function () {
+              describe("Validations", function () {
+                  it("Can update carbon credits with proxies", async function () {
+                      const { otherAccount, owner } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
+                      const EcoNovaCarbonCredits = await hre.ethers.getContractFactory(
+                          "EcoNovaCarbonCreditsV1"
+                      )
+                      const EcoNovaCarbonCreditsDeployer = await EcoNovaCarbonCredits.deploy()
+                      await EcoNovaCarbonCreditsDeployer.waitForDeployment()
+
+                      const proxy1967 = await hre.ethers.getContractFactory("ERC1967Proxy")
+
+                      const data =
+                          EcoNovaCarbonCreditsDeployer.interface.encodeFunctionData("initialize")
+                      const proxyDeployer = await proxy1967.deploy(
+                          EcoNovaCarbonCreditsDeployer,
+                          data
+                      )
+                      await proxyDeployer.waitForDeployment()
+
+                      const EcoNovaCarbonCreditsProxy = await hre.ethers.getContractAt(
+                          "EcoNovaCarbonCreditsV1",
+                          proxyDeployer
+                      )
+
+                      const carbonCredits = 100
+                      const projectCarbonCredits = "🌍 Planet-Saver Project 🌿"
+
+                      const issueCreditTx = await EcoNovaCarbonCreditsProxy.issueCredit(
+                          otherAccount,
+                          carbonCredits,
+                          projectCarbonCredits
+                      )
+                      const issueReceipt = await issueCreditTx.wait(1)
+                      const event = issueReceipt!.logs[1] as any
+                      const args = event.args as unknown as any[]
+
+                      const carbonCreditId = args[0]
+
+                      const version = await EcoNovaCarbonCreditsProxy.version()
+                      const newOwner = await EcoNovaCarbonCreditsProxy.owner()
+
+                      expect(version).to.equal("V1")
+                      expect(newOwner).to.equal(owner.address)
+
+                      const EcoNovaCarbonCreditsV2 = await hre.ethers.getContractFactory(
+                          "EcoNovaCarbonCreditsV2"
+                      )
+                      const EcoNovaCarbonCreditsV2Deployer = await EcoNovaCarbonCreditsV2.deploy()
+                      await EcoNovaCarbonCreditsV2Deployer.waitForDeployment()
+                      await EcoNovaCarbonCreditsProxy.upgradeToAndCall(
+                          EcoNovaCarbonCreditsV2Deployer,
+                          "0x"
+                      )
+                      const version2 = await EcoNovaCarbonCreditsProxy.version()
+                      const owner2 = await EcoNovaCarbonCreditsProxy.owner()
+
+                      const creditDetails = await EcoNovaCarbonCreditsProxy.getCreditDetails(
+                          carbonCreditId
+                      )
+
+                      expect(version2).to.equal("V2")
+                      expect(owner2).to.equal(owner.address)
+                      expect(creditDetails[0]).to.equal(carbonCredits)
+                      expect(creditDetails[1]).to.equal(projectCarbonCredits)
+                      expect(creditDetails[2]).to.equal(false)
+                  })
               })
           })
 
