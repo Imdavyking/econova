@@ -48,9 +48,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
       name: "tokenBalance",
       description: "Get the balance of a token in a wallet.",
       schema: z.object({
-        tokenAddress: tokenSchema
-          .describe("The token to check")
-          // .default(KYBERSWAP_TOKENS_INFO.S.address),
+        tokenAddress: tokenSchema.describe("The token to check"),
       }),
     }),
     walletAddress: tool(() => undefined, {
@@ -172,7 +170,8 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const systemPrompt = new SystemMessage(
     `You are an assistant that converts user prompts into structured formats, try to use tool_calls than content always.
-    Strictly only respond to the last message after the last occurrence of the separator ('${separator}'). Completely ignore all previous messages unless the last message is unclear or explicitly requires context from them.    ============ TOKEN SWAPS ============
+    Strictly only respond to the last message after the last occurrence of the separator ('${separator}'), Completely ignore all previous messages unless the last message is unclear or explicitly requires context from them, If there is no separator in the input, take the entire context into account.   
+    ============ TOKEN SWAPS ============
     ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
     ============ End of Token Swaps ============
     ============ ALLORA NETWORK ============
