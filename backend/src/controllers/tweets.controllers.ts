@@ -19,12 +19,7 @@ export const getTweets = async (_: Request, res: Response) => {
 export const getPaginatedTweets = async (req: Request, res: Response) => {
   try {
     const { pageNumber } = req.body;
-    if (!pageNumber) {
-      res.status(400).json({ error: "pageNumber is required" });
-      return;
-    }
-
-    const tweets = await getPageTweets(+pageNumber);
+    const tweets = await getPageTweets(+(pageNumber ?? 1));
     res.json(tweets);
   } catch (error) {
     res
