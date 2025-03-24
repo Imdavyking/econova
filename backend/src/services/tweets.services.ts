@@ -8,6 +8,31 @@ dotenv.config();
 
 export const getAllTweets = async () =>
   await TweetSchemaModel.find().sort({ created_at: -1 });
+
+export const getPaginatedTweets = async (page = 1, limit = 10) => {
+  try {
+    const skip = (page - 1) * limit;
+
+    const tweets = await TweetSchemaModel.find()
+      .sort({ created_at: -1 }) // Sort by latest tweets
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const totalDocs = await TweetSchemaModel.countDocuments();
+
+    return {
+      tweets,
+      totalPages: Math.ceil(totalDocs / limit),
+      currentPage: page,
+      totalTweets: totalDocs,
+    };
+  } catch (error) {
+    console.error("Error fetching paginated tweets:", error);
+    throw error;
+  }
+};
+
 export const getTweetByTweetId = async (id: string) =>
   await TweetSchemaModel.findOne({ id });
 
