@@ -3,11 +3,13 @@ import {
   getTweets,
   getTweetByTweetID,
   getTweetPoints,
+  getPaginatedTweets,
 } from "../controllers/tweets.controllers";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
 import { auth } from "../middlewares/auth";
 const tweetRoutes = express.Router();
 tweetRoutes.get("/", getTweets);
+tweetRoutes.get("/page/:pageNumber", getPaginatedTweets);
 tweetRoutes.get("/points/:tweetId/:tweetSignature", auth, getTweetPoints);
 tweetRoutes.get("/:id", getTweetByTweetID);
 
