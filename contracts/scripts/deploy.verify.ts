@@ -198,9 +198,31 @@ async function main() {
             crossChainLzInfo,
         })
 
+        await setLayerZeroLibs(
+            {
+                layerzeroInfo: crossChainLzInfo!,
+                oappAddress: crossChainTokenAddress,
+            },
+            {
+                layerzeroInfo: layerZeroChainInfo,
+                oappAddress: tokenAddress,
+            }
+        )
+
         console.log(`🔄 Setting peer for cross-chain Endpoint: ${crossChainLzInfo.endpointV2}`)
 
         await hre.changeNetwork(currentNetwork)
+
+        await setLayerZeroLibs(
+            {
+                layerzeroInfo: layerZeroChainInfo,
+                oappAddress: tokenAddress,
+            },
+            {
+                layerzeroInfo: crossChainLzInfo!,
+                oappAddress: crossChainTokenAddress,
+            }
+        )
 
         const ecoNovaToken = await ethers.getContractAt("EcoNovaToken", tokenAddress)
         await ecoNovaToken.setPeer(
@@ -214,17 +236,6 @@ async function main() {
         await verify(crossChainTokenAddress, [crossChainLzInfo.endpointV2, wallet.address])
 
         updateEnv(crossChainLzInfo.chainId.toString()!, "frontend", "VITE_CROSS_CHAIN_ID")
-
-        await setLayerZeroLibs(
-            {
-                layerzeroInfo: layerZeroChainInfo,
-                oappAddress: tokenAddress,
-            },
-            {
-                layerzeroInfo: crossChainLzInfo,
-                oappAddress: crossChainTokenAddress,
-            }
-        )
     }
 }
 

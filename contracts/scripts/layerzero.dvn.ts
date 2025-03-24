@@ -15,12 +15,14 @@ export const setLayerZeroLibs = async (
         const endpointAbi = [
             "function setSendLibrary(address oapp, uint32 eid, address sendLib) external",
             "function setReceiveLibrary(address oapp, uint32 eid, address receiveLib,uint256 _graceperiod) external",
-            "function setConfig(address _oapp, address _lib, SetConfigParam[] calldata _params) external",
+            "function setConfig(address _oapp, address _lib, (uint32 eid, uint32 configType, bytes config)[] calldata _params) external",
         ]
 
+        const [wallet] = await ethers.getSigners()
         const endpointContract = new ethers.Contract(
             baseContract.layerzeroInfo.endpointV2!,
-            endpointAbi
+            endpointAbi,
+            wallet
         )
 
         const sendTx = await endpointContract.setSendLibrary(
@@ -50,7 +52,7 @@ export const setLayerZeroLibs = async (
 
         const executorConfig = {
             maxMessageSize: 10000,
-            executorAddress: "0xExecutorAddress",
+            executorAddress: baseContract.layerzeroInfo.executorAddress,
         }
 
         const configTypeUlnStruct =
