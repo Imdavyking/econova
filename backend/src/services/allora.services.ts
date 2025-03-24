@@ -9,7 +9,7 @@ import { environment } from "../utils/config";
 dotenv.config();
 
 const ALLORA_API_KEY =
-  environment.ALLORA_API_KEY || "UP-8cbc632a67a84ac1b4078661";
+  environment.ALLORA_API_KEY || "UP-9e404f395a8e4893bbfa7f0f";
 
 const alloraClientTestnet = new AlloraAPIClient({
   chainSlug: ChainSlug.TESTNET,
