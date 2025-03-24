@@ -15,13 +15,18 @@ const alloraClientMainnet = new AlloraAPIClient({
   apiKey: ALLORA_API_KEY,
 });
 
+const alloraTopics: any[] = [];
+
 /**
  * Fetch all topics from Allora Network.
  * @returns A list of topics.
  */
 export const fetchAlloraTopics = async () => {
   try {
-    const alloraTopics = await alloraClientMainnet.getAllTopics();
+    if (alloraTopics.length === 0) {
+      const topics = await alloraClientMainnet.getAllTopics();
+      alloraTopics.push(...topics);
+    }
 
     let output = "Allora Network Topics: \n";
     for (const topic of alloraTopics) {
