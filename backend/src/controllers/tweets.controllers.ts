@@ -1,4 +1,8 @@
-import { getAllTweets, getTweetByTweetId } from "../services/tweets.services";
+import {
+  getAllTweets,
+  getPageTweets,
+  getTweetByTweetId,
+} from "../services/tweets.services";
 import { Request, Response } from "express";
 import { signTwitterPoints } from "../services/twitter-points.services";
 import { getLikingUsersData, getRetweetersData } from "../utils/fetch.tweets";
@@ -11,6 +15,27 @@ export const getTweets = async (_: Request, res: Response) => {
   const tweets = await getAllTweets();
   res.json(tweets);
 };
+
+export const getPaginatedTweets = async (req: Request, res: Response) => {
+  try {
+    const { page, limit } = req.query;
+    if (!page) {
+      res.status(400).json({ error: "Page is required" });
+      return;
+    }
+    if (!limit) {
+      res.status(400).json({ error: "Limit is required" });
+      return;
+    }
+    const tweets = await getPageTweets(+page, +limit);
+    res.json(tweets);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching page tweets" });
+  }
+};
+
 export const getTweetByTweetID = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

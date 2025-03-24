@@ -9,7 +9,7 @@ dotenv.config();
 export const getAllTweets = async () =>
   await TweetSchemaModel.find().sort({ created_at: -1 });
 
-export const getPaginatedTweets = async (page = 1, limit = 10) => {
+export const getPageTweets = async (page = 1, limit = 10) => {
   try {
     const skip = (page - 1) * limit;
 
