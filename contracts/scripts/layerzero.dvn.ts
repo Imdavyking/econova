@@ -32,6 +32,8 @@ export const setLayerZeroLibs = async (
         )
         await sendTx.wait(1)
 
+        console.log(`sendTx: ${sendTx.hash}`)
+
         const receiveTx = await endpointContract.setReceiveLibrary(
             baseContract.oappAddress,
             crossContract.layerzeroInfo.endpointIdV2,
@@ -40,6 +42,8 @@ export const setLayerZeroLibs = async (
         )
 
         await receiveTx.wait(1)
+
+        console.log(`receiveTx: ${receiveTx.hash}`)
 
         const ulnConfig = {
             confirmations: 1,
@@ -88,6 +92,8 @@ export const setLayerZeroLibs = async (
 
         await configSendTx.wait(1)
 
+        console.log(`configSendTx: ${configSendTx.hash}`)
+
         const configReceiveTx = await endpointContract.setConfig(
             baseContract.oappAddress,
             baseContract.layerzeroInfo.receiveLibAddress,
@@ -95,6 +101,8 @@ export const setLayerZeroLibs = async (
         )
 
         await configReceiveTx.wait(1)
+
+        console.log(`configReceiveTx: ${configReceiveTx.hash}`)
 
         console.log("✅ LayerZero libraries set")
     } catch (error) {
