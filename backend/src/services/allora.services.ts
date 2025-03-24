@@ -26,10 +26,10 @@ const alloraClientMainnet = new AlloraAPIClient({
  */
 export const fetchAlloraTopics = async () => {
   try {
-    let alloraTopics = await alloraClientTestnet.getAllTopics();
+    let alloraTopics = await alloraClientMainnet.getAllTopics();
 
     if (alloraTopics.length === 0) {
-      alloraTopics = await alloraClientMainnet.getAllTopics();
+      alloraTopics = await alloraClientTestnet.getAllTopics();
     }
 
     let output = "Allora Network Topics: \n";
@@ -45,7 +45,7 @@ export const fetchAlloraTopics = async () => {
     return output;
   } catch (error) {
     console.error("Error fetching Allora topics:", error);
-    return "Error fetching Allora topics.";
+    return "No allora topics available.";
   }
 };
 
