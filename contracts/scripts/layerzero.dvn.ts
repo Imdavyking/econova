@@ -91,7 +91,7 @@ export const setLayerZeroLibs = async (
         const configReceiveTx = await endpointContract.setConfig(
             baseContract.oappAddress,
             baseContract.layerzeroInfo.receiveLibAddress,
-            [setConfigParamUln, setConfigParamExecutor]
+            [setConfigParamUln]
         )
 
         await configReceiveTx.wait(1)
