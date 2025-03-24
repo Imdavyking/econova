@@ -5,16 +5,10 @@ export const setLayerZeroLibs = async (
     baseContract: {
         layerzeroInfo: LayerZeroChainInfo
         oappAddress: string
-        sendLibAddress: string
-        receiveLibAddress: string
-        dvnAddress: string
     },
     crossContract: {
         layerzeroInfo: LayerZeroChainInfo
         oappAddress: string
-        sendLibAddress: string
-        receiveLibAddress: string
-        dvnAddress: string
     }
 ) => {
     try {
@@ -24,12 +18,6 @@ export const setLayerZeroLibs = async (
             "function setConfig(address _oapp, address _lib, SetConfigParam[] calldata _params) external",
         ]
 
-        // struct SetConfigParam {
-        //     uint32 eid;
-        //     uint32 configType;
-        //     bytes config;
-        //   }
-
         const endpointContract = new ethers.Contract(
             baseContract.layerzeroInfo.endpointV2!,
             endpointAbi
@@ -38,14 +26,14 @@ export const setLayerZeroLibs = async (
         const sendTx = await endpointContract.setSendLibrary(
             baseContract.oappAddress,
             crossContract.layerzeroInfo.endpointIdV2,
-            baseContract.sendLibAddress
+            baseContract.layerzeroInfo.sendLibAddress
         )
         await sendTx.wait(1)
 
         const receiveTx = await endpointContract.setReceiveLibrary(
             baseContract.oappAddress,
             crossContract.layerzeroInfo.endpointIdV2,
-            baseContract.receiveLibAddress,
+            baseContract.layerzeroInfo.receiveLibAddress,
             0
         )
 
@@ -56,7 +44,7 @@ export const setLayerZeroLibs = async (
             requiredDVNCount: 1,
             optionalDVNCount: 0,
             optionalDVNThreshold: 0,
-            requiredDVNs: [baseContract.dvnAddress],
+            requiredDVNs: [baseContract.layerzeroInfo.dvnAddress],
             optionalDVNs: [],
         }
 
@@ -92,7 +80,7 @@ export const setLayerZeroLibs = async (
 
         const configSendTx = await endpointContract.setConfig(
             baseContract.oappAddress,
-            baseContract.sendLibAddress,
+            baseContract.layerzeroInfo.sendLibAddress,
             [setConfigParamUln, setConfigParamExecutor]
         )
 
@@ -100,7 +88,7 @@ export const setLayerZeroLibs = async (
 
         const configReceiveTx = await endpointContract.setConfig(
             baseContract.oappAddress,
-            baseContract.receiveLibAddress,
+            baseContract.layerzeroInfo.receiveLibAddress,
             [setConfigParamUln, setConfigParamExecutor]
         )
 

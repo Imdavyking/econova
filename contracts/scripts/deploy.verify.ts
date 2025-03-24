@@ -219,16 +219,10 @@ async function main() {
             {
                 layerzeroInfo: layerZeroChainInfo,
                 oappAddress: tokenAddress,
-                sendLibAddress: "0xC39161c743D0307EB9BCc9FEF03eeb9Dc4802de7",
-                receiveLibAddress: "0xe1844c5D63a9543023008D332Bd3d2e6f1FE1043",
-                dvnAddress: "0x282b3386571f7f794450d5789911a9804fa346b4",
             },
             {
                 layerzeroInfo: crossChainLzInfo,
                 oappAddress: crossChainTokenAddress,
-                sendLibAddress: "0x6c26c61a97006888ea9E4FA36584c7df57Cd9dA3",
-                receiveLibAddress: "0x1322871e4ab09Bc7f5717189434f97bBD9546e95",
-                dvnAddress: "0x23de2fe932d9043291f870324b74f820e11dc81a",
             }
         )
     }

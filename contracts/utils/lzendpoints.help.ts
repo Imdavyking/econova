@@ -9,6 +9,10 @@ export type LayerZeroChainInfo = {
     name: string
     rpcUrl: string | undefined
     chainId: number
+    sendLibAddress?: string
+    receiveLibAddress?: string
+    dvnAddress?: string
+    executorAddress?: string
 }
 
 export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
@@ -26,13 +30,6 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
         rpcUrl: "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
         chainId: 97,
     },
-    56: {
-        endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
-        endpointIdV2: EndpointId.BSC_V2_MAINNET,
-        name: "bscMainnet",
-        rpcUrl: "https://rpc.ankr.com/bsc",
-        chainId: 56,
-    },
     57054: {
         endpointV2: "0x6C7Ab2202C98C4227C5c46f1417D81144DA716Ff",
         endpointIdV2: EndpointId.SONIC_V2_TESTNET,
@@ -40,12 +37,23 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
         rpcUrl: "https://rpc.blaze.soniclabs.com",
         chainId: 57054,
     },
+    56: {
+        endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
+        endpointIdV2: EndpointId.BSC_V2_MAINNET,
+        name: "bscMainnet",
+        rpcUrl: "https://rpc.ankr.com/bsc",
+        chainId: 56,
+    },
     146: {
         endpointV2: "0x6F475642a6e85809B1c36Fa62763669b1b48DD5B",
         endpointIdV2: EndpointId.SONIC_V2_MAINNET,
         name: "sonicMainnet",
         rpcUrl: "https://rpc.soniclabs.com",
         chainId: 146,
+        sendLibAddress: "0xC39161c743D0307EB9BCc9FEF03eeb9Dc4802de7",
+        receiveLibAddress: "0xe1844c5D63a9543023008D332Bd3d2e6f1FE1043",
+        dvnAddress: "0x282b3386571f7f794450d5789911a9804fa346b4",
+        executorAddress: "0x4208D6E27538189bB48E603D6123A94b8Abe0A0b",
     },
     137: {
         endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
@@ -53,6 +61,10 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
         name: "polygon",
         rpcUrl: "https://rpc.ankr.com/polygon",
         chainId: 137,
+        sendLibAddress: "0x6c26c61a97006888ea9E4FA36584c7df57Cd9dA3",
+        receiveLibAddress: "0x1322871e4ab09Bc7f5717189434f97bBD9546e95",
+        dvnAddress: "0x23de2fe932d9043291f870324b74f820e11dc81a",
+        executorAddress: "0xCd3F213AD101472e1713C72B1697E727C803885b",
     },
 }
 
