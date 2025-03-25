@@ -991,10 +991,6 @@ export const getTransactionInfo = async ({ txHash }) => {
     const { from, to, hash } = tx;
     let { contractAddress } = tx;
 
-    if (!contractAddress) {
-      contractAddress = to;
-    }
-
     const value = ethers.formatEther(txInfo.value ?? 0);
     const gasPrice = ethers.formatEther(tx.gasPrice ?? 0);
     const gasLimit = ethers.formatEther(txInfo.gasLimit ?? 0);
@@ -1008,6 +1004,10 @@ export const getTransactionInfo = async ({ txHash }) => {
 
     const fromIsContract = fromCode != "0x";
     const toIsContract = toCode != "0x";
+
+    if (!contractAddress && toIsContract) {
+      contractAddress = to;
+    }
 
     const decodedResult = {
       name: "",
