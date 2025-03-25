@@ -34,9 +34,10 @@ const categorySchema = Object.values(charityCategories).map(
 const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 
-const tokensPrompt = `    ============ TOKENS ============
-    ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
-    ============ END OF TOKENS ============`;
+const tokensPrompt = `
+============ TOKENS ============
+${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
+============ END OF TOKENS ============`;
 
 export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
   const tools = {
@@ -343,7 +344,9 @@ Your key functions include:
 5. Voting Assistance - Notify token holders about key votes, offer tailored recommendations, and facilitate vote delegation.  
 6. Transparency & Auditability - Maintain a verifiable record of AI recommendations, ensuring governance integrity and allowing for community challenges.  
 
-You must ensure accuracy, neutrality, and security in all analyses. Your insights should be clear, unbiased, and rooted in real-time blockchain data and sentiment analysis. Token holders rely on your guidance to make informed decisions that shape the future of the ecosystem.`
+You must ensure accuracy, neutrality, and security in all analyses. Your insights should be clear, unbiased, and rooted in real-time blockchain data and sentiment analysis. Token holders rely on your guidance to make informed decisions that shape the future of the ecosystem.
+${tokensPrompt}
+`
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
 
