@@ -10,10 +10,7 @@ import dotenv from "dotenv";
 import { charityCategories } from "../utils/charity.categories";
 import { fetchAlloraTopics } from "./allora.services";
 import { environment } from "../utils/config";
-import {
-  WRAPPED_SONIC_CONTRACT_ADDRESS,
-  KYBERSWAP_TOKENS_INFO,
-} from "../utils/constants";
+import { KYBERSWAP_TOKENS_INFO } from "../utils/constants";
 dotenv.config();
 const openAIApiKey = environment.OPENAI_API_KEY!;
 const NATIVE_TOKEN = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
