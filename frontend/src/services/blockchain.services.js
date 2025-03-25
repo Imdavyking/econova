@@ -1014,14 +1014,52 @@ export const getTransactionInfo = async ({ txHash }) => {
     if (toIsContract) {
       try {
         const implementation = await getImplementationAddress(to);
-        const contractCode = await getVerifiedSourceCode({
-          contractAddress: implementation,
-        });
-        const abiDecoder = new ethers.Interface(
-          typeof contractCode.abi === "string"
-            ? JSON.parse(contractCode.abi)
-            : contractCode.abi
-        );
+
+        const sourceCodePromise = [
+          getVerifiedSourceCode({
+            contractAddress: implementation,
+          }),
+        ];
+
+        if (implementation !== to) {
+          sourceCodePromise.push(
+            getVerifiedSourceCode({
+              contractAddress: to,
+            })
+          );
+        }
+
+        const [contractCodeResult, proxyCodeResult] = await Promise.allSettled([
+          sourceCodePromise,
+        ]);
+
+        const contractCode =
+          typeof contractCodeResult !== "undefined" &&
+          contractCodeResult.status === "fulfilled"
+            ? contractCodeResult.value
+            : null;
+        const proxyCode =
+          typeof proxyCodeResult !== "undefined" &&
+          proxyCodeResult.status === "fulfilled"
+            ? proxyCodeResult.value
+            : null;
+
+        const abis = [];
+        if (contractCode) {
+          abis.push(
+            ...(contractCode.abi === "string"
+              ? JSON.parse(contractCode.abi)
+              : contractCode.abi)
+          );
+        }
+        if (proxyCode) {
+          abis.push(
+            ...(proxyCode.abi === "string"
+              ? JSON.parse(proxyCode.abi)
+              : proxyCode.abi)
+          );
+        }
+        const abiDecoder = new ethers.Interface(abis);
 
         abiDecoder.fragments.find((fragment) => {
           if (
