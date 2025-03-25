@@ -988,7 +988,8 @@ export const getTransactionInfo = async ({ txHash }) => {
     const txInfo = await tx.getTransaction();
     const blockInfo = await signer.provider.getBlock(tx.blockNumber);
     const timestamp = new Date(blockInfo.timestamp * 1000).toUTCString();
-    const { from, to, hash, contractAddress } = tx;
+    const { from, to, hash } = tx;
+    let { contractAddress } = tx;
 
     const value = ethers.formatEther(txInfo.value ?? 0);
     const gasPrice = ethers.formatEther(tx.gasPrice ?? 0);
@@ -1014,6 +1015,7 @@ export const getTransactionInfo = async ({ txHash }) => {
     if (toIsContract) {
       try {
         const implementation = await getImplementationAddress(to);
+        contractAddress = to;
         const contractAddresses = [implementation];
 
         if (implementation !== to) {
