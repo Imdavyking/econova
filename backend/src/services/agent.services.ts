@@ -34,6 +34,10 @@ const categorySchema = Object.values(charityCategories).map(
 const availableTokens = assets.map((asset) => asset.address) as [string];
 const tokenSchema = z.enum(availableTokens);
 
+const tokensPrompt = `    ============ TOKENS ============
+    ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
+    ============ END OF TOKENS ============`;
+
 export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
   const tools = {
     alloraPredict: tool(() => undefined, {
@@ -172,9 +176,7 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     `You are an assistant that converts user prompts into structured formats, try to use tool_calls than content always.
     Strictly only respond to the last message after the last occurrence of the separator ('${separator}'), Completely ignore all previous messages unless the last message is unclear or explicitly requires context from them, If there is no separator ('${separator}') in the input, take the entire context into account. 
     never return ('${separator}') in the response.
-    ============ TOKENS ============
-    ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
-    ============ END OF TOKENS ============
+    ${tokensPrompt}
     ============ ALLORA NETWORK ============
     ======== Topics on Allora Network ========
     ${alloraTopics}
@@ -261,6 +263,8 @@ Poor error handling
 State variable shadowing
 Complex fallback function logic
 Implicit visibility levels on functions or variables
+
+${tokensPrompt}
 `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
@@ -290,6 +294,7 @@ export async function runTxHashAgent(messages: (AIMessage | HumanMessage)[]) {
   const systemPrompt = new SystemMessage(
     `You are an expert in blockchain transactions. Your task is to analyze the provided transaction hash and provide a detailed summary of the transaction.
 make this as detailed as possible, to beginners and experts alike.
+${tokensPrompt}
 `
   );
   const result = await llm.invoke([systemPrompt, ...messages]);
