@@ -1007,7 +1007,6 @@ export const getTransactionInfo = async ({ txHash }) => {
     const decodedResult = {
       name: "",
       isValid: false,
-      isProxyContract: false,
       inputs: [],
       params: [],
     };
@@ -1050,7 +1049,6 @@ export const getTransactionInfo = async ({ txHash }) => {
               inputs: fragment.inputs,
               params: [...abiDecoder.decodeFunctionData(fragment, txInfo.data)],
               isValid: true,
-              isProxyContract: implementation !== to,
             });
             return true;
           } catch {
