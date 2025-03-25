@@ -802,6 +802,53 @@ export const getTokenBalance = async ({
   }
 };
 
+export async function getImplementationAddress(proxyAddress) {
+  try {
+    const proxySlots = [
+      "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc", // EIP-1967
+      "0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3", // EIP-1967 (ZOS)
+      "0xc5f16f0fcc639fa48a6947836d9850f504798523bf8c9a3a87d5876cf622bcf7", // EIP-1822
+      "0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2cc8c9978d5e30d2aebb8c197", // EIP-1822 (ZOS)
+    ];
+
+    const provider = new BrowserProvider(window.ethereum);
+
+    const storageValues = await Promise.all(
+      proxySlots.map((slot) => provider.getStorage(proxyAddress, slot))
+    );
+
+    const emptyStorage =
+      "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+    for (let i = 0; i < storageValues.length; i++) {
+      const storageValue = storageValues[i];
+
+      if (
+        storageValue &&
+        storageValue !== emptyStorage &&
+        storageValue !== zeroAddress
+      ) {
+        const implementationAddress = ethers.getAddress(
+          "0x" + storageValue.substring(26)
+        );
+
+        console.log(
+          `✅ Found Implementation Contract: ${implementationAddress}`
+        );
+        return implementationAddress;
+      }
+    }
+
+    console.warn(
+      "⚠️ No implementation address found, returning proxy address."
+    );
+    return proxyAddress;
+  } catch (error) {
+    console.error("❌ Error getting implementation address:", error);
+    return proxyAddress;
+  }
+}
+
 export const getTokenBalanceService = async ({
   tokenAddress,
   switchChainId = CHAIN_ID,

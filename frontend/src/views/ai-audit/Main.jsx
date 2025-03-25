@@ -8,6 +8,7 @@ import { detectContractLanguage } from "../../services/contract.detect.services"
 import { callLLMAuditApi } from "../../services/openai.services";
 import { getVerifiedSourceCode } from "../../services/source.code.services";
 import { Link } from "react-router-dom";
+import { getImplementationAddress } from "../../services/blockchain.services";
 
 export default function AiAudit() {
   const [file, setFile] = useState(null);
@@ -19,7 +20,11 @@ export default function AiAudit() {
 
   const fetchVerifiedSourceCode = async ({ contractAddress }) => {
     try {
-      const result = await getVerifiedSourceCode({ contractAddress });
+      const implementation = await getImplementationAddress(contractAddress);
+
+      const result = await getVerifiedSourceCode({
+        contractAddress: implementation,
+      });
       if (!result.sourceCode || !result.contractName) {
         toast.error("No verified source code found for this contract.");
         return;
