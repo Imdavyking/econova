@@ -170,7 +170,8 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
 
   const systemPrompt = new SystemMessage(
     `You are an assistant that converts user prompts into structured formats, try to use tool_calls than content always.
-    Strictly only respond to the last message after the last occurrence of the separator ('${separator}'), Completely ignore all previous messages unless the last message is unclear or explicitly requires context from them, If there is no separator ('${separator}') in the input, take the entire context into account.   
+    Strictly only respond to the last message after the last occurrence of the separator ('${separator}'), Completely ignore all previous messages unless the last message is unclear or explicitly requires context from them, If there is no separator ('${separator}') in the input, take the entire context into account. 
+    never return ('${separator}') in the response.
     ============ TOKEN SWAPS ============
     ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
     ============ End of Token Swaps ============
