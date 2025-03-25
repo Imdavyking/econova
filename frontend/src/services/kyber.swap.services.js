@@ -61,18 +61,17 @@ class Kyberswap {
     } else {
       const tokenContract = await getERC20Contract(sourceToken, this.chainId);
 
-      const decimals = await tokenContract.decimals();
+      const decimals = Number(await tokenContract.decimals());
+
       amountRaw = ethers.parseUnits(
-        sourceAmount.toString(),
-        decimals.toString()
+        Number(sourceAmount.toFixed(decimals)).toString(),
+        decimals
       );
 
       const balance = await tokenContract.balanceOf(signer.address);
       if (balance < amountRaw) {
         throw new Error("Insufficient balance");
       }
-
-      await this.handleTokenApproval(sourceToken, routerAddress, amountRaw);
     }
 
     const routeData = await this.getSwapRoute(
@@ -82,6 +81,10 @@ class Kyberswap {
     );
 
     const routerAddress = routeData.routerAddress;
+
+    if (!isNativeToken) {
+      await this.handleTokenApproval(sourceToken, routerAddress, amountRaw);
+    }
 
     const encodedData = await this.getEncodedSwapData(
       routeData.routeSummary,
