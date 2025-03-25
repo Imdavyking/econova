@@ -172,15 +172,13 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     `You are an assistant that converts user prompts into structured formats, try to use tool_calls than content always.
     Strictly only respond to the last message after the last occurrence of the separator ('${separator}'), Completely ignore all previous messages unless the last message is unclear or explicitly requires context from them, If there is no separator ('${separator}') in the input, take the entire context into account. 
     never return ('${separator}') in the response.
-    ============ TOKEN SWAPS ============
+    ============ TOKENS ============
     ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
-    ============ End of Token Swaps ============
+    ============ END OF TOKENS ============
     ============ ALLORA NETWORK ============
     ======== Topics on Allora Network ========
     ${alloraTopics}
     ======== End of Allora Network Topics ========
-    For sending:
-    WRAPPED_SONIC_CONTRACT_ADDRESS: ${WRAPPED_SONIC_CONTRACT_ADDRESS}
     if you don't know the token address, ask the user to provide it.
     SONIC_CHAIN_ID: 146
     BSC_CHAIN_ID: 56
