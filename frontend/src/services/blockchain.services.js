@@ -1013,7 +1013,6 @@ export const getTransactionInfo = async ({ txHash }) => {
 
     if (toIsContract) {
       try {
-        //TODO: decode transaction for proxies
         const implementation = await getImplementationAddress(to);
         const contractCode = await getVerifiedSourceCode({
           contractAddress: implementation,
