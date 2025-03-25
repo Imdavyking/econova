@@ -1007,6 +1007,7 @@ export const getTransactionInfo = async ({ txHash }) => {
     const decodedResult = {
       name: "",
       isValid: false,
+      isProxyContract: false,
       inputs: [],
       params: [],
     };
@@ -1014,51 +1015,26 @@ export const getTransactionInfo = async ({ txHash }) => {
     if (toIsContract) {
       try {
         const implementation = await getImplementationAddress(to);
-
-        const sourceCodePromise = [
-          getVerifiedSourceCode({
-            contractAddress: implementation,
-          }),
-        ];
+        const contractAddresses = [implementation];
 
         if (implementation !== to) {
-          sourceCodePromise.push(
-            getVerifiedSourceCode({
-              contractAddress: to,
-            })
-          );
+          contractAddresses.push(to);
         }
 
-        const [contractCodeResult, proxyCodeResult] = await Promise.allSettled([
-          sourceCodePromise,
-        ]);
+        const sourceCodes = await Promise.allSettled(
+          contractAddresses.map((address) =>
+            getVerifiedSourceCode({ contractAddress: address })
+          )
+        );
 
-        const contractCode =
-          typeof contractCodeResult !== "undefined" &&
-          contractCodeResult.status === "fulfilled"
-            ? contractCodeResult.value
-            : null;
-        const proxyCode =
-          typeof proxyCodeResult !== "undefined" &&
-          proxyCodeResult.status === "fulfilled"
-            ? proxyCodeResult.value
-            : null;
+        const abis = sourceCodes
+          .filter((result) => result.status === "fulfilled" && result.value)
+          .flatMap(({ value }) =>
+            typeof value.abi === "string" ? JSON.parse(value.abi) : value.abi
+          );
 
-        const abis = [];
-        if (contractCode) {
-          abis.push(
-            ...(contractCode.abi === "string"
-              ? JSON.parse(contractCode.abi)
-              : contractCode.abi)
-          );
-        }
-        if (proxyCode) {
-          abis.push(
-            ...(proxyCode.abi === "string"
-              ? JSON.parse(proxyCode.abi)
-              : proxyCode.abi)
-          );
-        }
+        if (!abis.length) return;
+
         const abiDecoder = new ethers.Interface(abis);
 
         abiDecoder.fragments.find((fragment) => {
@@ -1069,21 +1045,20 @@ export const getTransactionInfo = async ({ txHash }) => {
             return false;
 
           try {
-            const result = abiDecoder.decodeFunctionData(fragment, txInfo.data);
             Object.assign(decodedResult, {
               name: fragment.name,
               inputs: fragment.inputs,
-              params: [...result],
+              params: [...abiDecoder.decodeFunctionData(fragment, txInfo.data)],
               isValid: true,
+              isProxyContract: implementation !== to,
             });
-
             return true;
           } catch {
             return false;
           }
         });
-      } catch (_) {
-        console.log(_);
+      } catch (error) {
+        console.log(error);
       }
     }
     const decodedData = {
