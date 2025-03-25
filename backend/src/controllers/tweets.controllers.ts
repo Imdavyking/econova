@@ -18,7 +18,7 @@ export const getTweets = async (_: Request, res: Response) => {
 
 export const getPaginatedTweets = async (req: Request, res: Response) => {
   try {
-    const { pageNumber } = req.body;
+    const { pageNumber } = req.params;
     if (!pageNumber) {
       res.status(400).json({ error: "Page number is required" });
       return;
