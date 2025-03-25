@@ -17,10 +17,13 @@ export default function AiAudit() {
   const [auditResult, setAuditResult] = useState(null);
   const [isAuditing, setIsAuditing] = useState(false);
   const [contractAddress, setContractAddress] = useState("");
+  const [isProxy, setIsProxy] = useState(false);
 
   const fetchVerifiedSourceCode = async ({ contractAddress }) => {
     try {
       const implementation = await getImplementationAddress(contractAddress);
+
+      setIsProxy(implementation !== contractAddress);
 
       const result = await getVerifiedSourceCode({
         contractAddress: implementation,
@@ -108,6 +111,7 @@ export default function AiAudit() {
     if (source !== "manual") setContractCode("");
     if (source !== "address") setContractAddress("");
     setAuditResult(null);
+    setIsProxy(false);
   };
 
   const handleSubmit = async () => {
@@ -180,6 +184,12 @@ export default function AiAudit() {
             onChange={handleContractAddressChange}
             className="w-full text-sm text-gray-300 bg-gray-700 rounded-lg p-2 border border-gray-600"
           />
+          {isProxy && (
+            <p className="text-yellow-400 text-sm mt-1">
+              ⚠️ This is a proxy contract. The implementation contract will be
+              audited.
+            </p>
+          )}
         </div>
 
         {/* File Upload */}

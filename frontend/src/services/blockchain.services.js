@@ -826,7 +826,7 @@ export async function getImplementationAddress(proxyAddress) {
       if (
         storageValue &&
         storageValue !== emptyStorage &&
-        storageValue !== zeroAddress
+        storageValue !== ethers.ZeroAddress
       ) {
         const implementationAddress = ethers.getAddress(
           "0x" + storageValue.substring(26)
