@@ -186,6 +186,9 @@ contract EcoNovaCourseNFT is
         address recipient,
         uint256 tokenId
     ) external payable nonReentrant {
+        if (ownerOf(tokenId) != msg.sender) {
+            revert EcoNovaCourseNFT__NotOwner();
+        }
         if (block.chainid == dstChain_) {
             revert EcoNovaCourseNFT__CrossChainTransferToSameChain();
         }
@@ -193,9 +196,6 @@ contract EcoNovaCourseNFT is
             revert EcoNovaCourseNFT__ChainNotSupported(dstChain_);
         }
         string memory tokenURI_ = tokenURI(tokenId);
-        if (ownerOf(tokenId) != msg.sender) {
-            revert EcoNovaCourseNFT__NotOwner();
-        }
         _burn(tokenId);
         bytes memory dstTxCall = abi.encodeCall(
             IEcoNovaCourseNFT.receiveNFT,
