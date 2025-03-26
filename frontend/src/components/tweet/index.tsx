@@ -4,7 +4,7 @@ import { SERVER_URL } from "../../utils/constants";
 import { FaSpinner, FaHeart, FaRetweet } from "react-icons/fa";
 import { signTweetId } from "../../services/blockchain.twitter.services";
 import { toast } from "react-toastify";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, subHours } from "date-fns";
 import {
   addPointsFromTwitterService,
   checkForClaimService,
@@ -31,7 +31,8 @@ export const Tweet = ({ tweet }) => {
   const [isChecking, setIsChecking] = React.useState(false);
   const [isClaiming, setIsClaiming] = React.useState(false);
   const [results, setResults] = React.useState<Results | null>(null);
-  const formattedTime = formatDistanceToNow(new Date(tweet.created_at), {
+  const adjustedTime = subHours(new Date(tweet.created_at), 1);
+  const formattedTime = formatDistanceToNow(adjustedTime, {
     addSuffix: true,
   });
 
