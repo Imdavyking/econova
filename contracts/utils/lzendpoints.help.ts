@@ -43,6 +43,10 @@ export const LZ_CHAINS: Record<number, LayerZeroChainInfo> = {
         name: "bscMainnet",
         rpcUrl: "https://rpc.ankr.com/bsc",
         chainId: 56,
+        sendLibAddress: "0x9F8C645f2D0b2159767Bd6E0839DE4BE49e823DE",
+        receiveLibAddress: "0xB217266c3A98C8B2709Ee26836C98cf12f6cCEC1",
+        dvnAddress: "0xfd6865c841c2d64565562fcc7e05e619a30615f0",
+        executorAddress: "0x3ebD570ed38B1b3b4BC886999fcF507e9D584859",
     },
     146: {
         endpointV2: "0x6F475642a6e85809B1c36Fa62763669b1b48DD5B",
