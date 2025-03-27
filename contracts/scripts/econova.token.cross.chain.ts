@@ -55,10 +55,7 @@ export async function deployCrossChainOFT({
         }
 
         console.log(`🔄 Setting remote token address: ${remoteTokenAddr}`)
-        // TODO: fix this
-        // await EndpointV2.setDestLzEndpoint(remoteTokenAddr, remoteLzInfo.endpointV2)
 
-        console.log(`🔄 Setting peer for cross-chain Endpoint: ${remoteLzInfo.endpointV2}`)
         await ecoNovaToken.setPeer(
             remoteLzInfo.endpointIdV2,
             ethers.zeroPadValue(remoteTokenAddr, 32)
