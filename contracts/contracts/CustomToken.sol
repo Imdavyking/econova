@@ -1,24 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract CustomToken is ERC20 {
-    address public immutable OWNER;
-    address public immutable DEPLOYER;
-
+contract CustomToken is ERC20, Ownable {
     error CustomToken__NotOwner();
     error CustomToken__MaxSupplyExceeded();
 
     constructor(
         string memory name,
-        string memory symbol,
-        uint256 initialSupply,
-        address owner
-    ) ERC20(name, symbol) {
-        OWNER = owner;
-        DEPLOYER = msg.sender;
-        _mint(owner, initialSupply * (10 ** uint256(decimals())));
-    }
+        string memory symbol
+    ) ERC20(name, symbol) Ownable(msg.sender) {}
 
     /**
      * @dev Mint tokens
@@ -26,10 +18,7 @@ contract CustomToken is ERC20 {
      * @param amount - the amount of tokens to mint
      */
 
-    function mint(address to, uint256 amount) external {
-        if (msg.sender != OWNER) {
-            revert CustomToken__NotOwner();
-        }
+    function mint(address to, uint256 amount) external onlyOwner {
         uint256 MAX_SUPPLY = 21_000_000 * 10 ** decimals();
         if (totalSupply() + amount > MAX_SUPPLY) {
             revert CustomToken__MaxSupplyExceeded();

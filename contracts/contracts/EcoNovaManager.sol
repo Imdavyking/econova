@@ -140,7 +140,9 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         if (initialSupply <= 0) {
             revert EcoNovaManager__CanNotBeZero();
         }
-        CustomToken token = new CustomToken(name, symbol, initialSupply, msg.sender);
+        CustomToken token = new CustomToken(name, symbol);
+        token.mint(msg.sender, initialSupply * 10 ** token.decimals());
+        token.transferOwnership(msg.sender);
         emit TokenCreated(address(token), name, symbol, initialSupply);
     }
 
