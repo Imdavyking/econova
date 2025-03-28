@@ -22,7 +22,7 @@ import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers"
 import { Contract, ContractTransactionResponse } from "ethers"
-import { Charity, EcoNovaGovernor } from "../typechain-types"
+import { Charity, EcoNovaGovernor, ERC20__factory } from "../typechain-types"
 
 dotenv.config()
 
@@ -691,7 +691,9 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
               describe("Events", function () {
                   it("Can deploy token and emit the address", async function () {
-                      const { ecoNDeployer } = await loadFixture(deployEcoNovaDeployerFixture)
+                      const { ecoNDeployer, owner } = await loadFixture(
+                          deployEcoNovaDeployerFixture
+                      )
                       const customToken = {
                           name: "Beta",
                           symbol: "BT",
@@ -712,10 +714,14 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
                       const [address, name, symbol, supply] = args
 
+                      const ownerBalance = await ethers.getContractAt("ERC20", address)
+                      const balance = await ownerBalance.balanceOf(owner.address)
+
                       expect(name).to.equal(customToken.name)
                       expect(address).to.not.equal("")
                       expect(symbol).to.equal(customToken.symbol)
                       expect(supply).to.equal(customToken.initialSupply)
+                      expect(balance.toString()).to.equal("100000000000000000000000")
                   })
 
                   it("Should emit an event on donated", async function () {
