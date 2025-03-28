@@ -101,8 +101,9 @@ async function switchOrAddChain(ethProvider, switchChainId) {
 }
 export const getBlockNumber = async () => {
   try {
-    const provider = new BrowserProvider(window.ethereum);
-    const blockNumber = await provider.getBlockNumber();
+    const signer = await getSigner();
+    await switchOrAddChain(signer.provider, CHAIN_ID);
+    const blockNumber = await signer.provider.getBlockNumber();
     return blockNumber;
   } catch (error) {
     console.error("Error getting block number:", error);
