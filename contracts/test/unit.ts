@@ -707,17 +707,15 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
 
                       if (!receipt) return
 
-                      const event = receipt.logs[0] as any
+                      const event = receipt.logs[3] as any
                       const args = event.args as unknown as any[]
 
-                      console.log(args)
+                      const [address, name, symbol, supply] = args
 
-                    //   const [address, name, symbol, supply] = args
-
-                    //   expect(name).to.equal(customToken.name)
-                    //   expect(address).to.not.equal("")
-                    //   expect(symbol).to.equal(customToken.symbol)
-                    //   expect(supply).to.equal(customToken.initialSupply)
+                      expect(name).to.equal(customToken.name)
+                      expect(address).to.not.equal("")
+                      expect(symbol).to.equal(customToken.symbol)
+                      expect(supply).to.equal(customToken.initialSupply)
                   })
 
                   it("Should emit an event on donated", async function () {
