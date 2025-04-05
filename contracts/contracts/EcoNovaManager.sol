@@ -37,7 +37,8 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     uint256 public constant SLIPPAGE_TOLERANCE_BPS = 200;
     uint256 public constant ONE_DAY = 60 * 60 * 60 * 24;
     address public constant NATIVE_TOKEN = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
-    address public constant WRAPPED_SONIC = address(0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38);
+    address public constant WRAPPED_NATIVE_TOKEN =
+        address(0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38);
     address public constant WETH = address(0x50c42dEAcD8Fc9773493ED674b675bE577f2634b);
     address public constant USDC = address(0x29219dd400f2Bf60E5a23d13Be72B486D4038894);
 
@@ -194,7 +195,7 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      * @param token The address of the token.
      */
     function getPriceFeedFromToken(address token) private pure returns (bytes32) {
-        if (token == NATIVE_TOKEN || token == WRAPPED_SONIC) {
+        if (token == NATIVE_TOKEN || token == WRAPPED_NATIVE_TOKEN) {
             return 0xf490b178d0c85683b7a0f2388b40af2e6f7c90cbe0f96b31f315f08d0e5a2d6d;
         } else if (token == WETH) {
             return 0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6;

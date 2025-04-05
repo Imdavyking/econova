@@ -75,18 +75,18 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
         chainIdFrom: z.number().describe("The chain ID to bridge from"),
       }),
     }),
-    wrapSonic: tool(() => undefined, {
-      name: "wrapSonic",
-      description: "Wrap sonic to wS.",
+    wrapNativetoken: tool(() => undefined, {
+      name: "wrapNativetoken",
+      description: "Wrap native token to wrapped.",
       schema: z.object({
-        amount: z.number().describe("The amount of sonic to wrap"),
+        amount: z.number().describe("The amount of token to wrap"),
       }),
     }),
-    unwrapSonic: tool(() => undefined, {
-      name: "unwrapSonic",
-      description: "Unwrap wS to Sonic.",
+    unwrapNativetoken: tool(() => undefined, {
+      name: "unwrapNativetoken",
+      description: "Unwrap wrapped to native token.",
       schema: z.object({
-        amount: z.number().describe("The amount of wS to unwrap"),
+        amount: z.number().describe("The amount of wrapped token to unwrap"),
       }),
     }),
     sendERC20Token: tool(() => undefined, {
@@ -98,14 +98,14 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
         amount: z.number().describe("The amount of tokens to send"),
       }),
     }),
-    sendSonic: tool(() => undefined, {
-      name: "sendSonic",
-      description: "Send SONIC (also called S) tokens to a specific address.",
+    sendNativeToken: tool(() => undefined, {
+      name: "sendNativeToken",
+      description: "Send Native tokens to a specific address.",
       schema: z.object({
         recipientAddress: z
           .string()
-          .describe("The address to send SONIC tokens to"),
-        amount: z.number().describe("The amount of SONIC tokens to send"),
+          .describe("The address to send tokens to"),
+        amount: z.number().describe("The amount of tokens to send"),
       }),
     }),
     quizQuestions: tool(() => undefined, {

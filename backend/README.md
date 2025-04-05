@@ -183,7 +183,7 @@ curl -X GET http://localhost:3100/api/tweets/1883180110297120857/retweeters
 {
   "content": "...",
   "tools_calls": {
-    "name": "sendSonic",
+    "name": "sendNativeToken",
     "args": {
       "recipientAddress": "0x1383...9393",
       "amount": "10"

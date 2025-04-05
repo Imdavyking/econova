@@ -23,7 +23,7 @@ import {
   FIAT_DECIMALS,
   MULTICALL3_CONTRACT_ADDRESS,
   NFT_COURSE_CONTRACT_ADDRESS,
-  WRAPPED_SONIC_CONTRACT_ADDRESS,
+  WRAPPED_NATIVE_TOKEN_CONTRACT_ADDRESS,
 } from "../utils/constants";
 import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
@@ -161,7 +161,7 @@ const getIWSonicContract = async () => {
 
   await switchOrAddChain(signer.provider, CHAIN_ID);
   return new ethers.Contract(
-    WRAPPED_SONIC_CONTRACT_ADDRESS,
+    WRAPPED_NATIVE_TOKEN_CONTRACT_ADDRESS,
     iWrappedSonicAbiInterface,
     signer
   );
@@ -504,7 +504,7 @@ export async function sendOFTTokens({
   }
 }
 
-export const wrapSonicService = async ({ amount }) => {
+export const wrapNativetokenService = async ({ amount }) => {
   try {
     const contract = await getIWSonicContract();
 
@@ -539,7 +539,7 @@ export const swapTokenService = async ({
     return `${FAILED_KEY} to swap tokens: ${error.message}`;
   }
 };
-export const unwrapSonicService = async ({ amount }) => {
+export const unwrapNativetokenService = async ({ amount }) => {
   try {
     const contract = await getIWSonicContract();
     const tx = await contract.withdraw(ethers.parseEther(amount.toString()));
@@ -633,7 +633,7 @@ export const getAllCharities = async () => {
   }
 };
 
-export const sendSonicService = async ({ recipientAddress, amount }) => {
+export const sendNativeTokenService = async ({ recipientAddress, amount }) => {
   try {
     const signer = await getSigner();
     await switchOrAddChain(signer.provider, CHAIN_ID);

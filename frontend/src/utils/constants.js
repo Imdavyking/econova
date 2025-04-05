@@ -4,7 +4,9 @@ export const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 export const SERVER_URL_TWITTER_LOGIN = `${SERVER_URL}/twitter/login`;
 export const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 export const CHAIN_ID = formatChainId(import.meta.env.VITE_CHAIN_ID);
-export const CROSS_CHAIN_ID = formatChainId(import.meta.env.VITE_CROSS_CHAIN_ID);
+export const CROSS_CHAIN_ID = formatChainId(
+  import.meta.env.VITE_CROSS_CHAIN_ID
+);
 export const CHAIN_NAME = import.meta.env.VITE_CHAIN_NAME;
 export const CHAIN_CURRENCY_NAME = import.meta.env.VITE_CHAIN_CURRENCY_NAME;
 export const CHAIN_SYMBOL = import.meta.env.VITE_CHAIN_SYMBOL;
@@ -14,7 +16,7 @@ export const CHAIN_BLOCKEXPLORER_URL = import.meta.env
 export const APP_NAME = import.meta.env.VITE_APP_NAME;
 export const FIAT_DECIMALS = 2;
 export const NATIVE_TOKEN = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
-export const WRAPPED_SONIC_CONTRACT_ADDRESS =
+export const WRAPPED_NATIVE_TOKEN_CONTRACT_ADDRESS =
   "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38";
 export const MULTICALL3_CONTRACT_ADDRESS =
   "0xcA11bde05977b3631167028862bE2a173976CA11";
