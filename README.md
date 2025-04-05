@@ -157,7 +157,7 @@ Want to help? Submit a PR or report issues via our **[GitHub](https://github.com
 
 ## 📷 **Images**
 
-![Help](images/help.png) ![Chat](images/chat.png)
+<!-- ![Help](images/help.png) ![Chat](images/chat.png) -->
 
 ---
 
