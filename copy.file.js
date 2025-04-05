@@ -22,4 +22,3 @@ copyFile("backend/README.md", "documentation/docs/Tutorial/backend.md");
 copyFile("indexer/README.md", "documentation/docs/Tutorial/indexer.md");
 copyFile("contracts/README.md", "documentation/docs/Tutorial/contracts.md");
 copyFile("robot/README.md", "documentation/docs/Tutorial/robot.md");
-copyFile("private/README.md", "documentation/docs/Tutorial/private.md");
