@@ -5,45 +5,63 @@ import dotenv from "dotenv";
 import { CHAIN_ID } from "../utils/constants";
 import { initKeystore } from "../utils/init.keystore";
 import mongoose from "mongoose";
+
 dotenv.config();
 
 export async function saveMerkleRoot(address: string, level: number) {
   const session = await mongoose.startSession();
   session.startTransaction();
-  const existingMerkleTree = await MerkleTreeModel.findOne().session(session);
-  let allValues: [string, number][] = [[address, level]];
-  let proof = null;
 
-  if (existingMerkleTree) {
-    const existingTree = StandardMerkleTree.load(existingMerkleTree.treeData);
-    const existingValues = Array.from(existingTree.entries()).map(
-      ([_, v]) => v
-    );
+  try {
+    const existingMerkleTree = await MerkleTreeModel.findOne().session(session);
+    let allValues: [string, number][] = [[address, level]];
+    let proof = null;
 
-    const uniqueValues = new Set(existingValues.map((v) => JSON.stringify(v)));
-    uniqueValues.add(JSON.stringify([address, level]));
+    if (existingMerkleTree) {
+      const existingTree = StandardMerkleTree.load(existingMerkleTree.treeData);
+      const existingValues = Array.from(existingTree.entries()).map(
+        ([_, v]) => v
+      );
 
-    allValues = Array.from(uniqueValues).map((v) => JSON.parse(v));
-  }
+      const uniqueValues = new Set(
+        existingValues.map((v) => JSON.stringify(v))
+      );
+      uniqueValues.add(JSON.stringify([address, level]));
 
-  const tree = StandardMerkleTree.of(allValues, ["address", "uint8"]);
-  for (const [i, v] of tree.entries()) {
-    if (v[0] === address && v[1] === level) {
-      proof = tree.getProof(i);
-      break;
+      allValues = Array.from(uniqueValues).map((v) => JSON.parse(v));
     }
-  }
-  await MerkleTreeModel.deleteMany().session(session);
-  const merkleTree = new MerkleTreeModel({
-    root: tree.root,
-    treeData: tree.dump(),
-  });
-  await merkleTree.save({ session });
 
-  return {
-    root: tree.root,
-    proof,
-  };
+    const tree = StandardMerkleTree.of(allValues, ["address", "uint8"]);
+
+    for (const [i, v] of tree.entries()) {
+      if (v[0] === address && v[1] === level) {
+        proof = tree.getProof(i);
+        break;
+      }
+    }
+
+    // Clear all previous Merkle Trees in the DB
+    await MerkleTreeModel.deleteMany().session(session);
+
+    const merkleTree = new MerkleTreeModel({
+      root: tree.root,
+      treeData: tree.dump(),
+    });
+
+    await merkleTree.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return {
+      root: tree.root,
+      proof,
+    };
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
 }
 
 export const signUserLevelWithRoot = async (
@@ -52,7 +70,6 @@ export const signUserLevelWithRoot = async (
   root: string
 ) => {
   const wallet = initKeystore(null);
-
   const timestamp = Math.floor(Date.now() / 1000);
 
   const messageHash = ethers.solidityPackedKeccak256(
