@@ -51,7 +51,6 @@ export async function saveMerkleRoot(address: string, level: number) {
     await merkleTree.save({ session });
 
     await session.commitTransaction();
-    session.endSession();
 
     return {
       root: tree.root,
@@ -59,8 +58,9 @@ export async function saveMerkleRoot(address: string, level: number) {
     };
   } catch (error) {
     await session.abortTransaction();
-    session.endSession();
     throw error;
+  } finally {
+    session.endSession();
   }
 }
 
