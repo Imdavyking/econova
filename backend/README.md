@@ -36,11 +36,8 @@
         FRONTEND_URL=
         CHAIN_ID=
         PINATA_JWT=
-        LIGHTHOUSE_API_KEY=
         RPC_URL=
         CONTRACT_ADDRESS=
-        ALLORA_API_KEY=
-        ALLORA_NETWORK=mainnet # testnet
         API_SCAN_VERIFIER_KEY=
         COINGECKO_DEMO_API_KEY=
      ```

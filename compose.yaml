@@ -23,10 +23,8 @@ services:
       - JWT_SECRET
       - PORT
       - CHAIN_ID
-      - LIGHTHOUSE_API_KEY
       - RPC_URL
       - CONTRACT_ADDRESS
-      - ALLORA_API_KEY
       - API_SCAN_VERIFIER_KEY
       - MONGO_URI
       - REDIS_HOST
@@ -130,14 +128,10 @@ secrets:
     file: ./backend/secrets/FRONTEND_URL
   CHAIN_ID:
     file: ./backend/secrets/CHAIN_ID
-  LIGHTHOUSE_API_KEY:
-    file: ./backend/secrets/LIGHTHOUSE_API_KEY
   RPC_URL:
     file: ./backend/secrets/RPC_URL
   CONTRACT_ADDRESS:
     file: ./backend/secrets/CONTRACT_ADDRESS
-  ALLORA_API_KEY:
-    file: ./backend/secrets/ALLORA_API_KEY
   API_SCAN_VERIFIER_KEY:
     file: ./backend/secrets/API_SCAN_VERIFIER_KEY
   KEYSTORE_FILE:

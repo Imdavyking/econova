@@ -28,8 +28,6 @@ jobs:
       CONTRACT_ADDRESS: ${{vars.CONTRACT_ADDRESS}}
       FRONTEND_URL: ${{secrets.FRONTEND_URL}}
       CHAIN_ID: ${{secrets.CHAIN_ID}}
-      LIGHTHOUSE_API_KEY: ${{secrets.LIGHTHOUSE_API_KEY}}
-      ALLORA_API_KEY: ${{secrets.ALLORA_API_KEY}}
       API_SCAN_VERIFIER_KEY: ${{secrets.API_SCAN_VERIFIER_KEY}}
       JWT_SECRET: ${{secrets.JWT_SECRET}}
       OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
