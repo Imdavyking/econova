@@ -31,7 +31,6 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@alloralabs/allora-sdk": "^0.1.0",
     "@jest/globals": "^29.7.0",
     "@langchain/core": "^0.3.27",
     "@langchain/google-genai": "^0.1.6",

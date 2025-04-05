@@ -8,7 +8,6 @@ import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import dotenv from "dotenv";
 import { charityCategories } from "../utils/charity.categories";
-import { fetchAlloraTopics } from "./allora.services";
 import { environment } from "../utils/config";
 import { KYBERSWAP_TOKENS_INFO } from "../utils/constants";
 dotenv.config();
@@ -129,16 +128,6 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
           .describe("The amount in USD"),
       }),
     }),
-    adviceOnHealth: tool(() => undefined, {
-      name: "adviceOnHealth",
-      description: "",
-      schema: z.object({
-        isHealthy: z.boolean().describe("user is healthy using BMI"),
-        advice: z
-          .string()
-          .describe("AI advice to the user on how to improve their health"),
-      }),
-    }),
     redeemPoints: tool(() => undefined, {
       name: "redeemPoints",
       description: "Redeem points for rewards.",
@@ -166,8 +155,6 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     tools: Object.values(tools),
   });
 
-  const alloraTopics = await fetchAlloraTopics();
-
   const separator = " | --- | ";
 
   const systemPrompt = new SystemMessage(
@@ -175,10 +162,6 @@ export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
     Strictly only respond to the last message after the last occurrence of the separator ('${separator}'), Completely ignore all previous messages unless the last message is unclear or explicitly requires context from them, If there is no separator ('${separator}') in the input, take the entire context into account. 
     never return ('${separator}') in the response.
     ${tokensPrompt}
-    ============ ALLORA NETWORK ============
-    ======== Topics on Allora Network ========
-    ${alloraTopics}
-    ======== End of Allora Network Topics ========
     if you don't know the token address, ask the user to provide it.
     SONIC_CHAIN_ID: 146
     BSC_CHAIN_ID: 56

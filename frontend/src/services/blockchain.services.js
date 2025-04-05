@@ -504,10 +504,6 @@ export async function sendOFTTokens({
   }
 }
 
-export const adviceOnHealthService = async ({ advice }) => {
-  return advice;
-};
-
 export const wrapSonicService = async ({ amount }) => {
   try {
     const contract = await getIWSonicContract();
