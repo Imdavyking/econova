@@ -10,7 +10,6 @@ import multicallAbi from "@/assets/json/multicall3.json";
 import { BrowserProvider, ethers } from "ethers";
 import { DEFAULT_DEBRIDGE_GATE_ADDRESS } from "@debridge-finance/desdk/lib/evm/context";
 import {
-  BMI_ADVICE,
   CHAIN_BLOCKEXPLORER_URL,
   CHAIN_CURRENCY_NAME,
   CHAIN_ID,
@@ -556,45 +555,6 @@ export const unwrapSonicService = async ({ amount }) => {
     return `${FAILED_KEY} to unwrap ${amount} ${CHAIN_SYMBOL} ${
       error.message
     }: ${errorInfo ? errorInfo.name : error.message}`;
-  }
-};
-
-export const saveHealthyBMIProofService = async ({
-  weightInKg,
-  heightInCm,
-}) => {
-  try {
-    const { proof, _pubSignals } = await getHealthyBMIProof({
-      weightInKg,
-      heightInCm,
-    });
-
-    const _pA = [proof.pi_a[0], proof.pi_a[1]];
-    const _pB = [
-      [proof.pi_b[0][1], proof.pi_b[0][0]],
-      [proof.pi_b[1][1], proof.pi_b[1][0]],
-    ];
-    const _pC = [proof.pi_c[0], proof.pi_c[1]];
-    const manager = await getContract();
-
-    const tx = await manager.checkBMIHealthy(_pA, _pB, _pC, _pubSignals);
-    const receipt = await tx.wait(1);
-
-    const logs = manager.interface.parseLog(receipt.logs[0]);
-
-    const userHealthy = logs.args.at(1);
-
-    if (!userHealthy) {
-      throw new Error("User not healthy");
-    }
-
-    return `BMI is healthy, keep up the good work`;
-  } catch (error) {
-    console.log(`Error: ${error.message}`);
-    const errorInfo = parseContractError(error, managerAbiInterface);
-    return `${FAILED_KEY} : ${BMI_ADVICE}: ${
-      errorInfo ? errorInfo.name : error.message
-    }`;
   }
 };
 

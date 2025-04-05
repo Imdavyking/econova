@@ -7,7 +7,6 @@ import Home from "../views/home/Main";
 import Donate from "../views/donate/Main";
 import DonationCategories from "../views/donate/Categories";
 import LeaderBoard from "../views/leaderboard/Main";
-import AIHealth from "../views/ai-health/Main";
 import AITutor from "../views/ai-tutor/Main";
 import AiAudit from "../views/ai-audit/Main";
 import AiPortfolioManager from "../views/ai-portfolio-manager/Main";
@@ -43,10 +42,6 @@ function Router() {
     {
       path: "/leaderboard",
       element: <LeaderBoard />,
-    },
-    {
-      path: "/ai-health",
-      element: <AIHealth />,
     },
     {
       path: "/ai-tutor",

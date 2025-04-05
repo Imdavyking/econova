@@ -1,9 +1,0 @@
-{
-  "name": "private",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "verify:zk": "./snark_setup.sh"
-  }
-}

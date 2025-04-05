@@ -156,7 +156,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               const CharityDeployer = await hre.ethers.getContractFactory("Charity")
               const MockPythPriceFeed = await hre.ethers.getContractFactory("MockPythPriceFeed")
               const EndpointV2Mock = await hre.ethers.getContractFactory("EndpointV2Mock")
-              const Groth16Verifier = await hre.ethers.getContractFactory("Groth16Verifier")
               const TimeLock = await hre.ethers.getContractFactory("TimeLock")
               const EcoNovaGovernor = await hre.ethers.getContractFactory("EcoNovaGovernor")
               const timeLockDeployer = await TimeLock.deploy(MIN_DELAY, [], [], owner.address)
@@ -176,14 +175,11 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
               await mockPythPriceFeedDeployer.waitForDeployment()
               const endpointV2Mock = await EndpointV2Mock.deploy(1)
               await endpointV2Mock.waitForDeployment()
-              const groth16Deployer = await Groth16Verifier.deploy()
-              await groth16Deployer.waitForDeployment()
 
               const ecoNDeployer = await EcoNovaDeployer.deploy(
                   mockPythPriceFeedDeployer,
                   owner,
                   [charityDeployer],
-                  groth16Deployer,
                   endpointV2Mock
               )
 
@@ -747,35 +743,6 @@ typeof chainId !== "undefined" && !localHardhat.includes(chainId)
                           .withArgs(owner, NATIVE_TOKEN, "271210873559917723", category)
                   })
 
-                  it("Should emit an BMIRecorded event on bmi verify", async function () {
-                      const { ecoNDeployer, owner } = await loadFixture(
-                          deployEcoNovaDeployerFixture
-                      )
-
-                      const ecoD = ecoNDeployer.checkBMIHealthy(
-                          [
-                              "20606638541072922061980428880724412480908269290138854078750983266247270498397",
-                              "4672451083534101101597832021484554888189901911089965552618285519770622790931",
-                          ],
-                          [
-                              [
-                                  "16591371836046369082101798809051895293297518014895540262919917525466208670575",
-                                  "4297016560857544825984867378256335957562038908290277969518564658450810758958",
-                              ],
-                              [
-                                  "877062026622333165730181566302122034682188148884094488712779314966298240515",
-                                  "10035002646655856374128822531335377239491785149066640510768304671780887993830",
-                              ],
-                          ],
-                          [
-                              "3816844612412909560289070152002134674862700669878787340781696546457876357565",
-                              "5942731572393451414117325646745711737508576984550362617110023419428425319555",
-                          ],
-                          ["1", "1"]
-                      )
-
-                      await expect(ecoD).to.emit(ecoNDeployer, "BMIRecorded").withArgs(owner, true)
-                  })
                   it("Should emit an event on withdraw", async function () {
                       const {
                           ecoNDeployer,

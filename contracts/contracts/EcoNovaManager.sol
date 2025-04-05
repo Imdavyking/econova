@@ -12,7 +12,6 @@ import "./CustomToken.sol";
 import "./Charity.sol";
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
-import "./interfaces/IGroth16VerifierP3.sol";
 import "./mocks/EndpointV2Mock.sol";
 
 contract EcoNovaManager is Ownable, ReentrancyGuard {
@@ -28,7 +27,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     mapping(bytes32 => bool) public usedHashes;
     mapping(uint256 => mapping(uint256 => bool)) public userAddedTweets;
     mapping(uint8 => address) public charityOrganizations;
-    mapping(address => bool) public userBMIHealthy;
 
     /**
      * constants
@@ -54,7 +52,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
      */
     EcoNovaToken public immutable i_ecoNovaToken;
     IPyth public immutable i_pyth;
-    IGroth16VerifierP3 public immutable i_groth16VerifierP3;
 
     /**
      * error messages
@@ -97,7 +94,6 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
     event TokenCreated(address indexed token, string name, string symbol, uint256 initialSupply);
     event CharityAdded(uint8 indexed charityCategory, address charityAddress);
     event CharityRemoved(uint8 indexed charityCategory);
-    event BMIRecorded(address indexed user, bool isHealthy);
 
     /**
      * structs
@@ -113,13 +109,11 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         address oracleAddress,
         address _botAddress,
         Charity[] memory _charity,
-        IGroth16VerifierP3 _groth16VerifierP3,
         address _lzEndpoint
     ) Ownable(msg.sender) {
         i_ecoNovaToken = new EcoNovaToken(_lzEndpoint, msg.sender);
         botAddress = _botAddress;
         i_pyth = IPyth(oracleAddress);
-        i_groth16VerifierP3 = _groth16VerifierP3;
         for (uint256 i = 0; i < _charity.length; i++) {
             addCharity(_charity[i]);
         }
@@ -455,27 +449,5 @@ contract EcoNovaManager is Ownable, ReentrancyGuard {
         address oldBotAddress = botAddress;
         botAddress = _newBotAddress;
         emit BotAddressUpdated(oldBotAddress, _newBotAddress);
-    }
-
-    /**
-     * @notice Verifies a zero-knowledge proof for BMI health status and records the result.
-     * @dev Uses a zk-SNARK proof to validate if the user's BMI is within a healthy range.
-     * @param _pA - First part of the zk-SNARK proof.
-     * @param _pB - Second part of the zk-SNARK proof (nested array for pairing checks).
-     * @param _pC - Third part of the zk-SNARK proof.
-     * @param _pubSignals - Public input signals for the proof (e.g., BMI threshold).
-     */
-    function checkBMIHealthy(
-        uint256[2] calldata _pA,
-        uint256[2][2] calldata _pB,
-        uint256[2] calldata _pC,
-        uint256[2] calldata _pubSignals
-    ) external {
-        bool verified = i_groth16VerifierP3.verifyProof(_pA, _pB, _pC, _pubSignals);
-        if (!verified) {
-            revert EcoNovaManager__InvalidSignature();
-        }
-        userBMIHealthy[msg.sender] = verified;
-        emit BMIRecorded(msg.sender, verified);
     }
 }

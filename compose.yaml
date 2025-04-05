@@ -1,5 +1,3 @@
-include:
-  - ./indexer/docker-compose.yml
 services:
   backend:
     build:
@@ -61,15 +59,10 @@ services:
       - app-network
     env_file:
       - ./frontend/.env
-    environment:
-      - VITE_SERVER_URL=http://localhost:3100
-      - VITE_GRAPH_QL_ENDPOINT=http://localhost:5100
     restart: always
     depends_on:
       backend:
         condition: service_healthy
-      graphql-engine:
-        condition: service_started
 
   redis:
     image: redis:7.4-alpine

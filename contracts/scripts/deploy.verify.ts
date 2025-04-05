@@ -43,14 +43,9 @@ async function main() {
 
     const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
 
-    const verifier = await contract.i_groth16VerifierP3()
-    await verify(verifier, [])
-
     const tokenAddress = await contract.i_ecoNovaToken()
     console.log(`EcoNovaToken deployed to: ${tokenAddress}`)
     await verify(tokenAddress, [layerZeroChainInfo.endpointV2, wallet.address])
-
-    console.log(`Groth16VerifierP3 deployed to: ${verifier}`)
 
     const charityLength = await contract.charityLength()
 
@@ -110,7 +105,6 @@ async function main() {
         oracle,
         wallet.address,
         [...charities],
-        verifier,
         layerZeroChainInfo.endpointV2,
     ])
     await verify(ecoCourseNFTAddress, [wallet.address])
