@@ -254,16 +254,17 @@ export default function AiAudit() {
 
             {/* Star Rating Display */}
             <div className="flex items-center mb-4">
-              {[...Array(5)].map((_, index) => (
-                <FaStar
-                  key={index}
-                  className={`text-xl ${
-                    index < auditResult.rating
-                      ? "text-yellow-400"
-                      : "text-gray-500"
-                  }`}
-                />
-              ))}
+              {auditResult.rating &&
+                [...Array(5)].map((_, index) => (
+                  <FaStar
+                    key={index}
+                    className={`text-xl ${
+                      index < auditResult.rating
+                        ? "text-yellow-400"
+                        : "text-gray-500"
+                    }`}
+                  />
+                ))}
               <span className="ml-2 text-gray-300 text-sm">
                 ({auditResult.rating}/5)
               </span>
