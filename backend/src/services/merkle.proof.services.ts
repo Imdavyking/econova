@@ -3,12 +3,14 @@ import { MerkleTreeModel } from "../models/merkle.tree";
 import { ethers } from "ethers";
 import dotenv from "dotenv";
 import { CHAIN_ID } from "../utils/constants";
-import { environment } from "../utils/config";
 import { initKeystore } from "../utils/init.keystore";
+import mongoose from "mongoose";
 dotenv.config();
 
 export async function saveMerkleRoot(address: string, level: number) {
-  const existingMerkleTree = await MerkleTreeModel.findOne();
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  const existingMerkleTree = await MerkleTreeModel.findOne().session(session);
   let allValues: [string, number][] = [[address, level]];
   let proof = null;
 
@@ -31,12 +33,12 @@ export async function saveMerkleRoot(address: string, level: number) {
       break;
     }
   }
-  await MerkleTreeModel.deleteMany();
+  await MerkleTreeModel.deleteMany().session(session);
   const merkleTree = new MerkleTreeModel({
     root: tree.root,
     treeData: tree.dump(),
   });
-  await merkleTree.save();
+  await merkleTree.save({ session });
 
   return {
     root: tree.root,

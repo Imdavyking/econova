@@ -25,7 +25,9 @@ export const fetchAlloraTopics = async () => {
   try {
     if (alloraTopics.length === 0) {
       const topics = await alloraClientMainnet.getAllTopics();
-      alloraTopics.push(...topics);
+      if (topics.length !== 0) {
+        alloraTopics.push(...topics);
+      }
     }
 
     let output = "Allora Network Topics: \n";

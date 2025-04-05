@@ -4,7 +4,6 @@ import {
   signUserLevelWithRoot,
 } from "../services/merkle.proof.services";
 import { ethers } from "ethers";
-import { uploadToLighthouse } from "../services/lighthouse.services";
 import fs from "fs";
 import path from "path";
 import { uploadToPinata } from "../services/pinata.services";
@@ -73,10 +72,6 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
     let imageHash = await uploadToPinata(imageFile);
 
     if (!imageHash) {
-      imageHash = await uploadToLighthouse(imageBuffer);
-    }
-
-    if (!imageHash) {
       res.status(500).json({ error: "Failed to upload image to IPFS" });
       return;
     }
@@ -120,10 +115,6 @@ export const storeMerkleRoot = async (req: Request, res: Response) => {
     );
 
     let tokenURI = await uploadToPinata(nftMetaJsonFile);
-
-    if (!tokenURI) {
-      tokenURI = await uploadToLighthouse(nftMetaJsonBuffer);
-    }
 
     if (!tokenURI) {
       res.status(500).json({ error: "Failed to upload metadata to IPFS" });
