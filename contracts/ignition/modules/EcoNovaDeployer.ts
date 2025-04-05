@@ -5,7 +5,6 @@ import { NamedArtifactContractDeploymentFuture } from "@nomicfoundation/ignition
 import { charityCategories } from "../../utils/charity.categories"
 import { localHardhat } from "../../utils/localhardhat.chainid"
 import { LZ_CHAINS } from "../../utils/lzendpoints.help"
-import { MIN_DELAY } from "../../utils/constants"
 
 dotenv.config()
 
