@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { CHAIN_ID } from "../utils/constants";
 import { initKeystore } from "../utils/init.keystore";
 import mongoose from "mongoose";
+import logger from "../config/logger";
 
 dotenv.config();
 
@@ -40,7 +41,6 @@ export async function saveMerkleRoot(address: string, level: number) {
       }
     }
 
-    // Clear all previous Merkle Trees in the DB
     await MerkleTreeModel.deleteMany().session(session);
 
     const merkleTree = new MerkleTreeModel({
@@ -52,12 +52,15 @@ export async function saveMerkleRoot(address: string, level: number) {
 
     await session.commitTransaction();
 
+    logger.info("Merkle root saved successfully");
+
     return {
       root: tree.root,
       proof,
     };
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
+    logger.error(`Error saving merkle root ${error?.message}`);
     throw error;
   } finally {
     session.endSession();
