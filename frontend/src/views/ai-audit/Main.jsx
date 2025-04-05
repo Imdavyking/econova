@@ -253,7 +253,7 @@ export default function AiAudit() {
             </h3>
 
             {/* Star Rating Display */}
-            {/* <div className="flex items-center mb-4">
+            <div className="flex items-center mb-4">
               {[...Array(5)].map((_, index) => (
                 <FaStar
                   key={index}
@@ -267,7 +267,7 @@ export default function AiAudit() {
               <span className="ml-2 text-gray-300 text-sm">
                 ({auditResult.rating}/5)
               </span>
-            </div> */}
+            </div>
 
             <p className="mb-4 text-gray-300">{auditResult.overview}</p>
 
