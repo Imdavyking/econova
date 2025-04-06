@@ -26,7 +26,7 @@ type OwnershipTransfer @entity {
   contractAddress: String!
 }
 
-type OrocleUpdate @entity {
+type OracleUpdate @entity {
   id: ID!
   oldOrocle: String!
   newOrocle: String!

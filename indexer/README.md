@@ -3,7 +3,7 @@
 This project specifically indexes the following:  
 ✅ **PointsAdded** - Tracking reward points for users.  
 ✅ **OwnershipTransfer** - Recording changes in contract ownership.  
-✅ **OrocleUpdate** - Tracking updates to the system oracle.  
+✅ **OracleUpdate** - Tracking updates to the system oracle.  
 ✅ **PointsRedeemed** - Logging when users redeem their reward points.  
 ✅ **ProposalCreated** - Logging when a token holder creates a proposal.  
 ✅ **ProposalExecuted** - Logging when a proposal is executed.  

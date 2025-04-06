@@ -3,12 +3,10 @@
 EcoNova is a decentralized platform integrating **blockchain technology,DeFi and AI**
 
 ## 🌍 **Key Integrations**
-
-✅ **ZK-BMI verification**  
 🤖 **AI-powered tutoring**  
 💸 **Automated donations (powered by Gelato)**  
 📢 **Social media engagement rewards (powered by Zerepy)**  
-🔁 **Cross-chain transfers via deBridge & LayerZero**   
+🔁 **Cross-chain transfers via deBridge & LayerZero**
 🔍 **AI audit with FlareScan, GitHub Solidity analysis, and security compliance checks**
 
 ---
@@ -69,7 +67,7 @@ EcoNova’s **Twitter bot, EcoNova_bot**, powered by **Zerepy**, automatically:
 - **Rewards users with tokens based on interactions** 🎁
 - **Encourages community-driven fundraising** 🤝
 
-⚠️ **Note:** Twitter login **will not work** due to callback URL restrictions. Ensure the frontend URL is properly configured.
+⚠️ **Note:** if Twitter login **does not work** due to callback URL restrictions. Ensure the frontend URL is properly configured.
 
 ---
 

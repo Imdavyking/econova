@@ -21,7 +21,7 @@ import {
   Donation,
   PointsAdded,
   PointsRedeemed,
-  OrocleUpdate,
+  OracleUpdate,
   OwnershipTransfer,
   CharityAdded,
   ProposalCanceled,
@@ -290,10 +290,10 @@ export async function handlePointsRedeemedAbiLog(
 }
 
 export async function handleSetOracleAbiLog(log: SetOracleLog): Promise<void> {
-  logger.info(`New OrocleUpdate transaction log at block ${log.blockNumber}`);
+  logger.info(`New OracleUpdate transaction log at block ${log.blockNumber}`);
   assert(log.args, "No log.args");
 
-  const transaction = OrocleUpdate.create({
+  const transaction = OracleUpdate.create({
     id: log.transactionHash,
     blockHeight: BigInt(log.blockNumber),
     newOrocle: log.args.newOrocle,
