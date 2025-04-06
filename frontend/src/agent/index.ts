@@ -21,7 +21,6 @@ import {
 import { AiResponseType, SolveTaskResult, ToolCall } from "../types";
 import { charityCategories } from "../utils/charity.categories";
 import { bridgeCoin } from "../services/debridge.services";
-import { alloraPredictService } from "../services/allora.services";
 import { FAILED_KEY } from "../utils/constants";
 
 export class AIAgent {
@@ -31,7 +30,6 @@ export class AIAgent {
   constructor() {
     this.tools = {
       bridge: bridgeCoin,
-      alloraPredict: alloraPredictService,
       donate: donateToFoundationService,
       redeemPoints: redeemPointsService,
       deployToken: deployTokenService,
@@ -46,7 +44,6 @@ export class AIAgent {
     this.toolsInfo = {
       bridge:
         "Only Mainnet Bridges are Supported: Example - Bridge 10 SONIC to BSC",
-      alloraPredict: "Example: What is the price of ETH in 5 minutes?.",
       donate: `Example: Donate 100 USD to a cause. e.g ${Object.keys(
         charityCategories
       ).join(", ")}`,

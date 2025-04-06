@@ -37,14 +37,6 @@ ${JSON.stringify(Object.values(KYBERSWAP_TOKENS_INFO))}
 
 export async function runAIAgent(messages: (AIMessage | HumanMessage)[]) {
   const tools = {
-    alloraPredict: tool(() => undefined, {
-      name: "alloraPredict",
-      description: "Get price prediction for a token.",
-      schema: z.object({
-        topicId: z.number().nullable(),
-        topicName: z.string().nullable(),
-      }),
-    }),
     tokenBalance: tool(() => undefined, {
       name: "tokenBalance",
       description: "Get the balance of a token in a wallet.",
