@@ -21,7 +21,6 @@ contract AuditRegistry {
         uint256 timestamp
     );
 
-    // Function to register an audit for a contract
     function registerAudit(bytes32 contractHash, uint8 stars, string calldata summary) external {
         Audit memory newAudit = Audit({
             stars: stars,
@@ -40,24 +39,20 @@ contract AuditRegistry {
         }
     }
 
-    // Function to get all audits of a specific contract
     function getContractAudits(bytes32 contractHash) external view returns (Audit[] memory) {
         return audits[contractHash];
     }
 
-    // Function to get the history of audits performed by an auditor
     function getAuditorHistory(address auditor) external view returns (bytes32[] memory) {
         return auditorHistory[auditor];
     }
 
-    // Function to get the latest audit of a contract
     function getLatestAudit(bytes32 contractHash) external view returns (Audit memory) {
         uint256 length = audits[contractHash].length;
         require(length > 0, "No audits found for this contract");
         return audits[contractHash][length - 1];
     }
 
-    // Function to get all audits with pagination
     function getAllAudits(
         uint256 startIndex,
         uint256 limit
@@ -92,7 +87,6 @@ contract AuditRegistry {
         }
     }
 
-    // Function to get the total number of contracts
     function getTotalContracts() external view returns (uint256) {
         return allContracts.length;
     }
