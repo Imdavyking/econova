@@ -22,7 +22,7 @@ import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers"
 import { Contract, ContractTransactionResponse } from "ethers"
-import { Charity, EcoNovaGovernor, ERC20__factory } from "../typechain-types"
+import { Charity, EcoNovaGovernor } from "../typechain-types"
 
 dotenv.config()
 

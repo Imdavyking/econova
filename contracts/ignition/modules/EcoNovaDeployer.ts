@@ -8,7 +8,7 @@ import { LZ_CHAINS } from "../../utils/lzendpoints.help"
 
 dotenv.config()
 
-const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
+const ecoNovaModule = buildModule("EcoNovaManagerModule", (m) => {
     const chainId = network.config.chainId
     let oracle: NamedArtifactContractDeploymentFuture<"MockPythPriceFeed"> | string =
         process.env.ORACLE_ADDRESS!
@@ -35,14 +35,14 @@ const ecoNovaModule = buildModule("EcoNovaModule", (m) => {
         charityContracts.push(m.contract(`Charity`, [category, wallet], { id: categoryKey }))
     }
 
-    const ecoNovaDeployer = m.contract("EcoNovaManager", [
+    const ecoNovaManagerDeployer = m.contract("EcoNovaManager", [
         oracle,
         wallet,
         charityContracts,
         lzEndPoint,
     ])
 
-    return { ecoNovaDeployer }
+    return { ecoNovaManagerDeployer }
 })
 
 export default ecoNovaModule

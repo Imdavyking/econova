@@ -1,7 +1,7 @@
 import hre, { ethers } from "hardhat"
-
 import EcoNovaDeployer from "../ignition/modules/EcoNovaDeployer"
 import EcoNovaCourseNFTDeployer from "../ignition/modules/EcoNovaCourseNFTDeployer"
+import EconovaCarbonCreditDeployer from "../ignition/modules/EconovaCarbonCreditDeployer"
 import { verify } from "../utils/verify"
 import dotenv from "dotenv"
 import { network } from "hardhat"
@@ -26,28 +26,39 @@ async function main() {
     const chainId = network.config.chainId!
 
     cleanDeployments(chainId!)
-    const { ecoNovaDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
+    const { ecoNovaManagerDeployer } = await hre.ignition.deploy(EcoNovaDeployer)
     const { ecoNovaNFTDeployer } = await hre.ignition.deploy(EcoNovaCourseNFTDeployer)
+    const { carbonCreditProxy } = await hre.ignition.deploy(EconovaCarbonCreditDeployer)
+    await ecoNovaManagerDeployer.waitForDeployment()
+    await ecoNovaNFTDeployer.waitForDeployment()
+    await carbonCreditProxy.waitForDeployment()
     const [wallet] = await ethers.getSigners()
-    const ecoAddress = await ecoNovaDeployer.getAddress()
+    const ecoNovaManagerAddress = await ecoNovaManagerDeployer.getAddress()
     const ecoCourseNFTAddress = await ecoNovaNFTDeployer.getAddress()
+    const ecoProxyCarbonCreditAddress = await carbonCreditProxy.getAddress()
     const chainName = process.env.CHAIN_NAME!
     const chainCurrencyName = process.env.CHAIN_CURRENCY_NAME!
     const chainSymbol = process.env.CHAIN_SYMBOL!
     const layerZeroChainInfo = LZ_CHAINS[+chainId]
-    console.log(`EcoNovaManager deployed to: ${ecoAddress}`)
+    console.log(`EcoNovaManager deployed to: ${ecoNovaManagerAddress}`)
     console.log(`EcoNovaCourseNFT deployed to: ${ecoCourseNFTAddress}`)
+    console.log(`EcoNovaProxyCarbonCreditAddress deployed to: ${ecoProxyCarbonCreditAddress}`)
+
+    await verify(ecoProxyCarbonCreditAddress, [])
     const GovernorFactory = await hre.ethers.getContractFactory("EcoNovaGovernor")
 
     const TimeLockFactory = await hre.ethers.getContractFactory("TimeLock")
 
-    const contract = await ethers.getContractAt("EcoNovaManager", ecoAddress)
+    const ecoNovaManagerContract = await ethers.getContractAt(
+        "EcoNovaManager",
+        ecoNovaManagerAddress
+    )
 
-    const tokenAddress = await contract.i_ecoNovaToken()
+    const tokenAddress = await ecoNovaManagerContract.i_ecoNovaToken()
     console.log(`EcoNovaToken deployed to: ${tokenAddress}`)
     await verify(tokenAddress, [layerZeroChainInfo.endpointV2, wallet.address])
 
-    const charityLength = await contract.charityLength()
+    const charityLength = await ecoNovaManagerContract.charityLength()
 
     const charities = []
     const governorTimeLock = await TimeLockFactory.deploy(MIN_DELAY, [], [], wallet)
@@ -57,7 +68,7 @@ async function main() {
     const governorTimeLockAddress = await governorTimeLock.getAddress()
 
     for (let i = 0; i < Number(charityLength); i++) {
-        const charity = await contract.charityOrganizations(i)
+        const charity = await ecoNovaManagerContract.charityOrganizations(i)
         const charityContract = await ethers.getContractAt("Charity", charity)
         const ownerTx = await charityContract.transferOwnership(governorTimeLockAddress)
         await ownerTx.wait(1)
@@ -101,7 +112,7 @@ async function main() {
         "contracts/dao/TimeLock.sol:TimeLock"
     )
 
-    await verify(ecoAddress, [
+    await verify(ecoNovaManagerAddress, [
         oracle,
         wallet.address,
         [...charities],
@@ -126,12 +137,12 @@ async function main() {
     const rpcUrl = (network.config as any).url
     const blockExplorerUrl = network.config.ignition.explorerUrl!
     /** contract address */
-    updateEnv(ecoAddress, "frontend", "VITE_CONTRACT_ADDRESS")
+    updateEnv(ecoNovaManagerAddress, "frontend", "VITE_CONTRACT_ADDRESS")
     updateEnv(ecoCourseNFTAddress, "frontend", "VITE_NFT_COURSE_CONTRACT_ADDRESS")
     updateEnv(ecoNovaGovernorAddress, "frontend", "VITE_ECONOVA_GOVERNOR_CONTRACT_ADDRESS")
-    updateEnv(ecoAddress, "indexer", "CONTRACT_ADDRESS")
+    updateEnv(ecoNovaManagerAddress, "indexer", "CONTRACT_ADDRESS")
     updateEnv(ecoNovaGovernorAddress, "indexer", "GOVERNOR_CONTRACT_ADDRESS")
-    updateEnv(ecoAddress, "backend", "CONTRACT_ADDRESS")
+    updateEnv(ecoNovaManagerAddress, "backend", "CONTRACT_ADDRESS")
 
     /** block number */
     updateEnv(blockNumber.toString(), "indexer", "BLOCK_NUMBER")
