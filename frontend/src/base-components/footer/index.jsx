@@ -21,18 +21,12 @@ const Footer = () => {
       {/* Footer Links */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center md:text-left">
         <ul className="space-y-2">
-          <li className="font-semibold">Product & Charity</li>
+          <li className="font-semibold">Donation & Governance</li>
           <li>
             <Link to="/donate">Donate</Link>
           </li>
           <li>
             <Link to="/dao">DAO</Link>
-          </li>
-          <li>
-            <Link to="/bridge">Bridge</Link>
-          </li>
-          <li>
-            <Link to="/tx-analysis">Tx Analysis</Link>
           </li>
         </ul>
 
@@ -46,6 +40,15 @@ const Footer = () => {
           </li>
           <li>
             <Link to="/ai-portfolio-manager">Portfolio Manager</Link>
+          </li>
+        </ul>
+        <ul className="space-y-2">
+          <li className="font-semibold">Utilities</li>
+          <li>
+            <Link to="/bridge">Bridge</Link>
+          </li>
+          <li>
+            <Link to="/tx-analysis">Tx Analysis</Link>
           </li>
         </ul>
 
