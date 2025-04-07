@@ -14,25 +14,35 @@ create_secrets() {
     touch ".gitignore"
   fi
 
-  if ! grep -q "^secrets/$" ".gitignore"; then
+  if ! grep -qx "secrets/" ".gitignore"; then
     echo "secrets/" >> ".gitignore"
     echo "Added 'secrets/' to $dir/.gitignore"
   fi
 
   # Process the .env file and create secrets
-  awk -F= '{print $1, $2}' .env | while read -r key value; do
+ # Process the .env file and create secrets
+  while IFS='=' read -r key value || [ -n "$key" ]; do
+    # Skip comments or blank lines
+    [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+
+    key=$(echo "$key" | xargs)
+    # Remove anything after '#' in the value (the comment)
+    value=$(echo "$value" | sed 's/\s*#.*//' | xargs)
+
     echo "$value" > "secrets/$key"
 
-    # Check if the secret already exists
-    if docker secret ls | awk '{print $2}' | grep -q "^$key$"; then
+    if docker secret ls --format '{{.Name}}' | grep -qx "$key"; then
       echo "Updating secret $key..."
-      echo "$value" | docker secret rm "$key" && docker secret create "$key" "secrets/$key"
-    else
-      docker secret create "$key" "secrets/$key" && echo "Secret $key created successfully!" || echo "Failed to create secret: $key"
+      docker secret rm "$key" >/dev/null 2>&1
     fi
-  done
 
-  cd - > /dev/null  # Return to the previous directory
+    docker secret create "$key" "secrets/$key" \
+      && echo "Secret $key created successfully!" \
+      || echo "Failed to create secret: $key"
+  done < .env
+
+
+  cd - > /dev/null || exit
 }
 
 # Run the function for backend
