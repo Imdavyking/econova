@@ -146,10 +146,9 @@ const Home = () => {
               {APP_NAME}
             </h2>
             <p className="text-white font-extrabold text-lg md:text-2xl my-2 text-center max-w-[90%] md:max-w-[60%]">
-              A decentralized platform leveraging blockchain, AI, and ZKPs for
-              private health verification, automated donations, AI tutoring, and
-              cross-chain transactions, ensuring trustless, efficient charitable
-              giving with privacy and security.
+              A decentralized platform leveraging blockchain and AI, automated
+              donations, AI tutoring, and cross-chain transactions,smart
+              contract auditing.
               <span className="text-[#c54dfc] px-1">
                 and connects with Twitter
               </span>

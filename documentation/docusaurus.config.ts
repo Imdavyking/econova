@@ -9,7 +9,7 @@ import rehypeKatex from "rehype-katex";
 const config: Config = {
   title: "Econova",
   tagline:
-    "EcoNova is a decentralized platform leveraging blockchain, AI, and Zero-Knowledge Proofs (ZKPs) for private health verification, automated donations, AI tutoring, and cross-chain transactions, ensuring trustless and secure charitable giving.",
+    "A decentralized platform leveraging blockchain and AI, automated donations, AI tutoring, and cross-chain transactions,smart contract auditing.",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
