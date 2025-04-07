@@ -40,6 +40,7 @@ Create a `.env` file in the project root and add the following variables:
   VITE_TWITTER_NAME=
   VITE_NFT_COURSE_CONTRACT_ADDRESS=
   VITE_ECONOVA_GOVERNOR_CONTRACT_ADDRESS=
+  VITE_ECONOVA_DOCS_URL=
 ```
 
 # Usage
