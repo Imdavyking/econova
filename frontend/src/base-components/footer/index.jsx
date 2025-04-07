@@ -3,7 +3,7 @@
 import React from "react";
 import logoUrl from "@/assets/images/logo.png";
 import { Link } from "react-router-dom";
-import { APP_NAME } from "../../utils/constants";
+import { APP_NAME, ECONOVA_DOCS_URL } from "../../utils/constants";
 import AddTokenButton from "../../components/add-token-btn/Main";
 
 const Footer = () => {
@@ -63,7 +63,7 @@ const Footer = () => {
             <Link to="/terms-and-conditions">Terms & Condition</Link>
           </li>
           <li>
-            <Link to="https://econovadocs.vercel.app/" target="_blank">
+            <Link to={ECONOVA_DOCS_URL} target="_blank">
               Docs
             </Link>
           </li>
