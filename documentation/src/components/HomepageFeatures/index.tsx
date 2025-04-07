@@ -11,16 +11,6 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: "Private & Secure",
-    Svg: require("@site/static/img/undraw_secure_data.svg").default,
-    description: (
-      <>
-        EcoNova utilizes Zero-Knowledge Proofs (ZKPs) and blockchain security to
-        ensure user data remains private while enabling trustless verification.
-      </>
-    ),
-  },
-  {
     title: "Automated & Trustless Donations",
     Svg: require("@site/static/img/undraw_impactful_donation.svg").default,
     description: (
