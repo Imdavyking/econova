@@ -27,7 +27,6 @@ import {
 } from "../utils/constants";
 import { getWholeNumber } from "../utils/whole.util";
 import { charityCategories } from "../utils/charity.categories";
-import { getHealthyBMIProof } from "./zk.bmi.services";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { getVerifiedSourceCode } from "./source.code.services";
 import Kyberswap from "./kyber.swap.services";
